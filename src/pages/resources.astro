@@ -1,0 +1,67 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import GradientText from '../components/GradientText.astro';
+import ResourceCard from '../components/ResourceCard.astro';
+import ResourceGrid from '../components/ResourceGrid.astro';
+import Icon from '../components/Icon.astro';
+import { getCollection } from 'astro:content';
+
+const sessions = await getCollection('sessions');
+const sorted = sessions.sort((a, b) => a.data.number - b.data.number);
+
+// Deduplicate resources by URL
+const seen = new Set<string>();
+const allResources: { resource: any; sessionNumber: number }[] = [];
+for (const session of sorted) {
+  for (const res of session.data.resources || []) {
+    if (!seen.has(res.url)) {
+      seen.add(res.url);
+      allResources.push({ resource: res, sessionNumber: session.data.number });
+    }
+  }
+}
+---
+
+<BaseLayout title="ISOM 260 | Resources">
+  <section class="py-24 px-8 max-w-[1200px] mx-auto">
+    <div class="text-center mb-16">
+      <h1 class="text-[clamp(2.5rem,6vw,4rem)] font-extrabold mb-4">
+        <GradientText>Resources</GradientText> Hub
+      </h1>
+      <p class="text-text-secondary text-lg max-w-[600px] mx-auto">
+        All tools, videos, and learning materials from every session — deduplicated and organized.
+      </p>
+    </div>
+
+    {allResources.length > 0 ? (
+      <ResourceGrid>
+        {allResources.map(({ resource }) => (
+          <ResourceCard
+            title={resource.title}
+            url={resource.url}
+            description={resource.description}
+            icon={resource.icon}
+            badge={resource.badge}
+            badgeType={resource.badgeType}
+            linkText={resource.linkText}
+          />
+        ))}
+      </ResourceGrid>
+    ) : (
+      <div class="text-center py-24">
+        <Icon name="inbox" class="w-16 h-16 text-text-muted mx-auto mb-4" />
+        <p class="text-text-secondary text-lg">Resources will appear here as sessions are published.</p>
+      </div>
+    )}
+
+    <div class="mt-16 bg-bg-card border border-border-subtle rounded-2xl p-10 text-center fade-in">
+      <Icon name="file-text" class="w-10 h-10 text-accent-purple mx-auto mb-4" />
+      <h3 class="text-xl font-semibold mb-2">Course Materials PDF</h3>
+      <p class="text-text-secondary mb-6">Download the complete AI: From Neurons to LLMs reference document.</p>
+      <a href="/docs/AI_From_Neurons_To_LLMs.pdf" target="_blank" class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-accent-cyan to-accent-purple rounded-full text-bg-primary font-semibold no-underline transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_10px_40px_rgba(0,212,255,0.3)]">
+        <Icon name="download" class="w-5 h-5" />
+        Download PDF
+      </a>
+    </div>
+  </section>
+</BaseLayout>

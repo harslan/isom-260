@@ -1,0 +1,264 @@
+{
+  "number": 2,
+  "slug": "session-02",
+  "title": "How AI Actually Works",
+  "subtitle": "From neurons to LLMs — demystifying the technology powering the AI revolution",
+  "heroTitle": "How AI <span class=\"bg-gradient-to-br from-accent-cyan to-accent-purple bg-clip-text text-transparent\">Actually Works</span>",
+  "duration": "150 Minutes",
+  "icon": "brain",
+  "tags": ["Neural Networks", "LLMs", "Hands-On"],
+  "objectives": [
+    {
+      "title": "Understand Neural Networks",
+      "description": "Visualize how neural networks learn patterns and make decisions through layers of mathematical operations."
+    },
+    {
+      "title": "Demystify LLMs",
+      "description": "Understand how Large Language Models like ChatGPT are built, trained, and how they generate responses."
+    },
+    {
+      "title": "Connect to Business Value",
+      "description": "Identify real-world business applications where neural networks and AI drive competitive advantage."
+    },
+    {
+      "title": "Build Your First AI Model",
+      "description": "Use interactive tools to train your own classifier and experience the AI development process firsthand."
+    }
+  ],
+  "agenda": [
+    {
+      "time": "5:00 PM - 5:25 PM",
+      "title": "Part 1: The Big Picture",
+      "duration": "25 minutes",
+      "description": "Opening hook with live AI demo, then dive into the brilliant 3Blue1Brown visual explanation of neural networks.",
+      "bulletPoints": [
+        "Live demo: What happens inside ChatGPT?",
+        "Video: \"But What is a Neural Network?\"",
+        "Key concept: Neurons are just \"things that hold numbers\""
+      ]
+    },
+    {
+      "time": "5:25 PM - 6:05 PM",
+      "title": "Part 2: Interactive Exploration",
+      "duration": "40 minutes",
+      "description": "Hands-on learning with TensorFlow Playground and the stunning LLM Visualization tool.",
+      "bulletPoints": [
+        "TensorFlow Playground challenges (3 levels)",
+        "Explore: Why do deeper networks solve harder problems?",
+        "3D visualization of GPT-style transformers"
+      ]
+    },
+    {
+      "time": "6:05 PM - 6:40 PM",
+      "title": "Part 3: How LLMs Are Built",
+      "duration": "35 minutes",
+      "description": "The complete training pipeline from internet data to helpful assistant.",
+      "bulletPoints": [
+        "Pre-training: Learning from the internet",
+        "Tokenization: Breaking text into pieces",
+        "Post-training: Making it useful",
+        "Live coding demo in Google Colab"
+      ]
+    },
+    {
+      "time": "6:40 PM - 6:50 PM",
+      "title": "☕ Break",
+      "duration": "10 minutes",
+      "description": "Stretch, grab a coffee, check your messages. Let the concepts settle.",
+      "isBreak": true
+    },
+    {
+      "time": "6:50 PM - 7:20 PM",
+      "title": "Part 4: Business Applications & Limitations",
+      "duration": "30 minutes",
+      "description": "Where AI creates value — and where it fails spectacularly.",
+      "bulletPoints": [
+        "Customer segmentation & recommendations",
+        "Fraud detection & demand forecasting",
+        "\"Jagged intelligence\": Finding where LLMs fail",
+        "Activity: 5 prompts that break AI"
+      ]
+    },
+    {
+      "time": "7:20 PM - 7:45 PM",
+      "title": "Part 5: Build Challenge",
+      "duration": "25 minutes",
+      "description": "Build your own image classifier with Google's Teachable Machine.",
+      "bulletPoints": [
+        "Teams of 2-3 students",
+        "Train a 3-class classifier in 10 minutes",
+        "Reflect: What made it work? What didn't?"
+      ]
+    },
+    {
+      "time": "7:45 PM - 7:55 PM",
+      "title": "Part 6: Wrap-Up & Preview",
+      "duration": "10 minutes",
+      "description": "Key takeaways, homework assignment, and what's coming next.",
+      "bulletPoints": [
+        "4 key insights to remember",
+        "Homework overview",
+        "Preview: Prompt Engineering & API calls"
+      ]
+    }
+  ],
+  "videos": [
+    {
+      "youtubeId": "aircAruvnKk",
+      "title": "3Blue1Brown: Neural Networks",
+      "description": "The most intuitive visual explanation of neural networks ever created."
+    }
+  ],
+  "resources": [
+    {
+      "title": "TensorFlow Playground",
+      "url": "https://playground.tensorflow.org",
+      "description": "Play with a real neural network in your browser. Adjust neurons, layers, and watch learning happen in real-time.",
+      "icon": "network",
+      "badge": "Interactive",
+      "badgeType": "interactive",
+      "linkText": "Explore now"
+    },
+    {
+      "title": "LLM Visualization",
+      "url": "https://bbycroft.net/llm",
+      "description": "Stunning 3D walkthrough of GPT architecture. See every layer, attention head, and matrix operation.",
+      "icon": "box",
+      "badge": "Interactive",
+      "badgeType": "interactive",
+      "linkText": "Explore now"
+    },
+    {
+      "title": "Teachable Machine",
+      "url": "https://teachablemachine.withgoogle.com",
+      "description": "Train your own image, sound, or pose classifier with zero code. Export to use in your projects.",
+      "icon": "camera",
+      "badge": "Build Tool",
+      "badgeType": "tool",
+      "linkText": "Start building"
+    },
+    {
+      "title": "Karpathy: Deep Dive into LLMs",
+      "url": "https://www.youtube.com/watch?v=7xTGNNLPyMI",
+      "description": "3.5 hour masterclass from the former Tesla AI Director. The definitive explainer for how ChatGPT works.",
+      "icon": "play",
+      "badge": "Video",
+      "badgeType": "video",
+      "linkText": "Watch now"
+    },
+    {
+      "title": "OpenAI Tokenizer",
+      "url": "https://platform.openai.com/tokenizer",
+      "description": "See exactly how LLMs break text into tokens. Essential for understanding prompts and context limits.",
+      "icon": "type",
+      "badge": "Tool",
+      "badgeType": "tool",
+      "linkText": "Try it"
+    },
+    {
+      "title": "Google Colab",
+      "url": "https://colab.research.google.com",
+      "description": "Free cloud Python notebooks with GPU access. Write and run code without installing anything.",
+      "icon": "code",
+      "badge": "Code",
+      "badgeType": "code",
+      "linkText": "Open Colab"
+    }
+  ],
+  "activities": [
+    {
+      "number": 1,
+      "icon": "zap",
+      "title": "TensorFlow Playground Challenge",
+      "description": "Navigate to <strong>playground.tensorflow.org</strong> and complete these three challenges:",
+      "steps": [
+        {
+          "title": "Warm-up: Circle Dataset",
+          "description": "Classify the circular data with just 1 hidden layer. How many neurons do you need?"
+        },
+        {
+          "title": "Challenge: XOR Problem",
+          "description": "Why does 1 layer fail on XOR? Add layers until it works. What's the minimum architecture?"
+        },
+        {
+          "title": "Competition: Spiral Dataset",
+          "description": "Race to get the lowest test loss! Screenshot your best result and architecture."
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "icon": "search",
+      "title": "Breaking the AI: Jagged Intelligence",
+      "description": "Test these prompts on ChatGPT, Claude, or Gemini. Document where they fail:",
+      "steps": [],
+      "codeBlock": {
+        "language": "Test Prompts",
+        "code": "1. \"How many r's are in the word 'strawberry'?\"\n\n2. \"What is 47 × 38?\" (Don't let it use tools)\n\n3. \"Spell 'encyclopedia' backwards\"\n\n4. \"Count the number of words in: 'The quick brown fox jumps over the lazy dog'\"\n\n5. \"Who won the Super Bowl in February 2026?\""
+      },
+      "discussionNote": "<strong>Discussion:</strong> Why do these fail? What does this tell us about how LLMs \"think\"?"
+    },
+    {
+      "number": 3,
+      "icon": "camera",
+      "title": "Build Your Own Classifier",
+      "description": "Use <strong>Teachable Machine</strong> to train a custom image classifier in 10 minutes:",
+      "steps": [
+        {
+          "title": "Choose 3 Objects",
+          "description": "Phone, notebook, pen — or anything around you. You need distinct categories."
+        },
+        {
+          "title": "Collect Training Data",
+          "description": "Record ~30 samples per class using your webcam. Vary angles and lighting."
+        },
+        {
+          "title": "Train & Test",
+          "description": "Click \"Train Model\" and test with new images. What's your accuracy?"
+        },
+        {
+          "title": "Reflect",
+          "description": "What made classification easy or hard? How would this apply to a business problem?"
+        }
+      ]
+    }
+  ],
+  "takeaways": [
+    {
+      "icon": "brain",
+      "text": "<strong>Neural networks are mathematical functions</strong> that learn patterns from data through layers of simple operations."
+    },
+    {
+      "icon": "message-square",
+      "text": "<strong>LLMs predict the next token</strong> — they don't \"know\" things, they simulate plausible text based on patterns."
+    },
+    {
+      "icon": "trending-up",
+      "text": "<strong>Business value = pattern recognition</strong> — recommendations, fraud detection, forecasting all use these same principles."
+    },
+    {
+      "icon": "shield-alert",
+      "text": "<strong>AI augments, not replaces</strong> — human oversight remains essential for verification and judgment."
+    }
+  ],
+  "homework": [
+    {
+      "label": "Watch:",
+      "text": "Karpathy's \"Deep Dive into LLMs\" — at minimum, watch 0:00-45:00 (pretraining) and 1:30:00-2:00:00 (hallucinations & psychology)"
+    },
+    {
+      "label": "Practice:",
+      "text": "Get your best score on TensorFlow Playground's spiral dataset. Screenshot your architecture and loss value."
+    },
+    {
+      "label": "Think:",
+      "text": "Identify one business problem in your area of interest that could benefit from pattern recognition AI. Be ready to share."
+    }
+  ],
+  "nextSession": {
+    "title": "Session 3: Prompt Engineering & API Calls",
+    "description": "Learn the art and science of getting AI to do exactly what you want. We'll write our first API calls and build a simple AI-powered application.",
+    "tags": ["Prompt Design", "API Integration", "Build Your First App"],
+    "slug": "session-03"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "number": 10,
+  "slug": "session-10",
+  "title": "AI Strategy for Business",
+  "subtitle": "Building an AI roadmap — from opportunity identification to implementation",
+  "duration": "150 Minutes",
+  "icon": "target",
+  "tags": ["Strategy", "Roadmapping", "ROI"],
+  "objectives": [
+    { "title": "Develop an AI Strategy", "description": "Create a comprehensive AI adoption plan for a real business scenario." },
+    { "title": "Calculate AI ROI", "description": "Learn frameworks for evaluating the business impact of AI investments." }
+  ],
+  "nextSession": { "title": "Session 11: Advanced AI Applications", "description": "Generative AI, multimodal models, and cutting-edge applications.", "tags": ["Generative AI", "Multimodal", "Cutting Edge"], "slug": "session-11" }
+}

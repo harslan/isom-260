@@ -1,0 +1,14 @@
+{
+  "number": 8,
+  "slug": "session-08",
+  "title": "AI Agents & Automation",
+  "subtitle": "Building autonomous AI agents that can reason, plan, and execute complex tasks",
+  "duration": "150 Minutes",
+  "icon": "bot",
+  "tags": ["AI Agents", "Automation", "Workflows"],
+  "objectives": [
+    { "title": "Understand AI Agents", "description": "Learn the architecture behind autonomous agents that can use tools and make decisions." },
+    { "title": "Build an AI Workflow", "description": "Create an automated pipeline that combines multiple AI capabilities." }
+  ],
+  "nextSession": { "title": "Session 9: Ethics & Responsible AI", "description": "Bias, fairness, privacy, and the responsible deployment of AI systems.", "tags": ["Ethics", "Bias", "Responsible AI"], "slug": "session-09" }
+}

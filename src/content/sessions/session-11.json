@@ -1,0 +1,14 @@
+{
+  "number": 11,
+  "slug": "session-11",
+  "title": "Advanced AI Applications",
+  "subtitle": "Generative AI, multimodal models, and cutting-edge applications",
+  "duration": "150 Minutes",
+  "icon": "sparkles",
+  "tags": ["Generative AI", "Multimodal", "Cutting Edge"],
+  "objectives": [
+    { "title": "Explore Generative AI", "description": "Understand image generation, video synthesis, and creative AI applications." },
+    { "title": "Work with Multimodal Models", "description": "Build applications that combine text, image, and audio understanding." }
+  ],
+  "nextSession": { "title": "Session 12: Final Project Workshop", "description": "Hands-on workshop to build and refine your final AI project.", "tags": ["Workshop", "Project", "Building"], "slug": "session-12" }
+}

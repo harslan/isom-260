@@ -1,0 +1,14 @@
+{
+  "number": 9,
+  "slug": "session-09",
+  "title": "Ethics & Responsible AI",
+  "subtitle": "Bias, fairness, privacy, and the responsible deployment of AI systems",
+  "duration": "150 Minutes",
+  "icon": "shield",
+  "tags": ["Ethics", "Bias", "Responsible AI"],
+  "objectives": [
+    { "title": "Identify AI Bias", "description": "Recognize sources of bias in data, models, and deployment contexts." },
+    { "title": "Apply Ethical Frameworks", "description": "Use structured approaches to evaluate and mitigate AI risks in business." }
+  ],
+  "nextSession": { "title": "Session 10: AI Strategy for Business", "description": "Building an AI roadmap — from opportunity identification to implementation.", "tags": ["Strategy", "Roadmapping", "ROI"], "slug": "session-10" }
+}

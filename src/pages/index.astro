@@ -1,0 +1,46 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import CourseHighlights from '../components/CourseHighlights.astro';
+import InstructorSection from '../components/InstructorSection.astro';
+import SessionCard from '../components/SessionCard.astro';
+import SessionGrid from '../components/SessionGrid.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import { getCollection } from 'astro:content';
+import { course } from '../data/course';
+
+const sessions = await getCollection('sessions');
+const sorted = sessions.sort((a, b) => a.data.number - b.data.number);
+---
+
+<BaseLayout title="ISOM 260 | AI for Business — Suffolk University">
+  <Hero />
+
+  <CourseHighlights />
+
+  <section class="py-24 px-8 max-w-[1200px] mx-auto">
+    <SectionHeader number="01" label="Course Sessions" title="13-Week Journey" description="From AI fundamentals to building production applications." />
+    <SessionGrid>
+      {sorted.map((session) => (
+        <div class="fade-in">
+          <SessionCard
+            number={session.data.number}
+            slug={session.data.slug}
+            title={session.data.title}
+            subtitle={session.data.subtitle}
+            icon={session.data.icon}
+            tags={session.data.tags}
+          />
+        </div>
+      ))}
+    </SessionGrid>
+  </section>
+
+  <InstructorSection
+    name={course.instructor.name}
+    title={course.instructor.title}
+    email={course.instructor.email}
+    bio={course.instructor.bio}
+    github={course.instructor.github}
+  />
+</BaseLayout>

@@ -1,0 +1,14 @@
+{
+  "number": 3,
+  "slug": "session-03",
+  "title": "Prompt Engineering & API Calls",
+  "subtitle": "The art and science of getting AI to do exactly what you want",
+  "duration": "150 Minutes",
+  "icon": "terminal",
+  "tags": ["Prompt Design", "API Integration", "Build Your First App"],
+  "objectives": [
+    { "title": "Master Prompt Techniques", "description": "Learn zero-shot, few-shot, chain-of-thought, and system prompt design patterns." },
+    { "title": "Make Your First API Call", "description": "Connect to OpenAI's API and build a working AI-powered application." }
+  ],
+  "nextSession": { "title": "Session 4: Building AI Products", "description": "From prototype to product — learn to build AI applications users love.", "tags": ["Product Design", "User Experience", "Prototyping"], "slug": "session-04" }
+}

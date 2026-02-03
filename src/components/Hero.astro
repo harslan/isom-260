@@ -1,0 +1,25 @@
+---
+import ScrollIndicator from './ScrollIndicator.astro';
+import GradientText from './GradientText.astro';
+---
+
+<section class="min-h-screen flex flex-col justify-center items-center text-center px-8 pt-24 pb-16 relative">
+  <div class="font-mono text-[0.75rem] text-accent-cyan tracking-[4px] uppercase mb-6 px-6 py-2 border border-accent-cyan rounded-full animate-[fadeInUp_0.8s_ease_0.2s_both]">
+    Suffolk University &bull; Sawyer Business School
+  </div>
+  <h1 class="text-[clamp(2.5rem,8vw,5rem)] font-extrabold leading-[1.1] mb-6 animate-[fadeInUp_0.8s_ease_0.4s_both]">
+    ISOM 260: <GradientText>AI for Business</GradientText>
+  </h1>
+  <p class="text-[clamp(1.1rem,2.5vw,1.4rem)] text-text-secondary max-w-[700px] mb-10 animate-[fadeInUp_0.8s_ease_0.6s_both]">
+    Master the technologies reshaping every industry. From neural networks to production AI systems — learn by building.
+  </p>
+  <div class="flex gap-4 flex-wrap justify-center animate-[fadeInUp_0.8s_ease_0.8s_both]">
+    <a href="/sessions" class="px-8 py-4 bg-gradient-to-r from-accent-cyan to-accent-purple rounded-full text-bg-primary font-semibold no-underline transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_10px_40px_rgba(0,212,255,0.3)]">
+      View Sessions
+    </a>
+    <a href="/syllabus" class="px-8 py-4 border border-border-subtle rounded-full text-text-primary no-underline transition-all duration-300 hover:border-accent-cyan hover:text-accent-cyan">
+      Course Syllabus
+    </a>
+  </div>
+  <ScrollIndicator />
+</section>

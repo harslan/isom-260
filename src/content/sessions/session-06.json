@@ -1,0 +1,14 @@
+{
+  "number": 6,
+  "slug": "session-06",
+  "title": "Computer Vision",
+  "subtitle": "How machines see the world — image recognition, object detection, and business applications",
+  "duration": "150 Minutes",
+  "icon": "eye",
+  "tags": ["Image Recognition", "Object Detection", "Applications"],
+  "objectives": [
+    { "title": "Understand Computer Vision", "description": "Learn how CNNs and modern vision models process and understand images." },
+    { "title": "Build a Vision Application", "description": "Create an image classification or object detection application." }
+  ],
+  "nextSession": { "title": "Session 7: Natural Language Processing", "description": "Text analysis, sentiment detection, and building NLP-powered tools.", "tags": ["Text Analysis", "Sentiment", "NLP Tools"], "slug": "session-07" }
+}

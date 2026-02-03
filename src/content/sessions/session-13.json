@@ -1,0 +1,13 @@
+{
+  "number": 13,
+  "slug": "session-13",
+  "title": "Final Presentations & Course Wrap-Up",
+  "subtitle": "Present your AI projects and celebrate what you've built",
+  "duration": "150 Minutes",
+  "icon": "award",
+  "tags": ["Presentations", "Demo Day", "Celebration"],
+  "objectives": [
+    { "title": "Present Your Project", "description": "Deliver a compelling presentation of your AI-powered business solution." },
+    { "title": "Reflect & Plan Forward", "description": "Look back on what you've learned and plan how to continue your AI journey." }
+  ]
+}

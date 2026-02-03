@@ -1,0 +1,29 @@
+{
+  "number": 1,
+  "slug": "session-01",
+  "title": "Welcome to the AI Revolution",
+  "subtitle": "Course overview, expectations, and the landscape of AI in business today",
+  "duration": "150 Minutes",
+  "icon": "rocket",
+  "tags": ["Introduction", "AI Landscape", "Course Overview"],
+  "objectives": [
+    {
+      "title": "Understand Course Structure",
+      "description": "Learn how the course is organized, what tools we'll use, and what you'll build."
+    },
+    {
+      "title": "Map the AI Landscape",
+      "description": "Get a bird's-eye view of AI technologies and their business applications."
+    },
+    {
+      "title": "Set Up Your Toolkit",
+      "description": "Create accounts and configure the tools we'll use throughout the semester."
+    }
+  ],
+  "nextSession": {
+    "title": "Session 2: How AI Actually Works",
+    "description": "Dive deep into neural networks and large language models. Build your first AI model.",
+    "tags": ["Neural Networks", "LLMs", "Hands-On"],
+    "slug": "session-02"
+  }
+}

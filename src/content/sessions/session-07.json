@@ -1,0 +1,14 @@
+{
+  "number": 7,
+  "slug": "session-07",
+  "title": "Natural Language Processing",
+  "subtitle": "Text analysis, sentiment detection, and building NLP-powered tools",
+  "duration": "150 Minutes",
+  "icon": "message-circle",
+  "tags": ["Text Analysis", "Sentiment", "NLP Tools"],
+  "objectives": [
+    { "title": "Master NLP Fundamentals", "description": "Understand tokenization, embeddings, and how machines process human language." },
+    { "title": "Build NLP Applications", "description": "Create text classification, sentiment analysis, and summarization tools." }
+  ],
+  "nextSession": { "title": "Session 8: AI Agents & Automation", "description": "Building autonomous AI agents that can reason, plan, and execute complex tasks.", "tags": ["AI Agents", "Automation", "Workflows"], "slug": "session-08" }
+}

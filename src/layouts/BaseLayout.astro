@@ -1,0 +1,83 @@
+---
+import '../assets/styles/global.css';
+import BaseHead from '../components/BaseHead.astro';
+import Navbar from '../components/Navbar.astro';
+import MobileMenu from '../components/MobileMenu.astro';
+import SearchDialog from '../components/SearchDialog.astro';
+import Footer from '../components/Footer.astro';
+import NeuralBackground from '../components/NeuralBackground.astro';
+import { getCollection } from 'astro:content';
+
+interface Props {
+  title: string;
+  description?: string;
+  navBrand?: string;
+}
+
+const { title, description, navBrand } = Astro.props;
+
+const siteLinks = [
+  { label: 'Home', href: '/' },
+  { label: 'Sessions', href: '/sessions' },
+  { label: 'Syllabus', href: '/syllabus' },
+  { label: 'Resources', href: '/resources' },
+];
+
+// Build search index
+const sessions = await getCollection('sessions');
+const sorted = sessions.sort((a, b) => a.data.number - b.data.number);
+
+const searchIndex: { type: string; title: string; subtitle?: string; url: string; tags?: string[]; sessionTitle?: string }[] = [];
+
+for (const session of sorted) {
+  const d = session.data;
+  const url = `/sessions/${d.slug}`;
+  const numStr = String(d.number).padStart(2, '0');
+  const sessionLabel = `Session ${numStr}`;
+
+  searchIndex.push({
+    type: 'session',
+    title: `${sessionLabel}: ${d.title}`,
+    subtitle: d.subtitle,
+    url,
+    tags: d.tags,
+  });
+
+  for (const obj of d.objectives || []) {
+    searchIndex.push({
+      type: 'objective',
+      title: obj.title,
+      subtitle: obj.description,
+      url: `${url}#objectives`,
+      sessionTitle: sessionLabel,
+    });
+  }
+
+  for (const res of d.resources || []) {
+    searchIndex.push({
+      type: 'resource',
+      title: res.title,
+      subtitle: res.description,
+      url: res.url,
+      sessionTitle: sessionLabel,
+    });
+  }
+}
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <BaseHead title={title} description={description} />
+</head>
+<body>
+  <NeuralBackground />
+  <Navbar brand={navBrand} links={siteLinks} />
+  <MobileMenu links={siteLinks} />
+  <SearchDialog searchIndex={searchIndex} />
+  <main class="pt-[72px]">
+    <slot />
+  </main>
+  <Footer />
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "number": 4,
+  "slug": "session-04",
+  "title": "Building AI Products",
+  "subtitle": "From prototype to product — learn to build AI applications users love",
+  "duration": "150 Minutes",
+  "icon": "layout",
+  "tags": ["Product Design", "User Experience", "Prototyping"],
+  "objectives": [
+    { "title": "Design AI-Powered Products", "description": "Learn frameworks for designing products that leverage AI capabilities effectively." },
+    { "title": "Build a Working Prototype", "description": "Create an AI-powered application prototype using no-code and low-code tools." }
+  ],
+  "nextSession": { "title": "Session 5: Data & Analytics", "description": "Understanding data pipelines, analytics, and how data drives AI systems.", "tags": ["Data Pipelines", "Analytics", "Visualization"], "slug": "session-05" }
+}

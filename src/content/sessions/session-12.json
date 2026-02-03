@@ -1,0 +1,14 @@
+{
+  "number": 12,
+  "slug": "session-12",
+  "title": "Final Project Workshop",
+  "subtitle": "Hands-on workshop to build and refine your final AI project",
+  "duration": "150 Minutes",
+  "icon": "wrench",
+  "tags": ["Workshop", "Project", "Building"],
+  "objectives": [
+    { "title": "Build Your Final Project", "description": "Dedicated time to develop your AI-powered business solution with instructor support." },
+    { "title": "Refine Your Pitch", "description": "Prepare your presentation and demo for the final session." }
+  ],
+  "nextSession": { "title": "Session 13: Final Presentations", "description": "Present your AI projects and celebrate what you've built.", "tags": ["Presentations", "Demo Day", "Celebration"], "slug": "session-13" }
+}

@@ -1,0 +1,14 @@
+{
+  "number": 5,
+  "slug": "session-05",
+  "title": "Data & Analytics for AI",
+  "subtitle": "Understanding data pipelines, analytics, and how data drives AI systems",
+  "duration": "150 Minutes",
+  "icon": "database",
+  "tags": ["Data Pipelines", "Analytics", "Visualization"],
+  "objectives": [
+    { "title": "Understand Data Pipelines", "description": "Learn how data flows from collection to AI model training and inference." },
+    { "title": "Analyze Real Datasets", "description": "Work with business datasets to extract insights and prepare data for AI." }
+  ],
+  "nextSession": { "title": "Session 6: Computer Vision", "description": "How machines see the world — image recognition, object detection, and business applications.", "tags": ["Image Recognition", "Object Detection", "Applications"], "slug": "session-06" }
+}
