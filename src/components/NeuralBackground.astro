@@ -10,58 +10,91 @@
     const canvas = document.getElementById('neuralCanvas');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
+    let animId = null;
+    let lastTime = 0;
+    const FPS = 30;
+    const frameInterval = 1000 / FPS;
 
     function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      canvas.style.width = w + 'px';
+      canvas.style.height = h + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
     const nodes = [];
     const numNodes = 50;
+    const w = window.innerWidth;
+    const h = window.innerHeight;
 
     for (let i = 0; i < numNodes; i++) {
       nodes.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
+        x: Math.random() * w,
+        y: Math.random() * h,
         vx: (Math.random() - 0.5) * 0.5,
         vy: (Math.random() - 0.5) * 0.5,
         radius: Math.random() * 2 + 1
       });
     }
 
-    function animate() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    function animate(timestamp) {
+      animId = requestAnimationFrame(animate);
 
-      nodes.forEach(node => {
+      if (timestamp - lastTime < frameInterval) return;
+      lastTime = timestamp;
+
+      const cw = window.innerWidth;
+      const ch = window.innerHeight;
+
+      ctx.clearRect(0, 0, cw, ch);
+
+      for (let i = 0; i < nodes.length; i++) {
+        const node = nodes[i];
         node.x += node.vx;
         node.y += node.vy;
-        if (node.x < 0 || node.x > canvas.width) node.vx *= -1;
-        if (node.y < 0 || node.y > canvas.height) node.vy *= -1;
+        if (node.x < 0 || node.x > cw) node.vx *= -1;
+        if (node.y < 0 || node.y > ch) node.vy *= -1;
 
         ctx.beginPath();
         ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
         ctx.fillStyle = 'rgba(0, 212, 255, 0.6)';
         ctx.fill();
-      });
+      }
 
-      nodes.forEach((node, i) => {
-        nodes.slice(i + 1).forEach(other => {
-          const dist = Math.hypot(node.x - other.x, node.y - other.y);
-          if (dist < 150) {
+      for (let i = 0; i < nodes.length; i++) {
+        const a = nodes[i];
+        for (let j = i + 1; j < nodes.length; j++) {
+          const b = nodes[j];
+          const dx = a.x - b.x;
+          const dy = a.y - b.y;
+          const distSq = dx * dx + dy * dy;
+          if (distSq < 22500) {
+            const dist = Math.sqrt(distSq);
             ctx.beginPath();
-            ctx.moveTo(node.x, node.y);
-            ctx.lineTo(other.x, other.y);
-            ctx.strokeStyle = `rgba(136, 85, 255, ${0.2 * (1 - dist / 150)})`;
+            ctx.moveTo(a.x, a.y);
+            ctx.lineTo(b.x, b.y);
+            ctx.strokeStyle = 'rgba(136, 85, 255, ' + (0.2 * (1 - dist / 150)) + ')';
             ctx.lineWidth = 0.5;
             ctx.stroke();
           }
-        });
-      });
-
-      requestAnimationFrame(animate);
+        }
+      }
     }
-    animate();
+
+    animId = requestAnimationFrame(animate);
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        if (animId) { cancelAnimationFrame(animId); animId = null; }
+      } else {
+        if (!animId) { lastTime = 0; animId = requestAnimationFrame(animate); }
+      }
+    });
   })();
 </script>
