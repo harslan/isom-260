@@ -16,7 +16,14 @@
       "Bash(git -C /Users/barut/projects/isom-260 remote add origin https://github.com/harslan/isom-260.git)",
       "Bash(git -C /Users/barut/projects/isom-260 status)",
       "Bash(git -C /Users/barut/projects/isom-260 diff --cached)",
-      "Bash(git -C /Users/barut/projects/isom-260 add .gitignore README.md astro.config.mjs package-lock.json package.json public/ src/ tsconfig.json vercel.json .claude/)"
+      "Bash(git -C /Users/barut/projects/isom-260 add .gitignore README.md astro.config.mjs package-lock.json package.json public/ src/ tsconfig.json vercel.json .claude/)",
+      "Bash(git -C /Users/barut/projects/isom-260 log --oneline -5)",
+      "Bash(echo:*)",
+      "Bash(git commit:*)",
+      "Bash(git -C /Users/barut/projects/isom-260 push -u origin master)",
+      "Bash(vercel:*)",
+      "Bash(git add:*)",
+      "Bash(git push)"
     ]
   }
 }
