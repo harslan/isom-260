@@ -1,14 +1,300 @@
 {
   "number": 3,
   "slug": "session-03",
-  "title": "Prompt Engineering & API Calls",
-  "subtitle": "The art and science of getting AI to do exactly what you want",
+  "title": "The Art of Prompt Engineering",
+  "subtitle": "Master the craft of communicating with AI — from techniques to API calls",
+  "heroTitle": "The Art of <span class=\"bg-gradient-to-br from-accent-cyan to-accent-purple bg-clip-text text-transparent\">Prompt Engineering</span>",
   "duration": "150 Minutes",
-  "icon": "terminal",
-  "tags": ["Prompt Design", "API Integration", "Build Your First App"],
+  "icon": "pen-tool",
+  "tags": ["Prompt Design", "CRAFT Framework", "API Integration", "Build Your First App"],
   "objectives": [
-    { "title": "Master Prompt Techniques", "description": "Learn zero-shot, few-shot, chain-of-thought, and system prompt design patterns." },
-    { "title": "Make Your First API Call", "description": "Connect to OpenAI's API and build a working AI-powered application." }
+    {
+      "title": "Master Prompt Engineering Fundamentals",
+      "description": "Learn core techniques: zero-shot, few-shot, chain-of-thought, role prompting, and structured outputs."
+    },
+    {
+      "title": "Apply the CRAFT Framework",
+      "description": "Use Context, Role, Action, Format, and Tone to write prompts that get consistent, high-quality results."
+    },
+    {
+      "title": "Make Your First API Call",
+      "description": "Understand how APIs work and connect to Claude programmatically using Python."
+    },
+    {
+      "title": "Build Something Real",
+      "description": "Create a working AI-powered application — email analyzer, meeting summarizer, or product description generator."
+    }
   ],
-  "nextSession": { "title": "Session 4: Building AI Products", "description": "From prototype to product — learn to build AI applications users love.", "tags": ["Product Design", "User Experience", "Prototyping"], "slug": "session-04" }
+  "agenda": [
+    {
+      "time": "5:00 PM - 5:25 PM",
+      "title": "Part 1: Prompt Engineering Fundamentals",
+      "duration": "25 minutes",
+      "description": "Why prompt clarity matters. Transform vague requests into precise instructions.",
+      "bulletPoints": [
+        "Live demo: Weak vs strong prompts — same task, dramatically different results",
+        "The 6 core techniques: zero-shot, few-shot, chain-of-thought, role, structured output, chaining",
+        "Why explicit beats implicit every time"
+      ]
+    },
+    {
+      "time": "5:25 PM - 5:45 PM",
+      "title": "Part 2: The CRAFT Framework",
+      "duration": "20 minutes",
+      "description": "A memorable system for writing effective prompts every time.",
+      "bulletPoints": [
+        "C = Context: Background and situation",
+        "R = Role: Who the AI should be",
+        "A = Action: What to do",
+        "F = Format: How to structure output",
+        "T = Tone: Voice and style",
+        "Live transformation of real prompts using CRAFT"
+      ]
+    },
+    {
+      "time": "5:45 PM - 6:10 PM",
+      "title": "Part 3: Prompt Reflection Lab",
+      "duration": "25 minutes",
+      "description": "Analyze your own AI conversations and discover your prompting patterns.",
+      "bulletPoints": [
+        "Paste your real AI conversation logs into the AI Collaboration Analyzer",
+        "Get scored across 6 dimensions: Clarity, Context, Structure, Iteration, Critical Thinking, Efficiency",
+        "Discover your AI Collaboration Level: Novice, Developing, Skilled, or Master",
+        "Partner discussion: What surprised you? What will you change?"
+      ]
+    },
+    {
+      "time": "6:10 PM - 6:20 PM",
+      "title": "Break",
+      "duration": "10 minutes",
+      "description": "Stretch, grab coffee, let the concepts settle.",
+      "isBreak": true
+    },
+    {
+      "time": "6:20 PM - 6:45 PM",
+      "title": "Part 4: API Integration",
+      "duration": "25 minutes",
+      "description": "From chat interface to code — how to build AI into real applications.",
+      "bulletPoints": [
+        "What is an API? (Software talking to software)",
+        "Anatomy of an API call: model, messages, tokens, temperature, system prompts",
+        "Live demo: Your first API call to Claude",
+        "Understanding costs: tokens, pricing, and ROI thinking"
+      ]
+    },
+    {
+      "time": "6:45 PM - 7:15 PM",
+      "title": "Part 5: Build Your Application",
+      "duration": "30 minutes",
+      "description": "Hands-on Google Colab workshop — build a real AI-powered tool.",
+      "bulletPoints": [
+        "Open the pre-built Colab notebook",
+        "Choose your project: Email Tone Analyzer, Meeting Summarizer, or Product Description Generator",
+        "Apply the CRAFT framework programmatically",
+        "Test, iterate, and refine your prompts"
+      ]
+    },
+    {
+      "time": "7:15 PM - 7:35 PM",
+      "title": "Part 6: Prompt Battle Royale",
+      "duration": "20 minutes",
+      "description": "Competition time! Who can craft the best prompt for a given task?",
+      "bulletPoints": [
+        "Challenge: Write a prompt that generates a compelling LinkedIn post",
+        "Judging criteria: Prompt structure, output quality, creativity",
+        "Winner gets bragging rights (and maybe extra credit)"
+      ]
+    },
+    {
+      "time": "7:35 PM - 7:50 PM",
+      "title": "Part 7: Wrap-Up & Preview",
+      "duration": "15 minutes",
+      "description": "Key takeaways, homework, and what's coming next.",
+      "bulletPoints": [
+        "4 key insights to remember",
+        "Download the Prompt Engineering Cheat Sheet",
+        "Homework overview",
+        "Preview: AI Agents & Workflows in Session 4"
+      ]
+    }
+  ],
+  "resources": [
+    {
+      "title": "Prompt Engineering Cheat Sheet",
+      "url": "/session-03/prompt-engineering-cheatsheet.html",
+      "description": "Print-ready one-page reference with CRAFT framework, techniques, Quick Wins, and API basics. Keep it next to your computer!",
+      "icon": "file-text",
+      "badge": "Download",
+      "badgeType": "tool",
+      "linkText": "Open cheat sheet"
+    },
+    {
+      "title": "Colab Workshop Notebook",
+      "url": "/session-03/ISOM260_Session3_API_Workshop.ipynb",
+      "description": "Hands-on notebook for building your first AI application. Includes Email Analyzer, Meeting Summarizer, and Product Description Generator.",
+      "icon": "code",
+      "badge": "Hands-On",
+      "badgeType": "interactive",
+      "linkText": "Download notebook"
+    },
+    {
+      "title": "Anthropic Documentation",
+      "url": "https://docs.anthropic.com",
+      "description": "Official documentation for Claude API. The source of truth for building with Claude.",
+      "icon": "book-open",
+      "badge": "Docs",
+      "badgeType": "code",
+      "linkText": "Read docs"
+    },
+    {
+      "title": "API Console",
+      "url": "https://console.anthropic.com",
+      "description": "Get your API key, monitor usage, and manage billing for Claude API access.",
+      "icon": "key",
+      "badge": "Tool",
+      "badgeType": "tool",
+      "linkText": "Get API key"
+    },
+    {
+      "title": "Prompting Guide",
+      "url": "https://www.promptingguide.ai/",
+      "description": "Comprehensive resource covering all prompt engineering techniques with examples and research.",
+      "icon": "graduation-cap",
+      "badge": "Guide",
+      "badgeType": "video",
+      "linkText": "Learn more"
+    },
+    {
+      "title": "Anthropic Cookbook",
+      "url": "https://github.com/anthropics/anthropic-cookbook",
+      "description": "Code examples and recipes for common Claude use cases. Perfect for reference.",
+      "icon": "git-branch",
+      "badge": "Code",
+      "badgeType": "code",
+      "linkText": "View examples"
+    }
+  ],
+  "activities": [
+    {
+      "number": 1,
+      "icon": "microscope",
+      "title": "Prompt Reflection Lab",
+      "description": "Paste your real AI conversation logs into the <strong>AI Collaboration Analyzer</strong> and discover your prompting patterns:",
+      "steps": [
+        {
+          "title": "Grab 2-3 real AI conversations",
+          "description": "From claude.ai, ChatGPT, or any LLM. Copy the full chat (your prompts + AI responses)."
+        },
+        {
+          "title": "Use the Analyzer Prompt",
+          "description": "Copy the AI Collaboration Analyzer prompt (in class materials) into a new chat session and paste your logs."
+        },
+        {
+          "title": "Get your AI Collaboration Level",
+          "description": "Receive scores across 6 dimensions and your level: Novice, Developing, Skilled, or Master."
+        },
+        {
+          "title": "Reflect with a partner",
+          "description": "Discuss: What surprised you? What's your biggest strength? What will you change?"
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "icon": "pen-tool",
+      "title": "Prompt Transformation Challenge",
+      "description": "Take weak prompts and transform them using the <strong>CRAFT framework</strong>:",
+      "steps": [
+        {
+          "title": "Start with a weak prompt",
+          "description": "\"Help me with a presentation\" or \"Write me an email\""
+        },
+        {
+          "title": "Apply CRAFT",
+          "description": "Add Context, Role, Action, Format, and Tone systematically."
+        },
+        {
+          "title": "Compare outputs",
+          "description": "Run both prompts and see the dramatic difference in quality."
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "icon": "rocket",
+      "title": "Build Your AI Application",
+      "description": "Use Google Colab to make real API calls and build a working AI-powered tool:",
+      "steps": [
+        {
+          "title": "Open the Colab notebook",
+          "description": "Pre-configured with everything you need to get started."
+        },
+        {
+          "title": "Add your API key",
+          "description": "Use class-provided credits or your own Anthropic API key."
+        },
+        {
+          "title": "Choose your app",
+          "description": "Email Tone Analyzer, Meeting Summarizer, Product Description Generator, or your own idea!"
+        },
+        {
+          "title": "Test & iterate",
+          "description": "Refine your prompts until the output is production-quality."
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "icon": "trophy",
+      "title": "Prompt Battle Royale",
+      "description": "Competition time! Given a task, who can craft the prompt that produces the best output?",
+      "steps": [],
+      "codeBlock": {
+        "language": "Challenge",
+        "code": "Write a prompt that generates a compelling LinkedIn post\nannouncing a new AI feature at your (fictional) company.\n\nRequirements:\n- Professional yet engaging tone\n- Under 200 words\n- Includes a call-to-action\n\nJudging: Clarity of prompt structure, quality of output,\ncreativity, and adherence to constraints."
+      }
+    }
+  ],
+  "takeaways": [
+    {
+      "icon": "message-square",
+      "text": "<strong>Clarity beats cleverness.</strong> Explicit instructions outperform vague requests every single time."
+    },
+    {
+      "icon": "layout-template",
+      "text": "<strong>CRAFT is your friend.</strong> Context, Role, Action, Format, Tone — a framework for consistent results."
+    },
+    {
+      "icon": "repeat",
+      "text": "<strong>Iterate, iterate, iterate.</strong> Great prompts are refined through experimentation, not written perfectly the first time."
+    },
+    {
+      "icon": "plug-zap",
+      "text": "<strong>APIs unlock applications.</strong> Move from chat to building real products with AI."
+    }
+  ],
+  "homework": [
+    {
+      "label": "Practice:",
+      "text": "Write 5 prompts using the CRAFT framework for real tasks in your life or work. Document the before/after quality difference."
+    },
+    {
+      "label": "Build:",
+      "text": "Complete the Colab notebook. Successfully make 3 different API calls with different prompts."
+    },
+    {
+      "label": "Read:",
+      "text": "Browse the Anthropic Cookbook on GitHub. Pick one example that interests you and understand how it works."
+    },
+    {
+      "label": "Think:",
+      "text": "Identify a real business process at a company you know that could be improved with AI. Draft a proposal outline."
+    }
+  ],
+  "nextSession": {
+    "title": "Session 4: Building AI Agents & Workflows",
+    "description": "Take your skills further: chain prompts together, give Claude access to tools, and build AI systems that take action in the real world.",
+    "tags": ["Multi-step Agents", "Tool Use", "RAG Introduction", "Real-World Projects"],
+    "slug": "session-04"
+  }
 }
