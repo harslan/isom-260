@@ -130,12 +130,12 @@
     },
     {
       "title": "Colab Workshop Notebook",
-      "url": "/session-03/ISOM260_Session3_API_Workshop.ipynb",
+      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-03/ISOM260_Session3_API_Workshop.ipynb",
       "description": "Hands-on notebook for building your first AI application. Includes Email Analyzer, Meeting Summarizer, and Product Description Generator.",
       "icon": "code",
       "badge": "Hands-On",
       "badgeType": "interactive",
-      "linkText": "Download notebook"
+      "linkText": "Open in Colab"
     },
     {
       "title": "Anthropic Documentation",
