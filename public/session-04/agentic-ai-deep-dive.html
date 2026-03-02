@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session 4 Bonus: The Rise of AI Agents — ISOM 260</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.min.js"></script>
+    <style>
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #0f1424;
+            --bg-card: #141929;
+            --bg-elevated: #1a2035;
+            --cyan: #00e5ff;
+            --cyan-dim: #00b8d4;
+            --cyan-glow: rgba(0, 229, 255, 0.15);
+            --cyan-glow-strong: rgba(0, 229, 255, 0.3);
+            --magenta: #ff006e;
+            --magenta-glow: rgba(255, 0, 110, 0.15);
+            --yellow: #ffd600;
+            --green: #00e676;
+            --orange: #ff9100;
+            --text-primary: #e8ecf4;
+            --text-secondary: #8892a8;
+            --text-dim: #5a6478;
+            --border: rgba(0, 229, 255, 0.1);
+            --border-strong: rgba(0, 229, 255, 0.25);
+            --grid-line: rgba(0, 229, 255, 0.04);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background:
+                linear-gradient(var(--grid-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .glow-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .glow-orb-1 { width: 500px; height: 500px; background: rgba(255, 0, 110, 0.06); top: 10%; right: -100px; }
+        .glow-orb-2 { width: 400px; height: 400px; background: rgba(0, 229, 255, 0.05); bottom: 20%; left: -100px; }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ====== HERO ====== */
+        .hero {
+            padding: 5rem 0 3rem;
+        }
+
+        .session-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--magenta-glow);
+            border: 1px solid rgba(255, 0, 110, 0.3);
+            border-radius: 100px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--magenta);
+            margin-bottom: 2rem;
+        }
+
+        .session-badge .dot {
+            width: 6px; height: 6px;
+            background: var(--magenta);
+            border-radius: 50%;
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(255,0,110,0.4); }
+            50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(255,0,110,0); }
+        }
+
+        .hero h1 {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero h1 .magenta { color: var(--magenta); }
+        .hero h1 .cyan {
+            background: linear-gradient(135deg, var(--cyan), var(--cyan-dim));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+        }
+
+        /* ====== SECTIONS ====== */
+        .section {
+            padding: 4rem 0;
+            border-top: 1px solid var(--border);
+        }
+
+        .section-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--magenta);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-label::before {
+            content: '';
+            width: 24px; height: 1px;
+            background: var(--magenta);
+        }
+
+        .section-title {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(1.6rem, 3vw, 2.2rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+        }
+
+        .section-desc {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            max-width: 700px;
+            margin-bottom: 2.5rem;
+        }
+
+        /* ====== EQUATION BLOCK ====== */
+        .equation-block {
+            background: linear-gradient(135deg, var(--magenta-glow), var(--cyan-glow));
+            border: 1px solid var(--border-strong);
+            border-radius: 16px;
+            padding: 2.5rem 3rem;
+            margin: 2rem 0 3rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .equation-block::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--magenta), var(--cyan));
+        }
+
+        .equation {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(1.3rem, 3vw, 2rem);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .eq-part {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            white-space: nowrap;
+        }
+
+        .eq-llm { background: rgba(0, 229, 255, 0.15); color: var(--cyan); border: 1px solid rgba(0, 229, 255, 0.3); }
+        .eq-tools { background: rgba(255, 0, 110, 0.15); color: var(--magenta); border: 1px solid rgba(255, 0, 110, 0.3); }
+        .eq-loop { background: rgba(255, 214, 0, 0.15); color: var(--yellow); border: 1px solid rgba(255, 214, 0, 0.3); }
+        .eq-memory { background: rgba(0, 230, 118, 0.15); color: var(--green); border: 1px solid rgba(0, 230, 118, 0.3); }
+        .eq-result { background: rgba(255, 145, 0, 0.15); color: var(--orange); border: 1px solid rgba(255, 145, 0, 0.3); }
+        .eq-plus { color: var(--text-dim); font-size: 1.5rem; }
+        .eq-equals { color: var(--text-dim); font-size: 1.5rem; }
+
+        /* ====== COMPARISON VISUAL ====== */
+        .compare-visual {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 1.5rem;
+            align-items: start;
+            margin: 2rem 0;
+        }
+
+        .compare-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+        }
+
+        .compare-card h3 {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .compare-card .subtitle {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .compare-card.chatbot .subtitle { color: var(--text-dim); }
+        .compare-card.agent .subtitle { color: var(--cyan); }
+
+        .compare-card.agent {
+            border-color: var(--border-strong);
+            box-shadow: 0 0 40px rgba(0, 229, 255, 0.05);
+        }
+
+        .chat-line {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+            font-size: 0.85rem;
+        }
+
+        .chat-role {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 600;
+            min-width: 50px;
+            text-transform: uppercase;
+            padding-top: 0.2rem;
+        }
+
+        .chat-role.user { color: var(--text-dim); }
+        .chat-role.ai { color: var(--cyan); }
+        .chat-role.tool { color: var(--magenta); }
+
+        .chat-msg {
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .chat-msg .highlight { color: var(--cyan); font-weight: 500; }
+        .chat-msg .tool-call {
+            display: inline-block;
+            padding: 0.1rem 0.4rem;
+            background: rgba(255, 0, 110, 0.1);
+            border: 1px solid rgba(255, 0, 110, 0.2);
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--magenta);
+        }
+
+        .vs-label {
+            font-family: 'Sora', sans-serif;
+            font-weight: 800;
+            font-size: 1.2rem;
+            color: var(--text-dim);
+            align-self: center;
+            opacity: 0.4;
+        }
+
+        /* ====== NANOCLAW CASE STUDY ====== */
+        .case-feature {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .case-feature:hover {
+            border-color: var(--border-strong);
+        }
+
+        .case-feature-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .case-feature-icon {
+            width: 44px; height: 44px;
+            background: var(--magenta-glow);
+            border: 1px solid rgba(255, 0, 110, 0.2);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+        }
+
+        .case-feature h4 {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 600;
+        }
+
+        .case-feature p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .stat-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .stat-mini {
+            text-align: center;
+            padding: 1.25rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+        }
+
+        .stat-mini .number {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-mini .label {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+        }
+
+        .stat-mini.cyan .number { color: var(--cyan); }
+        .stat-mini.magenta .number { color: var(--magenta); }
+        .stat-mini.green .number { color: var(--green); }
+        .stat-mini.yellow .number { color: var(--yellow); }
+
+        /* ====== AGENT LOOP VISUAL ====== */
+        .loop-visual {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .loop-step {
+            display: flex;
+            align-items: stretch;
+            gap: 1.5rem;
+        }
+
+        .loop-connector {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 50px;
+            min-width: 50px;
+        }
+
+        .loop-dot {
+            width: 50px; height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            border: 2px solid;
+            background: var(--bg-primary);
+            position: relative;
+            z-index: 1;
+        }
+
+        .loop-line {
+            width: 2px;
+            flex: 1;
+            min-height: 20px;
+        }
+
+        .loop-step:nth-child(1) .loop-dot { border-color: var(--cyan); }
+        .loop-step:nth-child(1) .loop-line { background: linear-gradient(var(--cyan), var(--magenta)); }
+        .loop-step:nth-child(2) .loop-dot { border-color: var(--magenta); }
+        .loop-step:nth-child(2) .loop-line { background: linear-gradient(var(--magenta), var(--yellow)); }
+        .loop-step:nth-child(3) .loop-dot { border-color: var(--yellow); }
+        .loop-step:nth-child(3) .loop-line { background: linear-gradient(var(--yellow), var(--green)); }
+        .loop-step:nth-child(4) .loop-dot { border-color: var(--green); }
+        .loop-step:nth-child(4) .loop-line { background: linear-gradient(var(--green), var(--orange)); }
+        .loop-step:nth-child(5) .loop-dot { border-color: var(--orange); }
+
+        .loop-body {
+            flex: 1;
+            padding: 1rem 0 2rem;
+        }
+
+        .loop-body h4 {
+            font-family: 'Sora', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .loop-body p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .loop-return {
+            margin-top: 1rem;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 214, 0, 0.08);
+            border: 1px dashed rgba(255, 214, 0, 0.25);
+            border-radius: 8px;
+            font-size: 0.8rem;
+            color: var(--yellow);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* ====== CTA ====== */
+        .cta-block {
+            background: linear-gradient(135deg, var(--bg-card), var(--bg-elevated));
+            border: 2px solid var(--magenta);
+            border-radius: 16px;
+            padding: 3rem;
+            margin: 2rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-block::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background:
+                linear-gradient(rgba(255,0,110,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,0,110,0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+            pointer-events: none;
+        }
+
+        .cta-block > * { position: relative; z-index: 1; }
+
+        .cta-block h3 {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+
+        .cta-block p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.5rem;
+            background: var(--magenta);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(255, 0, 110, 0.3);
+        }
+
+        .cta-btn i { width: 18px; height: 18px; }
+
+        /* ====== FOOTER ====== */
+        .footer {
+            padding: 3rem 0;
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .footer-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-dim);
+        }
+
+        .footer-text a { color: var(--cyan); text-decoration: none; }
+
+        @media (max-width: 768px) {
+            .container { padding: 0 1.25rem; }
+            .compare-visual { grid-template-columns: 1fr; }
+            .vs-label { display: none; }
+            .equation { flex-direction: column; gap: 0.5rem; }
+            .stat-row { grid-template-columns: 1fr 1fr; }
+        }
+
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="glow-orb glow-orb-1"></div>
+    <div class="glow-orb glow-orb-2"></div>
+
+    <div class="container">
+
+        <!-- ====== HERO ====== -->
+        <section class="hero">
+            <div class="session-badge">
+                <span class="dot"></span>
+                Session 04 — Bonus Deep-Dive
+            </div>
+            <h1>
+                From Products to<br>
+                <span class="magenta">AI Agents</span>
+            </h1>
+            <p>
+                You just learned to build AI products. Now meet the next evolution: AI that doesn't just answer questions — it <strong>takes actions in the world</strong>. This is the hottest trend in tech right now. Let's understand it.
+            </p>
+        </section>
+
+        <!-- ====== THE CONCEPT ====== -->
+        <section class="section fade-up">
+            <div class="section-label">The Core Idea</div>
+            <h2 class="section-title">What Makes an Agent Different?</h2>
+            <p class="section-desc">
+                A chatbot answers questions. An AI product wraps that in a good UX. But an <strong>agent</strong> can reason, use tools, and take action — all on its own.
+            </p>
+
+            <!-- Chatbot vs Agent visual -->
+            <div class="compare-visual fade-up">
+                <div class="compare-card chatbot">
+                    <h3>Chatbot</h3>
+                    <div class="subtitle">What you've used before</div>
+                    <div class="chat-line">
+                        <div class="chat-role user">You</div>
+                        <div class="chat-msg">What's our Q4 revenue?</div>
+                    </div>
+                    <div class="chat-line">
+                        <div class="chat-role ai">AI</div>
+                        <div class="chat-msg">I don't have access to your company's financial data. You'll need to check your accounting system.</div>
+                    </div>
+                    <div style="margin-top: 1rem; padding: 0.5rem 0.75rem; background: rgba(255,0,110,0.08); border-radius: 6px; font-size: 0.75rem; color: var(--magenta);">❌ Dead end. You have to go find the data yourself.</div>
+                </div>
+
+                <div class="vs-label">VS</div>
+
+                <div class="compare-card agent">
+                    <h3>AI Agent</h3>
+                    <div class="subtitle">What we're building now</div>
+                    <div class="chat-line">
+                        <div class="chat-role user">You</div>
+                        <div class="chat-msg">What's our Q4 revenue?</div>
+                    </div>
+                    <div class="chat-line">
+                        <div class="chat-role tool">🛠️</div>
+                        <div class="chat-msg"><span class="tool-call">query_database("revenue", "Q4")</span></div>
+                    </div>
+                    <div class="chat-line">
+                        <div class="chat-role tool">🛠️</div>
+                        <div class="chat-msg"><span class="tool-call">calculator("2.3M - 2.05M")</span></div>
+                    </div>
+                    <div class="chat-line">
+                        <div class="chat-role ai">AI</div>
+                        <div class="chat-msg">Q4 revenue was <span class="highlight">$2.3M</span>, up <span class="highlight">12% QoQ</span>, and <span class="highlight">3% above forecast</span>. Strongest growth was in the enterprise segment.</div>
+                    </div>
+                    <div style="margin-top: 1rem; padding: 0.5rem 0.75rem; background: rgba(0,229,255,0.08); border-radius: 6px; font-size: 0.75rem; color: var(--cyan);">✓ Queried real data. Did the math. Gave you the insight.</div>
+                </div>
+            </div>
+
+            <!-- The Equation -->
+            <div class="equation-block fade-up">
+                <div class="equation">
+                    <span class="eq-part eq-llm">🧠 LLM</span>
+                    <span class="eq-plus">+</span>
+                    <span class="eq-part eq-tools">🛠️ Tools</span>
+                    <span class="eq-plus">+</span>
+                    <span class="eq-part eq-loop">🔄 Reasoning Loop</span>
+                    <span class="eq-plus">+</span>
+                    <span class="eq-part eq-memory">💾 Memory</span>
+                    <span class="eq-equals">=</span>
+                    <span class="eq-part eq-result">🤖 AI Agent</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====== THE AGENT LOOP ====== -->
+        <section class="section fade-up">
+            <div class="section-label">How It Works</div>
+            <h2 class="section-title">The Agent Loop</h2>
+            <p class="section-desc">
+                Every AI agent — from NanoClaw to Claude Code to enterprise systems — follows this exact same pattern. It's elegantly simple.
+            </p>
+
+            <div class="loop-visual fade-up">
+                <div class="loop-step">
+                    <div class="loop-connector">
+                        <div class="loop-dot">📨</div>
+                        <div class="loop-line"></div>
+                    </div>
+                    <div class="loop-body">
+                        <h4>1. Receive Message</h4>
+                        <p>The user sends a question or task. Could come from a chat interface, WhatsApp, Slack, or an API call.</p>
+                    </div>
+                </div>
+                <div class="loop-step">
+                    <div class="loop-connector">
+                        <div class="loop-dot">🧠</div>
+                        <div class="loop-line"></div>
+                    </div>
+                    <div class="loop-body">
+                        <h4>2. Send to LLM + Tool Definitions</h4>
+                        <p>The message goes to Claude (or GPT, Gemini, etc.) along with descriptions of all available tools. The LLM decides: "Do I need a tool, or can I answer directly?"</p>
+                    </div>
+                </div>
+                <div class="loop-step">
+                    <div class="loop-connector">
+                        <div class="loop-dot">🛠️</div>
+                        <div class="loop-line"></div>
+                    </div>
+                    <div class="loop-body">
+                        <h4>3. Execute Tool (if needed)</h4>
+                        <p>If the LLM wants to use a tool, it says: "I need to call <code>get_stock_price("AAPL")</code>." Your code executes the tool and sends the result back.</p>
+                        <div class="loop-return">↩ Loop back to step 2 with the tool result. Claude may need more tools!</div>
+                    </div>
+                </div>
+                <div class="loop-step">
+                    <div class="loop-connector">
+                        <div class="loop-dot">💬</div>
+                        <div class="loop-line"></div>
+                    </div>
+                    <div class="loop-body">
+                        <h4>4. Synthesize & Respond</h4>
+                        <p>Once Claude has all the information it needs, it combines everything into a clear, actionable answer. Done.</p>
+                    </div>
+                </div>
+                <div class="loop-step">
+                    <div class="loop-connector">
+                        <div class="loop-dot">💾</div>
+                    </div>
+                    <div class="loop-body">
+                        <h4>5. Remember (optional)</h4>
+                        <p>Advanced agents save context for next time — user preferences, past decisions, accumulated knowledge. This turns a one-shot tool into a true assistant.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====== NANOCLAW CASE STUDY ====== -->
+        <section class="section fade-up">
+            <div class="section-label">Case Study — Trending Now</div>
+            <h2 class="section-title">NanoClaw vs. OpenClaw: A Product Lesson</h2>
+            <p class="section-desc">
+                The biggest story in AI right now is the rise — and growing pains — of personal AI agents. It's a masterclass in product thinking.
+            </p>
+
+            <div class="stat-row fade-up">
+                <div class="stat-mini magenta">
+                    <div class="number">400K</div>
+                    <div class="label">Lines of code<br>OpenClaw</div>
+                </div>
+                <div class="stat-mini cyan">
+                    <div class="number">500</div>
+                    <div class="label">Lines of code<br>NanoClaw</div>
+                </div>
+                <div class="stat-mini green">
+                    <div class="number">7K+</div>
+                    <div class="label">GitHub stars<br>in 1 week</div>
+                </div>
+                <div class="stat-mini yellow">
+                    <div class="number">8 min</div>
+                    <div class="label">To audit<br>entire codebase</div>
+                </div>
+            </div>
+
+            <!-- Story -->
+            <div class="case-feature fade-up">
+                <div class="case-feature-header">
+                    <div class="case-feature-icon">💥</div>
+                    <div>
+                        <h4>The Problem: OpenClaw Goes Viral — and Goes Wrong</h4>
+                    </div>
+                </div>
+                <p><strong>OpenClaw</strong> is an open-source AI agent platform that lets you unleash an AI on your entire computer — email, files, calendar, everything. It exploded to 150,000+ users. But with 400,000 lines of code and 70+ dependencies, nobody could actually audit it for security. Result? A director at Meta's AI lab had her entire inbox deleted by her own AI agent. Other users reported agents making unauthorized purchases and sending unintended messages.</p>
+            </div>
+
+            <div class="case-feature fade-up">
+                <div class="case-feature-header">
+                    <div class="case-feature-icon">🔒</div>
+                    <div>
+                        <h4>The Solution: NanoClaw — Simplicity as a Feature</h4>
+                    </div>
+                </div>
+                <p><strong>Gavriel Cohen</strong>, a developer from Israel, built NanoClaw in a single weekend using Claude Code. His insight: the same core agent functionality doesn't need 400K lines. NanoClaw does it in ~500 lines, with every agent running in an isolated container — like giving each AI its own locked room instead of the keys to your house. Andrej Karpathy (the same person whose neural network videos you watched in Session 2!) endorsed it, calling the core engine "manageable, auditable, flexible."</p>
+            </div>
+
+            <div class="case-feature fade-up">
+                <div class="case-feature-header">
+                    <div class="case-feature-icon">💡</div>
+                    <div>
+                        <h4>The Business Lessons</h4>
+                    </div>
+                </div>
+                <p><strong>Lesson 1: Simplicity beats features.</strong> NanoClaw proved that a smaller, auditable codebase is more valuable than a feature-rich one nobody understands. Sound familiar? (Think: One Core Flow from the Product Canvas.)</p>
+                <p style="margin-top: 0.5rem;"><strong>Lesson 2: Security = product-market fit.</strong> The #1 reason people switched wasn't a cool new feature — it was trust. In the age of AI agents that access your data, "I can read and understand every line of code" is a killer feature.</p>
+                <p style="margin-top: 0.5rem;"><strong>Lesson 3: "Skills over Features."</strong> NanoClaw rejects the traditional software model. Instead of adding features to the codebase, users teach their AI to modify the code itself. Want Telegram support? Don't add it — have Claude Code rewrite your local installation. Each user gets exactly the code they need. This is a totally new paradigm.</p>
+            </div>
+        </section>
+
+        <!-- ====== HANDS-ON CTA ====== -->
+        <section class="section fade-up">
+            <div class="cta-block">
+                <h3>🧪 Ready to Build Your First Agent?</h3>
+                <p>Open the Colab notebook and give Claude real tools — a calculator, stock data, company info. Watch it decide which tools to use, chain them together, and synthesize answers like a real AI agent.</p>
+                <a href="#" class="cta-btn" target="_blank">
+                    <i data-lucide="external-link"></i>
+                    Open the Colab Notebook
+                </a>
+                <p style="margin-top: 1rem; font-size: 0.8rem; color: var(--text-dim);">
+                    You'll need your Anthropic API key from Session 3. If you don't have one, pair up with someone who does.
+                </p>
+            </div>
+        </section>
+
+        <!-- ====== FOOTER ====== -->
+        <footer class="footer">
+            <p class="footer-text">
+                ISOM 260: AI for Business • Suffolk University • Sawyer Business School<br>
+                Prof. Hasan Arslan • <a href="https://isom-260.vercel.app">isom-260.vercel.app</a>
+            </p>
+        </footer>
+
+    </div>
+
+    <script>
+        lucide.createIcons();
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('visible');
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+        document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>

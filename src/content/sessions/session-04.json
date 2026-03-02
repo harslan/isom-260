@@ -1,14 +1,297 @@
 {
   "number": 4,
   "slug": "session-04",
-  "title": "Building AI Products",
-  "subtitle": "From prototype to product — learn to build AI applications users love",
+  "title": "Building AI Products + Intro to AI Agents",
+  "subtitle": "Ship a real product in 50 minutes, then discover the architecture powering every AI agent in the world",
+  "heroTitle": "Building AI <span class=\"bg-gradient-to-br from-accent-cyan to-accent-purple bg-clip-text text-transparent\">Products & Agents</span>",
   "duration": "150 Minutes",
-  "icon": "layout",
-  "tags": ["Product Design", "User Experience", "Prototyping"],
+  "icon": "rocket",
+  "tags": ["Product Building", "AI Agents", "NanoClaw", "Tool Use", "Ship Fast"],
   "objectives": [
-    { "title": "Design AI-Powered Products", "description": "Learn frameworks for designing products that leverage AI capabilities effectively." },
-    { "title": "Build a Working Prototype", "description": "Create an AI-powered application prototype using no-code and low-code tools." }
+    {
+      "title": "Ship a Real AI Product",
+      "description": "Build and deploy a working AI-powered product in 50 minutes using Lovable, Bolt, or Claude Artifacts."
+    },
+    {
+      "title": "Master Product Thinking",
+      "description": "Apply the AI Product Canvas: Problem First, 10x Better, One Core Flow, Ship & Learn."
+    },
+    {
+      "title": "Understand AI Agents",
+      "description": "Learn the equation: LLM + Tools + Reasoning Loop + Memory = AI Agent. Understand why this changes everything."
+    },
+    {
+      "title": "Build Your First Agent",
+      "description": "Give Claude real tools (calculator, stock data, company info) and watch it reason about which tools to use."
+    }
   ],
-  "nextSession": { "title": "Session 5: Data & Analytics", "description": "Understanding data pipelines, analytics, and how data drives AI systems.", "tags": ["Data Pipelines", "Analytics", "Visualization"], "slug": "session-05" }
+  "agenda": [
+    {
+      "time": "5:00 PM - 5:15 PM",
+      "title": "Part 1: The Shift",
+      "duration": "15 minutes",
+      "description": "The world changed. You can now build in hours what used to take months.",
+      "bulletPoints": [
+        "Stats: 70% faster prototyping, 10x more builders, $0 cost to start",
+        "Before/After: 2020 vs 2026 — what's possible now",
+        "Your business thinking IS the bottleneck (in the best way)",
+        "Opening: By 7:30 tonight, every team ships a real product AND builds their first AI agent"
+      ]
+    },
+    {
+      "time": "5:15 PM - 5:30 PM",
+      "title": "Part 2: Product Thinking",
+      "duration": "15 minutes",
+      "description": "Four principles that separate successful AI products from failures.",
+      "bulletPoints": [
+        "Problem First — Fall in love with the problem, not the technology",
+        "10x Better — If it's not dramatically better, why would anyone switch?",
+        "One Core Flow — What's the ONE thing your product does brilliantly?",
+        "Ship & Learn — Perfection is the enemy of progress",
+        "LIVE DEMO: Build 'Resume Roaster' from a single prompt in Lovable"
+      ]
+    },
+    {
+      "time": "5:30 PM - 5:45 PM",
+      "title": "Part 3: Builder's Toolkit + Case Studies",
+      "duration": "15 minutes",
+      "description": "The tools and patterns of successful AI products.",
+      "bulletPoints": [
+        "Tool categories: Chat-to-Artifact, Cloud Builders (Lovable, Bolt), AI IDEs, Design-to-Code",
+        "Case studies: NotebookLM, Grammarly — what makes them work",
+        "5 UX patterns: Set Expectations, Easy Recovery, User Control, Progressive Disclosure, Invisible AI"
+      ]
+    },
+    {
+      "time": "5:45 PM - 6:35 PM",
+      "title": "Part 4: The 50-Minute Startup",
+      "duration": "50 minutes",
+      "description": "Build, test, and deploy a real AI product. Teams of 2-3.",
+      "bulletPoints": [
+        "5:45-5:55 — Fill AI Product Canvas (problem, user, 10x advantage, core flow)",
+        "5:55-6:25 — BUILD PHASE: Prompt your tool, iterate, get feedback",
+        "6:25-6:32 — Test with another team, fix the #1 issue",
+        "6:32-6:35 — Deploy + prepare 90-second pitch"
+      ]
+    },
+    {
+      "time": "6:35 PM - 6:55 PM",
+      "title": "Part 5: Demo Day",
+      "duration": "20 minutes",
+      "description": "Gallery walk + top pitches. Celebrate what you built!",
+      "bulletPoints": [
+        "Gallery Walk: Try every team's product (10 min)",
+        "Class votes on favorites",
+        "Top 5 teams do 90-second live demos",
+        "Peer feedback: Problem-Solution Fit, Delight, UX, Business Potential"
+      ],
+      "isBreak": false
+    },
+    {
+      "time": "6:55 PM - 7:15 PM",
+      "title": "Part 6: From Products to Agents",
+      "duration": "20 minutes",
+      "description": "The #1 trend in AI right now: agents that take action, not just answer questions.",
+      "bulletPoints": [
+        "THE KEY INSIGHT: Chatbot answers questions. Agent DOES things.",
+        "The Equation: LLM + Tools + Reasoning Loop + Memory = AI Agent",
+        "The Agent Loop: Receive → Think → Execute Tool → Synthesize → Remember",
+        "Case Study: NanoClaw vs OpenClaw — simplicity wins (500 lines vs 400,000)"
+      ]
+    },
+    {
+      "time": "7:15 PM - 7:28 PM",
+      "title": "Part 7: Hands-On Agent Building",
+      "duration": "13 minutes",
+      "description": "Build your first AI agent with real tools in Google Colab.",
+      "bulletPoints": [
+        "Give Claude a calculator tool — watch it decide when to use it",
+        "Add stock lookup + company info tools — watch Claude chain them",
+        "Key moment: Claude decides NOT to use tools when it doesn't need them",
+        "The magic: You didn't write if/else logic. Claude REASONED about it."
+      ]
+    },
+    {
+      "time": "7:28 PM - 7:30 PM",
+      "title": "Part 8: Wrap-Up",
+      "duration": "2 minutes",
+      "description": "Key takeaways and bridge to next session.",
+      "bulletPoints": [
+        "At 5:00 you used AI. At 6:35 you BUILT AI products. At 7:28 you understand AI AGENTS.",
+        "Next week: Data & Analytics — the fuel that powers every AI product and agent"
+      ]
+    }
+  ],
+  "resources": [
+    {
+      "title": "Agentic AI Deep-Dive",
+      "url": "/session-04/agentic-ai-deep-dive.html",
+      "description": "Visual explainer: Chatbot vs Agent, the Agent Loop, and the NanoClaw case study. Perfect for review.",
+      "icon": "bot",
+      "badge": "Key Concept",
+      "badgeType": "interactive",
+      "linkText": "View deep-dive"
+    },
+    {
+      "title": "Agent Workshop Notebook",
+      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-04/ISOM260_Session4_Build_Your_First_Agent.ipynb",
+      "description": "Build your first AI agent with 3 tools: calculator, stock lookup, company info. Watch Claude reason about which to use.",
+      "icon": "code",
+      "badge": "Hands-On",
+      "badgeType": "interactive",
+      "linkText": "Open in Colab"
+    },
+    {
+      "title": "Lovable",
+      "url": "https://lovable.dev",
+      "description": "AI-powered full-stack builder. Describe your app, get working code with backend, database, and deployment.",
+      "icon": "heart",
+      "badge": "Builder",
+      "badgeType": "tool",
+      "linkText": "Start building"
+    },
+    {
+      "title": "Bolt.new",
+      "url": "https://bolt.new",
+      "description": "Instant web apps from prompts. Great for rapid prototyping and iteration.",
+      "icon": "zap",
+      "badge": "Builder",
+      "badgeType": "tool",
+      "linkText": "Try Bolt"
+    },
+    {
+      "title": "Claude Artifacts",
+      "url": "https://claude.ai",
+      "description": "Create interactive tools, visualizations, and mini-apps directly in Claude conversations.",
+      "icon": "sparkles",
+      "badge": "Builder",
+      "badgeType": "tool",
+      "linkText": "Open Claude"
+    },
+    {
+      "title": "Anthropic Tool Use Docs",
+      "url": "https://docs.anthropic.com/en/docs/build-with-claude/tool-use",
+      "description": "Official documentation for giving Claude tools. The foundation of building AI agents.",
+      "icon": "book-open",
+      "badge": "Docs",
+      "badgeType": "code",
+      "linkText": "Read docs"
+    }
+  ],
+  "activities": [
+    {
+      "number": 1,
+      "icon": "rocket",
+      "title": "The 50-Minute Startup",
+      "description": "Build and deploy a real AI-powered product in teams of 2-3:",
+      "steps": [
+        {
+          "title": "Fill the AI Product Canvas (10 min)",
+          "description": "Problem you're solving, target user, 10x advantage over alternatives, one core flow."
+        },
+        {
+          "title": "Build Phase (30 min)",
+          "description": "Use Lovable, Bolt, or Claude Artifacts. Prompt, iterate, get instructor feedback."
+        },
+        {
+          "title": "Test & Refine (7 min)",
+          "description": "Swap with another team. Get real user feedback. Fix the #1 issue."
+        },
+        {
+          "title": "Deploy & Pitch Prep (3 min)",
+          "description": "One-click deploy. Prepare your 90-second pitch: Problem, Solution, Demo, Ask."
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "icon": "trophy",
+      "title": "Demo Day",
+      "description": "Showcase your creations and learn from classmates:",
+      "steps": [
+        {
+          "title": "Gallery Walk (10 min)",
+          "description": "Walk around, try every team's product for ~1 minute each."
+        },
+        {
+          "title": "Vote",
+          "description": "Pick your favorites for: Best Problem-Solution Fit, Most Delightful, Best UX, Most Business Potential."
+        },
+        {
+          "title": "Top 5 Pitches (10 min)",
+          "description": "Winners do 90-second live demos. Celebrate all teams!"
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "icon": "bot",
+      "title": "Build Your First AI Agent",
+      "description": "In Google Colab, give Claude real tools and watch the magic happen:",
+      "steps": [
+        {
+          "title": "Setup (3 min)",
+          "description": "Install SDK, enter API key from Session 3."
+        },
+        {
+          "title": "Single Tool Test (3 min)",
+          "description": "Give Claude a calculator. Ask: 'What is 7,394 x 8,261?' Watch it DECIDE to use the tool."
+        },
+        {
+          "title": "Multi-Tool Agent (5 min)",
+          "description": "Add stock lookup + company info. Ask: 'Compare Apple and Microsoft market caps.' Watch Claude chain multiple tools."
+        },
+        {
+          "title": "The Magic Moment (2 min)",
+          "description": "Ask: 'What's the capital of France?' Watch Claude decide it DOESN'T need a tool. That's reasoning."
+        }
+      ],
+      "codeBlock": {
+        "language": "The Agent Equation",
+        "code": "AI Agent = LLM + Tools + Reasoning Loop + Memory\n\n┌─────────────────────────────────────────────┐\n│  Chatbot: \"What's our Q4 revenue?\"          │\n│  → \"I don't have access to that data.\"     │\n│  ❌ Dead end. YOU go find it.               │\n└─────────────────────────────────────────────┘\n\n┌─────────────────────────────────────────────┐\n│  Agent: \"What's our Q4 revenue?\"            │\n│  → *calls* query_database(\"revenue\", \"Q4\") │\n│  → *calls* calculator(\"2.3M - 2.05M\")      │\n│  → \"Revenue: $2.3M, up 12% QoQ\"            │\n│  ✅ Agent did the work. You got the insight.│\n└─────────────────────────────────────────────┘"
+      }
+    }
+  ],
+  "takeaways": [
+    {
+      "icon": "rocket",
+      "text": "<strong>Ship fast, learn faster.</strong> A working prototype beats a perfect plan. You built a real product in 50 minutes."
+    },
+    {
+      "icon": "target",
+      "text": "<strong>One Core Flow.</strong> The best products do one thing brilliantly. Complexity is the enemy of adoption."
+    },
+    {
+      "icon": "bot",
+      "text": "<strong>Agents = LLM + Tools + Loop + Memory.</strong> This equation powers every AI agent in the world, from NanoClaw to Claude Code."
+    },
+    {
+      "icon": "brain",
+      "text": "<strong>The AI decides.</strong> You don't write if/else logic for tools. The LLM REASONS about what it needs. That's the breakthrough."
+    }
+  ],
+  "homework": [
+    {
+      "label": "Iterate:",
+      "text": "Make 3 meaningful improvements to your product based on peer feedback. Document before/after."
+    },
+    {
+      "label": "Build:",
+      "text": "Add a 4th custom tool to the Colab notebook that would be useful for your product. Test it with 3 different queries."
+    },
+    {
+      "label": "Test:",
+      "text": "User test your product with 3 people outside class. Write down their exact feedback (don't interpret, just record)."
+    },
+    {
+      "label": "Write:",
+      "text": "1-page product brief: Problem, Target User, Competition, Monetization Strategy, Next 3 Features."
+    }
+  ],
+  "nextSession": {
+    "title": "Session 5: Data & Analytics",
+    "description": "Every AI product runs on data. Learn how data flows, how to visualize it, and how it makes AI smarter.",
+    "tags": ["Data Pipelines", "Visualization", "Analytics", "AI Training Data"],
+    "slug": "session-05"
+  }
 }
