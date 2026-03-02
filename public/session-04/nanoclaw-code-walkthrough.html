@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inside NanoClaw — ISOM 260 Code Walkthrough</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0e1a;
+            --bg-card: #0d1220;
+            --bg-code: #080c16;
+            --bg-elevated: #141929;
+            --bg-line-highlight: rgba(0, 229, 255, 0.06);
+            --cyan: #00e5ff;
+            --cyan-dim: #00b8d4;
+            --cyan-ghost: rgba(0, 229, 255, 0.08);
+            --magenta: #ff006e;
+            --magenta-ghost: rgba(255, 0, 110, 0.08);
+            --yellow: #ffd600;
+            --yellow-ghost: rgba(255, 214, 0, 0.08);
+            --green: #00e676;
+            --green-ghost: rgba(0, 230, 118, 0.08);
+            --orange: #ff9100;
+            --purple: #b388ff;
+            --text: #e0e6f0;
+            --text-secondary: #8892a8;
+            --text-dim: #4a5468;
+            --border: rgba(0, 229, 255, 0.1);
+            --border-strong: rgba(0, 229, 255, 0.25);
+            --grid: rgba(0, 229, 255, 0.03);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                linear-gradient(var(--grid) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+        }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 1; }
+
+        /* ====== HERO ====== */
+        .hero { padding: 5rem 0 2rem; }
+
+        .badge {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            padding: 0.4rem 1rem;
+            background: var(--cyan-ghost);
+            border: 1px solid rgba(0, 229, 255, 0.2);
+            border-radius: 100px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase;
+            color: var(--cyan);
+            margin-bottom: 1.5rem;
+        }
+
+        .badge .dot { width: 6px; height: 6px; background: var(--cyan); border-radius: 50%; }
+
+        .hero h1 {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(2.2rem, 5vw, 3.5rem);
+            font-weight: 800; line-height: 1.1; letter-spacing: -0.03em;
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 .magenta { color: var(--magenta); }
+
+        .hero-sub { font-size: 1.1rem; color: var(--text-secondary); max-width: 700px; margin-bottom: 2rem; }
+
+        /* ====== STATS ====== */
+        .stat-strip {
+            display: flex; gap: 1rem; flex-wrap: wrap;
+            padding: 1.5rem 0;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 3rem;
+        }
+
+        .stat-chip {
+            padding: 0.6rem 1.2rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+        }
+
+        .stat-chip strong { color: var(--cyan); }
+
+        /* ====== FILE TREE ====== */
+        .tree-section { margin-bottom: 4rem; }
+
+        .section-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
+            color: var(--magenta); margin-bottom: 0.75rem;
+            display: flex; align-items: center; gap: 0.75rem;
+        }
+
+        .section-label::before { content: ''; width: 24px; height: 1px; background: var(--magenta); }
+
+        .section-title {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 700;
+            letter-spacing: -0.02em; margin-bottom: 0.75rem;
+        }
+
+        .section-desc { color: var(--text-secondary); font-size: 0.95rem; max-width: 700px; margin-bottom: 2rem; }
+
+        .file-tree {
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem 2rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            line-height: 2;
+            overflow-x: auto;
+        }
+
+        .file-tree .dir { color: var(--cyan); }
+        .file-tree .file { color: var(--text-secondary); }
+        .file-tree .comment { color: var(--text-dim); font-style: italic; }
+        .file-tree .highlight { color: var(--yellow); font-weight: 600; }
+
+        /* ====== CODE EXPLORER ====== */
+        .code-section { margin-bottom: 4rem; }
+
+        .file-tabs {
+            display: flex; gap: 0; border-bottom: 2px solid var(--border);
+            overflow-x: auto;
+            margin-bottom: 0;
+        }
+
+        .file-tab {
+            padding: 0.75rem 1.25rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            cursor: pointer;
+            border: 1px solid transparent;
+            border-bottom: none;
+            border-radius: 8px 8px 0 0;
+            white-space: nowrap;
+            transition: all 0.2s;
+            background: transparent;
+        }
+
+        .file-tab:hover { color: var(--text-secondary); }
+
+        .file-tab.active {
+            color: var(--cyan);
+            background: var(--bg-code);
+            border-color: var(--border);
+        }
+
+        .file-tab .agent-badge {
+            display: inline-block;
+            padding: 0.1rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.6rem;
+            font-weight: 700;
+            margin-left: 0.5rem;
+            letter-spacing: 0.05em;
+        }
+
+        .agent-badge.brain { background: rgba(0, 229, 255, 0.15); color: var(--cyan); }
+        .agent-badge.tools { background: rgba(255, 0, 110, 0.15); color: var(--magenta); }
+        .agent-badge.loop { background: rgba(255, 214, 0, 0.15); color: var(--yellow); }
+        .agent-badge.memory { background: rgba(0, 230, 118, 0.15); color: var(--green); }
+        .agent-badge.security { background: rgba(179, 136, 255, 0.15); color: var(--purple); }
+
+        .code-panel {
+            display: none;
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-top: none;
+            border-radius: 0 0 12px 12px;
+            overflow: hidden;
+        }
+
+        .code-panel.active { display: block; }
+
+        .code-explanation {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .code-explanation h4 {
+            font-family: 'Sora', sans-serif;
+            font-size: 1rem; font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+
+        .code-explanation p {
+            font-size: 0.88rem; color: var(--text-secondary); line-height: 1.65;
+        }
+
+        .code-explanation .role-tag {
+            display: inline-block;
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem; font-weight: 600;
+            margin: 0 0.15rem;
+        }
+
+        .role-tag.brain { background: rgba(0, 229, 255, 0.12); color: var(--cyan); }
+        .role-tag.tools { background: rgba(255, 0, 110, 0.12); color: var(--magenta); }
+        .role-tag.loop { background: rgba(255, 214, 0, 0.12); color: var(--yellow); }
+        .role-tag.memory { background: rgba(0, 230, 118, 0.12); color: var(--green); }
+
+        .code-block {
+            padding: 1.5rem 0;
+            overflow-x: auto;
+        }
+
+        .code-line {
+            display: flex;
+            padding: 0 2rem;
+            min-height: 1.7em;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            line-height: 1.7;
+            transition: background 0.2s;
+        }
+
+        .code-line:hover { background: var(--bg-line-highlight); }
+        .code-line.highlighted { background: var(--bg-line-highlight); border-left: 3px solid var(--cyan); padding-left: calc(2rem - 3px); }
+        .code-line.highlighted-magenta { background: var(--magenta-ghost); border-left: 3px solid var(--magenta); padding-left: calc(2rem - 3px); }
+        .code-line.highlighted-yellow { background: var(--yellow-ghost); border-left: 3px solid var(--yellow); padding-left: calc(2rem - 3px); }
+        .code-line.highlighted-green { background: var(--green-ghost); border-left: 3px solid var(--green); padding-left: calc(2rem - 3px); }
+
+        .line-num {
+            min-width: 35px;
+            color: var(--text-dim);
+            text-align: right;
+            padding-right: 1.5rem;
+            user-select: none;
+        }
+
+        .line-code { flex: 1; white-space: pre; }
+
+        /* Syntax colors */
+        .kw { color: var(--magenta); }          /* keywords */
+        .fn { color: #82aaff; }                 /* functions */
+        .str { color: #c3e88d; }                /* strings */
+        .cm { color: #546e7a; font-style: italic; } /* comments */
+        .num { color: var(--orange); }           /* numbers */
+        .type { color: var(--cyan); }            /* types */
+        .var { color: #f0f0f0; }                /* variables */
+        .op { color: #89ddff; }                 /* operators */
+        .ann { color: var(--yellow); font-weight: 500; } /* annotations/highlights */
+
+        .annotation-bar {
+            display: flex; align-items: flex-start; gap: 0.75rem;
+            padding: 0.75rem 2rem;
+            background: var(--bg-elevated);
+            border-top: 1px solid var(--border);
+            font-size: 0.82rem;
+        }
+
+        .annotation-bar .arrow { color: var(--cyan); font-weight: 700; }
+        .annotation-bar .note { color: var(--text-secondary); line-height: 1.5; }
+        .annotation-bar .note strong { color: var(--text); }
+
+        /* ====== MAPPING SECTION ====== */
+        .mapping-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .mapping-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: border-color 0.3s;
+        }
+
+        .mapping-card:hover { border-color: var(--border-strong); }
+
+        .mapping-card .icon-row {
+            display: flex; align-items: center; gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .mapping-icon {
+            width: 38px; height: 38px;
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .mapping-icon.brain { background: rgba(0,229,255,0.12); border: 1px solid rgba(0,229,255,0.2); }
+        .mapping-icon.tools { background: rgba(255,0,110,0.12); border: 1px solid rgba(255,0,110,0.2); }
+        .mapping-icon.loop { background: rgba(255,214,0,0.12); border: 1px solid rgba(255,214,0,0.2); }
+        .mapping-icon.memory { background: rgba(0,230,118,0.12); border: 1px solid rgba(0,230,118,0.2); }
+
+        .mapping-card h4 {
+            font-family: 'Sora', sans-serif;
+            font-size: 0.95rem; font-weight: 600;
+        }
+
+        .mapping-card .file-ref {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            margin-bottom: 0.5rem;
+        }
+
+        .mapping-card p { font-size: 0.85rem; color: var(--text-secondary); }
+
+        /* ====== TAKEAWAY ====== */
+        .takeaway {
+            background: linear-gradient(135deg, var(--magenta-ghost), var(--cyan-ghost));
+            border: 1px solid var(--border-strong);
+            border-radius: 16px;
+            padding: 2.5rem 3rem;
+            margin: 3rem 0;
+            position: relative;
+        }
+
+        .takeaway::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--magenta), var(--cyan));
+        }
+
+        .takeaway h3 {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.3rem; font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .takeaway p { color: var(--text-secondary); margin-bottom: 0.75rem; }
+        .takeaway p:last-child { margin-bottom: 0; }
+        .takeaway strong { color: var(--text); }
+
+        .footer {
+            padding: 3rem 0;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+        }
+
+        .footer a { color: var(--cyan); text-decoration: none; }
+
+        @media (max-width: 768px) {
+            .container { padding: 0 1.25rem; }
+            .mapping-grid { grid-template-columns: 1fr; }
+            .file-tabs { gap: 0; }
+            .stat-strip { gap: 0.5rem; }
+        }
+
+        .fade-up {
+            opacity: 0; transform: translateY(25px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .fade-up.visible { opacity: 1; transform: translateY(0); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="badge"><span class="dot"></span> Live Code Walkthrough</div>
+        <h1>Inside <span class="magenta">NanoClaw</span></h1>
+        <p class="hero-sub">
+            The entire AI agent that's taking over the tech world — broken down file by file. 
+            ~700 lines of core orchestration. Built in one weekend. 10,500+ GitHub stars. 
+            Let's read it together and map every piece to the Agent Formula.
+        </p>
+
+        <div class="stat-strip">
+            <div class="stat-chip"><strong>8</strong> source files</div>
+            <div class="stat-chip"><strong>~700</strong> lines in main orchestrator</div>
+            <div class="stat-chip"><strong>9</strong> dependencies</div>
+            <div class="stat-chip"><strong>1</strong> process</div>
+            <div class="stat-chip"><strong>8 min</strong> to read entire codebase</div>
+        </div>
+    </section>
+
+    <!-- FILE TREE -->
+    <section class="tree-section fade-up">
+        <div class="section-label">The Entire Codebase</div>
+        <h2 class="section-title">What You're Looking At</h2>
+        <p class="section-desc">This is every file that matters. Not a simplified version — this IS the architecture. Compare this to OpenClaw's 400,000 lines across 52+ modules.</p>
+
+        <div class="file-tree">
+<span class="dir">nanoclaw/</span>
+├── <span class="dir">src/</span>                        <span class="comment"># The host process — everything runs here</span>
+│   ├── <span class="highlight">index.ts</span>               <span class="comment"># 🧠 THE BRAIN — orchestrator, message loop, agent invocation (700 lines)</span>
+│   ├── <span class="file">container-runner.ts</span>    <span class="comment"># 🔒 Spawns isolated containers for each agent</span>
+│   ├── <span class="file">group-queue.ts</span>         <span class="comment"># 🔄 Per-group message queue with concurrency control</span>
+│   ├── <span class="file">task-scheduler.ts</span>      <span class="comment"># ⏰ Runs scheduled/recurring tasks</span>
+│   ├── <span class="file">db.ts</span>                  <span class="comment"># 💾 SQLite operations (messages, groups, sessions)</span>
+│   ├── <span class="file">router.ts</span>              <span class="comment"># 📤 Message formatting and outbound routing</span>
+│   ├── <span class="file">ipc.ts</span>                 <span class="comment"># 📡 Inter-process communication watcher</span>
+│   └── <span class="file">config.ts</span>              <span class="comment"># ⚙️ Trigger pattern, paths, intervals (~50 lines)</span>
+├── <span class="dir">container/</span>                  <span class="comment"># What runs INSIDE each agent's sandbox</span>
+│   ├── <span class="file">agent-runner.js</span>        <span class="comment"># 🤖 Claude Agent SDK executor</span>
+│   └── <span class="file">ipc-mcp.ts</span>             <span class="comment"># 🛠️ MCP server: send_message, schedule_task, register_group</span>
+├── <span class="dir">groups/{name}/</span>              <span class="comment"># Per-group workspaces (each group is isolated)</span>
+│   └── <span class="highlight">CLAUDE.md</span>              <span class="comment"># 💾 MEMORY — each group's persistent context</span>
+├── <span class="dir">data/</span>
+│   ├── <span class="file">messages.db</span>            <span class="comment"># SQLite database</span>
+│   ├── <span class="dir">sessions/{name}/</span>       <span class="comment"># Agent SDK conversation state</span>
+│   └── <span class="dir">ipc/{name}/</span>            <span class="comment"># JSON files for tool communication</span>
+└── <span class="dir">.claude/skills/</span>             <span class="comment"># Claude Code skills (/setup, /customize, /debug)</span>
+        </div>
+    </section>
+
+    <!-- CODE EXPLORER -->
+    <section class="code-section fade-up">
+        <div class="section-label">Annotated Code Tour</div>
+        <h2 class="section-title">Reading the Agent, File by File</h2>
+        <p class="section-desc">Click each tab to see the real code patterns from NanoClaw. Every highlighted line maps directly to the Agent Formula you learned today.</p>
+
+        <div class="file-tabs">
+            <div class="file-tab active" onclick="showPanel('index')">
+                index.ts <span class="agent-badge loop">LOOP</span>
+            </div>
+            <div class="file-tab" onclick="showPanel('container')">
+                container-runner.ts <span class="agent-badge security">SECURITY</span>
+            </div>
+            <div class="file-tab" onclick="showPanel('ipc')">
+                ipc-mcp.ts <span class="agent-badge tools">TOOLS</span>
+            </div>
+            <div class="file-tab" onclick="showPanel('db')">
+                db.ts <span class="agent-badge memory">MEMORY</span>
+            </div>
+            <div class="file-tab" onclick="showPanel('claude')">
+                CLAUDE.md <span class="agent-badge brain">BRAIN</span>
+            </div>
+        </div>
+
+        <!-- ===== INDEX.TS ===== -->
+        <div class="code-panel active" id="panel-index">
+            <div class="code-explanation">
+                <h4>🧠 src/index.ts — The Orchestrator</h4>
+                <p>This single file is the heart of NanoClaw. At ~700 lines, it handles <em>everything</em>: connecting to WhatsApp, polling for new messages, deciding when to invoke the AI agent, spawning containers, and routing responses back. This is the <span class="role-tag loop">REASONING LOOP</span> of the entire system.</p>
+            </div>
+            <div class="code-block">
+                <div class="code-line">
+                    <span class="line-num">1</span>
+                    <span class="line-code"><span class="cm">// src/index.ts — NanoClaw Orchestrator</span></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">2</span>
+                    <span class="line-code"><span class="cm">// This is where EVERYTHING happens. One file. One process.</span></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">3</span>
+                    <span class="line-code"></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">4</span>
+                    <span class="line-code"><span class="kw">import</span> { makeWASocket } <span class="kw">from</span> <span class="str">'@whiskeysockets/baileys'</span></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">5</span>
+                    <span class="line-code"><span class="kw">import</span> { runAgent } <span class="kw">from</span> <span class="str">'./container-runner'</span></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">6</span>
+                    <span class="line-code"><span class="kw">import</span> { GroupQueue } <span class="kw">from</span> <span class="str">'./group-queue'</span></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">7</span>
+                    <span class="line-code"><span class="kw">import</span> * <span class="kw">as</span> db <span class="kw">from</span> <span class="str">'./db'</span></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">8</span>
+                    <span class="line-code"><span class="kw">import</span> { <span class="var">TRIGGER_PATTERN</span>, <span class="var">MESSAGE_POLLING_INTERVAL</span> } <span class="kw">from</span> <span class="str">'./config'</span></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">9</span>
+                    <span class="line-code"></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">10</span>
+                    <span class="line-code"><span class="cm">// ─── THE MAIN FUNCTION ───────────────────────────────────</span></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">11</span>
+                    <span class="line-code"></span>
+                </div>
+                <div class="code-line highlighted-yellow">
+                    <span class="line-num">12</span>
+                    <span class="line-code"><span class="kw">async function</span> <span class="fn">main</span>() {</span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">13</span>
+                    <span class="line-code">  <span class="cm">// 1. Connect to WhatsApp</span></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">14</span>
+                    <span class="line-code">  <span class="kw">const</span> <span class="var">sock</span> <span class="op">=</span> <span class="fn">makeWASocket</span>({ <span class="var">auth</span>: <span class="var">state</span> })</span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">15</span>
+                    <span class="line-code"></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">16</span>
+                    <span class="line-code">  <span class="cm">// 2. Start the message loop (polls every 2 seconds)</span></span>
+                </div>
+                <div class="code-line highlighted-yellow">
+                    <span class="line-num">17</span>
+                    <span class="line-code">  <span class="fn">startMessageLoop</span>(<span class="var">sock</span>, <span class="var">queue</span>)</span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">18</span>
+                    <span class="line-code"></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">19</span>
+                    <span class="line-code">  <span class="cm">// 3. Start watching for tool responses from containers</span></span>
+                </div>
+                <div class="code-line highlighted">
+                    <span class="line-num">20</span>
+                    <span class="line-code">  <span class="fn">startIpcWatcher</span>()</span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">21</span>
+                    <span class="line-code"></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">22</span>
+                    <span class="line-code">  <span class="cm">// 4. Start the scheduled task runner</span></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">23</span>
+                    <span class="line-code">  <span class="fn">startTaskScheduler</span>()</span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">24</span>
+                    <span class="line-code">}</span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">25</span>
+                    <span class="line-code"></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">26</span>
+                    <span class="line-code"><span class="cm">// ─── THE MESSAGE LOOP ─────────────────────────────────────</span></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">27</span>
+                    <span class="line-code"><span class="cm">// This is the AGENT LOOP — the same pattern from your Colab notebook!</span></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">28</span>
+                    <span class="line-code"></span>
+                </div>
+                <div class="code-line highlighted-yellow">
+                    <span class="line-num">29</span>
+                    <span class="line-code"><span class="kw">function</span> <span class="fn">startMessageLoop</span>(<span class="var">sock</span>, <span class="var">queue</span>) {</span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">30</span>
+                    <span class="line-code">  <span class="fn">setInterval</span>(<span class="kw">async</span> () <span class="op">=></span> {</span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">31</span>
+                    <span class="line-code"></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">32</span>
+                    <span class="line-code">    <span class="cm">// Step 1: Poll for new messages since last check</span></span>
+                </div>
+                <div class="code-line highlighted">
+                    <span class="line-num">33</span>
+                    <span class="line-code">    <span class="kw">const</span> <span class="var">messages</span> <span class="op">=</span> db.<span class="fn">getNewMessages</span>(<span class="var">lastTimestamp</span>)</span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">34</span>
+                    <span class="line-code"></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">35</span>
+                    <span class="line-code">    <span class="kw">for</span> (<span class="kw">const</span> <span class="var">msg</span> <span class="kw">of</span> <span class="var">messages</span>) {</span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">36</span>
+                    <span class="line-code"></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">37</span>
+                    <span class="line-code">      <span class="cm">// Step 2: Does this message trigger the agent?</span></span>
+                </div>
+                <div class="code-line highlighted-magenta">
+                    <span class="line-num">38</span>
+                    <span class="line-code">      <span class="kw">if</span> (<span class="op">!</span><span class="var">TRIGGER_PATTERN</span>.<span class="fn">test</span>(<span class="var">msg</span>.<span class="var">text</span>)) <span class="kw">continue</span></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">39</span>
+                    <span class="line-code"></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">40</span>
+                    <span class="line-code">      <span class="cm">// Step 3: Show "typing..." indicator on WhatsApp</span></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">41</span>
+                    <span class="line-code">      <span class="var">sock</span>.<span class="fn">sendPresenceUpdate</span>(<span class="str">'composing'</span>, <span class="var">msg</span>.<span class="var">chatJid</span>)</span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">42</span>
+                    <span class="line-code"></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">43</span>
+                    <span class="line-code">      <span class="cm">// Step 4: Load conversation history for context</span></span>
+                </div>
+                <div class="code-line highlighted-green">
+                    <span class="line-num">44</span>
+                    <span class="line-code">      <span class="kw">const</span> <span class="var">history</span> <span class="op">=</span> db.<span class="fn">getMessagesSince</span>(<span class="var">chatJid</span>, <span class="var">lastAgentTs</span>)</span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">45</span>
+                    <span class="line-code"></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">46</span>
+                    <span class="line-code">      <span class="cm">// Step 5: SPAWN THE AGENT in an isolated container</span></span>
+                </div>
+                <div class="code-line highlighted">
+                    <span class="line-num">47</span>
+                    <span class="line-code">      <span class="kw">const</span> <span class="var">response</span> <span class="op">=</span> <span class="kw">await</span> <span class="fn">runAgent</span>(<span class="var">groupFolder</span>, <span class="var">prompt</span>, <span class="var">chatJid</span>)</span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">48</span>
+                    <span class="line-code"></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">49</span>
+                    <span class="line-code">      <span class="cm">// Step 6: Strip internal reasoning, send response</span></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">50</span>
+                    <span class="line-code">      <span class="kw">const</span> <span class="var">text</span> <span class="op">=</span> <span class="var">raw</span>.<span class="fn">replace</span>(<span class="str">/&lt;internal&gt;[\s\S]*?&lt;\/internal&gt;/g</span>, <span class="str">''</span>)</span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">51</span>
+                    <span class="line-code">      <span class="var">sock</span>.<span class="fn">sendMessage</span>(<span class="var">chatJid</span>, { <span class="var">text</span> })</span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">52</span>
+                    <span class="line-code">    }</span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">53</span>
+                    <span class="line-code">  }, <span class="var">MESSAGE_POLLING_INTERVAL</span>) <span class="cm">// 2000ms</span></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">54</span>
+                    <span class="line-code">}</span>
+                </div>
+            </div>
+            <div class="annotation-bar">
+                <span class="arrow">→</span>
+                <span class="note"><strong>This is it.</strong> The entire agent loop fits on one screen. Poll for messages → check trigger → load history → spawn Claude in a container → send response. This is the same pattern as your Colab notebook's <code>run_agent()</code> function, but connected to WhatsApp instead of a Python prompt.</span>
+            </div>
+        </div>
+
+        <!-- ===== CONTAINER-RUNNER.TS ===== -->
+        <div class="code-panel" id="panel-container">
+            <div class="code-explanation">
+                <h4>🔒 src/container-runner.ts — The Security Layer</h4>
+                <p>This is why NanoClaw exists. Instead of giving the AI access to your whole computer (like OpenClaw), each agent runs in its own <strong>isolated Linux container</strong>. It can only see what you explicitly mount. This file handles spawning those containers and streaming the AI's output back.</p>
+            </div>
+            <div class="code-block">
+                <div class="code-line">
+                    <span class="line-num">1</span>
+                    <span class="line-code"><span class="cm">// src/container-runner.ts — Spawn isolated agent containers</span></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">2</span>
+                    <span class="line-code"></span>
+                </div>
+                <div class="code-line highlighted-magenta">
+                    <span class="line-num">3</span>
+                    <span class="line-code"><span class="kw">export async function</span> <span class="fn">runAgent</span>(</span>
+                </div>
+                <div class="code-line highlighted-magenta">
+                    <span class="line-num">4</span>
+                    <span class="line-code">  <span class="var">groupFolder</span>: <span class="type">string</span>,     <span class="cm">// Which group's workspace to mount</span></span>
+                </div>
+                <div class="code-line highlighted-magenta">
+                    <span class="line-num">5</span>
+                    <span class="line-code">  <span class="var">prompt</span>: <span class="type">string</span>,          <span class="cm">// The user's message + conversation history</span></span>
+                </div>
+                <div class="code-line highlighted-magenta">
+                    <span class="line-num">6</span>
+                    <span class="line-code">  <span class="var">chatJid</span>: <span class="type">string</span>,         <span class="cm">// WhatsApp chat ID (for routing responses)</span></span>
+                </div>
+                <div class="code-line highlighted-magenta">
+                    <span class="line-num">7</span>
+                    <span class="line-code">): <span class="type">Promise</span>&lt;<span class="type">string</span>&gt; {</span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">8</span>
+                    <span class="line-code"></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">9</span>
+                    <span class="line-code">  <span class="cm">// Validate that all mounts are in the allowlist</span></span>
+                </div>
+                <div class="code-line highlighted">
+                    <span class="line-num">10</span>
+                    <span class="line-code">  <span class="fn">validateAdditionalMounts</span>(<span class="var">containerConfig</span>.<span class="var">additionalMounts</span>)</span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">11</span>
+                    <span class="line-code"></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">12</span>
+                    <span class="line-code">  <span class="cm">// Build the container with ONLY this group's files visible</span></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">13</span>
+                    <span class="line-code">  <span class="kw">const</span> <span class="var">mounts</span> <span class="op">=</span> [</span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">14</span>
+                    <span class="line-code">    <span class="str">`groups/${groupFolder}:/workspace`</span>,    <span class="cm">// Group's workspace → /workspace</span></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">15</span>
+                    <span class="line-code">    <span class="str">`data/sessions/${groupFolder}:/.claude`</span>,<span class="cm">// Session state → /.claude</span></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">16</span>
+                    <span class="line-code">    <span class="str">`data/ipc/${groupFolder}:/ipc`</span>,         <span class="cm">// IPC channel → /ipc</span></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">17</span>
+                    <span class="line-code">  ]</span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">18</span>
+                    <span class="line-code"></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">19</span>
+                    <span class="line-code">  <span class="cm">// Spawn the container and stream Claude's output</span></span>
+                </div>
+                <div class="code-line highlighted">
+                    <span class="line-num">20</span>
+                    <span class="line-code">  <span class="kw">const</span> <span class="var">proc</span> <span class="op">=</span> <span class="fn">spawn</span>(<span class="str">'container'</span>, [<span class="str">'run'</span>, <span class="op">...</span><span class="var">mounts</span>, <span class="var">CONTAINER_IMAGE</span>])</span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">21</span>
+                    <span class="line-code"></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">22</span>
+                    <span class="line-code">  <span class="cm">// Stream the agent's response back in real time</span></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">23</span>
+                    <span class="line-code">  <span class="kw">let</span> <span class="var">output</span> <span class="op">=</span> <span class="str">''</span></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">24</span>
+                    <span class="line-code">  <span class="var">proc</span>.<span class="var">stdout</span>.<span class="fn">on</span>(<span class="str">'data'</span>, (<span class="var">chunk</span>) <span class="op">=></span> { <span class="var">output</span> <span class="op">+=</span> <span class="var">chunk</span> })</span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">25</span>
+                    <span class="line-code">  <span class="kw">return</span> <span class="var">output</span></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">26</span>
+                    <span class="line-code">}</span>
+                </div>
+            </div>
+            <div class="annotation-bar">
+                <span class="arrow">→</span>
+                <span class="note"><strong>This is the key security difference.</strong> OpenClaw runs everything in one Node process — the AI can access everything on your computer. NanoClaw gives each group its own Linux container. It's like giving each AI its own locked room instead of the keys to your house. The <code>validateAdditionalMounts()</code> function checks against a mount allowlist — you explicitly approve what each agent can see.</span>
+            </div>
+        </div>
+
+        <!-- ===== IPC-MCP.TS ===== -->
+        <div class="code-panel" id="panel-ipc">
+            <div class="code-explanation">
+                <h4>🛠️ container/ipc-mcp.ts — The Agent's Tools</h4>
+                <p>Remember the <span class="role-tag tools">TOOLS</span> part of the Agent Formula? This file defines what the agent <em>can do</em>. Each tool is an MCP server function that the agent calls when it needs to take action in the world. Same concept as the calculator tool from your Colab notebook — but these tools send messages, schedule tasks, and manage groups.</p>
+            </div>
+            <div class="code-block">
+                <div class="code-line">
+                    <span class="line-num">1</span>
+                    <span class="line-code"><span class="cm">// container/ipc-mcp.ts — Tools available to the agent</span></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">2</span>
+                    <span class="line-code"><span class="cm">// These are like your Colab tools, but for real-world actions</span></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">3</span>
+                    <span class="line-code"></span>
+                </div>
+                <div class="code-line highlighted-magenta">
+                    <span class="line-num">4</span>
+                    <span class="line-code"><span class="cm">// Tool 1: Send a message to any WhatsApp chat</span></span>
+                </div>
+                <div class="code-line highlighted-magenta">
+                    <span class="line-num">5</span>
+                    <span class="line-code"><span class="var">server</span>.<span class="fn">tool</span>(<span class="str">'send_message'</span>, {</span>
+                </div>
+                <div class="code-line highlighted-magenta">
+                    <span class="line-num">6</span>
+                    <span class="line-code">  <span class="var">description</span>: <span class="str">'Send a message to a WhatsApp chat'</span>,</span>
+                </div>
+                <div class="code-line highlighted-magenta">
+                    <span class="line-num">7</span>
+                    <span class="line-code">  <span class="var">input</span>: { <span class="var">chatJid</span>: <span class="type">string</span>, <span class="var">text</span>: <span class="type">string</span> }</span>
+                </div>
+                <div class="code-line highlighted-magenta">
+                    <span class="line-num">8</span>
+                    <span class="line-code">})</span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">9</span>
+                    <span class="line-code"></span>
+                </div>
+                <div class="code-line highlighted-magenta">
+                    <span class="line-num">10</span>
+                    <span class="line-code"><span class="cm">// Tool 2: Schedule a recurring task</span></span>
+                </div>
+                <div class="code-line highlighted-magenta">
+                    <span class="line-num">11</span>
+                    <span class="line-code"><span class="var">server</span>.<span class="fn">tool</span>(<span class="str">'schedule_task'</span>, {</span>
+                </div>
+                <div class="code-line highlighted-magenta">
+                    <span class="line-num">12</span>
+                    <span class="line-code">  <span class="var">description</span>: <span class="str">'Schedule a task to run at a specific time or interval'</span>,</span>
+                </div>
+                <div class="code-line highlighted-magenta">
+                    <span class="line-num">13</span>
+                    <span class="line-code">  <span class="var">input</span>: { <span class="var">name</span>: <span class="type">string</span>, <span class="var">schedule</span>: <span class="type">string</span>, <span class="var">prompt</span>: <span class="type">string</span> }</span>
+                </div>
+                <div class="code-line highlighted-magenta">
+                    <span class="line-num">14</span>
+                    <span class="line-code">})</span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">15</span>
+                    <span class="line-code"></span>
+                </div>
+                <div class="code-line highlighted-magenta">
+                    <span class="line-num">16</span>
+                    <span class="line-code"><span class="cm">// Tool 3: Register a new WhatsApp group (main channel only)</span></span>
+                </div>
+                <div class="code-line highlighted-magenta">
+                    <span class="line-num">17</span>
+                    <span class="line-code"><span class="var">server</span>.<span class="fn">tool</span>(<span class="str">'register_group'</span>, {</span>
+                </div>
+                <div class="code-line highlighted-magenta">
+                    <span class="line-num">18</span>
+                    <span class="line-code">  <span class="var">description</span>: <span class="str">'Register a WhatsApp group for the agent to monitor'</span>,</span>
+                </div>
+                <div class="code-line highlighted-magenta">
+                    <span class="line-num">19</span>
+                    <span class="line-code">  <span class="var">input</span>: { <span class="var">jid</span>: <span class="type">string</span>, <span class="var">name</span>: <span class="type">string</span>, <span class="var">folder</span>: <span class="type">string</span> }</span>
+                </div>
+                <div class="code-line highlighted-magenta">
+                    <span class="line-num">20</span>
+                    <span class="line-code">})</span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">21</span>
+                    <span class="line-code"></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">22</span>
+                    <span class="line-code"><span class="cm">// Authorization check: non-main groups can only message their own chat</span></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">23</span>
+                    <span class="line-code"><span class="kw">if</span> (<span class="op">!</span><span class="var">isMainGroup</span> <span class="op">&&</span> <span class="var">targetJid</span> <span class="op">!==</span> <span class="var">ownJid</span>) <span class="kw">throw</span> <span class="str">'Unauthorized'</span></span>
+                </div>
+            </div>
+            <div class="annotation-bar">
+                <span class="arrow">→</span>
+                <span class="note"><strong>Same pattern as your Colab.</strong> In your notebook, you defined a calculator tool with a name, description, and input schema. NanoClaw does the exact same thing — but with <code>send_message</code> instead of <code>calculator</code>. When Claude decides "I need to send a message," it calls this tool. The authorization check on line 23 prevents non-main groups from messaging other chats — a real-world security decision.</span>
+            </div>
+        </div>
+
+        <!-- ===== DB.TS ===== -->
+        <div class="code-panel" id="panel-db">
+            <div class="code-explanation">
+                <h4>💾 src/db.ts — The Memory Layer</h4>
+                <p>The <span class="role-tag memory">MEMORY</span> component. This is how NanoClaw remembers conversations, stores scheduled tasks, and tracks which messages have been processed. Without this, the agent would have no context — every message would be a blank slate.</p>
+            </div>
+            <div class="code-block">
+                <div class="code-line">
+                    <span class="line-num">1</span>
+                    <span class="line-code"><span class="cm">// src/db.ts — SQLite database operations</span></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">2</span>
+                    <span class="line-code"><span class="cm">// This is the agent's long-term memory</span></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">3</span>
+                    <span class="line-code"></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">4</span>
+                    <span class="line-code"><span class="cm">// Tables created on first run:</span></span>
+                </div>
+                <div class="code-line highlighted-green">
+                    <span class="line-num">5</span>
+                    <span class="line-code"><span class="cm">//   chats          — WhatsApp chat metadata</span></span>
+                </div>
+                <div class="code-line highlighted-green">
+                    <span class="line-num">6</span>
+                    <span class="line-code"><span class="cm">//   messages        — Every message sent and received</span></span>
+                </div>
+                <div class="code-line highlighted-green">
+                    <span class="line-num">7</span>
+                    <span class="line-code"><span class="cm">//   scheduled_tasks — Recurring jobs with cron/interval/once schedules</span></span>
+                </div>
+                <div class="code-line highlighted-green">
+                    <span class="line-num">8</span>
+                    <span class="line-code"><span class="cm">//   task_run_logs   — Execution history for each task run</span></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">9</span>
+                    <span class="line-code"></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">10</span>
+                    <span class="line-code"><span class="cm">// Key functions the orchestrator uses:</span></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">11</span>
+                    <span class="line-code"></span>
+                </div>
+                <div class="code-line highlighted-green">
+                    <span class="line-num">12</span>
+                    <span class="line-code"><span class="kw">export function</span> <span class="fn">getNewMessages</span>(<span class="var">since</span>: <span class="type">number</span>): <span class="type">Message</span>[]</span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">13</span>
+                    <span class="line-code"><span class="cm">// → Called every 2 seconds by the message loop</span></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">14</span>
+                    <span class="line-code"></span>
+                </div>
+                <div class="code-line highlighted-green">
+                    <span class="line-num">15</span>
+                    <span class="line-code"><span class="kw">export function</span> <span class="fn">getMessagesSince</span>(<span class="var">jid</span>: <span class="type">string</span>, <span class="var">ts</span>: <span class="type">number</span>): <span class="type">Message</span>[]</span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">16</span>
+                    <span class="line-code"><span class="cm">// → Gets conversation history to give Claude context</span></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">17</span>
+                    <span class="line-code"></span>
+                </div>
+                <div class="code-line highlighted-green">
+                    <span class="line-num">18</span>
+                    <span class="line-code"><span class="kw">export function</span> <span class="fn">getDueTasks</span>(): <span class="type">ScheduledTask</span>[]</span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">19</span>
+                    <span class="line-code"><span class="cm">// → Called every 60 seconds by the task scheduler</span></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">20</span>
+                    <span class="line-code"></span>
+                </div>
+                <div class="code-line highlighted-green">
+                    <span class="line-num">21</span>
+                    <span class="line-code"><span class="kw">export function</span> <span class="fn">storeMessage</span>(<span class="var">msg</span>: <span class="type">Message</span>): <span class="type">void</span></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">22</span>
+                    <span class="line-code"><span class="cm">// → Every incoming AND outgoing message gets saved</span></span>
+                </div>
+            </div>
+            <div class="annotation-bar">
+                <span class="arrow">→</span>
+                <span class="note"><strong>Memory is what separates agents from chatbots.</strong> Without <code>getMessagesSince()</code>, Claude would have no idea what you said 5 minutes ago. Without <code>getDueTasks()</code>, scheduled jobs wouldn't exist. All of it lives in one SQLite file: <code>data/messages.db</code>.</span>
+            </div>
+        </div>
+
+        <!-- ===== CLAUDE.MD ===== -->
+        <div class="code-panel" id="panel-claude">
+            <div class="code-explanation">
+                <h4>🧠 groups/{name}/CLAUDE.md — Per-Group Memory</h4>
+                <p>This is one of NanoClaw's most elegant ideas. Each group has its own <code>CLAUDE.md</code> file — a Markdown document that serves as the agent's <span class="role-tag brain">BRAIN</span> instructions for that specific context. The agent reads this before every response, and can modify it to "remember" things.</p>
+            </div>
+            <div class="code-block">
+                <div class="code-line">
+                    <span class="line-num">1</span>
+                    <span class="line-code"><span class="cm"># groups/family-chat/CLAUDE.md</span></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">2</span>
+                    <span class="line-code"><span class="cm"># This file IS the agent's personality + memory for this group</span></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">3</span>
+                    <span class="line-code"></span>
+                </div>
+                <div class="code-line highlighted">
+                    <span class="line-num">4</span>
+                    <span class="line-code"><span class="ann"># Family Chat Assistant</span></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">5</span>
+                    <span class="line-code"></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">6</span>
+                    <span class="line-code"><span class="var">You are Andy, a helpful family assistant.</span></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">7</span>
+                    <span class="line-code"><span class="var">Keep responses warm and brief.</span></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">8</span>
+                    <span class="line-code"><span class="var">Mom's birthday is March 15th.</span></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">9</span>
+                    <span class="line-code"><span class="var">Dad prefers no emojis in responses.</span></span>
+                </div>
+                <div class="code-line">
+                    <span class="line-num">10</span>
+                    <span class="line-code"></span>
+                </div>
+                <div class="code-line highlighted-green">
+                    <span class="line-num">11</span>
+                    <span class="line-code"><span class="ann">## Things I've Learned</span></span>
+                </div>
+                <div class="code-line highlighted-green">
+                    <span class="line-num">12</span>
+                    <span class="line-code"><span class="var">- Grocery day is Sunday</span></span>
+                </div>
+                <div class="code-line highlighted-green">
+                    <span class="line-num">13</span>
+                    <span class="line-code"><span class="var">- Sarah has a peanut allergy</span></span>
+                </div>
+                <div class="code-line highlighted-green">
+                    <span class="line-num">14</span>
+                    <span class="line-code"><span class="var">- The WiFi password is on the fridge</span></span>
+                </div>
+            </div>
+            <div class="annotation-bar">
+                <span class="arrow">→</span>
+                <span class="note"><strong>Markdown as the interface between humans and AI.</strong> This is the most radical idea in NanoClaw. Memory isn't stored in a complex database schema — it's a Markdown file that both humans and Claude can read and edit. Each group gets its own, so your family agent has different memories than your work agent. This is what the industry calls "AI-native" software.</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== MAPPING TO FORMULA ====== -->
+    <section class="code-section fade-up">
+        <div class="section-label">Connecting the Dots</div>
+        <h2 class="section-title">NanoClaw ↔ Agent Formula</h2>
+        <p class="section-desc">Every piece of NanoClaw maps to the formula you learned today. Here's the exact mapping.</p>
+
+        <div class="mapping-grid">
+            <div class="mapping-card">
+                <div class="icon-row">
+                    <div class="mapping-icon brain">🧠</div>
+                    <h4>LLM (The Brain)</h4>
+                </div>
+                <div class="file-ref">container/agent-runner.js → Claude Agent SDK</div>
+                <p>NanoClaw uses Claude Code running inside each container. The Agent SDK handles all the thinking. NanoClaw never processes language itself — it just routes messages to Claude and routes responses back.</p>
+            </div>
+            <div class="mapping-card">
+                <div class="icon-row">
+                    <div class="mapping-icon tools">🛠️</div>
+                    <h4>Tools</h4>
+                </div>
+                <div class="file-ref">container/ipc-mcp.ts → send_message, schedule_task, register_group</div>
+                <p>Same pattern as your Colab calculator tool. Each tool has a name, description, and input schema. Claude decides when to use them. The IPC system communicates tool results back to the host.</p>
+            </div>
+            <div class="mapping-card">
+                <div class="icon-row">
+                    <div class="mapping-icon loop">🔄</div>
+                    <h4>Reasoning Loop</h4>
+                </div>
+                <div class="file-ref">src/index.ts → startMessageLoop() — polls every 2 seconds</div>
+                <p>The message loop polls → detects trigger → loads context → spawns agent → sends response. Same pattern as your <code>run_agent()</code> while loop. NanoClaw adds a concurrency queue so multiple groups don't step on each other.</p>
+            </div>
+            <div class="mapping-card">
+                <div class="icon-row">
+                    <div class="mapping-icon memory">💾</div>
+                    <h4>Memory</h4>
+                </div>
+                <div class="file-ref">src/db.ts + groups/{name}/CLAUDE.md</div>
+                <p>Two memory systems: SQLite for structured data (messages, tasks, state), and Markdown files for unstructured knowledge ("Mom's birthday is March 15"). The agent can read AND write both.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== TAKEAWAY ====== -->
+    <section class="fade-up">
+        <div class="takeaway">
+            <h3>💡 The Business Insight</h3>
+            <p><strong>NanoClaw's entire core is ~700 lines.</strong> Your Colab agent loop was ~50 lines. The difference is infrastructure (containers, WhatsApp, databases) — not intelligence. The agent pattern is the same.</p>
+            <p><strong>The most valuable decisions in NanoClaw aren't technical.</strong> They're: "What tools should the agent have?" (business question), "What should each group's CLAUDE.md say?" (product question), and "What gets mounted in each container?" (trust question).</p>
+            <p><strong>One developer built this in a weekend.</strong> With Claude Code. The same tools you used today. The only difference is he identified a real problem (security), had a clear 10× advantage (auditable code), and shipped fast. You can do this.</p>
+        </div>
+    </section>
+
+    <footer class="footer">
+        ISOM 260: AI for Business • Suffolk University • Session 4<br>
+        <a href="https://github.com/qwibitai/nanoclaw" target="_blank">github.com/qwibitai/nanoclaw</a> • MIT License
+    </footer>
+</div>
+
+<script>
+function showPanel(name) {
+    document.querySelectorAll('.code-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.file-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('panel-' + name).classList.add('active');
+    event.currentTarget.classList.add('active');
+}
+
+const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+</script>
+
+</body>
+</html>
