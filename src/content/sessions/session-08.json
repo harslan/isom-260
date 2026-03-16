@@ -27,49 +27,49 @@
   ],
   "agenda": [
     {
-      "time": "5:00 PM - 5:20 PM",
-      "title": "Part 1: The Agent Equation — Level 2",
-      "duration": "20 minutes",
-      "description": "You built a simple agent in Session 4. Now let's see what makes agents actually powerful in the real world.",
+      "time": "5:00 PM - 5:15 PM",
+      "title": "Part 1: From Products to Agents",
+      "duration": "15 minutes",
+      "description": "THE KEY INSIGHT: A chatbot answers questions. An agent DOES things. Let's meet the agent equation and the 500-line app that beat a 400,000-line codebase.",
       "bulletPoints": [
-        "Quick recall: LLM + Tools + Reasoning Loop + Memory = Agent. You built this. You own it.",
-        "What changed since Session 4? Agents went from demos to production (Claude Code, Devin, Cursor)",
-        "The 3 upgrades: Better reasoning (ReAct), Better planning (multi-step), Better collaboration (multi-agent)",
-        "LIVE DEMO: Prof. Arslan uses Claude Code to refactor a file — a real agent reasoning, planning, executing",
-        "Key insight: The agent DECIDES its own steps. Nobody hard-coded the workflow."
+        "Chatbot vs. Agent: One answers, the other acts. That distinction changes everything.",
+        "The Agent Equation: LLM + Tools + Reasoning Loop + Memory = Agent",
+        "NanoClaw vs OpenClaw: 500 lines of agent code beat 400,000 lines of traditional code. How?",
+        "Visual: nanoclaw-beginners-guide.html on projector — see the architecture at a glance",
+        "ACTION: Open the Session 4 Colab notebook, enter your API key. We're building an agent in 30 minutes."
       ]
     },
     {
-      "time": "5:20 PM - 5:45 PM",
-      "title": "Part 2: Advanced Agent Patterns",
-      "duration": "25 minutes",
-      "description": "Three patterns that separate toy agents from production agents. Every serious agent uses at least one.",
+      "time": "5:15 PM - 5:45 PM",
+      "title": "Part 2: Build Your First Agent",
+      "duration": "30 minutes",
+      "description": "Hands-on in Google Colab. You'll go from zero to a working multi-tool agent that decides for itself when and how to use tools.",
       "bulletPoints": [
-        "Pattern 1 — ReAct (Reason + Act): Think before you do. Observe, reason, act, repeat.",
-        "Pattern 2 — Chain-of-Thought Planning: Break big problems into steps BEFORE executing",
-        "Pattern 3 — Self-Reflection: Agent checks its own work, catches mistakes, retries",
-        "Visual walkthrough: Same task with naive agent vs. ReAct agent — watch the quality difference",
-        "When to use which: ReAct for complex research, CoT for multi-step tasks, self-reflection for high-stakes output"
+        "Open Session 4 Colab notebook. API key from Session 3 still works.",
+        "Single Tool (8 min): Give Claude a calculator tool — watch it decide when to use it and when to answer directly",
+        "Multi-Tool (10 min): Add stock price + company info tools. Watch Claude chain tools together to answer complex questions.",
+        "Experiment (12 min): Try your own questions. Ask 'What is the capital of France?' — Claude skips the tools entirely. It reasons about what it needs.",
+        "Key moment: You didn't program any logic. The LLM decided. That's the agent equation in action."
       ]
     },
     {
       "time": "5:45 PM - 6:10 PM",
-      "title": "Part 3: Multi-Agent Systems",
+      "title": "Part 3: What Makes Agents Powerful",
       "duration": "25 minutes",
-      "description": "One agent is powerful. A team of agents is transformative. How do you orchestrate them?",
+      "description": "You just built an agent. But it's naive — it uses tools once and stops. Here's what production agents do differently.",
       "bulletPoints": [
-        "The org chart analogy: Agents as specialized employees — researcher, writer, reviewer, coordinator",
-        "Architecture patterns: Pipeline (sequential), Debate (adversarial), Orchestrator (manager + workers)",
-        "LIVE WALKTHROUGH: A 3-agent content pipeline — Research Agent finds data, Writer Agent drafts, Editor Agent refines",
-        "Failure modes: Infinite loops, conflicting outputs, context loss between agents",
-        "Real-world examples: Customer support triage, financial report generation, code review pipelines"
+        "ReAct (Reason + Act): Think → Act → Observe → Repeat. The pattern behind every serious agent.",
+        "LIVE: react-agent-example.html — Play the trace. Watch an agent reason through a research task step by step.",
+        "Multi-Agent architectures: Pipeline (sequential), Debate (adversarial), Orchestrator (manager + workers)",
+        "MCP (Model Context Protocol): The USB-C of AI — one standard for connecting agents to any tool, any data source",
+        "Visual: advanced-agent-patterns.html — ReAct, multi-agent, and MCP in one interactive diagram"
       ]
     },
     {
       "time": "6:10 PM - 6:20 PM",
       "title": "Break",
       "duration": "10 minutes",
-      "description": "Stretch, grab coffee, think about which processes at your job could use an agent team.",
+      "description": "Stretch, grab coffee. You've gone from never building an agent to understanding production patterns. Next: you build a real one.",
       "isBreak": true
     },
     {
@@ -78,8 +78,8 @@
       "duration": "30 minutes",
       "description": "Hands-on in Google Colab. Build an agent that researches a topic, evaluates sources, and writes a structured report.",
       "bulletPoints": [
-        "Open Colab notebook. API key from Session 3 still works.",
-        "Phase 1 (8 min): Build the tools — web_search, evaluate_source, extract_key_facts",
+        "Open Session 8 Colab notebook. Same API key, new notebook.",
+        "Phase 1 (8 min): Build 3 research tools — web_search, evaluate_source, extract_key_facts",
         "Phase 2 (10 min): Wire the ReAct loop — agent decides what to search, evaluates results, searches again if needed",
         "Phase 3 (12 min): Add report generation — agent synthesizes findings into a structured briefing",
         "Challenge: Ask your agent to research a real business question. Does it find good sources? Does the report make sense?"
@@ -87,42 +87,28 @@
     },
     {
       "time": "6:50 PM - 7:10 PM",
-      "title": "Part 5: MCP & the Future of Agent Infrastructure",
+      "title": "Part 5: Business Automation & Agent ROI",
       "duration": "20 minutes",
-      "description": "How agents connect to the real world is changing. MCP is the USB-C of AI tools.",
+      "description": "Agents are impressive in demos. But where do they create real business value? MCP, automation strategy, and ROI.",
       "bulletPoints": [
-        "The problem: Every AI company builds tool integrations differently. It doesn't scale.",
-        "MCP (Model Context Protocol): One standard for connecting agents to any tool, any data source",
-        "Analogy: USB-C replaced 15 different cables. MCP replaces 15 different tool APIs.",
-        "Demo: How NanoClaw uses MCP to connect Claude to file system, browser, databases",
-        "The ecosystem: 1000+ MCP servers already — Slack, GitHub, Google Drive, Salesforce, databases",
-        "What this means for you: Build the tool once, every agent can use it"
-      ]
-    },
-    {
-      "time": "7:10 PM - 7:22 PM",
-      "title": "Part 6: Business Automation & Agent ROI",
-      "duration": "12 minutes",
-      "description": "Where do agents actually create business value? A framework for deciding what to automate.",
-      "bulletPoints": [
+        "MCP ecosystem: 1000+ servers already — Slack, GitHub, Google Drive, Salesforce, databases",
+        "NanoClaw + MCP demo: See how a real agent connects to tools via the universal standard",
         "The Automation Matrix: High volume + clear rules = automate. Low volume + judgment = augment.",
-        "Case studies: Invoice processing (full automation), sales outreach (agent + human review), strategy (human + AI assist)",
-        "Jobs that change: Data entry → Data validation. Report writing → Report editing. Research → Research direction.",
-        "New roles emerging: Agent Architect, Prompt Operations Manager, AI Process Designer",
-        "The trust equation: Autonomy increases as stakes decrease. Human-in-the-loop for high-stakes decisions.",
-        "ROI framework: Time saved x hourly cost x error reduction - agent cost = monthly value"
+        "Case studies: Invoice processing (full automation), sales outreach (agent + human), strategy (human + AI assist)",
+        "ROI framework: Time saved × hourly cost × error reduction − agent cost = monthly value",
+        "New roles emerging: Agent Architect, Prompt Operations Manager, AI Process Designer"
       ]
     },
     {
-      "time": "7:22 PM - 7:30 PM",
-      "title": "Part 7: Wrap-Up + Homework",
-      "duration": "8 minutes",
-      "description": "From single tools to agent teams. You've seen the full stack of autonomous AI.",
+      "time": "7:10 PM - 7:20 PM",
+      "title": "Part 6: Wrap-Up + Homework",
+      "duration": "10 minutes",
+      "description": "At 5:00 you'd never built an agent. At 6:50 you had a ReAct research agent that reasons, evaluates, and reports.",
       "bulletPoints": [
-        "Session 4: You built a 3-tool agent. Today: You built a research agent with ReAct reasoning.",
-        "The progression: Tool Use → Single Agent → Multi-Agent → Business Automation",
+        "The journey: Tool Use → Single Agent → ReAct Agent → Multi-Agent → Business Automation",
+        "Homework: Extend your research agent, design a multi-agent system, explore MCP servers, read Anthropic's agent guide",
+        "NanoClaw code walkthrough available as take-home reading — see how 500 lines of agent code actually work",
         "Key question to carry forward: What should be autonomous, what needs a human, and who decides?",
-        "Homework overview: Extend your agent, write an automation proposal, explore MCP",
         "Next week: Ethics & Responsible AI — the guardrails that make all of this safe and trustworthy"
       ]
     }
