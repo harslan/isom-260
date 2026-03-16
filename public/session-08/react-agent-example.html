@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session 8: ReAct Agent Live Example — ISOM 260</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.min.js"></script>
+    <style>
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #0f1424;
+            --bg-card: #141929;
+            --bg-elevated: #1a2035;
+            --cyan: #00e5ff;
+            --cyan-dim: #00b8d4;
+            --cyan-glow: rgba(0, 229, 255, 0.15);
+            --cyan-glow-strong: rgba(0, 229, 255, 0.3);
+            --magenta: #ff006e;
+            --magenta-glow: rgba(255, 0, 110, 0.15);
+            --yellow: #ffd600;
+            --green: #00e676;
+            --orange: #ff9100;
+            --text-primary: #e8ecf4;
+            --text-secondary: #8892a8;
+            --text-dim: #5a6478;
+            --border: rgba(0, 229, 255, 0.1);
+            --border-strong: rgba(0, 229, 255, 0.25);
+            --grid-line: rgba(0, 229, 255, 0.04);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background:
+                linear-gradient(var(--grid-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .glow-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .glow-orb-1 { width: 500px; height: 500px; background: rgba(255, 0, 110, 0.06); top: 10%; right: -100px; }
+        .glow-orb-2 { width: 400px; height: 400px; background: rgba(0, 229, 255, 0.05); bottom: 20%; left: -100px; }
+        .glow-orb-3 { width: 350px; height: 350px; background: rgba(255, 214, 0, 0.04); top: 60%; right: 10%; }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ====== HERO ====== */
+        .hero { padding: 4rem 0 2rem; }
+
+        .session-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--magenta-glow);
+            border: 1px solid rgba(255, 0, 110, 0.3);
+            border-radius: 100px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--magenta);
+            margin-bottom: 2rem;
+        }
+
+        .session-badge .dot {
+            width: 6px; height: 6px;
+            background: var(--magenta);
+            border-radius: 50%;
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(255,0,110,0.4); }
+            50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(255,0,110,0); }
+        }
+
+        .hero h1 {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(2.2rem, 4.5vw, 3.5rem);
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero h1 .cyan {
+            background: linear-gradient(135deg, var(--cyan), var(--cyan-dim));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            max-width: 750px;
+        }
+
+        /* ====== SECTIONS ====== */
+        .section {
+            padding: 3.5rem 0;
+            border-top: 1px solid var(--border);
+        }
+
+        .section-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--magenta);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-label::before {
+            content: '';
+            width: 24px; height: 1px;
+            background: var(--magenta);
+        }
+
+        .section-title {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+        }
+
+        .section-desc {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            max-width: 700px;
+            margin-bottom: 2rem;
+        }
+
+        /* ====== USER QUERY BOX ====== */
+        .query-box {
+            background: linear-gradient(135deg, var(--cyan-glow), var(--magenta-glow));
+            border: 1px solid var(--border-strong);
+            border-radius: 16px;
+            padding: 2rem 2.5rem;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .query-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--cyan), var(--magenta));
+        }
+
+        .query-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--cyan);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .query-text {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        .query-text em {
+            font-style: normal;
+            color: var(--yellow);
+        }
+
+        /* ====== TRACE STEPS ====== */
+        .trace-container {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .trace-container::before {
+            content: '';
+            position: absolute;
+            left: 11px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--cyan), var(--magenta), var(--yellow), var(--green));
+            opacity: 0.3;
+        }
+
+        .trace-step {
+            position: relative;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            transform: translateX(-20px);
+            transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .trace-step.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .trace-dot {
+            position: absolute;
+            left: -2rem;
+            top: 1.2rem;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            transform: translateX(6px);
+        }
+
+        .trace-dot.thought { background: var(--cyan); box-shadow: 0 0 12px var(--cyan-glow-strong); }
+        .trace-dot.action { background: var(--magenta); box-shadow: 0 0 12px var(--magenta-glow); }
+        .trace-dot.observation { background: var(--yellow); box-shadow: 0 0 12px rgba(255, 214, 0, 0.3); }
+        .trace-dot.final { background: var(--green); box-shadow: 0 0 12px rgba(0, 230, 118, 0.3); }
+
+        .step-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            transition: border-color 0.3s;
+        }
+
+        .step-card:hover {
+            border-color: var(--border-strong);
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .step-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 0.25rem 0.75rem;
+            border-radius: 100px;
+            white-space: nowrap;
+        }
+
+        .step-badge.thought {
+            background: rgba(0, 229, 255, 0.12);
+            color: var(--cyan);
+            border: 1px solid rgba(0, 229, 255, 0.25);
+        }
+        .step-badge.action {
+            background: rgba(255, 0, 110, 0.12);
+            color: var(--magenta);
+            border: 1px solid rgba(255, 0, 110, 0.25);
+        }
+        .step-badge.observation {
+            background: rgba(255, 214, 0, 0.12);
+            color: var(--yellow);
+            border: 1px solid rgba(255, 214, 0, 0.25);
+        }
+        .step-badge.final {
+            background: rgba(0, 230, 118, 0.12);
+            color: var(--green);
+            border: 1px solid rgba(0, 230, 118, 0.25);
+        }
+
+        .step-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+        }
+
+        .step-content {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .step-content strong {
+            color: var(--text-primary);
+        }
+
+        .step-content code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            background: var(--bg-elevated);
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+            color: var(--cyan);
+        }
+
+        .tool-call {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            margin-top: 0.5rem;
+            color: var(--magenta);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tool-call i { width: 16px; height: 16px; }
+
+        .observation-data {
+            background: var(--bg-elevated);
+            border: 1px solid rgba(255, 214, 0, 0.15);
+            border-radius: 8px;
+            padding: 1rem 1.25rem;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .observation-data .source-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .source-item .score {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+
+        .score.high { background: rgba(0, 230, 118, 0.15); color: var(--green); }
+        .score.mid { background: rgba(255, 214, 0, 0.15); color: var(--yellow); }
+
+        .credibility-card {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            margin: 0.25rem 0.25rem 0.25rem 0;
+            font-size: 0.85rem;
+        }
+
+        .credibility-card .cred-score {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 0.8rem;
+        }
+
+        .cred-score.s9 { color: var(--green); }
+        .cred-score.s8 { color: var(--cyan); }
+        .cred-score.s7 { color: var(--yellow); }
+
+        /* ====== FACTS EXTRACTED ====== */
+        .facts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.75rem;
+            margin-top: 0.75rem;
+        }
+
+        .fact-chip {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+
+        .fact-chip .number {
+            font-size: 1.4rem;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .fact-chip .label {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.75rem;
+            color: var(--text-dim);
+        }
+
+        .fact-chip.cyan .number { color: var(--cyan); }
+        .fact-chip.magenta .number { color: var(--magenta); }
+        .fact-chip.yellow .number { color: var(--yellow); }
+        .fact-chip.green .number { color: var(--green); }
+        .fact-chip.orange .number { color: var(--orange); }
+
+        /* ====== FINAL REPORT ====== */
+        .report-card {
+            background: linear-gradient(135deg, rgba(0, 230, 118, 0.05), rgba(0, 229, 255, 0.05));
+            border: 1px solid rgba(0, 230, 118, 0.2);
+            border-radius: 16px;
+            padding: 2rem 2.5rem;
+            margin-top: 1rem;
+        }
+
+        .report-card h3 {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--green);
+        }
+
+        .report-section {
+            margin-bottom: 1.25rem;
+        }
+
+        .report-section h4 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--cyan);
+            margin-bottom: 0.4rem;
+        }
+
+        .report-section p, .report-section li {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .report-section ul {
+            padding-left: 1.25rem;
+        }
+
+        .report-section li {
+            margin-bottom: 0.3rem;
+        }
+
+        .confidence-bar-container {
+            margin-top: 0.5rem;
+        }
+
+        .confidence-bar-track {
+            height: 8px;
+            background: var(--bg-elevated);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .confidence-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            background: linear-gradient(90deg, var(--cyan), var(--green));
+            width: 0;
+            transition: width 1.5s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .confidence-label {
+            display: flex;
+            justify-content: space-between;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            margin-top: 0.25rem;
+        }
+
+        /* ====== COMPARISON ====== */
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-grid { grid-template-columns: 1fr; }
+        }
+
+        .comparison-card {
+            border-radius: 16px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .comparison-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+        }
+
+        .comparison-card.naive {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 145, 0, 0.2);
+        }
+        .comparison-card.naive::before { background: var(--orange); }
+
+        .comparison-card.react {
+            background: var(--bg-card);
+            border: 1px solid rgba(0, 230, 118, 0.2);
+        }
+        .comparison-card.react::before { background: var(--green); }
+
+        .comparison-card h3 {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .comparison-card.naive h3 { color: var(--orange); }
+        .comparison-card.react h3 { color: var(--green); }
+
+        .comparison-card .verdict {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .comparison-card.naive .verdict { color: rgba(255, 145, 0, 0.6); }
+        .comparison-card.react .verdict { color: rgba(0, 230, 118, 0.6); }
+
+        .comparison-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .comparison-card li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            line-height: 1.5;
+        }
+
+        .comparison-card li .icon {
+            flex-shrink: 0;
+            margin-top: 0.2rem;
+        }
+
+        .comparison-card.naive li .icon { color: var(--orange); }
+        .comparison-card.react li .icon { color: var(--green); }
+
+        /* ====== STATS ROW ====== */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin: 2.5rem 0;
+        }
+
+        @media (max-width: 600px) {
+            .stats-row { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            text-align: center;
+        }
+
+        .stat-card .stat-value {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-card .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        .stat-card:nth-child(1) .stat-value { color: var(--cyan); }
+        .stat-card:nth-child(2) .stat-value { color: var(--magenta); }
+        .stat-card:nth-child(3) .stat-value { color: var(--yellow); }
+        .stat-card:nth-child(4) .stat-value { color: var(--green); }
+
+        /* ====== INSIGHT CALLOUT ====== */
+        .insight-box {
+            background: linear-gradient(135deg, var(--cyan-glow), transparent);
+            border: 1px solid rgba(0, 229, 255, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .insight-box .icon {
+            color: var(--cyan);
+            flex-shrink: 0;
+            margin-top: 0.15rem;
+        }
+
+        .insight-box p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .insight-box strong {
+            color: var(--text-primary);
+        }
+
+        /* ====== FOOTER ====== */
+        .footer {
+            padding: 3rem 0;
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .footer p {
+            color: var(--text-dim);
+            font-size: 0.85rem;
+        }
+
+        .footer a {
+            color: var(--cyan);
+            text-decoration: none;
+        }
+
+        .footer a:hover { text-decoration: underline; }
+
+        /* ====== PLAY BUTTON ====== */
+        .play-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .play-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, var(--cyan), var(--cyan-dim));
+            color: var(--bg-primary);
+            border: none;
+            border-radius: 8px;
+            font-family: 'Sora', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .play-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 20px var(--cyan-glow-strong);
+        }
+
+        .play-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .reset-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: 'Sora', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .reset-btn:hover {
+            border-color: var(--border-strong);
+            color: var(--text-primary);
+        }
+
+        .step-counter {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        /* ====== TYPING ANIMATION ====== */
+        @keyframes typing-cursor {
+            0%, 100% { border-right-color: var(--cyan); }
+            50% { border-right-color: transparent; }
+        }
+
+        .typing {
+            border-right: 2px solid var(--cyan);
+            animation: typing-cursor 0.8s step-end infinite;
+            padding-right: 2px;
+        }
+
+        /* ====== RESPONSIVE ====== */
+        @media (max-width: 768px) {
+            .container { padding: 0 1rem; }
+            .query-box { padding: 1.5rem; }
+            .query-text { font-size: 1.1rem; }
+            .report-card { padding: 1.5rem; }
+            .facts-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <div class="glow-orb glow-orb-1"></div>
+    <div class="glow-orb glow-orb-2"></div>
+    <div class="glow-orb glow-orb-3"></div>
+
+    <div class="container">
+        <!-- HERO -->
+        <div class="hero">
+            <div class="session-badge">
+                <span class="dot"></span>
+                Session 8 &middot; Live Example
+            </div>
+            <h1>Watch a <span class="cyan">ReAct Agent</span> Think</h1>
+            <p>This is exactly what happens inside your Colab notebook. The agent receives a question, then <strong>reasons</strong>, <strong>acts</strong>, <strong>observes</strong>, and <strong>repeats</strong> until it has a great answer.</p>
+        </div>
+
+        <!-- THE QUERY -->
+        <div class="section">
+            <div class="section-label">The Question</div>
+            <div class="query-box">
+                <div class="query-label">
+                    <i data-lucide="message-circle" style="width:14px;height:14px;"></i>
+                    User Input
+                </div>
+                <div class="query-text">
+                    "Research the <em>impact of AI on the job market</em>. I need specific data, credible sources, and a balanced view."
+                </div>
+            </div>
+
+            <!-- STATS -->
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-steps">0</div>
+                    <div class="stat-label">Agent Steps</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-tools">0</div>
+                    <div class="stat-label">Tool Calls</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-sources">0</div>
+                    <div class="stat-label">Sources Checked</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-facts">0</div>
+                    <div class="stat-label">Facts Extracted</div>
+                </div>
+            </div>
+
+            <!-- PLAY CONTROLS -->
+            <div class="play-controls">
+                <button class="play-btn" id="playBtn" onclick="playTrace()">
+                    <i data-lucide="play" style="width:16px;height:16px;"></i>
+                    Play Agent Trace
+                </button>
+                <button class="reset-btn" id="resetBtn" onclick="resetTrace()">
+                    <i data-lucide="rotate-ccw" style="width:16px;height:16px;"></i>
+                    Reset
+                </button>
+                <span class="step-counter" id="stepCounter"></span>
+            </div>
+
+            <!-- TRACE -->
+            <div class="trace-container" id="traceContainer">
+
+                <!-- STEP 1: THOUGHT -->
+                <div class="trace-step" data-step="1">
+                    <div class="trace-dot thought"></div>
+                    <div class="step-card">
+                        <div class="step-header">
+                            <span class="step-badge thought">Thought</span>
+                            <span class="step-number">Step 1</span>
+                        </div>
+                        <div class="step-content">
+                            The user wants research on AI's impact on jobs. I need <strong>specific data with numbers</strong>, not opinions. Let me start by searching for recent, authoritative sources on AI and employment. I'll look for statistics from reputable organizations.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 2: ACTION -->
+                <div class="trace-step" data-step="2">
+                    <div class="trace-dot action"></div>
+                    <div class="step-card">
+                        <div class="step-header">
+                            <span class="step-badge action">Action</span>
+                            <span class="step-number">Step 2</span>
+                        </div>
+                        <div class="step-content">
+                            Calling the search tool with a specific query targeting data and statistics:
+                            <div class="tool-call">
+                                <i data-lucide="search" style="width:14px;height:14px;"></i>
+                                web_search("AI impact on job market statistics 2025")
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 3: OBSERVATION -->
+                <div class="trace-step" data-step="3">
+                    <div class="trace-dot observation"></div>
+                    <div class="step-card">
+                        <div class="step-header">
+                            <span class="step-badge observation">Observation</span>
+                            <span class="step-number">Step 3</span>
+                        </div>
+                        <div class="step-content">
+                            Got 4 results back. Let me see what we have:
+                            <div class="observation-data">
+                                <div class="source-item">
+                                    <span class="score high">9/10</span>
+                                    <span><strong>Reuters</strong> &mdash; "AI Will Transform 40% of Jobs Worldwide, IMF Says"</span>
+                                </div>
+                                <div class="source-item">
+                                    <span class="score high">9/10</span>
+                                    <span><strong>McKinsey</strong> &mdash; "AI Could Automate 30% of Work Hours by 2030"</span>
+                                </div>
+                                <div class="source-item">
+                                    <span class="score high">9/10</span>
+                                    <span><strong>World Economic Forum</strong> &mdash; "85M Jobs Displaced, 97M Created"</span>
+                                </div>
+                                <div class="source-item">
+                                    <span class="score mid">7/10</span>
+                                    <span><strong>LinkedIn Economic Graph</strong> &mdash; "AI Jobs Boom: Tech Salaries Hit Record"</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 4: THOUGHT -->
+                <div class="trace-step" data-step="4">
+                    <div class="trace-dot thought"></div>
+                    <div class="step-card">
+                        <div class="step-header">
+                            <span class="step-badge thought">Thought</span>
+                            <span class="step-number">Step 4</span>
+                        </div>
+                        <div class="step-content">
+                            Good results. I have data from IMF, McKinsey, WEF, and LinkedIn. But the user asked for a <strong>"balanced view"</strong> — McKinsey is a consulting firm that might lean pro-technology. I should <strong>verify source credibility</strong> before trusting the data. Let me check the two most impactful sources.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 5: ACTION -->
+                <div class="trace-step" data-step="5">
+                    <div class="trace-dot action"></div>
+                    <div class="step-card">
+                        <div class="step-header">
+                            <span class="step-badge action">Action</span>
+                            <span class="step-number">Step 5</span>
+                        </div>
+                        <div class="step-content">
+                            Evaluating the credibility of my key sources:
+                            <div class="tool-call">
+                                <i data-lucide="shield-check" style="width:14px;height:14px;"></i>
+                                evaluate_source("Reuters")
+                            </div>
+                            <div class="tool-call" style="margin-top:0.5rem;">
+                                <i data-lucide="shield-check" style="width:14px;height:14px;"></i>
+                                evaluate_source("McKinsey Global Institute")
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 6: OBSERVATION -->
+                <div class="trace-step" data-step="6">
+                    <div class="trace-dot observation"></div>
+                    <div class="step-card">
+                        <div class="step-header">
+                            <span class="step-badge observation">Observation</span>
+                            <span class="step-number">Step 6</span>
+                        </div>
+                        <div class="step-content">
+                            Source credibility results:
+                            <div style="margin-top: 0.75rem;">
+                                <div class="credibility-card">
+                                    <span class="cred-score s9">9/10</span>
+                                    <strong>Reuters</strong> &mdash; Wire Service &mdash; "Minimal bias. Highly trustworthy."
+                                </div>
+                                <div class="credibility-card">
+                                    <span class="cred-score s8">8/10</span>
+                                    <strong>McKinsey</strong> &mdash; Consulting &mdash; "Pro-business perspective. May understate disruption risks."
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 7: THOUGHT -->
+                <div class="trace-step" data-step="7">
+                    <div class="trace-dot thought"></div>
+                    <div class="step-card">
+                        <div class="step-header">
+                            <span class="step-badge thought">Thought</span>
+                            <span class="step-number">Step 7</span>
+                        </div>
+                        <div class="step-content">
+                            Interesting — McKinsey scores 8/10 but with a noted <strong>"pro-technology perspective"</strong> that may <strong>understate disruption risks</strong>. This is exactly the kind of nuance the user needs for a "balanced view." Reuters and WEF are solid anchors. Now let me extract the hard numbers from these sources for the report.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 8: ACTION -->
+                <div class="trace-step" data-step="8">
+                    <div class="trace-dot action"></div>
+                    <div class="step-card">
+                        <div class="step-header">
+                            <span class="step-badge action">Action</span>
+                            <span class="step-number">Step 8</span>
+                        </div>
+                        <div class="step-content">
+                            Extracting structured facts from the search results:
+                            <div class="tool-call">
+                                <i data-lucide="file-text" style="width:14px;height:14px;"></i>
+                                extract_key_facts("IMF estimates AI will affect 40% of global employment. In advanced economies, 60% of jobs exposed. McKinsey: 30% of work hours automatable by 2030. WEF: 85M displaced, 97M created, net +12M jobs...")
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 9: OBSERVATION -->
+                <div class="trace-step" data-step="9">
+                    <div class="trace-dot observation"></div>
+                    <div class="step-card">
+                        <div class="step-header">
+                            <span class="step-badge observation">Observation</span>
+                            <span class="step-number">Step 9</span>
+                        </div>
+                        <div class="step-content">
+                            Key facts extracted and categorized:
+                            <div class="facts-grid">
+                                <div class="fact-chip cyan">
+                                    <span class="number">40%</span>
+                                    <span class="label">Jobs affected globally (IMF)</span>
+                                </div>
+                                <div class="fact-chip magenta">
+                                    <span class="number">60%</span>
+                                    <span class="label">Jobs exposed in advanced economies</span>
+                                </div>
+                                <div class="fact-chip yellow">
+                                    <span class="number">85M</span>
+                                    <span class="label">Jobs displaced by 2025 (WEF)</span>
+                                </div>
+                                <div class="fact-chip green">
+                                    <span class="number">97M</span>
+                                    <span class="label">New jobs created (WEF)</span>
+                                </div>
+                                <div class="fact-chip orange">
+                                    <span class="number">30%</span>
+                                    <span class="label">Work hours automatable by 2030</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 10: FINAL THOUGHT -->
+                <div class="trace-step" data-step="10">
+                    <div class="trace-dot thought"></div>
+                    <div class="step-card">
+                        <div class="step-header">
+                            <span class="step-badge thought">Thought</span>
+                            <span class="step-number">Step 10</span>
+                        </div>
+                        <div class="step-content">
+                            I now have <strong>5 hard data points</strong> from <strong>4 verified sources</strong> with credibility ratings. I noted McKinsey's pro-tech bias for balance. I have both the displacement story (85M jobs) and the creation story (97M jobs). The user asked for a balanced view — I can deliver that now. Time to synthesize.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 11: FINAL ANSWER -->
+                <div class="trace-step" data-step="11">
+                    <div class="trace-dot final"></div>
+                    <div class="step-card" style="border-color: rgba(0, 230, 118, 0.2);">
+                        <div class="step-header">
+                            <span class="step-badge final">Synthesized Report</span>
+                            <span class="step-number">Final Output</span>
+                        </div>
+                        <div class="step-content">
+                            <div class="report-card">
+                                <h3>Research Briefing: AI's Impact on the Job Market</h3>
+
+                                <div class="report-section">
+                                    <h4>Executive Summary</h4>
+                                    <p>AI will significantly reshape global employment, but the narrative is <strong>transformation, not elimination</strong>. While 85 million jobs face displacement, approximately 97 million new roles will emerge — a net positive of 12 million jobs. However, the transition will be uneven and requires massive reskilling.</p>
+                                </div>
+
+                                <div class="report-section">
+                                    <h4>Key Findings</h4>
+                                    <ul>
+                                        <li><strong>40% of all jobs worldwide</strong> will be affected by AI (IMF, via Reuters, credibility: 9/10)</li>
+                                        <li><strong>60% of jobs in advanced economies</strong> are exposed — half will benefit, half face displacement risk</li>
+                                        <li><strong>30% of current work hours</strong> could be automated by 2030 (McKinsey, credibility: 8/10 — note: may understate disruption)</li>
+                                        <li><strong>Net +12 million jobs</strong> projected: 97M created vs. 85M displaced (World Economic Forum)</li>
+                                        <li><strong>Top growing roles:</strong> AI specialists, data analysts, digital transformation experts</li>
+                                    </ul>
+                                </div>
+
+                                <div class="report-section">
+                                    <h4>Source Quality</h4>
+                                    <p>3 of 4 sources rated 8+/10 credibility. Note: McKinsey's pro-business perspective may present an optimistic view of automation. Balanced against IMF and WEF data which include displacement risks.</p>
+                                </div>
+
+                                <div class="report-section">
+                                    <h4>Confidence Level</h4>
+                                    <div class="confidence-bar-container">
+                                        <div class="confidence-bar-track">
+                                            <div class="confidence-bar-fill" id="confidenceBar"></div>
+                                        </div>
+                                        <div class="confidence-label">
+                                            <span>Low</span>
+                                            <span style="color: var(--green); font-weight: 600;">HIGH (82%)</span>
+                                            <span>Max</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="report-section">
+                                    <h4>Recommended Next Steps</h4>
+                                    <ul>
+                                        <li>Research industry-specific impacts (healthcare, finance, manufacturing)</li>
+                                        <li>Investigate reskilling programs and their effectiveness</li>
+                                        <li>Examine geographic differences (advanced vs. developing economies)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- NAIVE vs REACT COMPARISON -->
+        <div class="section">
+            <div class="section-label">Why ReAct Matters</div>
+            <div class="section-title">Same Question, Two Agents</div>
+            <div class="section-desc">What happens when you ask a naive agent vs. a ReAct agent the same question?</div>
+
+            <div class="comparison-grid">
+                <div class="comparison-card naive">
+                    <h3>Naive Agent</h3>
+                    <div class="verdict">1 step &middot; 0 tools &middot; No verification</div>
+                    <ul>
+                        <li><span class="icon">&times;</span> Answers from memory (no search)</li>
+                        <li><span class="icon">&times;</span> No source citations</li>
+                        <li><span class="icon">&times;</span> No credibility checks</li>
+                        <li><span class="icon">&times;</span> Vague: "AI will impact many jobs"</li>
+                        <li><span class="icon">&times;</span> May hallucinate statistics</li>
+                        <li><span class="icon">&times;</span> No structure or confidence level</li>
+                    </ul>
+                </div>
+                <div class="comparison-card react">
+                    <h3>ReAct Agent</h3>
+                    <div class="verdict">11 steps &middot; 5 tool calls &middot; 4 sources verified</div>
+                    <ul>
+                        <li><span class="icon">&check;</span> Searched for specific data</li>
+                        <li><span class="icon">&check;</span> Cited Reuters, IMF, McKinsey, WEF</li>
+                        <li><span class="icon">&check;</span> Checked source credibility (8-9/10)</li>
+                        <li><span class="icon">&check;</span> Specific: "40% of jobs, +12M net"</li>
+                        <li><span class="icon">&check;</span> Noted McKinsey's pro-tech bias</li>
+                        <li><span class="icon">&check;</span> Structured report with confidence level</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="insight-box">
+                <div class="icon"><i data-lucide="lightbulb" style="width:20px;height:20px;"></i></div>
+                <p><strong>This is what you're about to build.</strong> Open the Colab notebook and you'll wire these exact same tools — <code>web_search</code>, <code>evaluate_source</code>, <code>extract_key_facts</code> — into a ReAct loop. By the end of class, your agent will produce reports like this one.</p>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="footer">
+            <p><strong>ISOM 260: AI for Business</strong> &middot; Suffolk University &middot; Session 8</p>
+            <p style="margin-top: 0.5rem;"><a href="https://isom-260.vercel.app">isom-260.vercel.app</a></p>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        const steps = document.querySelectorAll('.trace-step');
+        let currentStep = 0;
+        let isPlaying = false;
+        let playTimeout = null;
+
+        // Stats tracking
+        const statMap = {
+            steps: 0,
+            tools: 0,
+            sources: 0,
+            facts: 0
+        };
+
+        // What each step adds to stats
+        const stepStats = [
+            { steps: 1 },                          // 1: thought
+            { steps: 2, tools: 1 },                 // 2: action (web_search)
+            { steps: 3, sources: 4 },               // 3: observation
+            { steps: 4 },                           // 4: thought
+            { steps: 5, tools: 3 },                 // 5: action (2x evaluate_source)
+            { steps: 6, sources: 4 },               // 6: observation
+            { steps: 7 },                           // 7: thought
+            { steps: 8, tools: 4 },                 // 8: action (extract_key_facts)
+            { steps: 9, facts: 5 },                 // 9: observation
+            { steps: 10 },                          // 10: thought
+            { steps: 11, tools: 5, facts: 5 },      // 11: final
+        ];
+
+        function updateStats(stepIndex) {
+            const s = stepStats[stepIndex];
+            if (s.steps) document.getElementById('stat-steps').textContent = s.steps;
+            if (s.tools) document.getElementById('stat-tools').textContent = s.tools;
+            if (s.sources) document.getElementById('stat-sources').textContent = s.sources;
+            if (s.facts) document.getElementById('stat-facts').textContent = s.facts;
+        }
+
+        function showStep(index) {
+            if (index >= steps.length) {
+                isPlaying = false;
+                document.getElementById('playBtn').disabled = false;
+                document.getElementById('stepCounter').textContent = 'Complete!';
+                // Animate confidence bar
+                setTimeout(() => {
+                    const bar = document.getElementById('confidenceBar');
+                    if (bar) bar.style.width = '82%';
+                }, 300);
+                return;
+            }
+
+            steps[index].classList.add('visible');
+            updateStats(index);
+            currentStep = index + 1;
+            document.getElementById('stepCounter').textContent = `Step ${currentStep} of ${steps.length}`;
+
+            if (isPlaying) {
+                // Variable timing: thoughts faster, observations slower
+                const stepType = steps[index].querySelector('.step-badge').textContent.trim().toLowerCase();
+                let delay = 1200;
+                if (stepType === 'thought') delay = 1000;
+                if (stepType === 'observation') delay = 1800;
+                if (index === steps.length - 1) delay = 500; // final step
+
+                playTimeout = setTimeout(() => showStep(index + 1), delay);
+            }
+        }
+
+        function playTrace() {
+            isPlaying = true;
+            document.getElementById('playBtn').disabled = true;
+
+            // Start from where we left off, or from beginning
+            if (currentStep >= steps.length) {
+                resetTrace();
+                setTimeout(() => {
+                    isPlaying = true;
+                    document.getElementById('playBtn').disabled = true;
+                    showStep(0);
+                }, 300);
+            } else {
+                showStep(currentStep);
+            }
+        }
+
+        function resetTrace() {
+            isPlaying = false;
+            currentStep = 0;
+            if (playTimeout) clearTimeout(playTimeout);
+            steps.forEach(s => s.classList.remove('visible'));
+            document.getElementById('stat-steps').textContent = '0';
+            document.getElementById('stat-tools').textContent = '0';
+            document.getElementById('stat-sources').textContent = '0';
+            document.getElementById('stat-facts').textContent = '0';
+            document.getElementById('stepCounter').textContent = '';
+            document.getElementById('playBtn').disabled = false;
+            const bar = document.getElementById('confidenceBar');
+            if (bar) bar.style.width = '0';
+        }
+    </script>
+</body>
+</html>

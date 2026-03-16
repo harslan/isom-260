@@ -1,0 +1,1663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Agent Patterns — ISOM 260</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.min.js"></script>
+    <style>
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #0f1424;
+            --bg-card: #141929;
+            --bg-elevated: #1a2035;
+            --cyan: #00e5ff;
+            --cyan-dim: #00b8d4;
+            --cyan-glow: rgba(0, 229, 255, 0.15);
+            --cyan-glow-strong: rgba(0, 229, 255, 0.3);
+            --magenta: #ff006e;
+            --magenta-glow: rgba(255, 0, 110, 0.15);
+            --yellow: #ffd600;
+            --yellow-glow: rgba(255, 214, 0, 0.15);
+            --green: #00e676;
+            --green-glow: rgba(0, 230, 118, 0.15);
+            --orange: #ff9100;
+            --purple: #b388ff;
+            --text-primary: #e8ecf4;
+            --text-secondary: #8892a8;
+            --text-dim: #5a6478;
+            --border: rgba(0, 229, 255, 0.1);
+            --border-strong: rgba(0, 229, 255, 0.25);
+            --grid-line: rgba(0, 229, 255, 0.04);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background:
+                linear-gradient(var(--grid-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .glow-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .glow-orb-1 { width: 500px; height: 500px; background: rgba(255, 0, 110, 0.06); top: 10%; right: -100px; }
+        .glow-orb-2 { width: 400px; height: 400px; background: rgba(0, 229, 255, 0.05); bottom: 20%; left: -100px; }
+        .glow-orb-3 { width: 350px; height: 350px; background: rgba(255, 214, 0, 0.04); top: 50%; left: 30%; }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ====== HERO ====== */
+        .hero {
+            padding: 5rem 0 3rem;
+        }
+
+        .session-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--magenta-glow);
+            border: 1px solid rgba(255, 0, 110, 0.3);
+            border-radius: 100px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--magenta);
+            margin-bottom: 2rem;
+        }
+
+        .session-badge .dot {
+            width: 6px; height: 6px;
+            background: var(--magenta);
+            border-radius: 50%;
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(255,0,110,0.4); }
+            50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(255,0,110,0); }
+        }
+
+        .hero h1 {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero h1 .magenta { color: var(--magenta); }
+        .hero h1 .cyan {
+            background: linear-gradient(135deg, var(--cyan), var(--cyan-dim));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+        }
+
+        /* ====== SECTIONS ====== */
+        .section {
+            padding: 4rem 0;
+            border-top: 1px solid var(--border);
+        }
+
+        .section-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--magenta);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-label::before {
+            content: '';
+            width: 24px; height: 1px;
+            background: var(--magenta);
+        }
+
+        .section-title {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(1.6rem, 3vw, 2.2rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+        }
+
+        .section-desc {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            max-width: 700px;
+            margin-bottom: 2.5rem;
+        }
+
+        /* ====== REACT TRACE ====== */
+        .react-trace {
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .react-query {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.9rem;
+        }
+
+        .react-query .query-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            min-width: 50px;
+        }
+
+        .react-query .query-text {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .react-step {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+            opacity: 0;
+            transform: translateX(-20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .react-step.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .react-step-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            min-width: 110px;
+            padding-top: 0.6rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.4rem;
+        }
+
+        .react-step-label.thought { color: var(--cyan); }
+        .react-step-label.action { color: var(--magenta); }
+        .react-step-label.observation { color: var(--yellow); }
+
+        .react-step-content {
+            flex: 1;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .react-step.thought-step .react-step-content { border-left: 3px solid var(--cyan); }
+        .react-step.action-step .react-step-content { border-left: 3px solid var(--magenta); }
+        .react-step.observation-step .react-step-content { border-left: 3px solid var(--yellow); }
+
+        .react-step-content code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            padding: 0.1rem 0.35rem;
+            background: rgba(255, 0, 110, 0.1);
+            border: 1px solid rgba(255, 0, 110, 0.2);
+            border-radius: 4px;
+            color: var(--magenta);
+        }
+
+        .react-step-content .highlight-cyan { color: var(--cyan); font-weight: 500; }
+        .react-step-content .highlight-green { color: var(--green); font-weight: 500; }
+
+        .react-final {
+            margin-top: 1rem;
+            padding: 1rem 1.25rem;
+            background: rgba(0, 230, 118, 0.06);
+            border: 1px solid rgba(0, 230, 118, 0.2);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: var(--green);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .react-final.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .cycle-separator {
+            text-align: center;
+            padding: 0.5rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--text-dim);
+            letter-spacing: 0.1em;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .cycle-separator.visible { opacity: 1; }
+
+        /* ====== COMPARISON ====== */
+        .compare-grid {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 1.5rem;
+            align-items: start;
+            margin: 2rem 0;
+        }
+
+        .compare-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+        }
+
+        .compare-card h3 {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .compare-card .subtitle {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .compare-card.naive .subtitle { color: var(--text-dim); }
+        .compare-card.react .subtitle { color: var(--cyan); }
+
+        .compare-card.react {
+            border-color: var(--border-strong);
+            box-shadow: 0 0 40px rgba(0, 229, 255, 0.05);
+        }
+
+        .compare-line {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            padding: 0.4rem 0;
+            line-height: 1.5;
+        }
+
+        .compare-line + .compare-line {
+            border-top: 1px solid rgba(255,255,255,0.03);
+        }
+
+        .compare-verdict {
+            margin-top: 1rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+        }
+
+        .verdict-bad {
+            background: rgba(255, 0, 110, 0.08);
+            color: var(--magenta);
+        }
+
+        .verdict-good {
+            background: rgba(0, 229, 255, 0.08);
+            color: var(--cyan);
+        }
+
+        .vs-label {
+            font-family: 'Sora', sans-serif;
+            font-weight: 800;
+            font-size: 1.2rem;
+            color: var(--text-dim);
+            align-self: center;
+            opacity: 0.4;
+        }
+
+        /* ====== CHAIN OF THOUGHT TIMELINE ====== */
+        .cot-timeline {
+            position: relative;
+            margin: 2rem 0;
+            padding-left: 2rem;
+        }
+
+        .cot-timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--cyan), var(--magenta), var(--yellow), var(--green), var(--orange));
+        }
+
+        .cot-step {
+            position: relative;
+            padding: 0 0 2rem 2rem;
+            opacity: 0;
+            transform: translateX(-15px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .cot-step.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .cot-step::before {
+            content: attr(data-step);
+            position: absolute;
+            left: -13px;
+            top: 0;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Sora', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            background: var(--bg-primary);
+            z-index: 1;
+        }
+
+        .cot-step:nth-child(1)::before { border: 2px solid var(--cyan); color: var(--cyan); }
+        .cot-step:nth-child(2)::before { border: 2px solid var(--magenta); color: var(--magenta); }
+        .cot-step:nth-child(3)::before { border: 2px solid var(--yellow); color: var(--yellow); }
+        .cot-step:nth-child(4)::before { border: 2px solid var(--green); color: var(--green); }
+        .cot-step:nth-child(5)::before { border: 2px solid var(--orange); color: var(--orange); }
+
+        .cot-step h4 {
+            font-family: 'Sora', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .cot-step p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .cot-step .status-tag {
+            display: inline-block;
+            margin-top: 0.5rem;
+            padding: 0.15rem 0.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            border-radius: 4px;
+        }
+
+        .status-plan { background: rgba(0, 229, 255, 0.1); color: var(--cyan); border: 1px solid rgba(0, 229, 255, 0.2); }
+        .status-exec { background: rgba(0, 230, 118, 0.1); color: var(--green); border: 1px solid rgba(0, 230, 118, 0.2); }
+
+        .insight-block {
+            background: linear-gradient(135deg, var(--cyan-glow), var(--magenta-glow));
+            border: 1px solid var(--border-strong);
+            border-radius: 12px;
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .insight-block::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--cyan), var(--magenta));
+        }
+
+        .insight-block .insight-stat {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--cyan);
+            line-height: 1;
+        }
+
+        .insight-block .insight-text {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+
+        .insight-block .insight-source {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--text-dim);
+            margin-top: 0.5rem;
+        }
+
+        /* ====== MULTI-AGENT ARCHITECTURES ====== */
+        .arch-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .arch-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .arch-card:hover {
+            border-color: var(--border-strong);
+        }
+
+        .arch-card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .arch-icon {
+            width: 44px; height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+        }
+
+        .arch-icon.cyan-bg { background: var(--cyan-glow); border: 1px solid rgba(0, 229, 255, 0.2); }
+        .arch-icon.magenta-bg { background: var(--magenta-glow); border: 1px solid rgba(255, 0, 110, 0.2); }
+        .arch-icon.yellow-bg { background: var(--yellow-glow); border: 1px solid rgba(255, 214, 0, 0.2); }
+
+        .arch-card h3 {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+        }
+
+        .arch-card .arch-subtitle {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+        }
+
+        .arch-card > p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Pipeline diagram */
+        .pipeline-diagram {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            overflow-x: auto;
+            padding: 1rem 0;
+        }
+
+        .pipeline-node {
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            font-family: 'Sora', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            white-space: nowrap;
+            text-align: center;
+            min-width: 100px;
+        }
+
+        .pipeline-arrow {
+            font-size: 1.2rem;
+            padding: 0 0.3rem;
+            color: var(--text-dim);
+            flex-shrink: 0;
+        }
+
+        .node-researcher { background: rgba(0, 229, 255, 0.12); color: var(--cyan); border: 1px solid rgba(0, 229, 255, 0.25); }
+        .node-writer { background: rgba(255, 0, 110, 0.12); color: var(--magenta); border: 1px solid rgba(255, 0, 110, 0.25); }
+        .node-editor { background: rgba(255, 214, 0, 0.12); color: var(--yellow); border: 1px solid rgba(255, 214, 0, 0.25); }
+        .node-output { background: rgba(0, 230, 118, 0.12); color: var(--green); border: 1px solid rgba(0, 230, 118, 0.25); }
+
+        .pipeline-data {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.55rem;
+            color: var(--text-dim);
+            text-align: center;
+            margin-top: 0.4rem;
+        }
+
+        .pipeline-node-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Debate diagram */
+        .debate-diagram {
+            display: flex;
+            justify-content: center;
+            padding: 1.5rem 0;
+        }
+
+        .debate-layout {
+            position: relative;
+            width: 300px;
+            height: 240px;
+        }
+
+        .debate-node {
+            position: absolute;
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            font-family: 'Sora', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            white-space: nowrap;
+            text-align: center;
+        }
+
+        .debate-node.proposer { top: 0; left: 50%; transform: translateX(-50%); background: rgba(0, 229, 255, 0.12); color: var(--cyan); border: 1px solid rgba(0, 229, 255, 0.25); }
+        .debate-node.critic { bottom: 20px; left: 0; background: rgba(255, 0, 110, 0.12); color: var(--magenta); border: 1px solid rgba(255, 0, 110, 0.25); }
+        .debate-node.synthesizer { bottom: 20px; right: 0; background: rgba(255, 214, 0, 0.12); color: var(--yellow); border: 1px solid rgba(255, 214, 0, 0.25); }
+
+        .debate-arrows {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+        }
+
+        .debate-arrows svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .debate-arrows line {
+            stroke-width: 1.5;
+            stroke-dasharray: 4 3;
+        }
+
+        .debate-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.55rem;
+            fill: var(--text-dim);
+        }
+
+        /* Orchestrator diagram */
+        .orch-diagram {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 0;
+        }
+
+        .orch-manager {
+            padding: 0.7rem 1.5rem;
+            border-radius: 8px;
+            font-family: 'Sora', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            background: rgba(0, 229, 255, 0.12);
+            color: var(--cyan);
+            border: 1px solid rgba(0, 229, 255, 0.25);
+            position: relative;
+        }
+
+        .orch-lines {
+            display: flex;
+            justify-content: center;
+            gap: 3.5rem;
+        }
+
+        .orch-line {
+            width: 2px;
+            height: 24px;
+            background: var(--border-strong);
+        }
+
+        .orch-workers {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .orch-worker {
+            padding: 0.5rem 0.9rem;
+            border-radius: 6px;
+            font-family: 'Sora', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .worker-research { background: rgba(255, 0, 110, 0.12); color: var(--magenta); border: 1px solid rgba(255, 0, 110, 0.25); }
+        .worker-analysis { background: rgba(255, 214, 0, 0.12); color: var(--yellow); border: 1px solid rgba(255, 214, 0, 0.25); }
+        .worker-writing { background: rgba(0, 230, 118, 0.12); color: var(--green); border: 1px solid rgba(0, 230, 118, 0.25); }
+        .worker-code { background: rgba(255, 145, 0, 0.12); color: var(--orange); border: 1px solid rgba(255, 145, 0, 0.25); }
+
+        /* Analogy cards */
+        .analogy-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .analogy-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.25rem;
+            text-align: center;
+        }
+
+        .analogy-card .pattern-name {
+            font-family: 'Sora', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .analogy-card .biz-analogy {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .analogy-card:nth-child(1) .pattern-name { color: var(--cyan); }
+        .analogy-card:nth-child(1) .biz-analogy { color: var(--cyan-dim); }
+        .analogy-card:nth-child(2) .pattern-name { color: var(--magenta); }
+        .analogy-card:nth-child(2) .biz-analogy { color: var(--magenta); }
+        .analogy-card:nth-child(3) .pattern-name { color: var(--yellow); }
+        .analogy-card:nth-child(3) .biz-analogy { color: var(--yellow); }
+
+        .analogy-card p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* ====== EVOLUTION TIMELINE ====== */
+        .evo-timeline {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .evo-timeline::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 2%;
+            right: 2%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--cyan), var(--magenta), var(--yellow), var(--green));
+            z-index: 0;
+        }
+
+        .evo-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s ease;
+        }
+
+        .evo-card:hover {
+            border-color: var(--border-strong);
+            transform: translateY(-4px);
+        }
+
+        .evo-session {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+        }
+
+        .evo-card:nth-child(1) .evo-session { color: var(--cyan); }
+        .evo-card:nth-child(2) .evo-session { color: var(--magenta); }
+        .evo-card:nth-child(3) .evo-session { color: var(--yellow); }
+        .evo-card:nth-child(4) .evo-session { color: var(--green); }
+
+        .evo-icon {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .evo-card h4 {
+            font-family: 'Sora', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+
+        .evo-card p {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .evo-complexity {
+            margin-top: 0.75rem;
+            display: flex;
+            justify-content: center;
+            gap: 3px;
+        }
+
+        .evo-complexity .bar {
+            width: 6px;
+            height: 16px;
+            border-radius: 2px;
+            background: var(--border);
+        }
+
+        .evo-card:nth-child(1) .bar.filled { background: var(--cyan); }
+        .evo-card:nth-child(2) .bar.filled { background: var(--magenta); }
+        .evo-card:nth-child(3) .bar.filled { background: var(--yellow); }
+        .evo-card:nth-child(4) .bar.filled { background: var(--green); }
+
+        /* ====== MCP SECTION ====== */
+        .mcp-visual {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 1.5rem;
+            align-items: center;
+            margin: 2rem 0;
+        }
+
+        .mcp-side {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .mcp-side h4 {
+            font-family: 'Sora', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .mcp-before h4 { color: var(--magenta); }
+        .mcp-after h4 { color: var(--green); }
+
+        .mcp-after {
+            border-color: rgba(0, 230, 118, 0.25);
+            box-shadow: 0 0 30px rgba(0, 230, 118, 0.05);
+        }
+
+        .spaghetti-line {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            margin-bottom: 0.4rem;
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+        }
+
+        .spaghetti-line .connector {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            color: var(--magenta);
+            opacity: 0.6;
+            flex-shrink: 0;
+        }
+
+        .mcp-hub {
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .mcp-hub-node {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(0, 230, 118, 0.12);
+            border: 1px solid rgba(0, 230, 118, 0.3);
+            border-radius: 6px;
+            font-family: 'Sora', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--green);
+            margin-bottom: 0.75rem;
+        }
+
+        .mcp-spokes {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.4rem;
+        }
+
+        .mcp-spoke {
+            padding: 0.25rem 0.6rem;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+        }
+
+        .mcp-arrow-col {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+            font-family: 'Sora', sans-serif;
+            font-size: 1.5rem;
+            color: var(--text-dim);
+            opacity: 0.5;
+        }
+
+        .mcp-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .stat-mini {
+            text-align: center;
+            padding: 1.25rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+        }
+
+        .stat-mini .number {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-mini .label {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+        }
+
+        .stat-mini.cyan .number { color: var(--cyan); }
+        .stat-mini.magenta .number { color: var(--magenta); }
+        .stat-mini.green .number { color: var(--green); }
+        .stat-mini.yellow .number { color: var(--yellow); }
+
+        /* ====== DECISION MATRIX ====== */
+        .decision-flow {
+            margin: 2rem 0;
+        }
+
+        .decision-row {
+            display: flex;
+            align-items: stretch;
+            gap: 0;
+            margin-bottom: 0.5rem;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+
+        .decision-row.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .decision-condition {
+            flex: 1;
+            padding: 0.85rem 1.25rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px 0 0 8px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .decision-condition .cond-icon {
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .decision-arrow {
+            display: flex;
+            align-items: center;
+            padding: 0 0.75rem;
+            background: var(--bg-elevated);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            color: var(--text-dim);
+            font-size: 1rem;
+        }
+
+        .decision-solution {
+            flex: 1;
+            padding: 0.85rem 1.25rem;
+            border-radius: 0 8px 8px 0;
+            font-family: 'Sora', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .decision-row:nth-child(1) .decision-solution { background: rgba(0, 229, 255, 0.08); border: 1px solid rgba(0, 229, 255, 0.2); color: var(--cyan); }
+        .decision-row:nth-child(2) .decision-solution { background: rgba(255, 0, 110, 0.08); border: 1px solid rgba(255, 0, 110, 0.2); color: var(--magenta); }
+        .decision-row:nth-child(3) .decision-solution { background: rgba(255, 214, 0, 0.08); border: 1px solid rgba(255, 214, 0, 0.2); color: var(--yellow); }
+        .decision-row:nth-child(4) .decision-solution { background: rgba(0, 230, 118, 0.08); border: 1px solid rgba(0, 230, 118, 0.2); color: var(--green); }
+        .decision-row:nth-child(5) .decision-solution { background: rgba(255, 145, 0, 0.08); border: 1px solid rgba(255, 145, 0, 0.2); color: var(--orange); }
+
+        /* ====== FOOTER ====== */
+        .footer {
+            padding: 3rem 0;
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .footer-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            line-height: 1.8;
+        }
+
+        .footer-text a { color: var(--cyan); text-decoration: none; }
+        .footer-text a:hover { text-decoration: underline; }
+
+        /* ====== ANIMATIONS ====== */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ====== RESPONSIVE ====== */
+        @media (max-width: 900px) {
+            .evo-timeline {
+                grid-template-columns: 1fr 1fr;
+            }
+            .evo-timeline::before { display: none; }
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 0 1.25rem; }
+            .compare-grid { grid-template-columns: 1fr; }
+            .vs-label { display: none; }
+            .mcp-visual { grid-template-columns: 1fr; }
+            .mcp-arrow-col { transform: rotate(90deg); padding: 0.5rem; }
+            .analogy-row { grid-template-columns: 1fr; }
+            .evo-timeline { grid-template-columns: 1fr; }
+            .pipeline-diagram { flex-wrap: wrap; justify-content: center; }
+            .debate-layout { width: 260px; height: 220px; }
+            .decision-row { flex-direction: column; }
+            .decision-condition { border-radius: 8px 8px 0 0; }
+            .decision-arrow { justify-content: center; padding: 0.25rem; border-left: 1px solid var(--border); border-right: 1px solid var(--border); border-top: none; border-bottom: none; }
+            .decision-solution { border-radius: 0 0 8px 8px; }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 { font-size: 2rem; }
+            .debate-layout { width: 220px; height: 200px; }
+            .debate-node { font-size: 0.7rem; padding: 0.5rem 0.7rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="glow-orb glow-orb-1"></div>
+    <div class="glow-orb glow-orb-2"></div>
+    <div class="glow-orb glow-orb-3"></div>
+
+    <div class="container">
+
+        <!-- ====== HERO ====== -->
+        <section class="hero">
+            <div class="session-badge">
+                <span class="dot"></span>
+                Session 8 &middot; Bonus Material
+            </div>
+            <h1>
+                Advanced<br>
+                <span class="cyan">Agent Patterns</span>
+            </h1>
+            <p>
+                From ReAct reasoning to multi-agent systems &mdash; the patterns that power production AI.
+            </p>
+        </section>
+
+        <!-- ====== SECTION 1: ReAct Pattern ====== -->
+        <section class="section fade-up">
+            <div class="section-label">Pattern 01</div>
+            <h2 class="section-title">ReAct &mdash; Think Before You Act</h2>
+            <p class="section-desc">
+                The ReAct pattern interleaves <strong>reasoning</strong> with <strong>action</strong>. Instead of blindly calling tools, the agent thinks about what it needs, acts, observes the result, and adjusts. This is how the best agents work.
+            </p>
+
+            <!-- Animated ReAct Trace -->
+            <div class="react-trace fade-up" id="react-trace">
+                <div class="react-query">
+                    <div class="query-label">Query</div>
+                    <div class="query-text">"Research the impact of AI on healthcare"</div>
+                </div>
+
+                <!-- Cycle 1 -->
+                <div class="react-step thought-step" data-delay="0">
+                    <div class="react-step-label thought">Thought</div>
+                    <div class="react-step-content">I need to find recent data on AI's impact on healthcare. Let me start by searching for peer-reviewed studies and industry reports from the last 2 years.</div>
+                </div>
+                <div class="react-step action-step" data-delay="200">
+                    <div class="react-step-label action">Action</div>
+                    <div class="react-step-content"><code>search_web("AI healthcare impact 2025 studies statistics")</code></div>
+                </div>
+                <div class="react-step observation-step" data-delay="400">
+                    <div class="react-step-label observation">Observation</div>
+                    <div class="react-step-content">Found 12 results. Key finding: WHO report says AI diagnostics reduce misdiagnosis by <span class="highlight-cyan">30%</span>. McKinsey estimates $150B value by 2026.</div>
+                </div>
+
+                <div class="cycle-separator" data-delay="500">--- cycle 2 ---</div>
+
+                <!-- Cycle 2 -->
+                <div class="react-step thought-step" data-delay="600">
+                    <div class="react-step-label thought">Thought</div>
+                    <div class="react-step-content">Good quantitative data, but I should also look at specific use cases and any risks/concerns to give a balanced analysis.</div>
+                </div>
+                <div class="react-step action-step" data-delay="800">
+                    <div class="react-step-label action">Action</div>
+                    <div class="react-step-content"><code>search_web("AI healthcare risks bias clinical trials 2025")</code></div>
+                </div>
+                <div class="react-step observation-step" data-delay="1000">
+                    <div class="react-step-label observation">Observation</div>
+                    <div class="react-step-content">FDA flagged bias in 3 diagnostic models. JAMA study found <span class="highlight-cyan">40% of AI tools</span> lacked adequate validation on diverse populations.</div>
+                </div>
+
+                <div class="cycle-separator" data-delay="1100">--- cycle 3 ---</div>
+
+                <!-- Cycle 3 -->
+                <div class="react-step thought-step" data-delay="1200">
+                    <div class="react-step-label thought">Thought</div>
+                    <div class="react-step-content">Now I have both benefits and risks. Let me calculate the net impact figures and synthesize a comprehensive answer.</div>
+                </div>
+                <div class="react-step action-step" data-delay="1400">
+                    <div class="react-step-label action">Action</div>
+                    <div class="react-step-content"><code>calculator("150000000000 * 0.7")</code> &mdash; adjusting for adoption barriers</div>
+                </div>
+                <div class="react-step observation-step" data-delay="1600">
+                    <div class="react-step-label observation">Observation</div>
+                    <div class="react-step-content">Realistic near-term value: <span class="highlight-green">$105B</span> accounting for regulatory and adoption headwinds.</div>
+                </div>
+
+                <div class="react-final" data-delay="1800">
+                    FINAL ANSWER: Synthesized a balanced report covering diagnostic improvements (30% fewer errors), market value ($105-150B), and critical risks (bias, validation gaps). Three Thought-Action-Observation cycles produced a nuanced analysis.
+                </div>
+            </div>
+
+            <!-- Naive vs ReAct Comparison -->
+            <h3 style="font-family: 'Sora', sans-serif; font-size: 1.1rem; font-weight: 600; margin: 3rem 0 1rem;">Why does this matter?</h3>
+
+            <div class="compare-grid fade-up">
+                <div class="compare-card naive">
+                    <h3>Naive Agent</h3>
+                    <div class="subtitle">No reasoning loop</div>
+                    <div class="compare-line"><strong>Step 1:</strong> Receive query "Research AI in healthcare"</div>
+                    <div class="compare-line"><strong>Step 2:</strong> Call <code style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--magenta);">search_web("AI healthcare")</code></div>
+                    <div class="compare-line"><strong>Step 3:</strong> Dump the first 3 search results verbatim to the user. No analysis, no evaluation, no follow-up.</div>
+                    <div class="compare-verdict verdict-bad">One search, zero reasoning. Shallow and incomplete.</div>
+                </div>
+
+                <div class="vs-label">VS</div>
+
+                <div class="compare-card react">
+                    <h3>ReAct Agent</h3>
+                    <div class="subtitle">Think + Act + Observe</div>
+                    <div class="compare-line"><strong>Cycle 1:</strong> Plans search strategy, finds quantitative data on benefits</div>
+                    <div class="compare-line"><strong>Cycle 2:</strong> Identifies gap (risks), searches for balanced perspective</div>
+                    <div class="compare-line"><strong>Cycle 3:</strong> Runs calculations, adjusts projections for realism</div>
+                    <div class="compare-line"><strong>Synthesis:</strong> Delivers a structured, balanced report with citations</div>
+                    <div class="compare-verdict verdict-good">3 cycles of reasoning. Thorough, balanced, and actionable.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====== SECTION 2: Chain-of-Thought Planning ====== -->
+        <section class="section fade-up">
+            <div class="section-label">Pattern 02</div>
+            <h2 class="section-title">Chain-of-Thought Planning</h2>
+            <p class="section-desc">
+                Before executing anything, the best agents <strong>plan first</strong>. They decompose complex tasks into discrete steps, then execute them one by one. Planning before acting dramatically reduces errors and wasted effort.
+            </p>
+
+            <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.5rem; margin-bottom: 1.5rem; font-size: 0.9rem;">
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em;">Task</span><br>
+                <span style="color: var(--text-primary); font-weight: 500;">"Write a competitive analysis report for our SaaS product"</span>
+            </div>
+
+            <div class="cot-timeline fade-up" id="cot-timeline">
+                <div class="cot-step" data-step="1" data-delay="0">
+                    <h4>Identify key competitors</h4>
+                    <p>Search for direct and indirect competitors in the SaaS space. Compile a list of the top 5 by market share.</p>
+                    <span class="status-tag status-plan">Plan</span>
+                    <span class="status-tag status-exec">Execute: search_web + analyze</span>
+                </div>
+                <div class="cot-step" data-step="2" data-delay="200">
+                    <h4>Gather feature comparisons</h4>
+                    <p>For each competitor, catalog their pricing, core features, and unique selling points from their websites and reviews.</p>
+                    <span class="status-tag status-plan">Plan</span>
+                    <span class="status-tag status-exec">Execute: scrape_page x5</span>
+                </div>
+                <div class="cot-step" data-step="3" data-delay="400">
+                    <h4>Analyze market positioning</h4>
+                    <p>Map each competitor on a price-vs-features matrix. Identify market gaps and positioning opportunities.</p>
+                    <span class="status-tag status-plan">Plan</span>
+                    <span class="status-tag status-exec">Execute: analyze + calculate</span>
+                </div>
+                <div class="cot-step" data-step="4" data-delay="600">
+                    <h4>Assess strengths and weaknesses</h4>
+                    <p>SWOT analysis for each competitor. Pull from user reviews, G2 ratings, and social sentiment.</p>
+                    <span class="status-tag status-plan">Plan</span>
+                    <span class="status-tag status-exec">Execute: search_reviews + summarize</span>
+                </div>
+                <div class="cot-step" data-step="5" data-delay="800">
+                    <h4>Synthesize final report</h4>
+                    <p>Combine all findings into a structured report with executive summary, comparison tables, and strategic recommendations.</p>
+                    <span class="status-tag status-plan">Plan</span>
+                    <span class="status-tag status-exec">Execute: write_report</span>
+                </div>
+            </div>
+
+            <div class="insight-block fade-up">
+                <div class="insight-stat">40% fewer errors</div>
+                <div class="insight-text">
+                    Agents that plan before acting produce significantly fewer errors and require fewer correction cycles. The "plan then execute" pattern mirrors how expert humans approach complex tasks &mdash; they don't just start typing.
+                </div>
+                <div class="insight-source">Source: Wang et al., "Plan-and-Solve Prompting" (ACL 2023) &mdash; showed chain-of-thought planning improved accuracy by 40% on multi-step reasoning benchmarks vs. zero-shot baselines.</div>
+            </div>
+        </section>
+
+        <!-- ====== SECTION 3: Multi-Agent Architectures ====== -->
+        <section class="section fade-up">
+            <div class="section-label">Pattern 03</div>
+            <h2 class="section-title">Multi-Agent Architectures</h2>
+            <p class="section-desc">
+                One agent is powerful. But <strong>teams of agents</strong> &mdash; each with a specialized role &mdash; can tackle problems no single agent can handle. Here are three production patterns.
+            </p>
+
+            <div class="arch-grid">
+                <!-- Pipeline -->
+                <div class="arch-card fade-up">
+                    <div class="arch-card-header">
+                        <div class="arch-icon cyan-bg"><i data-lucide="arrow-right" style="width:22px;height:22px;color:var(--cyan)"></i></div>
+                        <div>
+                            <h3>Pipeline (Sequential)</h3>
+                            <div class="arch-subtitle">Each agent hands off to the next</div>
+                        </div>
+                    </div>
+                    <p>Like an assembly line. Each agent has one job and passes its output to the next specialist. Simple, predictable, easy to debug.</p>
+                    <div class="pipeline-diagram">
+                        <div class="pipeline-node-wrap">
+                            <div class="pipeline-node node-researcher">Researcher</div>
+                            <div class="pipeline-data">raw data</div>
+                        </div>
+                        <div class="pipeline-arrow">&rarr;</div>
+                        <div class="pipeline-node-wrap">
+                            <div class="pipeline-node node-writer">Writer</div>
+                            <div class="pipeline-data">draft</div>
+                        </div>
+                        <div class="pipeline-arrow">&rarr;</div>
+                        <div class="pipeline-node-wrap">
+                            <div class="pipeline-node node-editor">Editor</div>
+                            <div class="pipeline-data">polished</div>
+                        </div>
+                        <div class="pipeline-arrow">&rarr;</div>
+                        <div class="pipeline-node-wrap">
+                            <div class="pipeline-node node-output">Final Output</div>
+                            <div class="pipeline-data">delivered</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Debate -->
+                <div class="arch-card fade-up">
+                    <div class="arch-card-header">
+                        <div class="arch-icon magenta-bg"><i data-lucide="messages-square" style="width:22px;height:22px;color:var(--magenta)"></i></div>
+                        <div>
+                            <h3>Debate (Adversarial)</h3>
+                            <div class="arch-subtitle">Agents challenge each other</div>
+                        </div>
+                    </div>
+                    <p>One agent proposes, another critiques, a third synthesizes. The tension between viewpoints produces stronger, more balanced outputs.</p>
+                    <div class="debate-diagram">
+                        <div class="debate-layout">
+                            <div class="debate-arrows">
+                                <svg viewBox="0 0 300 240">
+                                    <!-- Proposer to Critic -->
+                                    <line x1="120" y1="45" x2="65" y2="175" stroke="var(--cyan)" />
+                                    <text x="55" y="110" class="debate-label" transform="rotate(-62, 55, 110)">proposes</text>
+                                    <!-- Critic to Synthesizer -->
+                                    <line x1="95" y1="195" x2="210" y2="195" stroke="var(--magenta)" />
+                                    <text x="140" y="215" class="debate-label">critiques</text>
+                                    <!-- Synthesizer to Proposer -->
+                                    <line x1="235" y1="175" x2="180" y2="45" stroke="var(--yellow)" />
+                                    <text x="220" y="110" class="debate-label" transform="rotate(62, 220, 110)">refines</text>
+                                </svg>
+                            </div>
+                            <div class="debate-node proposer">Agent A: Proposer</div>
+                            <div class="debate-node critic">Agent B: Critic</div>
+                            <div class="debate-node synthesizer">Agent C: Synthesizer</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Orchestrator -->
+                <div class="arch-card fade-up">
+                    <div class="arch-card-header">
+                        <div class="arch-icon yellow-bg"><i data-lucide="network" style="width:22px;height:22px;color:var(--yellow)"></i></div>
+                        <div>
+                            <h3>Orchestrator (Manager + Workers)</h3>
+                            <div class="arch-subtitle">Coordinator delegates to specialists</div>
+                        </div>
+                    </div>
+                    <p>A manager agent analyzes the task, decides which specialists to invoke, coordinates their work, and assembles the final output. Most flexible pattern.</p>
+                    <div class="orch-diagram">
+                        <div class="orch-manager"><i data-lucide="crown" style="width:14px;height:14px;vertical-align:-2px;margin-right:4px"></i> Orchestrator</div>
+                        <div class="orch-lines">
+                            <div class="orch-line"></div>
+                            <div class="orch-line"></div>
+                            <div class="orch-line"></div>
+                            <div class="orch-line"></div>
+                        </div>
+                        <div class="orch-workers">
+                            <div class="orch-worker worker-research"><i data-lucide="search" style="width:12px;height:12px;vertical-align:-1px;margin-right:3px"></i> Research</div>
+                            <div class="orch-worker worker-analysis"><i data-lucide="bar-chart-3" style="width:12px;height:12px;vertical-align:-1px;margin-right:3px"></i> Analysis</div>
+                            <div class="orch-worker worker-writing"><i data-lucide="pen-tool" style="width:12px;height:12px;vertical-align:-1px;margin-right:3px"></i> Writing</div>
+                            <div class="orch-worker worker-code"><i data-lucide="code" style="width:12px;height:12px;vertical-align:-1px;margin-right:3px"></i> Coding</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Business Analogy -->
+            <h3 style="font-family: 'Sora', sans-serif; font-size: 1.1rem; font-weight: 600; margin: 2rem 0 1rem;">The Business Org Chart Analogy</h3>
+            <div class="analogy-row fade-up">
+                <div class="analogy-card">
+                    <div class="pattern-name">Pipeline</div>
+                    <div class="biz-analogy">= Assembly Line</div>
+                    <p>Each station does one thing well and passes the product forward. Toyota Production System meets AI.</p>
+                </div>
+                <div class="analogy-card">
+                    <div class="pattern-name">Debate</div>
+                    <div class="biz-analogy">= Peer Review Board</div>
+                    <p>Proposals get challenged by independent reviewers. Stronger outputs through constructive friction.</p>
+                </div>
+                <div class="analogy-card">
+                    <div class="pattern-name">Orchestrator</div>
+                    <div class="biz-analogy">= Project Manager + Team</div>
+                    <p>A PM evaluates the task, assembles the right team, delegates work, and delivers the final product.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====== SECTION 4: Evolution Timeline ====== -->
+        <section class="section fade-up">
+            <div class="section-label">The Big Picture</div>
+            <h2 class="section-title">The Evolution &mdash; From NanoClaw to Multi-Agent</h2>
+            <p class="section-desc">
+                We've been building toward this all semester. Each session added a new layer of capability. Here's the progression from simple tool use to autonomous agent networks.
+            </p>
+
+            <div class="evo-timeline fade-up">
+                <div class="evo-card">
+                    <div class="evo-session">Session 4</div>
+                    <div class="evo-icon">&#x1F527;</div>
+                    <h4>Tool Use</h4>
+                    <p>LLM + Calculator + Stock Lookup. The model decides which tool to call.</p>
+                    <div class="evo-complexity">
+                        <div class="bar filled"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                    </div>
+                </div>
+                <div class="evo-card">
+                    <div class="evo-session">Session 8</div>
+                    <div class="evo-icon">&#x1F9E0;</div>
+                    <h4>ReAct Agent</h4>
+                    <p>LLM + Reasoning Loop + Research Tools. The model thinks, acts, and observes in cycles.</p>
+                    <div class="evo-complexity">
+                        <div class="bar filled"></div>
+                        <div class="bar filled"></div>
+                        <div class="bar filled"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                    </div>
+                </div>
+                <div class="evo-card">
+                    <div class="evo-session">Production</div>
+                    <div class="evo-icon">&#x1F465;</div>
+                    <h4>Multi-Agent Systems</h4>
+                    <p>Teams of specialized agents coordinating on complex workflows.</p>
+                    <div class="evo-complexity">
+                        <div class="bar filled"></div>
+                        <div class="bar filled"></div>
+                        <div class="bar filled"></div>
+                        <div class="bar filled"></div>
+                        <div class="bar"></div>
+                    </div>
+                </div>
+                <div class="evo-card">
+                    <div class="evo-session">Future</div>
+                    <div class="evo-icon">&#x1F310;</div>
+                    <h4>Autonomous Networks</h4>
+                    <p>Self-organizing agent swarms that discover, recruit, and coordinate other agents.</p>
+                    <div class="evo-complexity">
+                        <div class="bar filled"></div>
+                        <div class="bar filled"></div>
+                        <div class="bar filled"></div>
+                        <div class="bar filled"></div>
+                        <div class="bar filled"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====== SECTION 5: MCP ====== -->
+        <section class="section fade-up">
+            <div class="section-label">Infrastructure</div>
+            <h2 class="section-title">MCP &mdash; The USB-C of AI</h2>
+            <p class="section-desc">
+                The <strong>Model Context Protocol</strong> (MCP) is an open standard that lets any AI model connect to any tool through a single, universal interface &mdash; just like USB-C replaced a drawer full of different cables.
+            </p>
+
+            <div class="mcp-visual fade-up">
+                <!-- Before MCP -->
+                <div class="mcp-side mcp-before">
+                    <h4>Before MCP</h4>
+                    <div class="spaghetti-line"><span>ChatGPT</span> <span class="connector">---custom-api---</span> <span>Slack</span></div>
+                    <div class="spaghetti-line"><span>Claude</span> <span class="connector">---custom-api---</span> <span>GitHub</span></div>
+                    <div class="spaghetti-line"><span>Gemini</span> <span class="connector">---custom-api---</span> <span>Google Drive</span></div>
+                    <div class="spaghetti-line"><span>ChatGPT</span> <span class="connector">---custom-api---</span> <span>Salesforce</span></div>
+                    <div class="spaghetti-line"><span>Claude</span> <span class="connector">---custom-api---</span> <span>Slack</span></div>
+                    <div class="spaghetti-line"><span>Gemini</span> <span class="connector">---custom-api---</span> <span>Salesforce</span></div>
+                    <div class="spaghetti-line"><span>ChatGPT</span> <span class="connector">---custom-api---</span> <span>Database</span></div>
+                    <div class="spaghetti-line"><span>Claude</span> <span class="connector">---custom-api---</span> <span>Google Drive</span></div>
+                    <div style="margin-top: 0.75rem; padding: 0.4rem 0.6rem; background: rgba(255,0,110,0.08); border-radius: 4px; font-size: 0.7rem; color: var(--magenta); text-align: center;">
+                        N models x M tools = N*M custom integrations
+                    </div>
+                </div>
+
+                <div class="mcp-arrow-col">
+                    <span>&rarr;</span>
+                </div>
+
+                <!-- After MCP -->
+                <div class="mcp-side mcp-after">
+                    <h4>After MCP</h4>
+                    <div class="mcp-hub">
+                        <div class="mcp-hub-node">MCP Standard Protocol</div>
+                        <div class="mcp-spokes">
+                            <div class="mcp-spoke">Slack</div>
+                            <div class="mcp-spoke">GitHub</div>
+                            <div class="mcp-spoke">Google Drive</div>
+                            <div class="mcp-spoke">Salesforce</div>
+                            <div class="mcp-spoke">PostgreSQL</div>
+                            <div class="mcp-spoke">Notion</div>
+                            <div class="mcp-spoke">Jira</div>
+                            <div class="mcp-spoke">Stripe</div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 0.75rem; text-align: center; font-size: 0.7rem; color: var(--text-secondary);">
+                        Any AI model connects to any tool<br>through <strong style="color: var(--green);">one universal protocol</strong>
+                    </div>
+                    <div style="margin-top: 0.5rem; padding: 0.4rem 0.6rem; background: rgba(0,230,118,0.08); border-radius: 4px; font-size: 0.7rem; color: var(--green); text-align: center;">
+                        N + M implementations total. Build once, connect everywhere.
+                    </div>
+                </div>
+            </div>
+
+            <div class="mcp-stats fade-up">
+                <div class="stat-mini green">
+                    <div class="number">1,000+</div>
+                    <div class="label">MCP servers<br>available</div>
+                </div>
+                <div class="stat-mini cyan">
+                    <div class="number">Open</div>
+                    <div class="label">Standard &mdash;<br>anyone can build</div>
+                </div>
+                <div class="stat-mini magenta">
+                    <div class="number">Anthropic</div>
+                    <div class="label">Created by<br>the Claude team</div>
+                </div>
+                <div class="stat-mini yellow">
+                    <div class="number">Universal</div>
+                    <div class="label">Works with any<br>LLM provider</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====== SECTION 6: When to Use What ====== -->
+        <section class="section fade-up">
+            <div class="section-label">Decision Guide</div>
+            <h2 class="section-title">When to Use What</h2>
+            <p class="section-desc">
+                Not every problem needs a multi-agent system. Use the simplest approach that gets the job done. Here's your decision guide.
+            </p>
+
+            <div class="decision-flow" id="decision-flow">
+                <div class="decision-row" data-delay="0">
+                    <div class="decision-condition">
+                        <span class="cond-icon"><i data-lucide="message-circle" style="width:16px;height:16px;color:var(--cyan)"></i></span>
+                        Simple, well-defined task
+                    </div>
+                    <div class="decision-arrow">&rarr;</div>
+                    <div class="decision-solution">
+                        <i data-lucide="bot" style="width:16px;height:16px"></i>
+                        Direct LLM Call
+                    </div>
+                </div>
+                <div class="decision-row" data-delay="150">
+                    <div class="decision-condition">
+                        <span class="cond-icon"><i data-lucide="database" style="width:16px;height:16px;color:var(--magenta)"></i></span>
+                        Needs external data or calculations
+                    </div>
+                    <div class="decision-arrow">&rarr;</div>
+                    <div class="decision-solution">
+                        <i data-lucide="wrench" style="width:16px;height:16px"></i>
+                        Single Agent + Tools
+                    </div>
+                </div>
+                <div class="decision-row" data-delay="300">
+                    <div class="decision-condition">
+                        <span class="cond-icon"><i data-lucide="brain" style="width:16px;height:16px;color:var(--yellow)"></i></span>
+                        Complex reasoning with uncertain steps
+                    </div>
+                    <div class="decision-arrow">&rarr;</div>
+                    <div class="decision-solution">
+                        <i data-lucide="repeat" style="width:16px;height:16px"></i>
+                        ReAct Agent
+                    </div>
+                </div>
+                <div class="decision-row" data-delay="450">
+                    <div class="decision-condition">
+                        <span class="cond-icon"><i data-lucide="list-checks" style="width:16px;height:16px;color:var(--green)"></i></span>
+                        Multi-step workflow with clear stages
+                    </div>
+                    <div class="decision-arrow">&rarr;</div>
+                    <div class="decision-solution">
+                        <i data-lucide="git-branch" style="width:16px;height:16px"></i>
+                        Chain-of-Thought + Tools
+                    </div>
+                </div>
+                <div class="decision-row" data-delay="600">
+                    <div class="decision-condition">
+                        <span class="cond-icon"><i data-lucide="users" style="width:16px;height:16px;color:var(--orange)"></i></span>
+                        Different expertise areas needed
+                    </div>
+                    <div class="decision-arrow">&rarr;</div>
+                    <div class="decision-solution">
+                        <i data-lucide="network" style="width:16px;height:16px"></i>
+                        Multi-Agent System
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====== FOOTER ====== -->
+        <footer class="footer">
+            <p class="footer-text">
+                ISOM 260: AI for Business &middot; Suffolk University &middot; Sawyer Business School<br>
+                Prof. Hasan Arslan &middot; <a href="https://isom-260.vercel.app">isom-260.vercel.app</a><br>
+                <span style="opacity: 0.6;">Built with Claude</span>
+            </p>
+        </footer>
+
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Intersection Observer for fade-up animations
+        const fadeObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        document.querySelectorAll('.fade-up').forEach(el => fadeObserver.observe(el));
+
+        // Sequential reveal for ReAct trace steps
+        const reactObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const trace = entry.target;
+                    const steps = trace.querySelectorAll('.react-step, .cycle-separator, .react-final');
+                    steps.forEach((step, i) => {
+                        const delay = parseInt(step.dataset.delay) || (i * 200);
+                        setTimeout(() => {
+                            step.classList.add('visible');
+                        }, delay);
+                    });
+                    reactObserver.unobserve(trace);
+                }
+            });
+        }, { threshold: 0.15 });
+
+        const reactTrace = document.getElementById('react-trace');
+        if (reactTrace) reactObserver.observe(reactTrace);
+
+        // Sequential reveal for CoT steps
+        const cotObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const timeline = entry.target;
+                    const steps = timeline.querySelectorAll('.cot-step');
+                    steps.forEach((step, i) => {
+                        const delay = parseInt(step.dataset.delay) || (i * 200);
+                        setTimeout(() => {
+                            step.classList.add('visible');
+                        }, delay);
+                    });
+                    cotObserver.unobserve(timeline);
+                }
+            });
+        }, { threshold: 0.15 });
+
+        const cotTimeline = document.getElementById('cot-timeline');
+        if (cotTimeline) cotObserver.observe(cotTimeline);
+
+        // Sequential reveal for decision rows
+        const decisionObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const flow = entry.target;
+                    const rows = flow.querySelectorAll('.decision-row');
+                    rows.forEach((row, i) => {
+                        const delay = parseInt(row.dataset.delay) || (i * 150);
+                        setTimeout(() => {
+                            row.classList.add('visible');
+                        }, delay);
+                    });
+                    decisionObserver.unobserve(flow);
+                }
+            });
+        }, { threshold: 0.15 });
+
+        const decisionFlow = document.getElementById('decision-flow');
+        if (decisionFlow) decisionObserver.observe(decisionFlow);
+    </script>
+</body>
+</html>

@@ -2,13 +2,340 @@
   "number": 8,
   "slug": "session-08",
   "title": "AI Agents & Automation",
-  "subtitle": "Building autonomous AI agents that can reason, plan, and execute complex tasks",
+  "subtitle": "From simple tool use to multi-agent systems that reason, plan, and automate real business workflows",
+  "heroTitle": "AI Agents & <span class=\"bg-gradient-to-br from-accent-cyan to-accent-purple bg-clip-text text-transparent\">Automation</span>",
   "duration": "150 Minutes",
   "icon": "bot",
-  "tags": ["AI Agents", "Automation", "Workflows"],
+  "tags": ["AI Agents", "Multi-Agent Systems", "ReAct Pattern", "MCP", "Business Automation", "Tool Use"],
   "objectives": [
-    { "title": "Understand AI Agents", "description": "Learn the architecture behind autonomous agents that can use tools and make decisions." },
-    { "title": "Build an AI Workflow", "description": "Create an automated pipeline that combines multiple AI capabilities." }
+    {
+      "title": "Level Up the Agent Equation",
+      "description": "Go beyond Session 4's intro. Master advanced patterns: ReAct (Reason + Act), chain-of-thought planning, and multi-step orchestration."
+    },
+    {
+      "title": "Understand Multi-Agent Systems",
+      "description": "See how specialized agents collaborate: one researches, one writes, one reviews. Learn when single-agent vs. multi-agent is the right call."
+    },
+    {
+      "title": "Build a Research Agent",
+      "description": "Hands-on: build an agent that searches, evaluates sources, synthesizes findings, and produces a structured report."
+    },
+    {
+      "title": "Evaluate Agent ROI for Business",
+      "description": "Apply a framework for deciding where AI agents create real value: which processes to automate, what stays human, and how to measure success."
+    }
   ],
-  "nextSession": { "title": "Session 9: Ethics & Responsible AI", "description": "Bias, fairness, privacy, and the responsible deployment of AI systems.", "tags": ["Ethics", "Bias", "Responsible AI"], "slug": "session-09" }
+  "agenda": [
+    {
+      "time": "5:00 PM - 5:20 PM",
+      "title": "Part 1: The Agent Equation — Level 2",
+      "duration": "20 minutes",
+      "description": "You built a simple agent in Session 4. Now let's see what makes agents actually powerful in the real world.",
+      "bulletPoints": [
+        "Quick recall: LLM + Tools + Reasoning Loop + Memory = Agent. You built this. You own it.",
+        "What changed since Session 4? Agents went from demos to production (Claude Code, Devin, Cursor)",
+        "The 3 upgrades: Better reasoning (ReAct), Better planning (multi-step), Better collaboration (multi-agent)",
+        "LIVE DEMO: Prof. Arslan uses Claude Code to refactor a file — a real agent reasoning, planning, executing",
+        "Key insight: The agent DECIDES its own steps. Nobody hard-coded the workflow."
+      ]
+    },
+    {
+      "time": "5:20 PM - 5:45 PM",
+      "title": "Part 2: Advanced Agent Patterns",
+      "duration": "25 minutes",
+      "description": "Three patterns that separate toy agents from production agents. Every serious agent uses at least one.",
+      "bulletPoints": [
+        "Pattern 1 — ReAct (Reason + Act): Think before you do. Observe, reason, act, repeat.",
+        "Pattern 2 — Chain-of-Thought Planning: Break big problems into steps BEFORE executing",
+        "Pattern 3 — Self-Reflection: Agent checks its own work, catches mistakes, retries",
+        "Visual walkthrough: Same task with naive agent vs. ReAct agent — watch the quality difference",
+        "When to use which: ReAct for complex research, CoT for multi-step tasks, self-reflection for high-stakes output"
+      ]
+    },
+    {
+      "time": "5:45 PM - 6:10 PM",
+      "title": "Part 3: Multi-Agent Systems",
+      "duration": "25 minutes",
+      "description": "One agent is powerful. A team of agents is transformative. How do you orchestrate them?",
+      "bulletPoints": [
+        "The org chart analogy: Agents as specialized employees — researcher, writer, reviewer, coordinator",
+        "Architecture patterns: Pipeline (sequential), Debate (adversarial), Orchestrator (manager + workers)",
+        "LIVE WALKTHROUGH: A 3-agent content pipeline — Research Agent finds data, Writer Agent drafts, Editor Agent refines",
+        "Failure modes: Infinite loops, conflicting outputs, context loss between agents",
+        "Real-world examples: Customer support triage, financial report generation, code review pipelines"
+      ]
+    },
+    {
+      "time": "6:10 PM - 6:20 PM",
+      "title": "Break",
+      "duration": "10 minutes",
+      "description": "Stretch, grab coffee, think about which processes at your job could use an agent team.",
+      "isBreak": true
+    },
+    {
+      "time": "6:20 PM - 6:50 PM",
+      "title": "Part 4: Build a Research Agent",
+      "duration": "30 minutes",
+      "description": "Hands-on in Google Colab. Build an agent that researches a topic, evaluates sources, and writes a structured report.",
+      "bulletPoints": [
+        "Open Colab notebook. API key from Session 3 still works.",
+        "Phase 1 (8 min): Build the tools — web_search, evaluate_source, extract_key_facts",
+        "Phase 2 (10 min): Wire the ReAct loop — agent decides what to search, evaluates results, searches again if needed",
+        "Phase 3 (12 min): Add report generation — agent synthesizes findings into a structured briefing",
+        "Challenge: Ask your agent to research a real business question. Does it find good sources? Does the report make sense?"
+      ]
+    },
+    {
+      "time": "6:50 PM - 7:10 PM",
+      "title": "Part 5: MCP & the Future of Agent Infrastructure",
+      "duration": "20 minutes",
+      "description": "How agents connect to the real world is changing. MCP is the USB-C of AI tools.",
+      "bulletPoints": [
+        "The problem: Every AI company builds tool integrations differently. It doesn't scale.",
+        "MCP (Model Context Protocol): One standard for connecting agents to any tool, any data source",
+        "Analogy: USB-C replaced 15 different cables. MCP replaces 15 different tool APIs.",
+        "Demo: How NanoClaw uses MCP to connect Claude to file system, browser, databases",
+        "The ecosystem: 1000+ MCP servers already — Slack, GitHub, Google Drive, Salesforce, databases",
+        "What this means for you: Build the tool once, every agent can use it"
+      ]
+    },
+    {
+      "time": "7:10 PM - 7:22 PM",
+      "title": "Part 6: Business Automation & Agent ROI",
+      "duration": "12 minutes",
+      "description": "Where do agents actually create business value? A framework for deciding what to automate.",
+      "bulletPoints": [
+        "The Automation Matrix: High volume + clear rules = automate. Low volume + judgment = augment.",
+        "Case studies: Invoice processing (full automation), sales outreach (agent + human review), strategy (human + AI assist)",
+        "Jobs that change: Data entry → Data validation. Report writing → Report editing. Research → Research direction.",
+        "New roles emerging: Agent Architect, Prompt Operations Manager, AI Process Designer",
+        "The trust equation: Autonomy increases as stakes decrease. Human-in-the-loop for high-stakes decisions.",
+        "ROI framework: Time saved x hourly cost x error reduction - agent cost = monthly value"
+      ]
+    },
+    {
+      "time": "7:22 PM - 7:30 PM",
+      "title": "Part 7: Wrap-Up + Homework",
+      "duration": "8 minutes",
+      "description": "From single tools to agent teams. You've seen the full stack of autonomous AI.",
+      "bulletPoints": [
+        "Session 4: You built a 3-tool agent. Today: You built a research agent with ReAct reasoning.",
+        "The progression: Tool Use → Single Agent → Multi-Agent → Business Automation",
+        "Key question to carry forward: What should be autonomous, what needs a human, and who decides?",
+        "Homework overview: Extend your agent, write an automation proposal, explore MCP",
+        "Next week: Ethics & Responsible AI — the guardrails that make all of this safe and trustworthy"
+      ]
+    }
+  ],
+  "resources": [
+    {
+      "title": "Anthropic Agent Documentation",
+      "url": "https://docs.anthropic.com/en/docs/build-with-claude/agentic",
+      "description": "Official guide to building agentic systems with Claude. Covers tool use, multi-step reasoning, and best practices for production agents.",
+      "icon": "book-open",
+      "badge": "Docs",
+      "badgeType": "code",
+      "linkText": "Read docs"
+    },
+    {
+      "title": "Model Context Protocol (MCP)",
+      "url": "https://modelcontextprotocol.io",
+      "description": "The open standard for connecting AI agents to tools and data sources. Think USB-C for AI. Browse 1000+ available servers.",
+      "icon": "plug-zap",
+      "badge": "Key Concept",
+      "badgeType": "interactive",
+      "linkText": "Explore MCP"
+    },
+    {
+      "title": "Advanced Agent Patterns",
+      "url": "/session-08/advanced-agent-patterns.html",
+      "description": "Visual explainer: ReAct reasoning, Chain-of-Thought planning, multi-agent architectures, and MCP. The patterns that power production AI agents.",
+      "icon": "bot",
+      "badge": "Key Concept",
+      "badgeType": "interactive",
+      "linkText": "View patterns"
+    },
+    {
+      "title": "ReAct Agent: Live Walkthrough",
+      "url": "/session-08/react-agent-example.html",
+      "description": "Watch a ReAct agent think step-by-step: search, evaluate sources, extract facts, and synthesize a research report. Interactive trace with real data.",
+      "icon": "play-circle",
+      "badge": "Start Here",
+      "badgeType": "interactive",
+      "linkText": "Watch the agent"
+    },
+    {
+      "title": "Research Agent Workshop Notebook",
+      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-08/ISOM260_Session8_Research_Agent.ipynb",
+      "description": "Build a research agent with ReAct reasoning, source evaluation, and report generation. Extends what you built in Session 4.",
+      "icon": "code",
+      "badge": "Hands-On",
+      "badgeType": "interactive",
+      "linkText": "Open in Colab"
+    },
+    {
+      "title": "Claude Code",
+      "url": "https://docs.anthropic.com/en/docs/claude-code",
+      "description": "Anthropic's agentic coding tool. A real-world example of everything we discussed: ReAct reasoning, tool use, multi-step planning, MCP.",
+      "icon": "terminal",
+      "badge": "Tool",
+      "badgeType": "tool",
+      "linkText": "Try Claude Code"
+    },
+    {
+      "title": "ReAct: Synergizing Reasoning and Acting",
+      "url": "https://arxiv.org/abs/2210.03629",
+      "description": "The original research paper that introduced the ReAct pattern. Showed that interleaving reasoning and action dramatically improves agent performance.",
+      "icon": "file-text",
+      "badge": "Research",
+      "badgeType": "code",
+      "linkText": "Read paper"
+    },
+    {
+      "title": "Anthropic Cookbook: Tool Use Patterns",
+      "url": "https://github.com/anthropics/anthropic-cookbook/tree/main/tool_use",
+      "description": "Production-ready code examples for building agents with Claude. Covers tool definition, multi-tool orchestration, and error handling.",
+      "icon": "git-branch",
+      "badge": "Code",
+      "badgeType": "code",
+      "linkText": "View examples"
+    },
+    {
+      "title": "Building Effective Agents (Anthropic)",
+      "url": "https://www.anthropic.com/engineering/building-effective-agents",
+      "description": "Anthropic's guide to building effective agents. Practical patterns, common pitfalls, and when to use agents vs. simpler solutions.",
+      "icon": "bot",
+      "badge": "Guide",
+      "badgeType": "interactive",
+      "linkText": "Read guide"
+    }
+  ],
+  "activities": [
+    {
+      "number": 1,
+      "icon": "bot",
+      "title": "Build a Research Agent",
+      "description": "30 minutes in Google Colab. Build an agent that uses ReAct reasoning to research, evaluate, and report:",
+      "steps": [
+        {
+          "title": "Build the Tools (8 min)",
+          "description": "Define three tools: web_search (finds information), evaluate_source (rates credibility), and extract_key_facts (pulls structured data from text)."
+        },
+        {
+          "title": "Wire the ReAct Loop (10 min)",
+          "description": "Connect the tools to Claude with a reasoning loop. The agent thinks about what to search, evaluates what it finds, and decides if it needs more information."
+        },
+        {
+          "title": "Add Report Generation (12 min)",
+          "description": "The agent synthesizes all findings into a structured briefing: key facts, source quality ratings, confidence level, and recommended next steps."
+        },
+        {
+          "title": "Test with a Real Question",
+          "description": "Ask your agent to research a real business question: market size, competitor analysis, or industry trend. Evaluate the output quality."
+        }
+      ],
+      "codeBlock": {
+        "language": "ReAct Pattern",
+        "code": "┌─────────────────────────────────────────────┐\n│  NAIVE AGENT                                │\n│                                             │\n│  User: \"Is the EV market growing?\"          │\n│  → search(\"EV market\")                      │\n│  → \"Here's what I found: [raw dump]\"        │\n│  ❌ No evaluation. No reasoning. Just noise.│\n└─────────────────────────────────────────────┘\n\n┌─────────────────────────────────────────────┐\n│  ReAct AGENT                                │\n│                                             │\n│  User: \"Is the EV market growing?\"          │\n│  THINK: Need market size data + growth rate │\n│  → search(\"global EV market size 2025\")     │\n│  OBSERVE: Found IEA report, Bloomberg data  │\n│  THINK: IEA is credible. Need growth trend. │\n│  → search(\"EV sales growth rate YoY\")       │\n│  OBSERVE: 35% YoY growth, slowing in EU     │\n│  THINK: Have enough for a solid answer.     │\n│  → \"EV market: $500B, +35% YoY, but...\"    │\n│  ✅ Reasoned. Evaluated. Synthesized.       │\n└─────────────────────────────────────────────┘"
+      }
+    },
+    {
+      "number": 2,
+      "icon": "users",
+      "title": "Multi-Agent Design Challenge",
+      "description": "Design (on paper) a multi-agent system for a real business process. Think like an architect:",
+      "steps": [
+        {
+          "title": "Pick a Business Process",
+          "description": "Choose one: customer support ticket handling, weekly competitor report, content publishing pipeline, or employee onboarding."
+        },
+        {
+          "title": "Define Your Agents",
+          "description": "Name each agent, define its specialty, list its tools, and describe when it hands off to the next agent. Minimum 3 agents."
+        },
+        {
+          "title": "Draw the Flow",
+          "description": "Sketch the pipeline on paper or whiteboard: triggers, handoffs, decision points, and human review gates."
+        },
+        {
+          "title": "Present to Another Team (3 min)",
+          "description": "Walk another team through your design. They ask: Where could this fail? What needs human oversight? What's the ROI?"
+        }
+      ],
+      "codeBlock": {
+        "language": "Multi-Agent Pipeline Example",
+        "code": "┌──────────────┐    ┌──────────────┐    ┌──────────────┐\n│  RESEARCHER  │───>│    WRITER    │───>│   EDITOR     │\n│              │    │              │    │              │\n│ Tools:       │    │ Tools:       │    │ Tools:       │\n│ • web_search │    │ • draft_doc  │    │ • check_facts│\n│ • read_pdf   │    │ • format     │    │ • check_tone │\n│ • summarize  │    │ • cite       │    │ • score      │\n│              │    │              │    │              │\n│ Output:      │    │ Output:      │    │ Output:      │\n│ Research     │    │ Draft        │    │ Final report │\n│ brief        │    │ report       │    │ + score      │\n└──────────────┘    └──────────────┘    └──────────────┘\n        │                                      │\n        │          ┌──────────────┐             │\n        └─────────>│  COORDINATOR │<────────────┘\n                   │              │\n                   │ Decides:     │\n                   │ • Good enough?│\n                   │ • Redo step? │\n                   │ • Send to    │\n                   │   human?     │\n                   └──────────────┘"
+      }
+    },
+    {
+      "number": 3,
+      "icon": "briefcase",
+      "title": "Automation ROI Assessment",
+      "description": "Apply the Automation Matrix to a real business process and calculate potential ROI:",
+      "steps": [
+        {
+          "title": "Pick a Process You Know",
+          "description": "Choose a repetitive business task from your job, internship, or a company you admire. Something done at least weekly."
+        },
+        {
+          "title": "Map It on the Automation Matrix",
+          "description": "Plot it on two axes: Volume (how often?) and Judgment Required (how much human thinking?). Decide: Full automation, augmentation, or human-only?"
+        },
+        {
+          "title": "Calculate the ROI",
+          "description": "Estimate: Hours per week x hourly cost x 52 weeks = annual cost. Subtract agent cost. Factor in error reduction. What's the payback period?"
+        },
+        {
+          "title": "Identify the Risks",
+          "description": "What could go wrong? What's the worst-case failure? Where do you need a human-in-the-loop checkpoint?"
+        }
+      ]
+    }
+  ],
+  "takeaways": [
+    {
+      "icon": "brain",
+      "text": "<strong>ReAct = Think before you act.</strong> The best agents don't just execute — they reason about what to do, observe results, and adapt. This pattern separates toy demos from production systems."
+    },
+    {
+      "icon": "users",
+      "text": "<strong>Agent teams beat solo agents.</strong> Just like human organizations, specialized agents collaborating on complex tasks produce better results than one agent trying to do everything."
+    },
+    {
+      "icon": "plug-zap",
+      "text": "<strong>MCP is the USB-C of AI.</strong> The Model Context Protocol means you build a tool integration once and every agent can use it. This standard is reshaping how agents connect to the world."
+    },
+    {
+      "icon": "trending-up",
+      "text": "<strong>Automate the routine, augment the judgment.</strong> The Automation Matrix helps you decide what to fully automate, what to augment with AI, and what must stay human."
+    },
+    {
+      "icon": "shield",
+      "text": "<strong>Trust scales as stakes shrink.</strong> Give agents full autonomy on low-risk tasks. Keep humans in the loop for high-stakes decisions. The trust equation is your guide."
+    }
+  ],
+  "homework": [
+    {
+      "label": "Build:",
+      "text": "Extend your Colab research agent with a 4th tool (e.g., competitor_lookup or financial_data). Test it with 3 different business research questions and document the reasoning traces."
+    },
+    {
+      "label": "Design:",
+      "text": "Write a 1-page multi-agent proposal for a business process you care about. Include: agent roles, tools needed, handoff logic, human review gates, and estimated ROI."
+    },
+    {
+      "label": "Explore:",
+      "text": "Browse the MCP server directory at modelcontextprotocol.io. Find 3 servers relevant to your final project idea. Write one paragraph on how each could help."
+    },
+    {
+      "label": "Reflect:",
+      "text": "Read Anthropic's 'Building Effective Agents' guide. Write 3 key takeaways and one thing that surprised you about when NOT to use agents."
+    }
+  ],
+  "nextSession": {
+    "title": "Session 9: Ethics & Responsible AI",
+    "description": "Agents are powerful. But power needs guardrails. Bias, fairness, privacy, and the responsible deployment of AI systems.",
+    "tags": ["Ethics", "Bias", "Responsible AI", "Trust & Safety"],
+    "slug": "session-09"
+  }
 }

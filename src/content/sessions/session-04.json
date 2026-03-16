@@ -137,11 +137,20 @@
       "linkText": "View deep-dive"
     },
     {
-      "title": "Inside NanoClaw: Code Walkthrough",
+      "title": "NanoClaw for Beginners",
+      "url": "/session-04/nanoclaw-beginners-guide.html",
+      "description": "No programming experience needed. Understand how a production AI agent works through business analogies, pseudocode, and just ~20 key lines of real code. Interactive detective challenges included.",
+      "icon": "graduation-cap",
+      "badge": "Start Here",
+      "badgeType": "interactive",
+      "linkText": "Start learning"
+    },
+    {
+      "title": "Inside NanoClaw: Full Code Walkthrough",
       "url": "/session-04/nanoclaw-code-walkthrough.html",
-      "description": "Read real production agent code file-by-file. See how index.ts, ipc-mcp.ts, and db.ts map to the Agent Formula. ~700 lines that power 10,500+ GitHub stars.",
+      "description": "Ready for more? Read real production agent code file-by-file. See how index.ts, ipc-mcp.ts, and db.ts map to the Agent Formula. ~700 lines that power 10,500+ GitHub stars.",
       "icon": "file-code",
-      "badge": "Real Code",
+      "badge": "Deep Dive",
       "badgeType": "code",
       "linkText": "Explore the code"
     },

@@ -2,13 +2,318 @@
   "number": 5,
   "slug": "session-05",
   "title": "Data & Analytics for AI",
-  "subtitle": "Understanding data pipelines, analytics, and how data drives AI systems",
+  "subtitle": "From raw data to AI-ready insights — pipelines, pandas, visualization, and data quality",
+  "heroTitle": "Data & <span class=\"bg-gradient-to-br from-accent-cyan to-accent-purple bg-clip-text text-transparent\">Analytics for AI</span>",
   "duration": "150 Minutes",
   "icon": "database",
-  "tags": ["Data Pipelines", "Analytics", "Visualization"],
+  "tags": ["Data Pipelines", "pandas", "Visualization", "Data Quality", "Business Analytics"],
   "objectives": [
-    { "title": "Understand Data Pipelines", "description": "Learn how data flows from collection to AI model training and inference." },
-    { "title": "Analyze Real Datasets", "description": "Work with business datasets to extract insights and prepare data for AI." }
+    {
+      "title": "Understand the Data Pipeline",
+      "description": "Trace how data flows from collection to cleaning to analysis to AI training. Know what happens at each stage and why it matters."
+    },
+    {
+      "title": "Analyze Real Business Data with pandas",
+      "description": "Load, explore, clean, and transform a real-world dataset in Google Colab using Python's most popular data library."
+    },
+    {
+      "title": "Visualize Data for Decision-Making",
+      "description": "Create bar charts, line plots, and scatter plots with matplotlib. Turn numbers into stories that drive business action."
+    },
+    {
+      "title": "Connect Data to Your AI Product",
+      "description": "Understand how data quality directly impacts AI performance. Define the data strategy for the product you built in Session 4."
+    }
   ],
-  "nextSession": { "title": "Session 6: Computer Vision", "description": "How machines see the world — image recognition, object detection, and business applications.", "tags": ["Image Recognition", "Object Detection", "Applications"], "slug": "session-06" }
+  "agenda": [
+    {
+      "time": "5:00 PM - 5:20 PM",
+      "title": "Part 1: Data is the New Oil (But Crude Oil is Useless)",
+      "duration": "20 minutes",
+      "description": "Every AI product you admire runs on data. But raw data is messy, incomplete, and often wrong. Here's how to think about it.",
+      "bulletPoints": [
+        "Opening hook: 'Your Session 4 product is smart. But without data, it's guessing.' Show a model trained on clean vs dirty data.",
+        "The Data Pipeline: Collection → Cleaning → Analysis → AI Training → Prediction",
+        "Real examples: Netflix recommendations (viewing data), Spotify Wrapped (listening data), Uber surge pricing (ride data)",
+        "The 80/20 rule: Data scientists spend 80% of their time cleaning data, 20% on modeling",
+        "GARBAGE IN, GARBAGE OUT: Amazon's hiring AI trained on biased data → biased results"
+      ]
+    },
+    {
+      "time": "5:20 PM - 5:35 PM",
+      "title": "Part 2: Meet pandas — Your Data Swiss Army Knife",
+      "duration": "15 minutes",
+      "description": "pandas is Python's superpower for data. If Excel is a bicycle, pandas is a Tesla.",
+      "bulletPoints": [
+        "What is pandas? DataFrames = spreadsheets in code. Same concept, infinite power.",
+        "LIVE DEMO: Load a CSV of 10,000 Airbnb listings in 1 line of code",
+        "The Big 5 operations: .head(), .describe(), .shape, .info(), .value_counts()",
+        "Filtering: 'Show me all listings under $100 in Manhattan' — one line of code",
+        "ACTION: Open the Colab notebook now. Run Cell 1 while I talk."
+      ]
+    },
+    {
+      "time": "5:35 PM - 6:15 PM",
+      "title": "Part 3: Hands-On Data Exploration Lab",
+      "duration": "40 minutes",
+      "description": "Get your hands dirty with real data. Load it, explore it, clean it, question it.",
+      "bulletPoints": [
+        "5:35-5:50 — EXPLORE: Load the dataset, run .describe(), find the most expensive listing, count by neighborhood",
+        "5:50-6:00 — CLEAN: Find missing values, handle outliers (a $10,000/night listing?), fix data types",
+        "6:00-6:10 — ANALYZE: Group by neighborhood, calculate averages, find patterns, answer 3 business questions",
+        "6:10-6:15 — SHARE: Tell your neighbor the most surprising thing you found in the data"
+      ]
+    },
+    {
+      "time": "6:15 PM - 6:25 PM",
+      "title": "Break",
+      "duration": "10 minutes",
+      "description": "Stretch, grab coffee, think about what patterns you spotted.",
+      "isBreak": true
+    },
+    {
+      "time": "6:25 PM - 6:45 PM",
+      "title": "Part 4: Data Visualization — Numbers Tell, Charts Sell",
+      "duration": "20 minutes",
+      "description": "A CEO won't read your DataFrame. They'll look at your chart for 3 seconds. Make those seconds count.",
+      "bulletPoints": [
+        "Why visualize? Anscombe's Quartet — 4 datasets with identical statistics, wildly different shapes",
+        "The Big 3 chart types: Bar (comparison), Line (trends), Scatter (relationships)",
+        "LIVE DEMO: Build 3 charts from our Airbnb data in matplotlib",
+        "Chart crimes: 3D pie charts, truncated axes, misleading scales — don't be that person",
+        "COLOR & LABELS: A chart without labels is just modern art. Always title, label, annotate."
+      ]
+    },
+    {
+      "time": "6:45 PM - 7:10 PM",
+      "title": "Part 5: Visualization Workshop",
+      "duration": "25 minutes",
+      "description": "Build 4 charts that tell a data story. Make them presentation-ready.",
+      "bulletPoints": [
+        "Chart 1: Bar chart — Average price by neighborhood (which area is most expensive?)",
+        "Chart 2: Histogram — Price distribution (where do most listings fall?)",
+        "Chart 3: Scatter plot — Price vs number of reviews (does cheaper = more popular?)",
+        "Chart 4: YOUR CHOICE — Create a chart that answers a question YOU have about the data",
+        "Bonus: Add titles, colors, and annotations to make your charts boardroom-ready"
+      ]
+    },
+    {
+      "time": "7:10 PM - 7:22 PM",
+      "title": "Part 6: Data Strategy for YOUR AI Product",
+      "duration": "12 minutes",
+      "description": "Connect everything back to the product you built in Session 4. What data does YOUR product need?",
+      "bulletPoints": [
+        "CLASS DISCUSSION: 'What data would your Session 4 product need to get smarter over time?'",
+        "The Data Flywheel: More users → more data → better AI → more users (Netflix, TikTok, Google)",
+        "3 questions every AI product must answer: What data? How to collect it? How to keep it clean?",
+        "Privacy & Ethics: What data SHOULDN'T you collect? GDPR, consent, and trust",
+        "Quick exercise: Write a 3-sentence data strategy for your product"
+      ]
+    },
+    {
+      "time": "7:22 PM - 7:30 PM",
+      "title": "Part 7: Wrap-Up + Homework",
+      "duration": "8 minutes",
+      "description": "You went from raw CSV to clean analysis to beautiful charts to AI-ready data strategy.",
+      "bulletPoints": [
+        "Recap: Collection → Cleaning → Analysis → Visualization → AI Training. You did all 5 today.",
+        "Key insight: The best AI model in the world fails on bad data. Data quality IS product quality.",
+        "Homework preview: Kaggle dataset analysis, visualization portfolio, data strategy document",
+        "Next week: Computer Vision — how machines SEE the world. Bring images you want to classify!"
+      ]
+    }
+  ],
+  "resources": [
+    {
+      "title": "Data Analytics Workshop Notebook",
+      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-05/ISOM260_Session5_Data_Analytics.ipynb",
+      "description": "Hands-on notebook with real Airbnb data. Load, clean, analyze, and visualize a 10,000-row dataset using pandas and matplotlib.",
+      "icon": "code",
+      "badge": "Hands-On",
+      "badgeType": "interactive",
+      "linkText": "Open in Colab"
+    },
+    {
+      "title": "Data Pipeline Visual Guide",
+      "url": "/session-05/data-pipeline-guide.html",
+      "description": "Interactive visual explainer: how data flows from collection to cleaning to analysis to AI training. Includes the Garbage In, Garbage Out case studies.",
+      "icon": "git-branch",
+      "badge": "Key Concept",
+      "badgeType": "interactive",
+      "linkText": "View guide"
+    },
+    {
+      "title": "pandas Documentation",
+      "url": "https://pandas.pydata.org/docs/getting_started/index.html",
+      "description": "Official getting started guide for pandas. The definitive reference for DataFrames, filtering, grouping, and data manipulation.",
+      "icon": "book-open",
+      "badge": "Docs",
+      "badgeType": "code",
+      "linkText": "Read docs"
+    },
+    {
+      "title": "matplotlib Gallery",
+      "url": "https://matplotlib.org/stable/gallery/index.html",
+      "description": "Hundreds of chart examples with code. Find the visualization you need, copy the code, customize it for your data.",
+      "icon": "bar-chart",
+      "badge": "Gallery",
+      "badgeType": "code",
+      "linkText": "Browse gallery"
+    },
+    {
+      "title": "Kaggle Datasets",
+      "url": "https://www.kaggle.com/datasets",
+      "description": "Thousands of free, real-world datasets for practice. Filter by business, finance, marketing, and more. Great for homework.",
+      "icon": "database",
+      "badge": "Data",
+      "badgeType": "tool",
+      "linkText": "Explore datasets"
+    },
+    {
+      "title": "Google Colab",
+      "url": "https://colab.research.google.com",
+      "description": "Free cloud-based Python notebooks. No installation needed — just open and start coding. Your data lab in the browser.",
+      "icon": "cloud",
+      "badge": "Tool",
+      "badgeType": "tool",
+      "linkText": "Open Colab"
+    },
+    {
+      "title": "Storytelling with Data",
+      "url": "https://www.storytellingwithdata.com/chart-guide",
+      "description": "How to choose the right chart for your data. A practical guide to turning numbers into compelling visual stories.",
+      "icon": "presentation",
+      "badge": "Guide",
+      "badgeType": "video",
+      "linkText": "Learn more"
+    }
+  ],
+  "activities": [
+    {
+      "number": 1,
+      "icon": "search",
+      "title": "Data Exploration Lab",
+      "description": "Load a real Airbnb dataset and uncover business insights using pandas in Google Colab:",
+      "steps": [
+        {
+          "title": "Load & Inspect (15 min)",
+          "description": "Import the CSV into a DataFrame. Run .head(), .shape, .describe(), and .info() to understand what you're working with."
+        },
+        {
+          "title": "Clean the Mess (10 min)",
+          "description": "Find missing values with .isnull().sum(). Handle outliers — is that $10,000/night listing real or a typo? Fix data types."
+        },
+        {
+          "title": "Analyze & Answer (10 min)",
+          "description": "Use .groupby() and .mean() to answer: Which neighborhood is most expensive? Which has the most listings? What's the average price?"
+        },
+        {
+          "title": "Share Your Finding (5 min)",
+          "description": "Tell your neighbor the most surprising insight you discovered. Did anything challenge your assumptions?"
+        }
+      ],
+      "codeBlock": {
+        "language": "python",
+        "code": "import pandas as pd\n\n# Load 10,000 Airbnb listings in ONE line\ndf = pd.read_csv('airbnb_nyc.csv')\n\n# Instant overview\nprint(f\"Rows: {df.shape[0]:,}  |  Columns: {df.shape[1]}\")\nprint(f\"Average price: ${df['price'].mean():.2f}\")\nprint(f\"Missing values:\\n{df.isnull().sum()}\")\n\n# Filter: Manhattan listings under $150\ncheap_manhattan = df[(df['neighbourhood_group'] == 'Manhattan') \n                     & (df['price'] < 150)]\nprint(f\"\\nAffordable Manhattan stays: {len(cheap_manhattan):,}\")"
+      }
+    },
+    {
+      "number": 2,
+      "icon": "bar-chart",
+      "title": "Visualization Workshop",
+      "description": "Build 4 presentation-ready charts from your cleaned data using matplotlib:",
+      "steps": [
+        {
+          "title": "Bar Chart — Price by Neighborhood (5 min)",
+          "description": "Create a horizontal bar chart comparing average prices across NYC neighborhoods. Add labels, colors, and a title."
+        },
+        {
+          "title": "Histogram — Price Distribution (5 min)",
+          "description": "Plot the distribution of listing prices. Where do most listings fall? Identify the long tail of luxury listings."
+        },
+        {
+          "title": "Scatter Plot — Price vs Reviews (5 min)",
+          "description": "Plot price against number of reviews. Does cheaper mean more popular? Look for the relationship."
+        },
+        {
+          "title": "Your Choice Chart (10 min)",
+          "description": "Create a chart that answers YOUR question about the data. Make it boardroom-ready with title, labels, and annotations."
+        }
+      ],
+      "codeBlock": {
+        "language": "python",
+        "code": "import matplotlib.pyplot as plt\n\n# Bar chart: Average price by neighborhood\navg_price = df.groupby('neighbourhood_group')['price'].mean().sort_values()\n\nplt.figure(figsize=(10, 6))\navg_price.plot(kind='barh', color='#6366f1')\nplt.title('Average Airbnb Price by NYC Neighborhood', fontsize=16)\nplt.xlabel('Average Price ($)')\nplt.ylabel('')\nfor i, v in enumerate(avg_price):\n    plt.text(v + 2, i, f'${v:.0f}', va='center')\nplt.tight_layout()\nplt.show()"
+      }
+    },
+    {
+      "number": 3,
+      "icon": "lightbulb",
+      "title": "Data Strategy for Your AI Product",
+      "description": "Connect data concepts to the product you built in Session 4. Define what data YOUR product needs:",
+      "steps": [
+        {
+          "title": "Identify Your Data (3 min)",
+          "description": "What data does your Session 4 product need? User inputs, behavior logs, external APIs? List at least 5 data points."
+        },
+        {
+          "title": "Map the Pipeline (3 min)",
+          "description": "How would you collect, clean, and store this data? Sketch the flow: source → ingestion → storage → analysis → AI model."
+        },
+        {
+          "title": "Address Quality & Ethics (3 min)",
+          "description": "What could go wrong? Biased data? Missing values? Privacy concerns? What data should you NOT collect?"
+        },
+        {
+          "title": "Write Your Data Strategy (3 min)",
+          "description": "3 sentences: What data you need, how you'll collect it, and how it makes your product smarter over time."
+        }
+      ]
+    }
+  ],
+  "takeaways": [
+    {
+      "icon": "database",
+      "text": "<strong>Data is the fuel, not the car.</strong> The best AI model in the world fails on bad data. You learned the full pipeline: collection, cleaning, analysis, visualization, training."
+    },
+    {
+      "icon": "code",
+      "text": "<strong>pandas turns spreadsheets into superpowers.</strong> One line to load 10,000 rows. One line to filter. One line to group. You did in seconds what takes hours in Excel."
+    },
+    {
+      "icon": "bar-chart",
+      "text": "<strong>Charts tell stories that numbers can't.</strong> Anscombe's Quartet proved it — identical statistics, totally different data. Always visualize before you model."
+    },
+    {
+      "icon": "alert-triangle",
+      "text": "<strong>Garbage in, garbage out.</strong> Amazon's biased hiring AI, misleading charts, dirty datasets — data quality is not optional. It IS the product."
+    },
+    {
+      "icon": "repeat",
+      "text": "<strong>The Data Flywheel drives every great AI product.</strong> More users generate more data, which trains better models, which attract more users. Your Session 4 product needs this loop."
+    }
+  ],
+  "homework": [
+    {
+      "label": "Analyze:",
+      "text": "Find a dataset on Kaggle relevant to your Session 4 product. Load it in Colab, clean it, and write 5 key findings. Include your code."
+    },
+    {
+      "label": "Visualize:",
+      "text": "Create 3 polished charts from your chosen dataset. Each chart should answer a specific business question. Add titles, labels, and annotations."
+    },
+    {
+      "label": "Strategize:",
+      "text": "Write a 1-page data strategy for your AI product: what data you need, how to collect it, how to ensure quality, and what ethical guardrails to set."
+    },
+    {
+      "label": "Explore:",
+      "text": "Read the pandas Getting Started guide. Try 3 operations we didn't cover in class (e.g., .merge(), .pivot_table(), .apply()). Share what you learned."
+    }
+  ],
+  "nextSession": {
+    "title": "Session 6: Computer Vision",
+    "description": "How machines see the world — image recognition, object detection, and building vision-powered business applications.",
+    "tags": ["Image Recognition", "Object Detection", "CNNs", "Business Applications"],
+    "slug": "session-06"
+  }
 }
