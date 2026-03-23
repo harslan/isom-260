@@ -155,9 +155,18 @@
       "linkText": "Explore the code"
     },
     {
-      "title": "Agent Workshop Notebook",
+      "title": "Agent Workshop Notebook (Claude)",
       "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-04/ISOM260_Session4_Build_Your_First_Agent.ipynb",
-      "description": "Build your first AI agent with 3 tools: calculator, stock lookup, company info. Watch Claude reason about which to use.",
+      "description": "Build your first AI agent with 3 tools: calculator, stock lookup, company info. Watch Claude reason about which to use. Requires an Anthropic API key.",
+      "icon": "code",
+      "badge": "Hands-On",
+      "badgeType": "interactive",
+      "linkText": "Open in Colab"
+    },
+    {
+      "title": "Agent Workshop Notebook (Gemini)",
+      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-04/ISOM260_Session4_Build_Your_First_Agent_Gemini.ipynb",
+      "description": "Same agent workshop using Google Gemini instead of Claude. Identical tools and structure — just a different LLM backend. Requires a Google API key.",
       "icon": "code",
       "badge": "Hands-On",
       "badgeType": "interactive",
@@ -339,9 +348,9 @@
     }
   ],
   "nextSession": {
-    "title": "Session 5: Data & Analytics",
-    "description": "Every AI product runs on data. Learn how data flows, how to visualize it, and how it makes AI smarter.",
-    "tags": ["Data Pipelines", "Visualization", "Analytics", "AI Training Data"],
+    "title": "Session 5: Agents Meet the Real World",
+    "description": "Real APIs, error handling, and memory — take your agents from simulated toys to production-ready tools.",
+    "tags": ["Real APIs", "Error Handling", "Agent Memory", "Wikipedia API"],
     "slug": "session-05"
   }
 }
