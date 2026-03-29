@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ISOM 260 — Session 4 Homework: Build Your First AI Agent</title>
+  <style>
+    :root {
+      --blue: #1e40af;
+      --blue-light: #eff6ff;
+      --green: #166534;
+      --green-light: #f0fdf4;
+      --orange: #9a3412;
+      --orange-light: #fff7ed;
+      --purple: #6b21a8;
+      --purple-light: #faf5ff;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-600: #4b5563;
+      --gray-700: #374151;
+      --gray-900: #111827;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: var(--gray-900);
+      line-height: 1.6;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 40px 24px;
+      background: #fff;
+    }
+
+    .header {
+      border-bottom: 3px solid var(--blue);
+      padding-bottom: 20px;
+      margin-bottom: 32px;
+    }
+    .header .course {
+      font-size: 0.85rem;
+      color: var(--blue);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .header h1 {
+      font-size: 1.75rem;
+      margin: 6px 0 4px;
+    }
+    .header .subtitle {
+      color: var(--gray-600);
+      font-size: 0.95rem;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      background: var(--gray-50);
+      border: 1px solid var(--gray-200);
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin-bottom: 32px;
+      font-size: 0.9rem;
+    }
+    .meta-item { display: flex; align-items: center; gap: 6px; }
+    .meta-label { font-weight: 600; color: var(--gray-700); }
+    .meta-value { color: var(--gray-600); }
+
+    h2 {
+      font-size: 1.2rem;
+      color: var(--gray-900);
+      margin: 36px 0 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    h2 .num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      background: var(--blue);
+      color: #fff;
+      font-size: 0.85rem;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    p, li { font-size: 0.95rem; color: var(--gray-700); }
+    p { margin-bottom: 10px; }
+    ul, ol { margin: 8px 0 16px 20px; }
+    li { margin-bottom: 6px; }
+    a { color: var(--blue); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    code {
+      background: var(--gray-100);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.88rem;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+    }
+
+    .task {
+      border-radius: 8px;
+      padding: 20px 24px;
+      margin: 16px 0;
+      border-left: 4px solid;
+    }
+    .task-build  { background: var(--blue-light);   border-color: var(--blue); }
+    .task-write  { background: var(--orange-light); border-color: var(--orange); }
+    .task-stretch { background: var(--purple-light); border-color: var(--purple); }
+
+    .task-label {
+      font-weight: 700;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+    }
+    .task-build  .task-label { color: var(--blue); }
+    .task-write  .task-label { color: var(--orange); }
+    .task-stretch .task-label { color: var(--purple); }
+
+    .task h3 { margin: 0 0 8px; color: var(--gray-900); font-size: 1.05rem; }
+    .task p:last-child { margin-bottom: 0; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0 24px;
+      font-size: 0.9rem;
+    }
+    th, td {
+      padding: 10px 14px;
+      text-align: left;
+      border: 1px solid var(--gray-200);
+    }
+    th {
+      background: var(--gray-50);
+      font-weight: 600;
+      color: var(--gray-700);
+    }
+    td { color: var(--gray-700); }
+
+    .checklist {
+      list-style: none;
+      margin-left: 0;
+      padding: 0;
+    }
+    .checklist li {
+      padding: 6px 0 6px 28px;
+      position: relative;
+    }
+    .checklist li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 10px;
+      width: 16px;
+      height: 16px;
+      border: 2px solid var(--gray-200);
+      border-radius: 3px;
+    }
+
+    .guide-banner {
+      background: linear-gradient(135deg, #eff6ff, #faf5ff);
+      border: 2px solid var(--blue);
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin: 24px 0;
+      text-align: center;
+    }
+    .guide-banner p { margin-bottom: 8px; font-weight: 600; color: var(--gray-900); }
+    .guide-banner a {
+      display: inline-block;
+      background: var(--blue);
+      color: #fff;
+      padding: 10px 24px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .guide-banner a:hover { background: #1e3a8a; text-decoration: none; }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--gray-200);
+      margin: 32px 0;
+    }
+
+    .footer {
+      margin-top: 40px;
+      padding-top: 16px;
+      border-top: 1px solid var(--gray-200);
+      font-size: 0.82rem;
+      color: var(--gray-600);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="course">ISOM 260 &mdash; AI for Business</div>
+    <h1>Homework 4: Build Your First AI Agent</h1>
+    <div class="subtitle">Session 4 &mdash; Building AI Products &amp; Intro to AI Agents</div>
+  </div>
+
+  <div class="meta">
+    <div class="meta-item">
+      <span class="meta-label">Due:</span>
+      <span class="meta-value">Before Session 5</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Points:</span>
+      <span class="meta-value">100 (+ 10 bonus)</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Format:</span>
+      <span class="meta-value">Colab notebook (.ipynb)</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Submit via:</span>
+      <span class="meta-value">Canvas</span>
+    </div>
+  </div>
+
+  <div class="guide-banner">
+    <p>Need help? Follow the step-by-step walkthrough guide.</p>
+    <a href="homework-session4-guide.html">Open the Walkthrough Guide &rarr;</a>
+  </div>
+
+  <h2>Overview</h2>
+  <p>
+    In class you built a multi-tool AI agent that can reason about <em>which</em> tools to use, <em>when</em> to use them, and how to combine results into a coherent answer. This homework asks you to go further: design and build your own tool, stress-test your agent, and reflect on what you learned.
+  </p>
+  <p>
+    You are <strong>encouraged to use AI tools</strong> (ChatGPT, Claude, Gemini) to help you understand code and complete tasks. That&rsquo;s a core skill in this course.
+  </p>
+
+  <hr class="divider" />
+
+  <h2><span class="num">1</span> Run the Notebook (Parts 1&ndash;4)</h2>
+
+  <div class="task task-build">
+    <div class="task-label">Build &mdash; 30 pts</div>
+    <h3>Open the Colab notebook, set up your API key, and run every cell</h3>
+    <ul>
+      <li>Open the <a href="https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-04/ISOM260_Session4_Build_Your_First_Agent_Gemini.ipynb" target="_blank">Session 4 Colab Notebook</a> and save a copy to your Drive.</li>
+      <li>Get a free API key from <a href="https://aistudio.google.com/apikey" target="_blank">Google AI Studio</a> and add it as a Colab secret named <code>GOOGLE_API_KEY</code>.</li>
+      <li>Run every cell in Parts 1&ndash;4, top to bottom. Leave all outputs visible.</li>
+    </ul>
+    <p><strong>Deliverable:</strong> All cells executed with outputs showing the agent calling tools and producing answers.</p>
+  </div>
+
+  <hr class="divider" />
+
+  <h2><span class="num">2</span> Build a Custom Tool</h2>
+
+  <div class="task task-build">
+    <div class="task-label">Build &mdash; 40 pts</div>
+    <h3>Design and implement your own tool, then test it with 3 queries</h3>
+    <p>In Part 5 of the notebook, use the template to create a 4th tool. You need to define:</p>
+    <ul>
+      <li><strong>Tool name</strong> &mdash; a descriptive identifier (e.g., <code>"calculate_tip_split"</code>)</li>
+      <li><strong>Description</strong> &mdash; 1&ndash;2 sentences telling Gemini <em>exactly when</em> to use your tool</li>
+      <li><strong>Parameters</strong> &mdash; the inputs your tool needs (name, type, description for each)</li>
+      <li><strong>Function body</strong> &mdash; Python code that takes the parameters and returns a useful string</li>
+    </ul>
+    <p>You may use simulated/hardcoded data (like the stock tool does). Creativity counts.</p>
+
+    <p><strong>Test your tool with 3 queries:</strong></p>
+    <ul>
+      <li><strong>Query 1:</strong> A straightforward use of your tool</li>
+      <li><strong>Query 2:</strong> A different scenario or input</li>
+      <li><strong>Query 3 (multi-tool):</strong> A question that requires your tool <em>plus</em> at least one existing tool (calculator, stock, or company info)</li>
+    </ul>
+    <p><strong>Deliverable:</strong> Tool definition, function, and 3 test runs with visible output.</p>
+  </div>
+
+  <hr class="divider" />
+
+  <h2><span class="num">3</span> Write Reflections</h2>
+
+  <div class="task task-write">
+    <div class="task-label">Write &mdash; 20 pts</div>
+    <h3>Answer these three questions in text cells (3&ndash;5 sentences each)</h3>
+    <ol>
+      <li>
+        <strong>Tool descriptions matter.</strong>
+        Change your tool&rsquo;s description to something vague (e.g., &ldquo;A tool that does stuff&rdquo;). Run the same query. What happens? Why does description quality matter for an AI agent? (Change it back after.)
+      </li>
+      <li>
+        <strong>Agent vs. chatbot.</strong>
+        Explain the difference between a chatbot and an AI agent to someone who has never taken this class. Use a concrete business example.
+      </li>
+      <li>
+        <strong>Your agent product.</strong>
+        If you could build an AI agent for a real company or organization, what would it do? What 3 tools would it need? Who would use it and why?
+      </li>
+    </ol>
+    <p><strong>Deliverable:</strong> Written answers in text cell(s) at the bottom of your notebook.</p>
+  </div>
+
+  <hr class="divider" />
+
+  <h2><span class="num">4</span> Bonus: Break Your Agent</h2>
+
+  <div class="task task-stretch">
+    <div class="task-label">Stretch &mdash; 10 bonus pts</div>
+    <h3>Find the limits of your agent</h3>
+    <p>Try to make your agent produce a wrong answer or behave unexpectedly. Ideas:</p>
+    <ul>
+      <li>Ask something that requires a tool you haven&rsquo;t provided</li>
+      <li>Ask something ambiguous that could match multiple tools</li>
+      <li>Give conflicting instructions in one question</li>
+    </ul>
+    <p><strong>Deliverable:</strong> 1&ndash;2 test runs plus a brief explanation of what happened and <em>why</em> (in a text cell).</p>
+  </div>
+
+  <hr class="divider" />
+
+  <h2>Grading Rubric</h2>
+  <table>
+    <thead>
+      <tr>
+        <th style="width:45%">Criterion</th>
+        <th style="width:15%">Points</th>
+        <th style="width:40%">What &ldquo;excellent&rdquo; looks like</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Notebook completion</strong><br />All cells run, outputs visible</td>
+        <td>30</td>
+        <td>Every cell executed successfully; agent output clearly shows tool calls and final answers</td>
+      </tr>
+      <tr>
+        <td><strong>Custom tool &mdash; definition</strong><br />Clear name, description, parameters</td>
+        <td>15</td>
+        <td>Description is detailed enough that Gemini reliably chooses the tool when appropriate</td>
+      </tr>
+      <tr>
+        <td><strong>Custom tool &mdash; function</strong><br />Working Python code</td>
+        <td>10</td>
+        <td>Function handles edge cases gracefully; returns clear, useful results</td>
+      </tr>
+      <tr>
+        <td><strong>Custom tool &mdash; testing</strong><br />3 queries, including 1 multi-tool</td>
+        <td>15</td>
+        <td>Queries are diverse; multi-tool query shows agent reasoning across tools</td>
+      </tr>
+      <tr>
+        <td><strong>Reflection</strong><br />Thoughtful answers to 3 questions</td>
+        <td>20</td>
+        <td>Shows genuine understanding of agent architecture; business example is specific and realistic</td>
+      </tr>
+      <tr>
+        <td><strong>Bonus: Break your agent</strong></td>
+        <td>+10</td>
+        <td>Insightful analysis of why the failure occurred</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <hr class="divider" />
+
+  <h2>Submission</h2>
+  <p>Download your completed notebook (<strong>File &rarr; Download &rarr; Download .ipynb</strong>) and upload it to Canvas under <strong>Session 4 Homework</strong>.</p>
+
+  <h2>Submission Checklist</h2>
+  <ul class="checklist">
+    <li>Notebook saved with <strong>all outputs visible</strong> (don&rsquo;t clear outputs before submitting)</li>
+    <li>All cells in Parts 1&ndash;4 executed successfully</li>
+    <li>Custom tool: definition + function + 3 test queries (including 1 multi-tool query)</li>
+    <li>Reflections: 3 written answers in text cell(s) (3&ndash;5 sentences each)</li>
+    <li>File downloaded as <code>.ipynb</code> and uploaded to Canvas</li>
+  </ul>
+
+  <div class="footer">
+    ISOM 260: AI for Business &nbsp;&bull;&nbsp; Suffolk University &nbsp;&bull;&nbsp; Prof. Hasan Arslan
+  </div>
+
+</body>
+</html>

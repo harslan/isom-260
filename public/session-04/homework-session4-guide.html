@@ -1,0 +1,1493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Build Your First AI Agent — Step-by-Step Guide | ISOM 260</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ====================================================================
+           DESIGN SYSTEM — matches nanoclaw guides exactly
+           ==================================================================== */
+        :root {
+            --bg: #0a0e1a;
+            --bg-card: #0d1220;
+            --bg-code: #080c16;
+            --bg-elevated: #141929;
+            --bg-line-highlight: rgba(0, 229, 255, 0.06);
+            --cyan: #00e5ff;
+            --cyan-dim: #00b8d4;
+            --cyan-ghost: rgba(0, 229, 255, 0.08);
+            --magenta: #ff006e;
+            --magenta-ghost: rgba(255, 0, 110, 0.08);
+            --yellow: #ffd600;
+            --yellow-ghost: rgba(255, 214, 0, 0.08);
+            --green: #00e676;
+            --green-ghost: rgba(0, 230, 118, 0.08);
+            --orange: #ff9100;
+            --orange-ghost: rgba(255, 145, 0, 0.08);
+            --purple: #b388ff;
+            --purple-ghost: rgba(179, 136, 255, 0.08);
+            --text: #e0e6f0;
+            --text-secondary: #8892a8;
+            --text-dim: #4a5468;
+            --border: rgba(0, 229, 255, 0.1);
+            --border-strong: rgba(0, 229, 255, 0.25);
+            --grid: rgba(0, 229, 255, 0.03);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                linear-gradient(var(--grid) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+        }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 1; }
+
+        /* ====== PROGRESS BAR ====== */
+        .progress-bar {
+            position: fixed; top: 0; left: 0; right: 0;
+            height: 3px; background: var(--bg); z-index: 100;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--green), var(--cyan));
+            width: 0%; transition: width 0.3s;
+        }
+
+        /* ====== HERO ====== */
+        .hero { padding: 5rem 0 2rem; }
+
+        .badge {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            padding: 0.4rem 1rem;
+            background: var(--cyan-ghost);
+            border: 1px solid rgba(0, 229, 255, 0.2);
+            border-radius: 100px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase;
+            color: var(--cyan); margin-bottom: 1.5rem;
+        }
+        .badge .dot { width: 6px; height: 6px; background: var(--cyan); border-radius: 50%; animation: pulse 2s ease-in-out infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+        .hero h1 {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(2.2rem, 5vw, 3.5rem);
+            font-weight: 800; line-height: 1.1; letter-spacing: -0.03em;
+            margin-bottom: 1rem;
+        }
+        .hero h1 .cyan { color: var(--cyan); }
+        .hero h1 .green { color: var(--green); }
+
+        .hero-sub {
+            font-size: 1.1rem; color: var(--text-secondary);
+            max-width: 700px; margin-bottom: 1.5rem;
+        }
+
+        .hero-note {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            padding: 0.6rem 1rem;
+            background: var(--green-ghost);
+            border: 1px solid rgba(0, 230, 118, 0.2);
+            border-radius: 8px;
+            font-size: 0.85rem; color: var(--green);
+            margin-bottom: 2rem;
+        }
+
+        /* ====== STEP INDICATOR (per-section) ====== */
+        .step-indicator {
+            display: flex; align-items: center; gap: 0.5rem;
+            margin-bottom: 1.5rem; flex-wrap: wrap;
+        }
+        .step-dot {
+            width: 32px; height: 32px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Sora', sans-serif;
+            font-weight: 700; font-size: 0.75rem;
+            border: 2px solid var(--border);
+            color: var(--text-dim); transition: all 0.3s; flex-shrink: 0;
+        }
+        .step-dot.active { border-color: var(--cyan); color: var(--cyan); background: rgba(0, 229, 255, 0.08); }
+        .step-dot.done { border-color: var(--green); color: var(--green); background: rgba(0, 230, 118, 0.08); }
+        .step-line { flex: 1; height: 2px; background: var(--border); min-width: 8px; }
+
+        /* ====== SECTIONS ====== */
+        .section { padding: 3.5rem 0; border-top: 1px solid var(--border); }
+
+        .section-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
+            margin-bottom: 0.75rem;
+            display: flex; align-items: center; gap: 0.75rem;
+        }
+        .section-label::before { content: ''; width: 24px; height: 1px; }
+        .section-label.cyan { color: var(--cyan); } .section-label.cyan::before { background: var(--cyan); }
+        .section-label.magenta { color: var(--magenta); } .section-label.magenta::before { background: var(--magenta); }
+        .section-label.green { color: var(--green); } .section-label.green::before { background: var(--green); }
+        .section-label.yellow { color: var(--yellow); } .section-label.yellow::before { background: var(--yellow); }
+        .section-label.orange { color: var(--orange); } .section-label.orange::before { background: var(--orange); }
+        .section-label.purple { color: var(--purple); } .section-label.purple::before { background: var(--purple); }
+
+        .section-title {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 700;
+            letter-spacing: -0.02em; margin-bottom: 0.75rem;
+        }
+
+        .section-desc { color: var(--text-secondary); font-size: 0.95rem; max-width: 700px; margin-bottom: 2rem; }
+
+        /* ====== EQUATION BLOCK ====== */
+        .equation-block {
+            background: linear-gradient(135deg, var(--magenta-ghost), var(--cyan-ghost));
+            border: 1px solid var(--border-strong);
+            border-radius: 16px;
+            padding: 2rem 2.5rem;
+            margin: 2rem 0;
+            text-align: center;
+            position: relative;
+        }
+        .equation-block::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--magenta), var(--cyan));
+            border-radius: 16px 16px 0 0;
+        }
+        .equation {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(0.95rem, 2.5vw, 1.35rem);
+            font-weight: 700;
+            display: flex; align-items: center; justify-content: center;
+            gap: 0.5rem; flex-wrap: wrap;
+        }
+        .eq-part {
+            padding: 0.4rem 0.8rem; border-radius: 8px; white-space: nowrap;
+        }
+        .eq-llm { background: rgba(0, 229, 255, 0.15); color: var(--cyan); border: 1px solid rgba(0, 229, 255, 0.3); }
+        .eq-tools { background: rgba(255, 0, 110, 0.15); color: var(--magenta); border: 1px solid rgba(255, 0, 110, 0.3); }
+        .eq-loop { background: rgba(255, 214, 0, 0.15); color: var(--yellow); border: 1px solid rgba(255, 214, 0, 0.3); }
+        .eq-result { background: rgba(0, 230, 118, 0.15); color: var(--green); border: 1px solid rgba(0, 230, 118, 0.3); }
+        .eq-you { background: rgba(179, 136, 255, 0.15); color: var(--purple); border: 1px solid rgba(179, 136, 255, 0.3); }
+        .eq-plus { color: var(--text-dim); font-size: 1.1rem; }
+        .eq-equals { color: var(--text-dim); font-size: 1.1rem; }
+
+        /* ====== FLOW DIAGRAM ====== */
+        .flow-vertical {
+            display: flex; flex-direction: column; align-items: center;
+            gap: 0; margin: 2rem 0;
+        }
+        .flow-step {
+            display: flex; align-items: center; gap: 1rem;
+            width: 100%; max-width: 550px;
+        }
+        .flow-icon-col {
+            display: flex; flex-direction: column; align-items: center;
+            width: 50px; flex-shrink: 0;
+        }
+        .flow-icon {
+            width: 44px; height: 44px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem; border: 2px solid; background: var(--bg); z-index: 1;
+        }
+        .flow-line-v { width: 2px; height: 24px; }
+        .flow-body { padding: 0.75rem 0; }
+        .flow-body h4 { font-family: 'Sora', sans-serif; font-size: 0.95rem; font-weight: 600; margin-bottom: 0.15rem; }
+        .flow-body p { font-size: 0.82rem; color: var(--text-secondary); margin: 0; }
+        .flow-spacer { height: 0; }
+
+        .flow-step:nth-child(1) .flow-icon { border-color: var(--green); }
+        .flow-step:nth-child(1) .flow-line-v { background: linear-gradient(var(--green), var(--cyan)); }
+        .flow-step:nth-child(3) .flow-icon { border-color: var(--cyan); }
+        .flow-step:nth-child(3) .flow-line-v { background: linear-gradient(var(--cyan), var(--magenta)); }
+        .flow-step:nth-child(5) .flow-icon { border-color: var(--magenta); }
+        .flow-step:nth-child(5) .flow-line-v { background: linear-gradient(var(--magenta), var(--yellow)); }
+        .flow-step:nth-child(7) .flow-icon { border-color: var(--yellow); }
+
+        /* ====== ANALOGY CARDS ====== */
+        .analogy-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 1.25rem; margin: 2rem 0;
+        }
+        .analogy-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px; padding: 1.75rem;
+            text-align: center; transition: all 0.3s;
+        }
+        .analogy-card:hover { border-color: var(--border-strong); transform: translateY(-2px); }
+        .analogy-emoji { font-size: 2.5rem; margin-bottom: 0.75rem; }
+        .analogy-card h4 {
+            font-family: 'Sora', sans-serif;
+            font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem;
+        }
+        .analogy-card p { font-size: 0.82rem; color: var(--text-secondary); margin: 0; }
+
+        .analogy-card.card-cyan { border-top: 3px solid var(--cyan); }
+        .analogy-card.card-magenta { border-top: 3px solid var(--magenta); }
+        .analogy-card.card-green { border-top: 3px solid var(--green); }
+        .analogy-card.card-yellow { border-top: 3px solid var(--yellow); }
+        .analogy-card.card-orange { border-top: 3px solid var(--orange); }
+        .analogy-card.card-purple { border-top: 3px solid var(--purple); }
+
+        /* ====== SIDE-BY-SIDE ====== */
+        .side-by-side {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 1.5rem; margin: 2rem 0;
+        }
+        .sbs-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px; padding: 1.5rem;
+        }
+        .sbs-card h4 {
+            font-family: 'Sora', sans-serif;
+            font-size: 0.95rem; font-weight: 600;
+            margin-bottom: 0.75rem;
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+        .sbs-card p, .sbs-card li { font-size: 0.85rem; color: var(--text-secondary); }
+        .sbs-card ul { margin: 0.5rem 0 0 1.25rem; }
+        .sbs-card li { margin-bottom: 0.35rem; }
+        .sbs-card strong { color: var(--text); }
+
+        /* ====== INSTRUCTION CARDS ====== */
+        .inst-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px; padding: 1.5rem 1.75rem;
+            margin: 1.5rem 0;
+        }
+        .inst-card h4 {
+            font-family: 'Sora', sans-serif;
+            font-size: 0.95rem; font-weight: 600;
+            margin-bottom: 1rem; color: var(--text);
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+
+        .inst-list {
+            counter-reset: inst; list-style: none; padding: 0;
+        }
+        .inst-list li {
+            counter-increment: inst;
+            padding: 0.6rem 0 0.6rem 2.5rem;
+            position: relative;
+            border-bottom: 1px solid rgba(0, 229, 255, 0.05);
+            font-size: 0.9rem; color: var(--text-secondary);
+        }
+        .inst-list li:last-child { border-bottom: none; }
+        .inst-list li::before {
+            content: counter(inst);
+            position: absolute; left: 0; top: 0.6rem;
+            width: 22px; height: 22px;
+            background: var(--cyan-ghost); color: var(--cyan);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem; font-weight: 700; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            border: 1px solid rgba(0, 229, 255, 0.2);
+        }
+        .inst-list li strong { color: var(--text); }
+        .inst-list li a { color: var(--cyan); text-decoration: none; }
+        .inst-list li a:hover { text-decoration: underline; }
+
+        .inst-list.green-nums li::before { background: var(--green-ghost); color: var(--green); border-color: rgba(0, 230, 118, 0.2); }
+        .inst-list.magenta-nums li::before { background: var(--magenta-ghost); color: var(--magenta); border-color: rgba(255, 0, 110, 0.2); }
+        .inst-list.yellow-nums li::before { background: var(--yellow-ghost); color: var(--yellow); border-color: rgba(255, 214, 0, 0.2); }
+
+        /* ====== CALLOUTS ====== */
+        .callout {
+            border-radius: 10px; padding: 1.25rem 1.5rem;
+            margin: 1.5rem 0; font-size: 0.9rem; color: var(--text-secondary);
+        }
+        .callout strong { display: block; margin-bottom: 0.25rem; }
+        .callout p { margin-bottom: 0.5rem; }
+        .callout p:last-child { margin-bottom: 0; }
+
+        .callout-warn { background: var(--yellow-ghost); border: 1px solid rgba(255, 214, 0, 0.2); }
+        .callout-warn strong { color: var(--yellow); }
+        .callout-success { background: var(--green-ghost); border: 1px solid rgba(0, 230, 118, 0.2); }
+        .callout-success strong { color: var(--green); }
+        .callout-info { background: var(--cyan-ghost); border: 1px solid rgba(0, 229, 255, 0.2); }
+        .callout-info strong { color: var(--cyan); }
+        .callout-error { background: var(--magenta-ghost); border: 1px solid rgba(255, 0, 110, 0.2); }
+        .callout-error strong { color: var(--magenta); }
+
+        .callout ul { margin: 0.5rem 0 0 1.25rem; }
+        .callout li { margin-bottom: 0.35rem; font-size: 0.88rem; }
+
+        /* ====== CODE WINDOWS (Mac-style) ====== */
+        .code-window {
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-radius: 12px; overflow: hidden; margin: 1.5rem 0;
+        }
+        .code-header {
+            padding: 0.75rem 1.5rem;
+            background: var(--bg-elevated);
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+        .dot-row { display: flex; gap: 0.35rem; margin-right: 0.75rem; }
+        .dot-row span { width: 8px; height: 8px; border-radius: 50%; }
+        .dot-red { background: #ff5f56; }
+        .dot-yellow { background: #ffbd2e; }
+        .dot-green { background: #27c93f; }
+        .code-header .filename {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem; color: var(--text-dim);
+        }
+        .code-body { padding: 1.25rem 1.5rem; overflow-x: auto; }
+
+        .code-line {
+            display: flex; min-height: 1.65em;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem; line-height: 1.7;
+        }
+        .code-line.dimmed { opacity: 0.25; }
+        .code-line.hl-cyan { opacity: 1; background: var(--bg-line-highlight); border-left: 3px solid var(--cyan); padding-left: 0.75rem; margin-left: -0.75rem; border-radius: 0 4px 4px 0; }
+        .code-line.hl-magenta { opacity: 1; background: var(--magenta-ghost); border-left: 3px solid var(--magenta); padding-left: 0.75rem; margin-left: -0.75rem; border-radius: 0 4px 4px 0; }
+        .code-line.hl-green { opacity: 1; background: var(--green-ghost); border-left: 3px solid var(--green); padding-left: 0.75rem; margin-left: -0.75rem; border-radius: 0 4px 4px 0; }
+        .code-line.hl-yellow { opacity: 1; background: var(--yellow-ghost); border-left: 3px solid var(--yellow); padding-left: 0.75rem; margin-left: -0.75rem; border-radius: 0 4px 4px 0; }
+
+        .line-num {
+            min-width: 30px; color: var(--text-dim);
+            text-align: right; padding-right: 1.25rem; user-select: none;
+        }
+        .line-code { flex: 1; white-space: pre; }
+
+        .kw { color: var(--magenta); }
+        .fn { color: #82aaff; }
+        .str { color: #c3e88d; }
+        .cm { color: #546e7a; font-style: italic; }
+        .num-lit { color: var(--orange); }
+        .type { color: var(--cyan); }
+
+        .code-annotation {
+            padding: 0.75rem 1.5rem;
+            background: var(--bg-elevated);
+            border-top: 1px solid var(--border);
+            font-size: 0.85rem; color: var(--text-secondary);
+            display: flex; align-items: flex-start; gap: 0.5rem;
+        }
+        .code-annotation .arrow { color: var(--cyan); font-weight: 700; flex-shrink: 0; }
+        .code-annotation strong { color: var(--text); }
+
+        /* ====== CODE TABS ====== */
+        .code-tabs {
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-radius: 12px; overflow: hidden; margin: 1.5rem 0;
+        }
+        .tab-bar {
+            display: flex; background: var(--bg-elevated);
+            border-bottom: 1px solid var(--border);
+        }
+        .tab-btn {
+            padding: 0.65rem 1.25rem; background: none; border: none;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem; color: var(--text-dim);
+            cursor: pointer; border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        .tab-btn:hover { color: var(--text-secondary); }
+        .tab-btn.active { color: var(--cyan); border-bottom-color: var(--cyan); background: rgba(0, 229, 255, 0.04); }
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+
+        /* ====== LLM BOX ====== */
+        .llm-box {
+            background: linear-gradient(135deg, var(--purple-ghost), var(--cyan-ghost));
+            border: 1px solid rgba(179, 136, 255, 0.25);
+            border-radius: 16px; padding: 2rem 2.5rem;
+            margin: 2.5rem 0; position: relative;
+        }
+        .llm-box::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--purple), var(--cyan));
+            border-radius: 16px 16px 0 0;
+        }
+        .llm-box h4 {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.1rem; font-weight: 700;
+            color: var(--purple); margin-bottom: 0.75rem;
+        }
+        .llm-box p { font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 0.75rem; }
+        .llm-box p:last-child { margin-bottom: 0; }
+        .llm-box em { color: var(--text); font-style: italic; }
+
+        /* ====== TOOL IDEA GRID ====== */
+        .idea-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 1.25rem; margin: 2rem 0;
+        }
+        .idea-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px; padding: 1.5rem;
+            text-align: center; transition: all 0.3s;
+        }
+        .idea-card:hover { border-color: var(--border-strong); transform: translateY(-2px); }
+        .idea-emoji { font-size: 2.2rem; margin-bottom: 0.5rem; }
+        .idea-card h5 { font-family: 'Sora', sans-serif; font-size: 0.9rem; font-weight: 600; margin-bottom: 0.25rem; }
+        .idea-card p { font-size: 0.78rem; color: var(--text-secondary); margin: 0; }
+
+        .idea-card:nth-child(1) { border-top: 3px solid var(--cyan); }
+        .idea-card:nth-child(2) { border-top: 3px solid var(--magenta); }
+        .idea-card:nth-child(3) { border-top: 3px solid var(--green); }
+        .idea-card:nth-child(4) { border-top: 3px solid var(--yellow); }
+        .idea-card:nth-child(5) { border-top: 3px solid var(--orange); }
+        .idea-card:nth-child(6) { border-top: 3px solid var(--purple); }
+
+        /* ====== CHALLENGE BLOCKS ====== */
+        .challenge {
+            background: linear-gradient(135deg, var(--yellow-ghost), var(--orange-ghost));
+            border: 1px solid rgba(255, 214, 0, 0.2);
+            border-radius: 12px; padding: 1.5rem; margin: 2rem 0;
+        }
+        .challenge-header {
+            font-family: 'Sora', sans-serif;
+            font-size: 0.95rem; font-weight: 700;
+            color: var(--yellow); margin-bottom: 0.5rem;
+        }
+        .challenge p { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.75rem; }
+        .challenge-answer {
+            background: var(--bg-code); border: 1px solid var(--border);
+            border-radius: 8px; overflow: hidden;
+        }
+        .challenge-answer-btn {
+            display: block; width: 100%; padding: 0.6rem 1rem;
+            background: none; border: none;
+            color: var(--text-dim);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem; cursor: pointer; text-align: left;
+            transition: color 0.2s;
+        }
+        .challenge-answer-btn:hover { color: var(--text-secondary); }
+        .challenge-answer-text {
+            display: none; padding: 0.75rem 1rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.85rem; color: var(--green); line-height: 1.6;
+        }
+        .challenge-answer.revealed .challenge-answer-text { display: block; }
+        .challenge-answer.revealed .challenge-answer-btn { color: var(--green); }
+
+        /* ====== FAQ COLLAPSIBLES ====== */
+        .faq-item {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 10px; margin: 0.75rem 0; overflow: hidden;
+        }
+        .faq-q {
+            padding: 1rem 1.5rem; cursor: pointer;
+            display: flex; align-items: center; justify-content: space-between;
+            transition: background 0.2s;
+            font-size: 0.9rem; font-weight: 600; color: var(--text);
+        }
+        .faq-q:hover { background: var(--bg-elevated); }
+        .faq-q .faq-emoji { margin-right: 0.75rem; font-size: 1rem; }
+        .faq-arrow { color: var(--text-dim); transition: transform 0.3s; font-size: 1rem; flex-shrink: 0; margin-left: 1rem; }
+        .faq-item.open .faq-arrow { transform: rotate(90deg); }
+        .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+        .faq-item.open .faq-a { max-height: 500px; }
+        .faq-a-inner {
+            padding: 0 1.5rem 1.25rem; font-size: 0.88rem;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border); padding-top: 1rem;
+        }
+
+        /* ====== TAKEAWAY ====== */
+        .takeaway {
+            background: linear-gradient(135deg, var(--green-ghost), var(--cyan-ghost));
+            border: 1px solid var(--border-strong);
+            border-radius: 16px; padding: 2.5rem; margin: 3rem 0;
+            position: relative;
+        }
+        .takeaway::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--green), var(--cyan));
+            border-radius: 16px 16px 0 0;
+        }
+        .takeaway h3 {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.3rem; font-weight: 700; margin-bottom: 1rem;
+        }
+        .takeaway p { color: var(--text-secondary); margin-bottom: 0.75rem; }
+        .takeaway p:last-child { margin-bottom: 0; }
+        .takeaway strong { color: var(--text); }
+
+        .takeaway-stats {
+            display: flex; gap: 2rem; flex-wrap: wrap;
+            margin-top: 1.5rem; padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+        .takeaway-stat { text-align: center; }
+        .takeaway-stat .stat-num {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.8rem; font-weight: 800; color: var(--cyan);
+        }
+        .takeaway-stat .stat-label { font-size: 0.75rem; color: var(--text-dim); }
+
+        /* ====== INLINE ELEMENTS ====== */
+        code {
+            background: rgba(0, 229, 255, 0.08); padding: 1px 6px;
+            border-radius: 4px; font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem; color: var(--cyan);
+        }
+        a { color: var(--cyan); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        kbd {
+            display: inline-block; background: var(--bg-elevated);
+            border: 1px solid var(--border-strong); border-radius: 4px;
+            padding: 1px 6px; font-size: 0.78rem;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text); box-shadow: 0 1px 0 rgba(0, 229, 255, 0.15);
+        }
+
+        .sub-heading {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.05rem; font-weight: 600;
+            color: var(--text); margin: 2rem 0 0.75rem;
+        }
+
+        .punchy {
+            font-size: 0.9rem; color: var(--text-secondary);
+            text-align: center; margin: 1.5rem 0;
+        }
+        .punchy strong { color: var(--text); }
+
+        /* ====== FOOTER ====== */
+        .footer {
+            padding: 3rem 0; border-top: 1px solid var(--border);
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem; color: var(--text-dim);
+        }
+        .footer a { color: var(--cyan); text-decoration: none; }
+
+        /* ====== RESPONSIVE ====== */
+        @media (max-width: 768px) {
+            .container { padding: 0 1.25rem; }
+            .analogy-grid, .idea-grid { grid-template-columns: 1fr; }
+            .side-by-side { grid-template-columns: 1fr; }
+            .equation { flex-direction: column; gap: 0.4rem; }
+            .takeaway-stats { gap: 1.25rem; }
+        }
+
+        /* ====== FADE-UP ====== */
+        .fade-up {
+            opacity: 0; transform: translateY(25px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .fade-up.visible { opacity: 1; transform: translateY(0); }
+    </style>
+</head>
+<body>
+
+<!-- PROGRESS BAR -->
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+<div class="container">
+
+    <!-- ====================================================================== -->
+    <!-- HERO                                                                   -->
+    <!-- ====================================================================== -->
+    <section class="hero">
+        <div class="badge"><span class="dot"></span> Step-by-Step Guide</div>
+        <h1>Build Your First <span class="cyan">AI Agent</span></h1>
+        <p class="hero-sub">
+            You don't need to be a programmer. This guide walks you through every single click &mdash; from opening the notebook to submitting on Canvas. Follow the steps in order, and you <em>will</em> finish.
+        </p>
+        <div class="hero-note">
+            Using ChatGPT, Claude, or Gemini for help isn't cheating &mdash; it's the point of this course.
+        </div>
+
+        <!-- Equation: what you're building -->
+        <div class="equation-block">
+            <div class="equation">
+                <span class="eq-part eq-llm">Gemini AI</span>
+                <span class="eq-plus">+</span>
+                <span class="eq-part eq-tools">Your Tools</span>
+                <span class="eq-plus">+</span>
+                <span class="eq-part eq-loop">Agent Loop</span>
+                <span class="eq-equals">=</span>
+                <span class="eq-part eq-result">Your First AI Agent</span>
+            </div>
+        </div>
+
+        <!-- Visual roadmap -->
+        <div class="step-indicator" id="heroSteps">
+            <div class="step-dot active">0</div>
+            <div class="step-line"></div>
+            <div class="step-dot">1</div>
+            <div class="step-line"></div>
+            <div class="step-dot">2</div>
+            <div class="step-line"></div>
+            <div class="step-dot">3</div>
+            <div class="step-line"></div>
+            <div class="step-dot">4</div>
+            <div class="step-line"></div>
+            <div class="step-dot">5</div>
+            <div class="step-line"></div>
+            <div class="step-dot">6</div>
+        </div>
+    </section>
+
+
+    <!-- ====================================================================== -->
+    <!-- STEP 0: OPEN & COPY                                                    -->
+    <!-- ====================================================================== -->
+    <section class="section fade-up" id="step0">
+        <div class="step-indicator">
+            <div class="step-dot active">0</div>
+            <div class="step-line"></div>
+            <div class="step-dot">1</div>
+            <div class="step-line"></div>
+            <div class="step-dot">2</div>
+            <div class="step-line"></div>
+            <div class="step-dot">3</div>
+            <div class="step-line"></div>
+            <div class="step-dot">4</div>
+            <div class="step-line"></div>
+            <div class="step-dot">5</div>
+            <div class="step-line"></div>
+            <div class="step-dot">6</div>
+        </div>
+
+        <div class="section-label green">Step 0 &mdash; Getting Started</div>
+        <h2 class="section-title">Open &amp; Copy the Notebook</h2>
+        <p class="section-desc">
+            Everything happens inside Google Colab &mdash; a free website where you write and run Python code directly in your browser. Nothing to install.
+        </p>
+
+        <div class="side-by-side">
+            <div class="sbs-card">
+                <h4>&#x1F4DD; Google Docs</h4>
+                <p>Write <strong>text</strong> in your browser. Auto-saves to Drive. Share with anyone.</p>
+            </div>
+            <div class="sbs-card">
+                <h4>&#x1F4BB; Google Colab</h4>
+                <p>Write <strong>code</strong> in your browser. Auto-saves to Drive. Share with anyone. <em>Same idea.</em></p>
+            </div>
+        </div>
+
+        <div class="inst-card">
+            <h4>&#x1F4C2; Open and save your own copy</h4>
+            <ol class="inst-list green-nums">
+                <li>Click this link to open the notebook: <a href="https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-04/ISOM260_Session4_Build_Your_First_Agent_Gemini.ipynb" target="_blank">Open Session 4 Colab Notebook</a></li>
+                <li>If prompted, <strong>sign in</strong> with your Google account (any Gmail or Suffolk Google account).</li>
+                <li>At the top menu, click <strong>File &rarr; Save a copy in Drive</strong>. A new tab opens with your personal copy.</li>
+                <li><strong>Rename your copy:</strong> click the title at the top-left (it says &ldquo;Copy of &hellip;&rdquo;) and change it to <code>Session4_YourName.ipynb</code>.</li>
+                <li><strong>Close the original tab.</strong> From now on, work only in your copy.</li>
+            </ol>
+        </div>
+
+        <div class="callout callout-warn">
+            <strong>&#x26A0; Don't skip &ldquo;Save a copy in Drive&rdquo;</strong>
+            <p>Without it, you're editing a read-only version. Your work won't be saved. You'll want to cry.</p>
+        </div>
+    </section>
+
+
+    <!-- ====================================================================== -->
+    <!-- STEP 1: API KEY                                                        -->
+    <!-- ====================================================================== -->
+    <section class="section fade-up" id="step1">
+        <div class="step-indicator">
+            <div class="step-dot done">0</div>
+            <div class="step-line"></div>
+            <div class="step-dot active">1</div>
+            <div class="step-line"></div>
+            <div class="step-dot">2</div>
+            <div class="step-line"></div>
+            <div class="step-dot">3</div>
+            <div class="step-line"></div>
+            <div class="step-dot">4</div>
+            <div class="step-line"></div>
+            <div class="step-dot">5</div>
+            <div class="step-line"></div>
+            <div class="step-dot">6</div>
+        </div>
+
+        <div class="section-label cyan">Step 1 &mdash; Setup</div>
+        <h2 class="section-title">Get Your API Key &amp; Connect It</h2>
+        <p class="section-desc">
+            Your agent needs an <strong style="color: var(--text);">API key</strong> to talk to Google's Gemini AI. Think of it as a password that lets your code use the AI service. It's free &mdash; takes about 2 minutes.
+        </p>
+
+        <div class="inst-card">
+            <h4>&#x1F511; Part A &mdash; Create your key</h4>
+            <ol class="inst-list">
+                <li>Open a <strong>new browser tab</strong> and go to: <a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com/apikey</a></li>
+                <li>Sign in with the <strong>same Google account</strong> you used for Colab.</li>
+                <li>Click the blue <strong>&ldquo;Create API Key&rdquo;</strong> button.</li>
+                <li>If asked to choose a project, select any one or &ldquo;Create project.&rdquo;</li>
+                <li>A long string of letters and numbers appears &mdash; this is your key. Click the <strong>copy icon</strong> next to it.</li>
+            </ol>
+        </div>
+
+        <div class="inst-card">
+            <h4>&#x1F512; Part B &mdash; Add the key to Colab</h4>
+            <ol class="inst-list magenta-nums">
+                <li>Go back to your <strong>Colab notebook</strong> tab.</li>
+                <li>In the <strong>left sidebar</strong>, click the <strong>key icon</strong> (the &ldquo;Secrets&rdquo; panel).</li>
+                <li>Click <strong>&ldquo;Add new secret.&rdquo;</strong></li>
+                <li>In the <strong>Name</strong> field, type exactly: <code>GOOGLE_API_KEY</code> &mdash; all caps, underscores, no spaces.</li>
+                <li>In the <strong>Value</strong> field, paste your API key (<kbd>Ctrl</kbd>+<kbd>V</kbd> or <kbd>Cmd</kbd>+<kbd>V</kbd>).</li>
+                <li>Toggle <strong>&ldquo;Notebook access&rdquo;</strong> to <strong>ON</strong> (it turns blue/green).</li>
+            </ol>
+        </div>
+
+        <div class="inst-card">
+            <h4>&#x2705; Part C &mdash; Test the connection</h4>
+            <ol class="inst-list green-nums">
+                <li>Scroll to the top of your notebook. Find the first gray box with code (under <strong>Part 1 &mdash; Setup</strong>).</li>
+                <li><strong>Run the cell:</strong> click the <strong>play button</strong> (&blacktriangleright;) on its left, or press <kbd>Shift</kbd>+<kbd>Enter</kbd>.</li>
+                <li>Run the next cells in Part 1 one by one. You should see: <code>Gemini is ready!</code></li>
+            </ol>
+        </div>
+
+        <div class="callout callout-success">
+            <strong>&#x1F389; You're all set if</strong>
+            <p>You see a success message with no red errors. The AI is connected and waiting for instructions.</p>
+        </div>
+
+        <div class="callout callout-error">
+            <strong>&#x1F6A8; If you see an error</strong>
+            <ul>
+                <li><code>API key not found</code> &rarr; Secret name must be exactly <code>GOOGLE_API_KEY</code> with &ldquo;Notebook access&rdquo; ON.</li>
+                <li><code>Invalid API key</code> &rarr; You copied only part of the key. Go back to AI Studio, copy the full key.</li>
+                <li><code>Permission denied</code> &rarr; Make sure AI Studio and Colab use the same Google account.</li>
+            </ul>
+        </div>
+    </section>
+
+
+    <!-- ====================================================================== -->
+    <!-- STEP 2: RUN PARTS 1-4                                                  -->
+    <!-- ====================================================================== -->
+    <section class="section fade-up" id="step2">
+        <div class="step-indicator">
+            <div class="step-dot done">0</div>
+            <div class="step-line"></div>
+            <div class="step-dot done">1</div>
+            <div class="step-line"></div>
+            <div class="step-dot active">2</div>
+            <div class="step-line"></div>
+            <div class="step-dot">3</div>
+            <div class="step-line"></div>
+            <div class="step-dot">4</div>
+            <div class="step-line"></div>
+            <div class="step-dot">5</div>
+            <div class="step-line"></div>
+            <div class="step-dot">6</div>
+        </div>
+
+        <div class="section-label yellow">Step 2 &mdash; 30 Points</div>
+        <h2 class="section-title">Run the Notebook (Parts 1&ndash;4)</h2>
+        <p class="section-desc">
+            Now you'll run the pre-built cells that set up your agent, define tools, and test everything. The agent will reason about which tools to use, call them, and combine the results into an answer.
+        </p>
+
+        <!-- What is a cell -->
+        <div class="analogy-grid">
+            <div class="analogy-card card-cyan">
+                <div class="analogy-emoji">&#x25B6;</div>
+                <h4>A Cell</h4>
+                <p>One gray box in the notebook containing code. Run it by clicking play or pressing <kbd>Shift</kbd>+<kbd>Enter</kbd>.</p>
+            </div>
+            <div class="analogy-card card-magenta">
+                <div class="analogy-emoji">&#x2B07;&#xFE0F;</div>
+                <h4>Top to Bottom</h4>
+                <p>Always run cells in order. Later cells depend on earlier ones. Don't skip ahead.</p>
+            </div>
+            <div class="analogy-card card-green">
+                <div class="analogy-emoji">&#x1F4AC;</div>
+                <h4>Output</h4>
+                <p>Text that appears below a cell after it runs. This is what the code produced. Keep it visible.</p>
+            </div>
+        </div>
+
+        <div class="callout callout-warn">
+            <strong>&#x1F4CB; The golden rule</strong>
+            <p>Run cells top to bottom, in order. If you skip ahead, you'll get <code>NameError</code> messages because later cells need code from earlier ones.</p>
+        </div>
+
+        <!-- Flow diagram: what each Part does -->
+        <h3 class="sub-heading">What happens at each Part</h3>
+        <div class="flow-vertical">
+            <div class="flow-step">
+                <div class="flow-icon-col">
+                    <div class="flow-icon">&#x2699;&#xFE0F;</div>
+                    <div class="flow-line-v"></div>
+                </div>
+                <div class="flow-body">
+                    <h4>Part 1 &mdash; Setup</h4>
+                    <p>Installs the Gemini library and connects your API key. You'll see a success message.</p>
+                </div>
+            </div>
+            <div class="flow-spacer"></div>
+            <div class="flow-step">
+                <div class="flow-icon-col">
+                    <div class="flow-icon">&#x1F6E0;&#xFE0F;</div>
+                    <div class="flow-line-v"></div>
+                </div>
+                <div class="flow-body">
+                    <h4>Part 2 &mdash; Tool Definitions</h4>
+                    <p>Defines the calculator, stock lookup, and company info tools. May run silently &mdash; that's normal.</p>
+                </div>
+            </div>
+            <div class="flow-spacer"></div>
+            <div class="flow-step">
+                <div class="flow-icon-col">
+                    <div class="flow-icon">&#x1F9EE;</div>
+                    <div class="flow-line-v"></div>
+                </div>
+                <div class="flow-body">
+                    <h4>Part 3 &mdash; Single-Tool Agent</h4>
+                    <p>Tests the calculator tool. Watch the agent decide to call <code>calculator</code>, get the result, and answer.</p>
+                </div>
+            </div>
+            <div class="flow-spacer"></div>
+            <div class="flow-step">
+                <div class="flow-icon-col">
+                    <div class="flow-icon">&#x1F9E0;</div>
+                </div>
+                <div class="flow-body">
+                    <h4>Part 4 &mdash; Multi-Tool Agent</h4>
+                    <p>All three tools at once. The agent combines stock data, company info, and math in a single answer. One test asks "What is the capital of France?" &mdash; the agent answers <em>without</em> a tool.</p>
+                </div>
+            </div>
+        </div>
+
+        <p class="punchy">
+            <strong>That's it. You just watched an AI agent think, choose tools, and answer.</strong><br>
+            The rest of the homework is about building your own tool and adding it to this agent.
+        </p>
+
+        <div class="callout callout-success">
+            <strong>&#x2705; You're on track if</strong>
+            <p>Every cell shows output or runs silently without red errors. Leave all outputs visible &mdash; they're part of your grade.</p>
+        </div>
+
+        <div class="callout callout-error">
+            <strong>&#x1F527; Common errors</strong>
+            <ul>
+                <li><code>NameError: name 'client' is not defined</code> &rarr; You skipped a cell. Run everything from Part 1.</li>
+                <li><code>Quota exceeded / 429</code> &rarr; Free rate limit. Wait 60 seconds and try again.</li>
+                <li>Cell stuck for 2+ minutes &rarr; Click the stop button, then try again.</li>
+            </ul>
+        </div>
+    </section>
+
+
+    <!-- ====================================================================== -->
+    <!-- STEP 3: BUILD YOUR CUSTOM TOOL — THE CENTERPIECE                       -->
+    <!-- ====================================================================== -->
+    <section class="section fade-up" id="step3">
+        <div class="step-indicator">
+            <div class="step-dot done">0</div>
+            <div class="step-line"></div>
+            <div class="step-dot done">1</div>
+            <div class="step-line"></div>
+            <div class="step-dot done">2</div>
+            <div class="step-line"></div>
+            <div class="step-dot active">3</div>
+            <div class="step-line"></div>
+            <div class="step-dot">4</div>
+            <div class="step-line"></div>
+            <div class="step-dot">5</div>
+            <div class="step-line"></div>
+            <div class="step-dot">6</div>
+        </div>
+
+        <div class="section-label magenta">Step 3 &mdash; The Main Event &mdash; 40 Points</div>
+        <h2 class="section-title">Build Your Custom Tool</h2>
+        <p class="section-desc">
+            Scroll to <strong style="color: var(--text);">Part 5</strong> in the notebook. You'll see a template with placeholder code. There are exactly <strong style="color: var(--text);">4 things</strong> to change &mdash; and that's it. The rest stays the same.
+        </p>
+
+        <!-- LLM encouragement -->
+        <div class="llm-box">
+            <h4>&#x1F916; Use AI to help you. Seriously.</h4>
+            <p>Paste the template into ChatGPT or Claude and say: <em>&ldquo;I need to turn this into a tip calculator tool. Help me fill in the code.&rdquo;</em></p>
+            <p>That's not cheating. It's exactly how professionals build software today. You should understand what the code does, but you don't need to write every line from scratch.</p>
+        </div>
+
+        <!-- Tool ideas -->
+        <h3 class="sub-heading">Pick a tool idea</h3>
+        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem;">
+            Choose something that interests you, or invent your own. You can use simulated data &mdash; like the stock tool does.
+        </p>
+
+        <div class="idea-grid">
+            <div class="idea-card">
+                <div class="idea-emoji">&#x1F4B0;</div>
+                <h5>Tip Splitter</h5>
+                <p>Bill, tip %, # people &rarr; each person's share</p>
+            </div>
+            <div class="idea-card">
+                <div class="idea-emoji">&#x1F393;</div>
+                <h5>GPA Calculator</h5>
+                <p>Letter grades &rarr; GPA on the 4.0 scale</p>
+            </div>
+            <div class="idea-card">
+                <div class="idea-emoji">&#x1F34E;</div>
+                <h5>Calorie Lookup</h5>
+                <p>Food name &rarr; calories, protein, carbs, fat</p>
+            </div>
+            <div class="idea-card">
+                <div class="idea-emoji">&#x1F4B1;</div>
+                <h5>Currency Converter</h5>
+                <p>Amount + currencies &rarr; converted value</p>
+            </div>
+            <div class="idea-card">
+                <div class="idea-emoji">&#x1F3E0;</div>
+                <h5>Rent Affordability</h5>
+                <p>Income + rent &rarr; can you afford it?</p>
+            </div>
+            <div class="idea-card">
+                <div class="idea-emoji">&#x1F4DA;</div>
+                <h5>Course Finder</h5>
+                <p>Keyword &rarr; matching Suffolk courses</p>
+            </div>
+        </div>
+
+        <!-- Side-by-side: what you start with / what you'll create -->
+        <h3 class="sub-heading">The 4 things to change</h3>
+        <div class="side-by-side">
+            <div class="sbs-card">
+                <h4>&#x1F4DD; What you start with</h4>
+                <ul>
+                    <li>Placeholder tool name</li>
+                    <li>Empty description</li>
+                    <li>Generic parameter</li>
+                    <li>Skeleton function</li>
+                </ul>
+                <p style="margin-top: 0.75rem; color: var(--text-dim); font-size: 0.8rem;">See the <strong style="color: var(--text-dim);">Template</strong> tab below</p>
+            </div>
+            <div class="sbs-card">
+                <h4>&#x1F50D; What you'll create</h4>
+                <ul>
+                    <li>Descriptive tool name</li>
+                    <li>Detailed description (so Gemini knows <em>when</em> to use it)</li>
+                    <li>Real parameters with types</li>
+                    <li>Working function that returns useful results</li>
+                </ul>
+                <p style="margin-top: 0.75rem; color: var(--text-dim); font-size: 0.8rem;">See the <strong style="color: var(--text-dim);">Tip Splitter</strong> tab below</p>
+            </div>
+        </div>
+
+        <!-- TABBED CODE EXPLORER -->
+        <div class="code-tabs" id="codeExplorer">
+            <div class="tab-bar">
+                <div class="dot-row" style="margin: 0 0.5rem 0 0.75rem;"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></div>
+                <button class="tab-btn active" onclick="switchTab('codeExplorer', 0)">Template (before)</button>
+                <button class="tab-btn" onclick="switchTab('codeExplorer', 1)">Tip Splitter (after)</button>
+            </div>
+
+            <!-- TAB 0: TEMPLATE -->
+            <div class="tab-panel active">
+                <div class="code-body">
+                    <div class="code-line"><span class="line-num">1</span><span class="line-code"><span class="cm"># Step 1: Define your tool</span></span></div>
+                    <div class="code-line hl-cyan"><span class="line-num">2</span><span class="line-code">my_custom_tool = types.FunctionDeclaration(</span></div>
+                    <div class="code-line hl-cyan"><span class="line-num">3</span><span class="line-code">    name=<span class="str">"your_tool_name"</span>,              <span class="cm"># &larr; 1. TOOL NAME</span></span></div>
+                    <div class="code-line hl-magenta"><span class="line-num">4</span><span class="line-code">    description=<span class="str">"Describe when to use..."</span>,  <span class="cm"># &larr; 2. DESCRIPTION</span></span></div>
+                    <div class="code-line hl-yellow"><span class="line-num">5</span><span class="line-code">    parameters_json_schema={               <span class="cm"># &larr; 3. PARAMETERS</span></span></div>
+                    <div class="code-line hl-yellow"><span class="line-num">6</span><span class="line-code">        <span class="str">"type"</span>: <span class="str">"object"</span>,</span></div>
+                    <div class="code-line hl-yellow"><span class="line-num">7</span><span class="line-code">        <span class="str">"properties"</span>: {</span></div>
+                    <div class="code-line hl-yellow"><span class="line-num">8</span><span class="line-code">            <span class="str">"param1"</span>: {</span></div>
+                    <div class="code-line hl-yellow"><span class="line-num">9</span><span class="line-code">                <span class="str">"type"</span>: <span class="str">"string"</span>,</span></div>
+                    <div class="code-line hl-yellow"><span class="line-num">10</span><span class="line-code">                <span class="str">"description"</span>: <span class="str">"..."</span></span></div>
+                    <div class="code-line hl-yellow"><span class="line-num">11</span><span class="line-code">            }</span></div>
+                    <div class="code-line hl-yellow"><span class="line-num">12</span><span class="line-code">        },</span></div>
+                    <div class="code-line hl-yellow"><span class="line-num">13</span><span class="line-code">        <span class="str">"required"</span>: [<span class="str">"param1"</span>]</span></div>
+                    <div class="code-line hl-yellow"><span class="line-num">14</span><span class="line-code">    }</span></div>
+                    <div class="code-line"><span class="line-num">15</span><span class="line-code">)</span></div>
+                    <div class="code-line"><span class="line-num">16</span><span class="line-code"></span></div>
+                    <div class="code-line"><span class="line-num">17</span><span class="line-code"><span class="cm"># Step 2: Write the function</span></span></div>
+                    <div class="code-line hl-green"><span class="line-num">18</span><span class="line-code"><span class="kw">def</span> <span class="fn">your_tool_name</span>(param1):          <span class="cm"># &larr; 4. FUNCTION BODY</span></span></div>
+                    <div class="code-line hl-green"><span class="line-num">19</span><span class="line-code">    <span class="cm"># Your code here</span></span></div>
+                    <div class="code-line hl-green"><span class="line-num">20</span><span class="line-code">    <span class="kw">return</span> <span class="str">"result string"</span></span></div>
+                </div>
+                <div class="code-annotation">
+                    <span class="arrow">&rarr;</span>
+                    <span><strong>4 colored regions = 4 things to change.</strong> Name (<span style="color:var(--cyan)">cyan</span>), description (<span style="color:var(--magenta)">magenta</span>), parameters (<span style="color:var(--yellow)">yellow</span>), function body (<span style="color:var(--green)">green</span>). Everything else stays exactly the same.</span>
+                </div>
+            </div>
+
+            <!-- TAB 1: TIP SPLITTER -->
+            <div class="tab-panel">
+                <div class="code-body">
+                    <div class="code-line"><span class="line-num">1</span><span class="line-code"><span class="cm"># Step 1: Define your tool</span></span></div>
+                    <div class="code-line hl-cyan"><span class="line-num">2</span><span class="line-code">my_custom_tool = types.FunctionDeclaration(</span></div>
+                    <div class="code-line hl-cyan"><span class="line-num">3</span><span class="line-code">    name=<span class="str">"calculate_tip_split"</span>,</span></div>
+                    <div class="code-line hl-magenta"><span class="line-num">4</span><span class="line-code">    description=<span class="str">"Calculate the tip on a restaurant bill and split "</span></span></div>
+                    <div class="code-line hl-magenta"><span class="line-num">5</span><span class="line-code">                <span class="str">"the total evenly among a group of people. Use "</span></span></div>
+                    <div class="code-line hl-magenta"><span class="line-num">6</span><span class="line-code">                <span class="str">"when someone asks about splitting a bill, "</span></span></div>
+                    <div class="code-line hl-magenta"><span class="line-num">7</span><span class="line-code">                <span class="str">"calculating a tip, or figuring out each "</span></span></div>
+                    <div class="code-line hl-magenta"><span class="line-num">8</span><span class="line-code">                <span class="str">"person's share at a restaurant."</span>,</span></div>
+                    <div class="code-line hl-yellow"><span class="line-num">9</span><span class="line-code">    parameters_json_schema={</span></div>
+                    <div class="code-line hl-yellow"><span class="line-num">10</span><span class="line-code">        <span class="str">"type"</span>: <span class="str">"object"</span>,</span></div>
+                    <div class="code-line hl-yellow"><span class="line-num">11</span><span class="line-code">        <span class="str">"properties"</span>: {</span></div>
+                    <div class="code-line hl-yellow"><span class="line-num">12</span><span class="line-code">            <span class="str">"bill_amount"</span>: {</span></div>
+                    <div class="code-line hl-yellow"><span class="line-num">13</span><span class="line-code">                <span class="str">"type"</span>: <span class="str">"number"</span>,</span></div>
+                    <div class="code-line hl-yellow"><span class="line-num">14</span><span class="line-code">                <span class="str">"description"</span>: <span class="str">"The total bill in dollars"</span></span></div>
+                    <div class="code-line hl-yellow"><span class="line-num">15</span><span class="line-code">            },</span></div>
+                    <div class="code-line hl-yellow"><span class="line-num">16</span><span class="line-code">            <span class="str">"tip_percent"</span>: {</span></div>
+                    <div class="code-line hl-yellow"><span class="line-num">17</span><span class="line-code">                <span class="str">"type"</span>: <span class="str">"number"</span>,</span></div>
+                    <div class="code-line hl-yellow"><span class="line-num">18</span><span class="line-code">                <span class="str">"description"</span>: <span class="str">"Tip percentage, e.g. 18 for 18%"</span></span></div>
+                    <div class="code-line hl-yellow"><span class="line-num">19</span><span class="line-code">            },</span></div>
+                    <div class="code-line hl-yellow"><span class="line-num">20</span><span class="line-code">            <span class="str">"num_people"</span>: {</span></div>
+                    <div class="code-line hl-yellow"><span class="line-num">21</span><span class="line-code">                <span class="str">"type"</span>: <span class="str">"number"</span>,</span></div>
+                    <div class="code-line hl-yellow"><span class="line-num">22</span><span class="line-code">                <span class="str">"description"</span>: <span class="str">"Number of people splitting"</span></span></div>
+                    <div class="code-line hl-yellow"><span class="line-num">23</span><span class="line-code">            }</span></div>
+                    <div class="code-line hl-yellow"><span class="line-num">24</span><span class="line-code">        },</span></div>
+                    <div class="code-line hl-yellow"><span class="line-num">25</span><span class="line-code">        <span class="str">"required"</span>: [<span class="str">"bill_amount"</span>, <span class="str">"tip_percent"</span>, <span class="str">"num_people"</span>]</span></div>
+                    <div class="code-line hl-yellow"><span class="line-num">26</span><span class="line-code">    }</span></div>
+                    <div class="code-line"><span class="line-num">27</span><span class="line-code">)</span></div>
+                    <div class="code-line"><span class="line-num">28</span><span class="line-code"></span></div>
+                    <div class="code-line"><span class="line-num">29</span><span class="line-code"><span class="cm"># Step 2: Write the function</span></span></div>
+                    <div class="code-line hl-green"><span class="line-num">30</span><span class="line-code"><span class="kw">def</span> <span class="fn">calculate_tip_split</span>(bill_amount, tip_percent, num_people):</span></div>
+                    <div class="code-line hl-green"><span class="line-num">31</span><span class="line-code">    <span class="str">"""Calculate tip and split the bill."""</span></span></div>
+                    <div class="code-line hl-green"><span class="line-num">32</span><span class="line-code">    tip = bill_amount * (tip_percent / <span class="num-lit">100</span>)</span></div>
+                    <div class="code-line hl-green"><span class="line-num">33</span><span class="line-code">    total = bill_amount + tip</span></div>
+                    <div class="code-line hl-green"><span class="line-num">34</span><span class="line-code">    per_person = total / num_people</span></div>
+                    <div class="code-line hl-green"><span class="line-num">35</span><span class="line-code">    <span class="kw">return</span> (</span></div>
+                    <div class="code-line hl-green"><span class="line-num">36</span><span class="line-code">        <span class="str">f"Bill: ${bill_amount:.2f}\n"</span></span></div>
+                    <div class="code-line hl-green"><span class="line-num">37</span><span class="line-code">        <span class="str">f"Tip ({tip_percent}%): ${tip:.2f}\n"</span></span></div>
+                    <div class="code-line hl-green"><span class="line-num">38</span><span class="line-code">        <span class="str">f"Total: ${total:.2f}\n"</span></span></div>
+                    <div class="code-line hl-green"><span class="line-num">39</span><span class="line-code">        <span class="str">f"Each person pays: ${per_person:.2f}"</span></span></div>
+                    <div class="code-line hl-green"><span class="line-num">40</span><span class="line-code">    )</span></div>
+                </div>
+                <div class="code-annotation">
+                    <span class="arrow">&rarr;</span>
+                    <span><strong>Same 4 regions, now filled in.</strong> Notice the description (magenta) is detailed &mdash; it tells Gemini <em>exactly</em> when to use this tool. Vague descriptions = Gemini won't call your tool.</span>
+                </div>
+            </div>
+        </div>
+
+        <p class="punchy">
+            <strong>Four things. That's all you change.</strong><br>
+            Everything else in the template stays exactly the same.
+        </p>
+
+        <!-- Register and test -->
+        <h3 class="sub-heading">Register and test your tool</h3>
+        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem;">
+            After defining your tool and function, register it so the agent knows it exists:
+        </p>
+
+        <div class="code-window">
+            <div class="code-header">
+                <div class="dot-row"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></div>
+                <span class="filename">registering your tool</span>
+            </div>
+            <div class="code-body">
+                <div class="code-line"><span class="line-num">1</span><span class="line-code"><span class="cm"># Step 3: Register your tool with the agent</span></span></div>
+                <div class="code-line"><span class="line-num">2</span><span class="line-code">my_tools = [calculator_tool, stock_tool, company_tool, my_custom_tool]</span></div>
+                <div class="code-line"><span class="line-num">3</span><span class="line-code">my_functions = {</span></div>
+                <div class="code-line dimmed"><span class="line-num">4</span><span class="line-code">    <span class="str">"calculator"</span>: calculator,</span></div>
+                <div class="code-line dimmed"><span class="line-num">5</span><span class="line-code">    <span class="str">"get_stock_price"</span>: get_stock_price,</span></div>
+                <div class="code-line dimmed"><span class="line-num">6</span><span class="line-code">    <span class="str">"get_company_info"</span>: get_company_info,</span></div>
+                <div class="code-line hl-cyan"><span class="line-num">7</span><span class="line-code">    <span class="str">"calculate_tip_split"</span>: calculate_tip_split  <span class="cm"># &larr; your tool here</span></span></div>
+                <div class="code-line"><span class="line-num">8</span><span class="line-code">}</span></div>
+                <div class="code-line"><span class="line-num">9</span><span class="line-code"></span></div>
+                <div class="code-line"><span class="line-num">10</span><span class="line-code"><span class="cm"># Step 4: Test it!</span></span></div>
+                <div class="code-line"><span class="line-num">11</span><span class="line-code">run_agent(<span class="str">"Split an $85 dinner bill with 20% tip between 3 people"</span>,</span></div>
+                <div class="code-line"><span class="line-num">12</span><span class="line-code">          my_tools, my_functions)</span></div>
+            </div>
+            <div class="code-annotation">
+                <span class="arrow">&rarr;</span>
+                <span><strong>Line 7 is the key.</strong> The string <code>"calculate_tip_split"</code> must <em>exactly</em> match the <code>name</code> in your tool definition. If they don't match, the agent won't find your function.</span>
+            </div>
+        </div>
+
+        <!-- Add 2 more test queries -->
+        <h3 class="sub-heading">Add 2 more test queries (3 total)</h3>
+        <div class="inst-card">
+            <h4>&#x1F9EA; Testing your tool</h4>
+            <ol class="inst-list">
+                <li>Click on the cell you just ran. At the top of the notebook, click <strong>&ldquo;+ Code&rdquo;</strong> to add a new code cell.</li>
+                <li>Type your <strong>second query</strong> &mdash; a different scenario for your tool.</li>
+                <li>Run the cell. Add another <strong>&ldquo;+ Code&rdquo;</strong> cell for your third query.</li>
+                <li><strong>Query 3 must be multi-tool:</strong> make it need your tool <em>plus</em> an existing tool (calculator, stock, or company info). Example: <em>&ldquo;Split a $300 dinner with 20% tip between 4 people, and tell me if each person's share could buy a share of AAPL stock.&rdquo;</em></li>
+                <li>Run it. You should see the agent call <strong>multiple tools</strong> to answer.</li>
+            </ol>
+        </div>
+
+        <div class="challenge">
+            <div class="challenge-header">&#x1F3AF; Can you stump the agent?</div>
+            <p>Write a single query that forces the agent to use <strong>all four tools</strong> &mdash; your custom tool + calculator + stock + company info &mdash; in one answer.</p>
+            <div class="challenge-answer" onclick="this.classList.toggle('revealed')">
+                <button class="challenge-answer-btn">Click to reveal a hint</button>
+                <div class="challenge-answer-text">
+                    Try something like: &ldquo;Split a $500 dinner with 18% tip between 6 people. How many shares of AAPL could each person buy with their share? And what does Apple do as a company?&rdquo; This needs the tip splitter (per-person amount), calculator (division), stock tool (AAPL price), and company tool (Apple info).
+                </div>
+            </div>
+        </div>
+
+        <div class="callout callout-success">
+            <strong>&#x2705; Done with Step 3 if</strong>
+            <p>You have your tool definition + function in one cell, and 3 test query cells (including 1 multi-tool) &mdash; all with visible output.</p>
+        </div>
+    </section>
+
+
+    <!-- ====================================================================== -->
+    <!-- STEP 4: REFLECTIONS                                                    -->
+    <!-- ====================================================================== -->
+    <section class="section fade-up" id="step4">
+        <div class="step-indicator">
+            <div class="step-dot done">0</div>
+            <div class="step-line"></div>
+            <div class="step-dot done">1</div>
+            <div class="step-line"></div>
+            <div class="step-dot done">2</div>
+            <div class="step-line"></div>
+            <div class="step-dot done">3</div>
+            <div class="step-line"></div>
+            <div class="step-dot active">4</div>
+            <div class="step-line"></div>
+            <div class="step-dot">5</div>
+            <div class="step-line"></div>
+            <div class="step-dot">6</div>
+        </div>
+
+        <div class="section-label orange">Step 4 &mdash; 20 Points</div>
+        <h2 class="section-title">Write Your Reflections</h2>
+        <p class="section-desc">
+            Time to think about what you built. Add a text cell (click <strong style="color: var(--text);">&ldquo;+ Text&rdquo;</strong> at the top of the notebook) and answer 3 questions, 3&ndash;5 sentences each.
+        </p>
+
+        <!-- Question 1 -->
+        <div class="inst-card">
+            <h4>&#x1F9EA; Question 1: Tool descriptions matter</h4>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0;">
+                Go back to your tool definition. Change the description to something vague: <code>"A tool that does stuff"</code>. Run one of your test queries again. What happens? Change the description back. In your text cell, explain what happened and <strong style="color: var(--text);">why</strong> description quality matters.
+            </p>
+        </div>
+
+        <div class="callout callout-info">
+            <strong>&#x1F4A1; This is a real experiment</strong>
+            <p>When you change the description to something vague, the agent will likely either (a) not call your tool at all, or (b) call the wrong tool. That's the point &mdash; the description is literally how the AI decides which tool to use. Like a job posting: if it says "do stuff," nobody knows whether to apply.</p>
+        </div>
+
+        <!-- Question 2 -->
+        <div class="inst-card">
+            <h4>&#x1F4AC; Question 2: Agent vs. chatbot</h4>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0;">
+                Explain the difference between a chatbot and an AI agent to someone who has never taken this class. Use a concrete business example &mdash; like comparing a basic FAQ bot vs. an agent that can look up orders, process refunds, and check inventory.
+            </p>
+        </div>
+
+        <!-- Question 3 -->
+        <div class="inst-card">
+            <h4>&#x1F680; Question 3: Your agent product</h4>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0;">
+                If you could build an AI agent for a real company or organization, what would it do? Name 3 tools it would need. Who would use it and why?
+            </p>
+        </div>
+    </section>
+
+
+    <!-- ====================================================================== -->
+    <!-- STEP 5: BONUS                                                          -->
+    <!-- ====================================================================== -->
+    <section class="section fade-up" id="step5">
+        <div class="step-indicator">
+            <div class="step-dot done">0</div>
+            <div class="step-line"></div>
+            <div class="step-dot done">1</div>
+            <div class="step-line"></div>
+            <div class="step-dot done">2</div>
+            <div class="step-line"></div>
+            <div class="step-dot done">3</div>
+            <div class="step-line"></div>
+            <div class="step-dot done">4</div>
+            <div class="step-line"></div>
+            <div class="step-dot active">5</div>
+            <div class="step-line"></div>
+            <div class="step-dot">6</div>
+        </div>
+
+        <div class="section-label purple">Step 5 &mdash; Bonus &mdash; +10 Points</div>
+        <h2 class="section-title">Time to Be a Hacker</h2>
+        <p class="section-desc">
+            Optional but fun (and worth extra credit). Try to make your agent produce a wrong answer, use the wrong tool, or behave unexpectedly. Then explain <em>why</em> it happened.
+        </p>
+
+        <div class="analogy-grid" style="grid-template-columns: 1fr 1fr;">
+            <div class="analogy-card card-magenta">
+                <div class="analogy-emoji">&#x1F50D;</div>
+                <h4>What to Try</h4>
+                <p>Ask for something no tool handles. Give ambiguous or conflicting instructions. Ask the same question in a misleading way.</p>
+            </div>
+            <div class="analogy-card card-purple">
+                <div class="analogy-emoji">&#x270D;&#xFE0F;</div>
+                <h4>What to Write</h4>
+                <p>Add a text cell: what you tried, what happened, and <strong>why</strong> you think the agent behaved that way. 2&ndash;4 sentences.</p>
+            </div>
+        </div>
+
+        <div class="challenge">
+            <div class="challenge-header">&#x1F525; Hacker Challenge</div>
+            <p>Can you get the agent to use a tool when it shouldn't? Or skip a tool when it obviously should use one?</p>
+            <div class="challenge-answer" onclick="this.classList.toggle('revealed')">
+                <button class="challenge-answer-btn">Click to reveal ideas</button>
+                <div class="challenge-answer-text">
+                    Try: <strong>&ldquo;What's 2 + 2?&rdquo;</strong> &mdash; does it waste time calling the calculator for something trivial?<br>
+                    Try: <strong>&ldquo;Convert 100 USD to euros&rdquo;</strong> &mdash; without a currency tool, does it hallucinate a rate or admit it can't help?<br>
+                    Try: <strong>&ldquo;What's Apple's weather?&rdquo;</strong> &mdash; does it confuse the company tool with something about weather?
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ====================================================================== -->
+    <!-- STEP 6: DOWNLOAD & SUBMIT                                              -->
+    <!-- ====================================================================== -->
+    <section class="section fade-up" id="step6">
+        <div class="step-indicator">
+            <div class="step-dot done">0</div>
+            <div class="step-line"></div>
+            <div class="step-dot done">1</div>
+            <div class="step-line"></div>
+            <div class="step-dot done">2</div>
+            <div class="step-line"></div>
+            <div class="step-dot done">3</div>
+            <div class="step-line"></div>
+            <div class="step-dot done">4</div>
+            <div class="step-line"></div>
+            <div class="step-dot done">5</div>
+            <div class="step-line"></div>
+            <div class="step-dot active">6</div>
+        </div>
+
+        <div class="section-label green">Step 6 &mdash; Finish Line</div>
+        <h2 class="section-title">Download &amp; Submit</h2>
+        <p class="section-desc">You're almost done. Three small steps left.</p>
+
+        <div class="inst-card">
+            <h4>&#x1F50D; Final check (recommended)</h4>
+            <ol class="inst-list yellow-nums">
+                <li>Scroll through your entire notebook top to bottom. Make sure <strong>every code cell has visible output</strong>.</li>
+                <li><strong>Optional but smart:</strong> Click <strong>Runtime &rarr; Restart and run all</strong> to re-run everything from scratch. This catches issues from running cells out of order.</li>
+            </ol>
+        </div>
+
+        <div class="inst-card">
+            <h4>&#x1F4E5; Download your notebook</h4>
+            <ol class="inst-list">
+                <li>In Colab's top menu: <strong>File &rarr; Download &rarr; Download .ipynb</strong></li>
+                <li>The file saves to your <strong>Downloads</strong> folder.</li>
+            </ol>
+        </div>
+
+        <div class="inst-card">
+            <h4>&#x1F4E4; Upload to Canvas</h4>
+            <ol class="inst-list green-nums">
+                <li>Open <strong>Canvas</strong> and navigate to <strong>ISOM 260</strong>.</li>
+                <li>Click <strong>Assignments</strong> in the left sidebar.</li>
+                <li>Find and click <strong>Session 4 Homework</strong>.</li>
+                <li>Click <strong>&ldquo;Submit Assignment&rdquo;</strong>, choose your <code>.ipynb</code> file, and submit.</li>
+            </ol>
+        </div>
+
+        <div class="callout callout-success">
+            <strong>&#x1F389; You're done!</strong>
+            <p>Canvas should show a confirmation. You can resubmit before the deadline if you want to make changes.</p>
+        </div>
+    </section>
+
+
+    <!-- ====================================================================== -->
+    <!-- FAQ                                                                    -->
+    <!-- ====================================================================== -->
+    <section class="section fade-up" id="faq">
+        <div class="section-label yellow">Troubleshooting</div>
+        <h2 class="section-title">FAQ &amp; Common Issues</h2>
+        <p class="section-desc">Click any question to expand the answer.</p>
+
+        <div class="faq-item" onclick="this.classList.toggle('open')">
+            <div class="faq-q">
+                <span><span class="faq-emoji">&#x1F6A8;</span> I get <code>NameError</code> &mdash; something &ldquo;is not defined&rdquo;</span>
+                <span class="faq-arrow">&#x25B6;</span>
+            </div>
+            <div class="faq-a">
+                <div class="faq-a-inner">
+                    You skipped a cell or ran cells out of order. Do <strong>Runtime &rarr; Restart and run all</strong> to re-run everything from the top. Cells depend on each other &mdash; if you skip the one that defines <code>client</code> or <code>calculator</code>, later cells won't work.
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-item" onclick="this.classList.toggle('open')">
+            <div class="faq-q">
+                <span><span class="faq-emoji">&#x1F511;</span> <code>API key not found</code> or <code>Invalid API key</code></span>
+                <span class="faq-arrow">&#x25B6;</span>
+            </div>
+            <div class="faq-a">
+                <div class="faq-a-inner">
+                    Go back to Step 1, Part B. Check: (1) secret name is exactly <code>GOOGLE_API_KEY</code> (all caps, underscores), (2) &ldquo;Notebook access&rdquo; is toggled ON, (3) you pasted the full key with no extra spaces. If it still fails, create a new key in AI Studio.
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-item" onclick="this.classList.toggle('open')">
+            <div class="faq-q">
+                <span><span class="faq-emoji">&#x23F3;</span> <code>Quota exceeded</code> or <code>429 Resource exhausted</code></span>
+                <span class="faq-arrow">&#x25B6;</span>
+            </div>
+            <div class="faq-a">
+                <div class="faq-a-inner">
+                    The free API has rate limits. Wait about 60 seconds and try again. If it keeps happening, wait a few minutes. The limit resets quickly &mdash; don't panic.
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-item" onclick="this.classList.toggle('open')">
+            <div class="faq-q">
+                <span><span class="faq-emoji">&#x1F6E0;&#xFE0F;</span> My custom tool doesn't get called by the agent</span>
+                <span class="faq-arrow">&#x25B6;</span>
+            </div>
+            <div class="faq-a">
+                <div class="faq-a-inner">
+                    Two common causes: (1) Your tool <strong>description</strong> is too vague &mdash; make it specific about <em>when</em> Gemini should use it. (2) The function name in <code>my_functions</code> doesn't match the <code>name</code> in your tool definition. They must be the exact same string.
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-item" onclick="this.classList.toggle('open')">
+            <div class="faq-q">
+                <span><span class="faq-emoji">&#x1F41B;</span> I get a syntax error in my Python function</span>
+                <span class="faq-arrow">&#x25B6;</span>
+            </div>
+            <div class="faq-a">
+                <div class="faq-a-inner">
+                    Copy your code and the error message, paste it into ChatGPT or Claude, and say: <em>&ldquo;I'm getting this error in my Python function. Can you fix it?&rdquo;</em> AI tools are great at debugging syntax errors &mdash; that's literally what they're for.
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-item" onclick="this.classList.toggle('open')">
+            <div class="faq-q">
+                <span><span class="faq-emoji">&#x1F5D1;&#xFE0F;</span> I accidentally deleted a cell</span>
+                <span class="faq-arrow">&#x25B6;</span>
+            </div>
+            <div class="faq-a">
+                <div class="faq-a-inner">
+                    Press <kbd>Ctrl</kbd>+<kbd>Z</kbd> (or <kbd>Cmd</kbd>+<kbd>Z</kbd> on Mac) to undo. If that doesn't work, try <strong>Edit &rarr; Undo</strong> in the Colab menu. Worst case: go back to the original notebook link, save a new copy, and redo the parts you lost.
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ====================================================================== -->
+    <!-- TAKEAWAY                                                               -->
+    <!-- ====================================================================== -->
+    <section class="section fade-up">
+        <div class="takeaway">
+            <h3>What You Just Built</h3>
+            <p><strong>You built an AI agent from scratch.</strong> Not a chatbot that just talks &mdash; an <em>agent</em> that reasons about which tools to use, calls them, and combines the results into a coherent answer. That's the architecture behind ChatGPT plugins, Google Assistant, and every enterprise AI system being built today.</p>
+            <p><strong>The pattern is always the same.</strong> LLM + tools + loop. Whether it's your Colab notebook or a production system with millions of users, the architecture you just built is identical. The only difference is the tools are real (APIs, databases, external services) instead of simulated.</p>
+            <p><strong>You're closer than you think.</strong> Four things to change in a template. That's the gap between "I've never coded" and "I built an AI agent." Remember that.</p>
+
+            <div class="takeaway-stats">
+                <div class="takeaway-stat">
+                    <div class="stat-num">4</div>
+                    <div class="stat-label">things to change</div>
+                </div>
+                <div class="takeaway-stat">
+                    <div class="stat-num">3</div>
+                    <div class="stat-label">test queries</div>
+                </div>
+                <div class="takeaway-stat">
+                    <div class="stat-num">1</div>
+                    <div class="stat-label">custom tool</div>
+                </div>
+                <div class="takeaway-stat">
+                    <div class="stat-num">100</div>
+                    <div class="stat-label">points possible</div>
+                </div>
+            </div>
+        </div>
+
+        <p class="punchy" style="margin-top: 2rem;">
+            Need the formal rubric and point breakdown?<br>
+            <a href="homework-session4.html" style="color: var(--cyan); text-decoration: none; font-weight: 600;">View the assignment spec &rarr;</a>
+        </p>
+    </section>
+
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <p>
+            ISOM 260: AI for Business &bull; Suffolk University &bull; Sawyer Business School<br>
+            Prof. Hasan Arslan &bull; <a href="https://isom-260.vercel.app">isom-260.vercel.app</a>
+        </p>
+    </footer>
+
+</div>
+
+<script>
+    // ====== PROGRESS BAR ======
+    window.addEventListener('scroll', () => {
+        const h = document.documentElement.scrollHeight - window.innerHeight;
+        const pct = h > 0 ? (window.scrollY / h) * 100 : 0;
+        document.getElementById('progressFill').style.width = pct + '%';
+    });
+
+    // ====== FADE-UP ON SCROLL ======
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) entry.target.classList.add('visible');
+        });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+    // ====== CODE TABS ======
+    function switchTab(containerId, index) {
+        const container = document.getElementById(containerId);
+        const btns = container.querySelectorAll('.tab-btn');
+        const panels = container.querySelectorAll('.tab-panel');
+        btns.forEach((b, i) => b.classList.toggle('active', i === index));
+        panels.forEach((p, i) => p.classList.toggle('active', i === index));
+    }
+
+    // ====== STEP INDICATOR — updates hero dots on scroll ======
+    const sections = ['step0','step1','step2','step3','step4','step5','step6'];
+    const heroStepDots = document.querySelectorAll('#heroSteps .step-dot');
+
+    function updateHeroSteps() {
+        let currentIdx = 0;
+        sections.forEach((id, i) => {
+            const el = document.getElementById(id);
+            if (el && el.getBoundingClientRect().top < window.innerHeight * 0.5) currentIdx = i;
+        });
+        heroStepDots.forEach((dot, i) => {
+            dot.classList.remove('active', 'done');
+            if (i < currentIdx) dot.classList.add('done');
+            else if (i === currentIdx) dot.classList.add('active');
+        });
+    }
+
+    window.addEventListener('scroll', updateHeroSteps);
+    updateHeroSteps();
+</script>
+</body>
+</html>
