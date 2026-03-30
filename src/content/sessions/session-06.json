@@ -110,6 +110,15 @@
   ],
   "resources": [
     {
+      "title": "Session 6 Lecture Guide",
+      "url": "/session-06/lecture-guide.html",
+      "description": "Projectable lecture companion — visual slides for the full Session 6 lecture with key diagrams, code comparisons, and interactive navigation.",
+      "icon": "presentation",
+      "badge": "Lecture",
+      "badgeType": "interactive",
+      "linkText": "Open lecture guide"
+    },
+    {
       "title": "Advanced Agent Patterns",
       "url": "/session-06/advanced-agent-patterns.html",
       "description": "Visual explainer: ReAct reasoning, Chain-of-Thought planning, multi-agent architectures, and MCP. The patterns that power production AI agents.",

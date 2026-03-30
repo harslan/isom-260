@@ -1,0 +1,1968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture Guide: Session 6 — Agent Patterns & Production Intelligence | ISOM 260</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #0f1424;
+            --bg-card: #141929;
+            --bg-elevated: #1a2035;
+            --bg-code: #0d1117;
+
+            --cyan: #00e5ff;
+            --cyan-dim: #00b8d4;
+            --cyan-glow: rgba(0, 229, 255, 0.15);
+            --cyan-glow-strong: rgba(0, 229, 255, 0.3);
+
+            --magenta: #ff006e;
+            --magenta-glow: rgba(255, 0, 110, 0.15);
+
+            --yellow: #ffd600;
+            --yellow-glow: rgba(255, 214, 0, 0.15);
+
+            --green: #00e676;
+            --green-glow: rgba(0, 230, 118, 0.15);
+
+            --orange: #ff9100;
+            --purple: #b388ff;
+
+            --text-primary: #e8ecf4;
+            --text-secondary: #8892a8;
+            --text-dim: #5a6478;
+
+            --border: rgba(0, 229, 255, 0.1);
+            --border-strong: rgba(0, 229, 255, 0.25);
+            --grid-line: rgba(0, 229, 255, 0.04);
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'DM Sans', sans-serif;
+            line-height: 1.7;
+            overflow-x: hidden;
+            background-image:
+                linear-gradient(var(--grid-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        /* Glow orbs */
+        .glow-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.4;
+        }
+        .glow-orb-1 {
+            width: 500px; height: 500px;
+            background: rgba(0, 229, 255, 0.08);
+            top: -100px; left: -100px;
+        }
+        .glow-orb-2 {
+            width: 400px; height: 400px;
+            background: rgba(255, 0, 110, 0.06);
+            top: 40%; right: -100px;
+        }
+        .glow-orb-3 {
+            width: 350px; height: 350px;
+            background: rgba(0, 230, 118, 0.05);
+            bottom: -50px; left: 30%;
+        }
+
+        /* Progress bar */
+        .progress-bar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: rgba(0, 229, 255, 0.1);
+            z-index: 1000;
+        }
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--cyan), var(--magenta));
+            transition: width 0.15s ease-out;
+        }
+
+        /* Dot navigation */
+        .dot-nav {
+            position: fixed;
+            right: 24px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 100;
+        }
+        .dot-nav-item {
+            width: 10px; height: 10px;
+            border-radius: 50%;
+            border: 2px solid var(--text-dim);
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .dot-nav-item:hover {
+            border-color: var(--cyan);
+        }
+        .dot-nav-item.active {
+            border-color: var(--cyan);
+            background: var(--cyan);
+            box-shadow: 0 0 8px var(--cyan-glow-strong);
+        }
+        .dot-nav-item .dot-label {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            color: var(--text-dim);
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.2s;
+            pointer-events: none;
+        }
+        .dot-nav-item:hover .dot-label {
+            opacity: 1;
+            color: var(--cyan);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Sections */
+        .slide-section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 4rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        .section-label::before {
+            content: '';
+            width: 24px;
+            height: 1px;
+        }
+        .section-label.cyan { color: var(--cyan); }
+        .section-label.cyan::before { background: var(--cyan); }
+        .section-label.magenta { color: var(--magenta); }
+        .section-label.magenta::before { background: var(--magenta); }
+        .section-label.green { color: var(--green); }
+        .section-label.green::before { background: var(--green); }
+        .section-label.yellow { color: var(--yellow); }
+        .section-label.yellow::before { background: var(--yellow); }
+        .section-label.orange { color: var(--orange); }
+        .section-label.orange::before { background: var(--orange); }
+        .section-label.purple { color: var(--purple); }
+        .section-label.purple::before { background: var(--purple); }
+
+        .section-title {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(1.6rem, 3vw, 2.4rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .section-desc {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            max-width: 700px;
+            margin-bottom: 2.5rem;
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 4rem 0;
+        }
+
+        .session-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+            padding: 0.5rem 1.2rem;
+            border-radius: 100px;
+            margin-bottom: 2rem;
+            background: var(--bg-card);
+        }
+        .session-badge .dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: var(--cyan);
+            animation: pulse-dot 2s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 var(--cyan-glow-strong); }
+            50% { opacity: 0.7; box-shadow: 0 0 0 6px transparent; }
+        }
+
+        .hero-title {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(2.2rem, 5vw, 3.8rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.15;
+            margin-bottom: 1.5rem;
+        }
+        .hero-title .gradient-text {
+            background: linear-gradient(135deg, var(--cyan), var(--magenta));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin-bottom: 2.5rem;
+        }
+
+        .hero-tags {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .hero-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.05em;
+            padding: 0.4rem 1rem;
+            border-radius: 100px;
+            border: 1px solid;
+        }
+        .hero-tag.cyan { color: var(--cyan); border-color: rgba(0,229,255,0.3); background: var(--cyan-glow); }
+        .hero-tag.magenta { color: var(--magenta); border-color: rgba(255,0,110,0.3); background: var(--magenta-glow); }
+        .hero-tag.green { color: var(--green); border-color: rgba(0,230,118,0.3); background: var(--green-glow); }
+        .hero-tag.yellow { color: var(--yellow); border-color: rgba(255,214,0,0.3); background: var(--yellow-glow); }
+
+        .hero-nav-hint {
+            margin-top: 3rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            animation: bounce-hint 2s infinite;
+        }
+        @keyframes bounce-hint {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(6px); }
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.75rem;
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            border-color: var(--border-strong);
+            transform: translateY(-2px);
+        }
+        .card-accent-cyan { border-top: 3px solid var(--cyan); }
+        .card-accent-magenta { border-top: 3px solid var(--magenta); }
+        .card-accent-green { border-top: 3px solid var(--green); }
+        .card-accent-yellow { border-top: 3px solid var(--yellow); }
+        .card-accent-orange { border-top: 3px solid var(--orange); }
+        .card-accent-purple { border-top: 3px solid var(--purple); }
+
+        .card-icon {
+            width: 44px; height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+        .card-icon.cyan { background: var(--cyan-glow); color: var(--cyan); }
+        .card-icon.magenta { background: var(--magenta-glow); color: var(--magenta); }
+        .card-icon.green { background: var(--green-glow); color: var(--green); }
+        .card-icon.yellow { background: var(--yellow-glow); color: var(--yellow); }
+        .card-icon.orange { background: rgba(255,145,0,0.15); color: var(--orange); }
+        .card-icon.purple { background: rgba(179,136,255,0.15); color: var(--purple); }
+
+        .card-title {
+            font-family: 'Sora', sans-serif;
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+        .card-desc {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* Grid layouts */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; }
+
+        /* Code window */
+        .code-window {
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 1.5rem 0;
+        }
+        .code-header {
+            padding: 0.75rem 1.5rem;
+            background: var(--bg-elevated);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .dot-row { display: flex; gap: 0.35rem; margin-right: 0.75rem; }
+        .dot-row span { width: 8px; height: 8px; border-radius: 50%; }
+        .dot-red { background: #ff5f56; }
+        .dot-yellow { background: #ffbd2e; }
+        .dot-green { background: #27c93f; }
+        .code-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+        }
+        .code-body {
+            padding: 1.25rem 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            line-height: 1.8;
+            overflow-x: auto;
+            white-space: pre;
+            color: var(--text-secondary);
+        }
+        .code-body .kw { color: var(--magenta); }
+        .code-body .fn { color: var(--cyan); }
+        .code-body .str { color: var(--green); }
+        .code-body .cmt { color: var(--text-dim); font-style: italic; }
+        .code-body .hl { color: var(--yellow); }
+        .code-body .num { color: var(--orange); }
+
+        /* Highlight line */
+        .hl-line {
+            display: block;
+            background: rgba(0, 229, 255, 0.08);
+            border-left: 3px solid var(--cyan);
+            margin: 0 -1.5rem;
+            padding: 0 1.5rem 0 calc(1.5rem - 3px);
+        }
+
+        /* Insight block */
+        .insight-block {
+            background: linear-gradient(135deg, var(--cyan-glow), var(--magenta-glow));
+            border: 1px solid var(--border-strong);
+            border-radius: 12px;
+            padding: 1.75rem 2rem;
+            position: relative;
+            margin: 2rem 0;
+        }
+        .insight-block::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--cyan), var(--magenta));
+            border-radius: 12px 12px 0 0;
+        }
+        .insight-block .insight-title {
+            font-family: 'Sora', sans-serif;
+            font-weight: 600;
+            font-size: 1.05rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .insight-block .insight-text {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Callout */
+        .callout {
+            border-radius: 10px;
+            padding: 1.25rem 1.5rem;
+            margin: 1.5rem 0;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+        .callout-icon {
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        .callout-info { background: var(--cyan-glow); border: 1px solid rgba(0,229,255,0.2); }
+        .callout-info strong { color: var(--cyan); }
+        .callout-warn { background: var(--yellow-glow); border: 1px solid rgba(255,214,0,0.2); }
+        .callout-warn strong { color: var(--yellow); }
+        .callout-success { background: var(--green-glow); border: 1px solid rgba(0,230,118,0.2); }
+        .callout-success strong { color: var(--green); }
+        .callout-error { background: var(--magenta-glow); border: 1px solid rgba(255,0,110,0.2); }
+        .callout-error strong { color: var(--magenta); }
+
+        /* Compare layout */
+        .compare-grid {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 1.5rem;
+            align-items: stretch;
+        }
+        .vs-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .vs-label {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-dim);
+            opacity: 0.5;
+        }
+
+        /* ReAct cycle */
+        .react-cycle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+            margin: 3rem 0;
+            flex-wrap: wrap;
+        }
+        .react-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .react-step-circle {
+            width: 90px; height: 90px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Sora', sans-serif;
+            font-weight: 700;
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+            position: relative;
+        }
+        .react-step-circle.think {
+            background: var(--cyan-glow);
+            border: 2px solid var(--cyan);
+            color: var(--cyan);
+        }
+        .react-step-circle.act {
+            background: var(--magenta-glow);
+            border: 2px solid var(--magenta);
+            color: var(--magenta);
+        }
+        .react-step-circle.observe {
+            background: var(--yellow-glow);
+            border: 2px solid var(--yellow);
+            color: var(--yellow);
+        }
+        .react-step-circle.decide {
+            background: var(--green-glow);
+            border: 2px solid var(--green);
+            color: var(--green);
+        }
+        .react-step-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--text-dim);
+            text-align: center;
+            max-width: 100px;
+        }
+        .react-arrow {
+            font-size: 1.5rem;
+            color: var(--text-dim);
+            margin: 0 1rem;
+            opacity: 0.5;
+        }
+
+        /* Automation matrix */
+        .matrix-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 4px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .matrix-cell {
+            padding: 2rem 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .matrix-cell .cell-label {
+            font-family: 'Sora', sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 0.4rem;
+        }
+        .matrix-cell .cell-desc {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+        .matrix-automate {
+            background: var(--green-glow);
+            border: 1px solid rgba(0,230,118,0.25);
+            color: var(--green);
+        }
+        .matrix-augment {
+            background: var(--cyan-glow);
+            border: 1px solid rgba(0,229,255,0.25);
+            color: var(--cyan);
+        }
+        .matrix-human {
+            background: var(--magenta-glow);
+            border: 1px solid rgba(255,0,110,0.25);
+            color: var(--magenta);
+        }
+        .matrix-skip {
+            background: rgba(90,100,120,0.1);
+            border: 1px solid rgba(90,100,120,0.2);
+            color: var(--text-dim);
+        }
+        .matrix-axis-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            text-align: center;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Equation block */
+        .equation-block {
+            background: linear-gradient(135deg, var(--magenta-glow), var(--cyan-glow));
+            border: 1px solid var(--border-strong);
+            padding: 2rem 2.5rem;
+            text-align: center;
+            border-radius: 12px;
+            margin: 2rem 0;
+        }
+        .equation {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            font-family: 'Sora', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 600;
+        }
+        .eq-part {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+        .eq-cyan { background: var(--cyan-glow); color: var(--cyan); }
+        .eq-magenta { background: var(--magenta-glow); color: var(--magenta); }
+        .eq-green { background: var(--green-glow); color: var(--green); }
+        .eq-yellow { background: var(--yellow-glow); color: var(--yellow); }
+        .eq-op {
+            color: var(--text-dim);
+            font-weight: 400;
+        }
+
+        /* Diagram flows */
+        .flow-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+        .flow-node {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem 1.25rem;
+            text-align: center;
+            min-width: 120px;
+        }
+        .flow-node-title {
+            font-family: 'Sora', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-bottom: 0.3rem;
+        }
+        .flow-node-desc {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .flow-arrow {
+            color: var(--text-dim);
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        /* Competence ladder */
+        .ladder {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            max-width: 650px;
+            margin: 2rem auto;
+        }
+        .ladder-step {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            padding: 1.25rem 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            transition: all 0.3s ease;
+        }
+        .ladder-step.current {
+            border-color: var(--green);
+            background: linear-gradient(135deg, var(--green-glow), transparent);
+            box-shadow: 0 0 30px rgba(0,230,118,0.08);
+        }
+        .ladder-num {
+            font-family: 'Sora', sans-serif;
+            font-weight: 800;
+            font-size: 1.5rem;
+            min-width: 36px;
+        }
+        .ladder-content .ladder-title {
+            font-family: 'Sora', sans-serif;
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 0.2rem;
+        }
+        .ladder-content .ladder-desc {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* Timeline */
+        .journey-timeline {
+            display: flex;
+            align-items: flex-start;
+            gap: 0;
+            margin: 2.5rem 0;
+            position: relative;
+            overflow-x: auto;
+            padding-bottom: 1rem;
+        }
+        .journey-node {
+            flex: 1;
+            text-align: center;
+            min-width: 120px;
+            position: relative;
+        }
+        .journey-node::before {
+            content: '';
+            position: absolute;
+            top: 18px;
+            left: 0; right: 0;
+            height: 2px;
+            background: var(--border);
+        }
+        .journey-node:first-child::before { left: 50%; }
+        .journey-node:last-child::before { right: 50%; }
+        .journey-dot {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            margin: 0 auto 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            font-weight: 700;
+            background: var(--bg-primary);
+            position: relative;
+            z-index: 2;
+        }
+        .journey-node.past .journey-dot {
+            border-color: var(--text-dim);
+            color: var(--text-dim);
+        }
+        .journey-node.current .journey-dot {
+            border-color: var(--cyan);
+            color: var(--cyan);
+            background: var(--cyan-glow);
+            box-shadow: 0 0 12px var(--cyan-glow-strong);
+        }
+        .journey-node.future .journey-dot {
+            border-color: var(--border);
+            color: var(--text-dim);
+        }
+        .journey-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            color: var(--text-dim);
+            line-height: 1.4;
+        }
+        .journey-node.current .journey-label {
+            color: var(--cyan);
+            font-weight: 600;
+        }
+
+        /* Takeaway cards */
+        .takeaway-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1.25rem 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            margin-bottom: 1rem;
+        }
+        .takeaway-icon {
+            flex-shrink: 0;
+            width: 38px; height: 38px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--cyan-glow);
+            color: var(--cyan);
+        }
+        .takeaway-text {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+        .takeaway-text strong {
+            color: var(--text-primary);
+        }
+
+        /* CTA card */
+        .cta-card {
+            background: linear-gradient(135deg, var(--cyan-glow), var(--green-glow));
+            border: 2px solid var(--cyan);
+            border-radius: 16px;
+            padding: 3rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .cta-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--cyan), var(--green));
+        }
+        .cta-title {
+            font-family: 'Sora', sans-serif;
+            font-weight: 700;
+            font-size: 1.6rem;
+            margin-bottom: 0.75rem;
+        }
+        .cta-desc {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--cyan);
+            color: var(--bg-primary);
+            font-family: 'Sora', sans-serif;
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 0.85rem 2rem;
+            border-radius: 10px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .cta-btn:hover {
+            background: #33ebff;
+            box-shadow: 0 0 20px var(--cyan-glow-strong);
+        }
+
+        /* Checklist */
+        .checklist {
+            list-style: none;
+            margin: 1.5rem 0;
+        }
+        .checklist li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.5rem 0;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        .checklist li .check-icon {
+            flex-shrink: 0;
+            color: var(--green);
+            margin-top: 3px;
+        }
+
+        /* Homework items */
+        .homework-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1.25rem 1.5rem;
+            border-radius: 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            margin-bottom: 0.75rem;
+        }
+        .homework-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            font-weight: 600;
+            flex-shrink: 0;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            margin-top: 2px;
+        }
+        .homework-text {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Orchestrator hub */
+        .hub-diagram {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        .hub-center {
+            background: var(--bg-card);
+            border: 2px solid var(--cyan);
+            border-radius: 14px;
+            padding: 1.25rem 2rem;
+            text-align: center;
+            box-shadow: 0 0 25px var(--cyan-glow);
+        }
+        .hub-spokes {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .hub-spoke {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 0.85rem 1.25rem;
+            text-align: center;
+            min-width: 110px;
+        }
+
+        /* MCP before/after */
+        .mcp-compare {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        .mcp-panel {
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+        }
+        .mcp-panel.before {
+            background: var(--magenta-glow);
+            border: 1px solid rgba(255,0,110,0.25);
+        }
+        .mcp-panel.after {
+            background: var(--green-glow);
+            border: 1px solid rgba(0,230,118,0.25);
+        }
+        .mcp-formula {
+            font-family: 'Sora', sans-serif;
+            font-weight: 800;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        .mcp-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Fade-in animation */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .fade-in-delay-1 { transition-delay: 0.1s; }
+        .fade-in-delay-2 { transition-delay: 0.2s; }
+        .fade-in-delay-3 { transition-delay: 0.3s; }
+        .fade-in-delay-4 { transition-delay: 0.4s; }
+
+        /* Failure card */
+        .failure-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border-left: 3px solid var(--magenta);
+        }
+        .failure-card .failure-title {
+            font-family: 'Sora', sans-serif;
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 0.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .failure-card .failure-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* MCP server badges */
+        .server-badges {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin: 1.5rem 0;
+        }
+        .server-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        /* Big quote */
+        .big-quote {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+            font-weight: 600;
+            text-align: center;
+            color: var(--text-primary);
+            padding: 2rem 0;
+            line-height: 1.4;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .big-quote .highlight {
+            background: linear-gradient(135deg, var(--cyan), var(--magenta));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+            .compare-grid { grid-template-columns: 1fr; }
+            .vs-divider { display: none; }
+            .mcp-compare { grid-template-columns: 1fr; }
+            .matrix-grid { max-width: 100%; }
+            .react-cycle { gap: 0.5rem; }
+            .react-arrow { margin: 0 0.25rem; font-size: 1rem; }
+            .react-step-circle { width: 65px; height: 65px; font-size: 0.7rem; }
+            .dot-nav { display: none; }
+            .slide-section { min-height: auto; padding: 3rem 0; }
+            .hero { min-height: 90vh; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Glow orbs -->
+<div class="glow-orb glow-orb-1"></div>
+<div class="glow-orb glow-orb-2"></div>
+<div class="glow-orb glow-orb-3"></div>
+
+<!-- Progress bar -->
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+<!-- Dot navigation -->
+<nav class="dot-nav" id="dotNav">
+    <button class="dot-nav-item active" data-section="0"><span class="dot-label">Title</span></button>
+    <button class="dot-nav-item" data-section="1"><span class="dot-label">Pattern Gap</span></button>
+    <button class="dot-nav-item" data-section="2"><span class="dot-label">ReAct</span></button>
+    <button class="dot-nav-item" data-section="3"><span class="dot-label">Three Levels</span></button>
+    <button class="dot-nav-item" data-section="4"><span class="dot-label">Hands-On</span></button>
+    <button class="dot-nav-item" data-section="5"><span class="dot-label">Failure Modes</span></button>
+    <button class="dot-nav-item" data-section="6"><span class="dot-label">Multi-Agent</span></button>
+    <button class="dot-nav-item" data-section="7"><span class="dot-label">MCP</span></button>
+    <button class="dot-nav-item" data-section="8"><span class="dot-label">Business ROI</span></button>
+    <button class="dot-nav-item" data-section="9"><span class="dot-label">Takeaways</span></button>
+    <button class="dot-nav-item" data-section="10"><span class="dot-label">Homework</span></button>
+</nav>
+
+<div class="container">
+
+    <!-- ============================================================ -->
+    <!-- SECTION 0: TITLE SLIDE                                        -->
+    <!-- ============================================================ -->
+    <section class="hero slide-section" id="section-0">
+        <div class="session-badge">
+            <span class="dot"></span> ISOM 260 · Suffolk University
+        </div>
+        <h1 class="hero-title">
+            Agent Patterns &<br><span class="gradient-text">Production Intelligence</span>
+        </h1>
+        <p class="hero-subtitle">
+            ReAct reasoning, multi-agent architectures, and the patterns that separate demos from production systems
+        </p>
+        <div class="hero-tags">
+            <span class="hero-tag cyan">ReAct</span>
+            <span class="hero-tag magenta">Multi-Agent</span>
+            <span class="hero-tag green">MCP</span>
+            <span class="hero-tag yellow">Business Automation</span>
+        </div>
+        <div class="hero-nav-hint">
+            <i data-lucide="chevron-down" style="width:14px; height:14px;"></i>
+            Use arrow keys to navigate
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 1: THE PATTERN GAP                                    -->
+    <!-- ============================================================ -->
+    <section class="slide-section" id="section-1">
+        <div class="section-label cyan">Part 1 · 5:00–5:12 PM</div>
+        <h2 class="section-title">The Pattern Gap</h2>
+        <p class="section-desc">
+            Bridge from Session 5's NanoClaw demo — the patterns behind production agents.
+        </p>
+
+        <!-- Competence Ladder -->
+        <h3 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1rem; margin-bottom:1.25rem; color:var(--text-secondary);">The Competence Ladder</h3>
+        <div class="ladder fade-in">
+            <div class="ladder-step">
+                <div class="ladder-num" style="color:var(--cyan);">S4</div>
+                <div class="ladder-content">
+                    <div class="ladder-title" style="color:var(--cyan);">Build agents with tool use</div>
+                    <div class="ladder-desc">Function calling, structured outputs, first agent loop</div>
+                </div>
+            </div>
+            <div class="ladder-step">
+                <div class="ladder-num" style="color:var(--magenta);">S5</div>
+                <div class="ladder-content">
+                    <div class="ladder-title" style="color:var(--magenta);">Connect to real APIs + memory</div>
+                    <div class="ladder-desc">Live Wikipedia, web fetch, conversation persistence</div>
+                </div>
+            </div>
+            <div class="ladder-step current">
+                <div class="ladder-num" style="color:var(--green);">S6</div>
+                <div class="ladder-content">
+                    <div class="ladder-title" style="color:var(--green);">ReAct + Multi-Agent + MCP</div>
+                    <div class="ladder-desc">Production patterns, team architectures, universal tool standard</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="insight-block fade-in">
+            <div class="insight-title">
+                <i data-lucide="lightbulb" style="width:18px; height:18px; color:var(--yellow);"></i>
+                NanoClaw Callback
+            </div>
+            <div class="insight-text">
+                When NanoClaw researched for us live — it didn't call one tool and stop. It searched, evaluated, searched again, then answered. That's a <strong style="color:var(--cyan);">PATTERN</strong>.
+            </div>
+        </div>
+
+        <!-- Three pattern preview cards -->
+        <div class="grid-3 fade-in" style="margin-top:2rem;">
+            <div class="card card-accent-cyan">
+                <div class="card-icon cyan"><i data-lucide="brain" style="width:22px; height:22px;"></i></div>
+                <div class="card-title">ReAct</div>
+                <div class="card-desc">Think before acting. Observe results. Adapt and iterate.</div>
+            </div>
+            <div class="card card-accent-magenta">
+                <div class="card-icon magenta"><i data-lucide="users" style="width:22px; height:22px;"></i></div>
+                <div class="card-title">Multi-Agent</div>
+                <div class="card-desc">Team of specialists collaborating on complex tasks.</div>
+            </div>
+            <div class="card card-accent-green">
+                <div class="card-icon green"><i data-lucide="plug-zap" style="width:22px; height:22px;"></i></div>
+                <div class="card-title">MCP</div>
+                <div class="card-desc">Universal tool standard. Build once, every agent uses it.</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 2: ReAct DEEP DIVE                                    -->
+    <!-- ============================================================ -->
+    <section class="slide-section" id="section-2">
+        <div class="section-label magenta">Part 2 · 5:12–5:40 PM</div>
+        <h2 class="section-title">ReAct Deep Dive</h2>
+        <p class="section-desc">
+            The pattern that powers every serious AI agent: Reason + Act. Think, then do, then evaluate, then decide what's next.
+        </p>
+
+        <!-- ReAct cycle diagram -->
+        <div class="react-cycle fade-in">
+            <div class="react-step">
+                <div class="react-step-circle think">THINK</div>
+                <div class="react-step-label">Reason about what to do next</div>
+            </div>
+            <div class="react-arrow">→</div>
+            <div class="react-step">
+                <div class="react-step-circle act">ACT</div>
+                <div class="react-step-label">Call a tool with purpose</div>
+            </div>
+            <div class="react-arrow">→</div>
+            <div class="react-step">
+                <div class="react-step-circle observe">OBSERVE</div>
+                <div class="react-step-label">Evaluate the result</div>
+            </div>
+            <div class="react-arrow">→</div>
+            <div class="react-step">
+                <div class="react-step-circle decide">DECIDE</div>
+                <div class="react-step-label">Repeat or conclude</div>
+            </div>
+        </div>
+
+        <!-- The one-line difference -->
+        <h3 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1.1rem; margin:2.5rem 0 1rem; color:var(--text-primary);">The One-Line Difference</h3>
+
+        <div class="compare-grid fade-in">
+            <div>
+                <div class="code-window">
+                    <div class="code-header">
+                        <div class="dot-row"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></div>
+                        <span class="code-title">Session 5 — System Prompt</span>
+                    </div>
+                    <div class="code-body"><span class="str">"You are a helpful research assistant.</span>
+<span class="str"> You have access to tools for searching</span>
+<span class="str"> Wikipedia, fetching web pages, and</span>
+<span class="str"> doing calculations."</span></div>
+                </div>
+            </div>
+            <div class="vs-divider"><span class="vs-label">vs</span></div>
+            <div>
+                <div class="code-window" style="border-color:var(--border-strong); box-shadow:0 0 30px var(--cyan-glow);">
+                    <div class="code-header">
+                        <div class="dot-row"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></div>
+                        <span class="code-title" style="color:var(--cyan);">Session 6 — ReAct Prompt</span>
+                    </div>
+                    <div class="code-body"><span class="str">"You are a research analyst. For every</span>
+<span class="str"> question, follow this loop:</span>
+<span class="hl-line"><span class="str"> THINK: What do I need to find out?</span></span>
+<span class="hl-line"><span class="str"> ACT: Call the best tool for this step.</span></span>
+<span class="hl-line"><span class="str"> OBSERVE: What did I learn? Is it enough?</span></span>
+<span class="hl-line"><span class="str"> REPEAT or CONCLUDE with a synthesis.</span></span>
+<span class="str"> Always show your reasoning."</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="insight-block fade-in" style="margin-top:2rem;">
+            <div class="insight-title">
+                <i data-lucide="zap" style="width:18px; height:18px; color:var(--yellow);"></i>
+                Key Insight
+            </div>
+            <div class="insight-text">
+                The agent loop is <strong style="color:var(--cyan);">identical</strong> to Session 5. The magic is in the <strong style="color:var(--magenta);">prompt</strong>, not the code.
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 3: THREE LEVELS OF INTELLIGENCE                       -->
+    <!-- ============================================================ -->
+    <section class="slide-section" id="section-3">
+        <div class="section-label yellow">Three Levels</div>
+        <h2 class="section-title">Three Levels of Intelligence</h2>
+        <p class="section-desc">
+            Same question, three approaches. Same tools for Levels 1 & 2 — watch the escalation.
+        </p>
+
+        <div class="grid-3 fade-in">
+            <!-- Level 0 -->
+            <div class="card" style="border-top:3px solid var(--text-dim);">
+                <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:1rem;">
+                    <span style="font-family:'Sora',sans-serif; font-weight:800; font-size:1.3rem; color:var(--text-dim);">L0</span>
+                    <span style="font-family:'JetBrains Mono',monospace; font-size:0.65rem; color:var(--text-dim); letter-spacing:0.1em; text-transform:uppercase;">No Tools</span>
+                </div>
+                <div class="card-desc" style="margin-bottom:1rem;">
+                    Generates text from training data. Looks confident — no way to verify.
+                </div>
+                <div class="code-window" style="margin:0;">
+                    <div class="code-body" style="font-size:0.7rem; padding:1rem;"><span class="cmt"># Just asks the LLM directly</span>
+<span class="str">"AI affects 40% of jobs..."</span>
+<span class="cmt"># Real? 🤷 No sources.</span></div>
+                </div>
+                <div style="margin-top:1rem; font-family:'JetBrains Mono',monospace; font-size:0.7rem; color:var(--magenta);">❌ Looks good. Can't verify.</div>
+            </div>
+
+            <!-- Level 1 -->
+            <div class="card" style="border-top:3px solid var(--orange);">
+                <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:1rem;">
+                    <span style="font-family:'Sora',sans-serif; font-weight:800; font-size:1.3rem; color:var(--orange);">L1</span>
+                    <span style="font-family:'JetBrains Mono',monospace; font-size:0.65rem; color:var(--orange); letter-spacing:0.1em; text-transform:uppercase;">Session 5 Agent</span>
+                </div>
+                <div class="card-desc" style="margin-bottom:1rem;">
+                    Has tools. Calls one, dumps the result. Real data, but no evaluation.
+                </div>
+                <div class="code-window" style="margin:0;">
+                    <div class="code-body" style="font-size:0.7rem; padding:1rem;"><span class="fn">wikipedia_search</span>(<span class="str">"AI"</span>)
+<span class="cmt"># Gets first result</span>
+<span class="str">"Here's what Wikipedia says..."</span>
+<span class="cmt"># Grabbed first match. Done.</span></div>
+                </div>
+                <div style="margin-top:1rem; font-family:'JetBrains Mono',monospace; font-size:0.7rem; color:var(--yellow);">⚠️ Real data, first result only.</div>
+            </div>
+
+            <!-- Level 2 -->
+            <div class="card" style="border-top:3px solid var(--green); border-color:var(--border-strong); box-shadow:0 0 30px rgba(0,230,118,0.06);">
+                <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:1rem;">
+                    <span style="font-family:'Sora',sans-serif; font-weight:800; font-size:1.3rem; color:var(--green);">L2</span>
+                    <span style="font-family:'JetBrains Mono',monospace; font-size:0.65rem; color:var(--green); letter-spacing:0.1em; text-transform:uppercase;">ReAct Agent</span>
+                </div>
+                <div class="card-desc" style="margin-bottom:1rem;">
+                    Same tools. Thinks, searches, evaluates, searches more, synthesizes.
+                </div>
+                <div class="code-window" style="margin:0;">
+                    <div class="code-body" style="font-size:0.7rem; padding:1rem;"><span class="hl">THINK:</span> <span class="cmt">Need employment data</span>
+<span class="fn">wikipedia_search</span>(<span class="str">"Tech_unemp"</span>)
+<span class="hl">OBSERVE:</span> <span class="cmt">Good, need specifics</span>
+<span class="fn">wikipedia_search</span>(<span class="str">"AI_jobs"</span>)
+<span class="hl">OBSERVE:</span> <span class="cmt">Better. Verify...</span>
+<span class="fn">fetch_web_page</span>(<span class="str">"..."</span>)
+<span class="hl">THINK:</span> <span class="cmt">Enough. Synthesize.</span></div>
+                </div>
+                <div style="margin-top:1rem; font-family:'JetBrains Mono',monospace; font-size:0.7rem; color:var(--green);">✅ Planned. Evaluated. Synthesized.</div>
+            </div>
+        </div>
+
+        <div class="big-quote fade-in" style="margin-top:2.5rem;">
+            Same tools. Same loop. <span class="highlight">One prompt paragraph changed everything.</span>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 4: HANDS-ON CHECKPOINT                                -->
+    <!-- ============================================================ -->
+    <section class="slide-section" id="section-4">
+        <div class="section-label green">Hands-On · 5:40–6:25 PM</div>
+        <h2 class="section-title">Build a ReAct Research Agent</h2>
+        <p class="section-desc">
+            45 minutes in Google Colab. Same tools, new system prompt, dramatically different behavior.
+        </p>
+
+        <div class="cta-card fade-in">
+            <div style="margin-bottom:1rem;"><i data-lucide="code" style="width:48px; height:48px; color:var(--cyan);"></i></div>
+            <div class="cta-title">Open Colab Now</div>
+            <div class="cta-desc">API key ready. We're building a research agent that thinks before it acts.</div>
+            <a href="https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-06/ISOM260_Session6_Agent_Patterns.ipynb" target="_blank" class="cta-btn">
+                <i data-lucide="external-link" style="width:16px; height:16px;"></i>
+                Open in Google Colab
+            </a>
+        </div>
+
+        <h3 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1.05rem; margin:2.5rem 0 1rem; color:var(--text-primary);">Workshop Phases</h3>
+        <ul class="checklist fade-in">
+            <li>
+                <span class="check-icon"><i data-lucide="circle-dot" style="width:16px; height:16px;"></i></span>
+                <span><strong>Phase 1 (10 min)</strong> — Bring back Session 5 tools. Verify they work. See the Three Levels live.</span>
+            </li>
+            <li>
+                <span class="check-icon"><i data-lucide="circle-dot" style="width:16px; height:16px;"></i></span>
+                <span><strong>Phase 2 (10 min)</strong> — Wire the ReAct loop. One system prompt change transforms behavior.</span>
+            </li>
+            <li>
+                <span class="check-icon"><i data-lucide="circle-dot" style="width:16px; height:16px;"></i></span>
+                <span><strong>Phase 3 (15 min)</strong> — Push the agent. Failure modes with real APIs. Wikipedia 404s, vague questions.</span>
+            </li>
+            <li>
+                <span class="check-icon"><i data-lucide="circle-dot" style="width:16px; height:16px;"></i></span>
+                <span><strong>Phase 4 (5 min)</strong> — Generate a structured research report from the agent's conversation.</span>
+            </li>
+            <li>
+                <span class="check-icon"><i data-lucide="circle-dot" style="width:16px; height:16px;"></i></span>
+                <span><strong>Phase 5 (5 min)</strong> — Build Your Own Tool challenge. Add a 4th tool using a real API.</span>
+            </li>
+        </ul>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 5: FAILURE MODES                                      -->
+    <!-- ============================================================ -->
+    <section class="slide-section" id="section-5">
+        <div class="section-label magenta">Failure Modes</div>
+        <h2 class="section-title">When Agents Fail</h2>
+        <p class="section-desc">
+            Production agents need to handle the messy real world. Here are four scenarios that break naive agents.
+        </p>
+
+        <div class="grid-2 fade-in">
+            <div class="failure-card">
+                <div class="failure-title">
+                    <i data-lucide="building-2" style="width:16px; height:16px; color:var(--magenta);"></i>
+                    Fake Company
+                </div>
+                <div class="failure-desc">
+                    Search for "Nexorium Technologies" — a company that doesn't exist. Does the agent admit "no data found" or hallucinate a plausible-sounding answer?
+                </div>
+            </div>
+            <div class="failure-card">
+                <div class="failure-title">
+                    <i data-lucide="message-circle-question" style="width:16px; height:16px; color:var(--magenta);"></i>
+                    Vague Opinion Question
+                </div>
+                <div class="failure-desc">
+                    Ask "Is AI good?" — a question tools can't answer. Does the agent search endlessly or recognize it's a judgment call?
+                </div>
+            </div>
+            <div class="failure-card">
+                <div class="failure-title">
+                    <i data-lucide="git-compare" style="width:16px; height:16px; color:var(--magenta);"></i>
+                    Sources Disagree
+                </div>
+                <div class="failure-desc">
+                    When Wikipedia says one thing and a web source says another. Does the agent pick one, acknowledge the conflict, or dig deeper?
+                </div>
+            </div>
+            <div class="failure-card">
+                <div class="failure-title">
+                    <i data-lucide="refresh-cw" style="width:16px; height:16px; color:var(--magenta);"></i>
+                    Infinite Loop Risk
+                </div>
+                <div class="failure-desc">
+                    The agent keeps searching for "perfect" data that doesn't exist. Does it know when to stop? Does it have a max-iteration guard?
+                </div>
+            </div>
+        </div>
+
+        <div class="callout callout-warn fade-in" style="margin-top:2rem;">
+            <span class="callout-icon"><i data-lucide="alert-triangle" style="width:18px; height:18px; color:var(--yellow);"></i></span>
+            <div>
+                <strong>What to watch for:</strong> Graceful degradation, honest uncertainty, and knowing when to stop. The best agents say "I don't know" when they don't know.
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 6: MULTI-AGENT ARCHITECTURES                          -->
+    <!-- ============================================================ -->
+    <section class="slide-section" id="section-6">
+        <div class="section-label purple">Part 5 · 6:35–7:00 PM</div>
+        <h2 class="section-title">Multi-Agent Architectures</h2>
+        <p class="section-desc">
+            One agent is useful. A team of agents is powerful. Three patterns for organizing agent teams.
+        </p>
+
+        <!-- Pattern 1: Pipeline -->
+        <div class="fade-in" style="margin-bottom:2.5rem;">
+            <h3 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1rem; color:var(--cyan); margin-bottom:1rem; display:flex; align-items:center; gap:0.5rem;">
+                <i data-lucide="arrow-right" style="width:16px; height:16px;"></i> Pipeline — Assembly Line
+            </h3>
+            <div class="flow-diagram">
+                <div class="flow-node" style="border-color:var(--cyan);">
+                    <div class="flow-node-title" style="color:var(--cyan);">Researcher</div>
+                    <div class="flow-node-desc">web_search, read_pdf</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-node" style="border-color:var(--magenta);">
+                    <div class="flow-node-title" style="color:var(--magenta);">Writer</div>
+                    <div class="flow-node-desc">draft_doc, cite</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-node" style="border-color:var(--green);">
+                    <div class="flow-node-title" style="color:var(--green);">Editor</div>
+                    <div class="flow-node-desc">check_facts, score</div>
+                </div>
+            </div>
+            <div class="card-desc" style="text-align:center; font-size:0.85rem;">Each agent does its part and passes to the next. Like a factory assembly line.</div>
+        </div>
+
+        <!-- Pattern 2: Debate -->
+        <div class="fade-in" style="margin-bottom:2.5rem;">
+            <h3 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1rem; color:var(--magenta); margin-bottom:1rem; display:flex; align-items:center; gap:0.5rem;">
+                <i data-lucide="swords" style="width:16px; height:16px;"></i> Debate — Adversarial Review
+            </h3>
+            <div class="flow-diagram">
+                <div class="flow-node" style="border-color:var(--cyan);">
+                    <div class="flow-node-title" style="color:var(--cyan);">Proposer</div>
+                    <div class="flow-node-desc">generates answer</div>
+                </div>
+                <div class="flow-arrow">⇄</div>
+                <div class="flow-node" style="border-color:var(--magenta);">
+                    <div class="flow-node-title" style="color:var(--magenta);">Critic</div>
+                    <div class="flow-node-desc">finds flaws</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-node" style="border-color:var(--green);">
+                    <div class="flow-node-title" style="color:var(--green);">Synthesizer</div>
+                    <div class="flow-node-desc">best of both</div>
+                </div>
+            </div>
+            <div class="card-desc" style="text-align:center; font-size:0.85rem;">Arguments and counterarguments. Adversarial pressure improves quality.</div>
+        </div>
+
+        <!-- Pattern 3: Orchestrator -->
+        <div class="fade-in">
+            <h3 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1rem; color:var(--green); margin-bottom:1rem; display:flex; align-items:center; gap:0.5rem;">
+                <i data-lucide="network" style="width:16px; height:16px;"></i> Orchestrator — Manager + Workers
+            </h3>
+            <div class="hub-diagram">
+                <div class="hub-center">
+                    <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:0.95rem; color:var(--cyan);">
+                        <i data-lucide="crown" style="width:16px; height:16px; margin-right:0.3rem;"></i>
+                        Manager Agent
+                    </div>
+                    <div style="font-family:'JetBrains Mono',monospace; font-size:0.65rem; color:var(--text-dim); margin-top:0.3rem;">dispatches · monitors · combines</div>
+                </div>
+                <div style="color:var(--text-dim); font-size:1.5rem;">↙ ↓ ↘</div>
+                <div class="hub-spokes">
+                    <div class="hub-spoke" style="border-color:rgba(0,229,255,0.2);">
+                        <div style="font-family:'Sora',sans-serif; font-weight:600; font-size:0.8rem;">Data Worker</div>
+                        <div style="font-size:0.65rem; color:var(--text-dim); font-family:'JetBrains Mono',monospace;">sql_query, chart</div>
+                    </div>
+                    <div class="hub-spoke" style="border-color:rgba(255,0,110,0.2);">
+                        <div style="font-family:'Sora',sans-serif; font-weight:600; font-size:0.8rem;">Research Worker</div>
+                        <div style="font-size:0.65rem; color:var(--text-dim); font-family:'JetBrains Mono',monospace;">web_search, read</div>
+                    </div>
+                    <div class="hub-spoke" style="border-color:rgba(0,230,118,0.2);">
+                        <div style="font-family:'Sora',sans-serif; font-weight:600; font-size:0.8rem;">Writing Worker</div>
+                        <div style="font-size:0.65rem; color:var(--text-dim); font-family:'JetBrains Mono',monospace;">draft, format</div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-desc" style="text-align:center; font-size:0.85rem;">Hub-and-spoke model. Just like companies have departments — the manager delegates.</div>
+        </div>
+
+        <div class="callout callout-info fade-in" style="margin-top:2rem;">
+            <span class="callout-icon"><i data-lucide="users" style="width:18px; height:18px; color:var(--cyan);"></i></span>
+            <div>
+                <strong>Design exercise:</strong> Pick a business process, sketch a 3-agent pipeline on paper. Which pattern fits? Where does a human need to approve?
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 7: MCP                                                -->
+    <!-- ============================================================ -->
+    <section class="slide-section" id="section-7">
+        <div class="section-label green">MCP</div>
+        <h2 class="section-title">MCP — The USB-C of AI</h2>
+        <p class="section-desc">
+            The Model Context Protocol: an open standard for connecting AI agents to tools and data sources. Build once, every agent uses it.
+        </p>
+
+        <!-- Before / After -->
+        <div class="mcp-compare fade-in">
+            <div class="mcp-panel before">
+                <div class="mcp-label">Before MCP</div>
+                <div class="mcp-formula" style="color:var(--magenta);">N × M</div>
+                <div style="color:var(--text-secondary); font-size:0.9rem;">
+                    Every agent needs a custom integration for every tool. 5 agents × 10 tools = 50 custom connectors.
+                </div>
+            </div>
+            <div class="mcp-panel after">
+                <div class="mcp-label">After MCP</div>
+                <div class="mcp-formula" style="color:var(--green);">N + M</div>
+                <div style="color:var(--text-secondary); font-size:0.9rem;">
+                    Each agent speaks MCP. Each tool speaks MCP. 5 agents + 10 tools = 15 connections.
+                </div>
+            </div>
+        </div>
+
+        <div class="insight-block fade-in">
+            <div class="insight-title">
+                <i data-lucide="plug-zap" style="width:18px; height:18px; color:var(--green);"></i>
+                Build once, every agent uses it
+            </div>
+            <div class="insight-text">
+                1,000+ MCP servers already exist. Slack, GitHub, Google Drive, databases, and more. Browse them at <strong style="color:var(--cyan);">modelcontextprotocol.io</strong>
+            </div>
+        </div>
+
+        <!-- Key MCP servers -->
+        <h3 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1rem; margin:2rem 0 0.75rem; color:var(--text-secondary);">Popular MCP Servers</h3>
+        <div class="server-badges fade-in">
+            <span class="server-badge"><i data-lucide="message-square" style="width:14px; height:14px; color:var(--cyan);"></i> Slack</span>
+            <span class="server-badge"><i data-lucide="github" style="width:14px; height:14px; color:var(--cyan);"></i> GitHub</span>
+            <span class="server-badge"><i data-lucide="hard-drive" style="width:14px; height:14px; color:var(--cyan);"></i> Google Drive</span>
+            <span class="server-badge"><i data-lucide="database" style="width:14px; height:14px; color:var(--cyan);"></i> PostgreSQL</span>
+            <span class="server-badge"><i data-lucide="file-text" style="width:14px; height:14px; color:var(--cyan);"></i> Notion</span>
+            <span class="server-badge"><i data-lucide="mail" style="width:14px; height:14px; color:var(--cyan);"></i> Gmail</span>
+            <span class="server-badge"><i data-lucide="terminal" style="width:14px; height:14px; color:var(--cyan);"></i> Filesystem</span>
+            <span class="server-badge"><i data-lucide="search" style="width:14px; height:14px; color:var(--cyan);"></i> Brave Search</span>
+        </div>
+
+        <div class="callout callout-info fade-in" style="margin-top:1.5rem;">
+            <span class="callout-icon"><i data-lucide="bot" style="width:18px; height:18px; color:var(--cyan);"></i></span>
+            <div>
+                <strong>NanoClaw's ipc-mcp.ts:</strong> Our live demo agent connects to tools via MCP — the same standard that powers Claude Code, Cursor, and hundreds of other AI tools.
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 8: BUSINESS AUTOMATION & ROI                          -->
+    <!-- ============================================================ -->
+    <section class="slide-section" id="section-8">
+        <div class="section-label orange">Part 6 · 7:00–7:18 PM</div>
+        <h2 class="section-title">Business Automation & Agent ROI</h2>
+        <p class="section-desc">
+            Where do agents create real business value? A framework for deciding what to automate, augment, or leave to humans.
+        </p>
+
+        <!-- Automation Matrix -->
+        <h3 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1rem; margin-bottom:0.5rem; color:var(--text-secondary);">The Automation Matrix</h3>
+        <div style="display:flex; gap:2rem; align-items:flex-start; margin:1.5rem 0;">
+            <div style="flex:1;">
+                <div class="matrix-axis-label" style="margin-bottom:0.5rem;">← Low Judgment · High Judgment →</div>
+                <div class="matrix-grid fade-in">
+                    <div class="matrix-cell matrix-automate">
+                        <div class="cell-label">AUTOMATE</div>
+                        <div class="cell-desc">High Volume + Low Judgment</div>
+                        <div style="font-size:0.7rem; margin-top:0.5rem; color:var(--text-secondary);">Invoice processing, data entry</div>
+                    </div>
+                    <div class="matrix-cell matrix-augment">
+                        <div class="cell-label">AUGMENT</div>
+                        <div class="cell-desc">High Volume + High Judgment</div>
+                        <div style="font-size:0.7rem; margin-top:0.5rem; color:var(--text-secondary);">Sales outreach, support triage</div>
+                    </div>
+                    <div class="matrix-cell matrix-skip">
+                        <div class="cell-label">DON'T BOTHER</div>
+                        <div class="cell-desc">Low Volume + Low Judgment</div>
+                        <div style="font-size:0.7rem; margin-top:0.5rem; color:var(--text-secondary);">Rare admin tasks</div>
+                    </div>
+                    <div class="matrix-cell matrix-human">
+                        <div class="cell-label">HUMAN</div>
+                        <div class="cell-desc">Low Volume + High Judgment</div>
+                        <div style="font-size:0.7rem; margin-top:0.5rem; color:var(--text-secondary);">Strategy, crisis decisions</div>
+                    </div>
+                </div>
+                <div class="matrix-axis-label" style="margin-top:0.5rem;">↑ High Volume · Low Volume ↓</div>
+            </div>
+        </div>
+
+        <!-- ROI Formula -->
+        <h3 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1rem; margin:2.5rem 0 1rem; color:var(--text-secondary);">ROI Formula</h3>
+        <div class="equation-block fade-in">
+            <div class="equation">
+                <span class="eq-part eq-cyan">Hours Saved</span>
+                <span class="eq-op">×</span>
+                <span class="eq-part eq-magenta">Hourly Cost</span>
+                <span class="eq-op">×</span>
+                <span class="eq-part eq-yellow">Error Reduction</span>
+                <span class="eq-op">−</span>
+                <span class="eq-part" style="background:rgba(90,100,120,0.15); color:var(--text-dim);">Agent Cost</span>
+                <span class="eq-op">=</span>
+                <span class="eq-part eq-green">Monthly Value</span>
+            </div>
+        </div>
+
+        <!-- Trust Equation -->
+        <div class="insight-block fade-in" style="margin-top:2rem;">
+            <div class="insight-title">
+                <i data-lucide="shield-check" style="width:18px; height:18px; color:var(--green);"></i>
+                The Trust Equation
+            </div>
+            <div class="insight-text">
+                Agent autonomy scales inversely with stakes.<br>
+                <strong style="color:var(--green);">Low stakes</strong> → let the agent run autonomously.<br>
+                <strong style="color:var(--magenta);">High stakes</strong> → human in the loop, every time.
+            </div>
+        </div>
+
+        <div class="callout callout-info fade-in" style="margin-top:1.5rem;">
+            <span class="callout-icon"><i data-lucide="message-circle" style="width:18px; height:18px; color:var(--cyan);"></i></span>
+            <div>
+                <strong>Quick discussion:</strong> What task from your job or internship would you automate first? Where on the matrix does it land?
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 9: THE ROAD AHEAD + KEY TAKEAWAYS                     -->
+    <!-- ============================================================ -->
+    <section class="slide-section" id="section-9">
+        <div class="section-label cyan">Part 7 · 7:18–7:30 PM</div>
+        <h2 class="section-title">The Road Ahead</h2>
+        <p class="section-desc">
+            Where we've been, where we're going, and why the agentic arc is the future of this course.
+        </p>
+
+        <!-- Journey Timeline -->
+        <div class="journey-timeline fade-in">
+            <div class="journey-node past">
+                <div class="journey-dot">S1-2</div>
+                <div class="journey-label">AI<br>Fundamentals</div>
+            </div>
+            <div class="journey-node past">
+                <div class="journey-dot">S3-4</div>
+                <div class="journey-label">Prompts &<br>Products</div>
+            </div>
+            <div class="journey-node past">
+                <div class="journey-dot">S5</div>
+                <div class="journey-label">Real-World<br>Agents</div>
+            </div>
+            <div class="journey-node current">
+                <div class="journey-dot">S6</div>
+                <div class="journey-label">Agent<br>Patterns</div>
+            </div>
+            <div class="journey-node future">
+                <div class="journey-dot">S7</div>
+                <div class="journey-label">RAG</div>
+            </div>
+            <div class="journey-node future">
+                <div class="journey-dot">S8</div>
+                <div class="journey-label">Multi-Agent<br>Build</div>
+            </div>
+            <div class="journey-node future">
+                <div class="journey-dot">S9</div>
+                <div class="journey-label">Industry<br>Agents</div>
+            </div>
+            <div class="journey-node future">
+                <div class="journey-dot">S10</div>
+                <div class="journey-label">Guard-<br>rails</div>
+            </div>
+            <div class="journey-node future">
+                <div class="journey-dot">S11</div>
+                <div class="journey-label">Eval</div>
+            </div>
+            <div class="journey-node future">
+                <div class="journey-dot">S12+</div>
+                <div class="journey-label">Final<br>Project</div>
+            </div>
+        </div>
+
+        <!-- Key Takeaways -->
+        <h3 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1.1rem; margin:2.5rem 0 1.25rem; color:var(--text-primary);">Key Takeaways</h3>
+
+        <div class="fade-in">
+            <div class="takeaway-card">
+                <div class="takeaway-icon" style="background:var(--cyan-glow); color:var(--cyan);">
+                    <i data-lucide="brain" style="width:18px; height:18px;"></i>
+                </div>
+                <div class="takeaway-text">
+                    <strong>ReAct = Think before you act.</strong> The best agents don't just execute — they reason about what to do, observe results, and adapt. This pattern separates toy demos from production systems.
+                </div>
+            </div>
+
+            <div class="takeaway-card">
+                <div class="takeaway-icon" style="background:var(--magenta-glow); color:var(--magenta);">
+                    <i data-lucide="users" style="width:18px; height:18px;"></i>
+                </div>
+                <div class="takeaway-text">
+                    <strong>Agent teams beat solo agents.</strong> Just like human organizations, specialized agents collaborating on complex tasks produce better results than one agent trying to do everything.
+                </div>
+            </div>
+
+            <div class="takeaway-card">
+                <div class="takeaway-icon" style="background:var(--green-glow); color:var(--green);">
+                    <i data-lucide="plug-zap" style="width:18px; height:18px;"></i>
+                </div>
+                <div class="takeaway-text">
+                    <strong>MCP is the USB-C of AI.</strong> The Model Context Protocol means you build a tool integration once and every agent can use it. This standard is reshaping how agents connect to the world.
+                </div>
+            </div>
+
+            <div class="takeaway-card">
+                <div class="takeaway-icon" style="background:var(--yellow-glow); color:var(--yellow);">
+                    <i data-lucide="trending-up" style="width:18px; height:18px;"></i>
+                </div>
+                <div class="takeaway-text">
+                    <strong>Automate the routine, augment the judgment.</strong> The Automation Matrix helps you decide what to fully automate, what to augment with AI, and what must stay human.
+                </div>
+            </div>
+
+            <div class="takeaway-card">
+                <div class="takeaway-icon" style="background:rgba(179,136,255,0.15); color:var(--purple);">
+                    <i data-lucide="lightbulb" style="width:18px; height:18px;"></i>
+                </div>
+                <div class="takeaway-text">
+                    <strong>The code changed one paragraph. The thinking changed everything.</strong> Your Session 5 agent — same tools, same loop — became a research powerhouse with one system prompt change. That's the ReAct pattern.
+                </div>
+            </div>
+        </div>
+
+        <div class="big-quote fade-in" style="margin-top:2rem;">
+            "The code changed one paragraph.<br><span class="highlight">The thinking changed everything.</span>"
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 10: HOMEWORK & RESOURCES                              -->
+    <!-- ============================================================ -->
+    <section class="slide-section" id="section-10">
+        <div class="section-label yellow">Homework</div>
+        <h2 class="section-title">Homework & Resources</h2>
+        <p class="section-desc">
+            Extend your agent, critique its research, design a multi-agent system, and explore MCP.
+        </p>
+
+        <div class="fade-in">
+            <div class="homework-item">
+                <span class="homework-label" style="background:var(--cyan-glow); color:var(--cyan);">Extend</span>
+                <div class="homework-text">
+                    Add a 4th tool to your research agent (e.g., competitor_lookup, financial_data, or industry_news). Test it with 3 different business questions and document the reasoning traces.
+                </div>
+            </div>
+            <div class="homework-item">
+                <span class="homework-label" style="background:var(--magenta-glow); color:var(--magenta);">Analyze</span>
+                <div class="homework-text">
+                    Pick one research output from your agent. Write a 1-page critique: Were the sources credible? Did the reasoning have gaps? What would a human analyst do differently?
+                </div>
+            </div>
+            <div class="homework-item">
+                <span class="homework-label" style="background:var(--green-glow); color:var(--green);">Design</span>
+                <div class="homework-text">
+                    Write a 1-page multi-agent system proposal for a business process you care about. Include: 3+ agent roles, tools for each, handoff logic, human review gates, and estimated ROI.
+                </div>
+            </div>
+            <div class="homework-item">
+                <span class="homework-label" style="background:var(--yellow-glow); color:var(--yellow);">Explore</span>
+                <div class="homework-text">
+                    Browse modelcontextprotocol.io and find 3 MCP servers relevant to your final project idea. Write one paragraph each on how they would help your agent.
+                </div>
+            </div>
+            <div class="homework-item">
+                <span class="homework-label" style="background:rgba(179,136,255,0.15); color:var(--purple);">Read</span>
+                <div class="homework-text">
+                    Read Anthropic's "Building Effective Agents" guide. Write 3 key takeaways and identify one scenario where you should NOT use an agent.
+                </div>
+            </div>
+        </div>
+
+        <!-- Resource links -->
+        <h3 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1.05rem; margin:2.5rem 0 1rem; color:var(--text-primary);">Resources</h3>
+        <div class="grid-2 fade-in">
+            <a href="/session-06/advanced-agent-patterns.html" style="text-decoration:none;">
+                <div class="card card-accent-cyan" style="cursor:pointer;">
+                    <div class="card-title" style="display:flex; align-items:center; gap:0.5rem;">
+                        <i data-lucide="bot" style="width:16px; height:16px; color:var(--cyan);"></i>
+                        Advanced Agent Patterns
+                    </div>
+                    <div class="card-desc">Visual explainer: ReAct, CoT, multi-agent, and MCP.</div>
+                </div>
+            </a>
+            <a href="/session-06/react-agent-example.html" style="text-decoration:none;">
+                <div class="card card-accent-magenta" style="cursor:pointer;">
+                    <div class="card-title" style="display:flex; align-items:center; gap:0.5rem;">
+                        <i data-lucide="play-circle" style="width:16px; height:16px; color:var(--magenta);"></i>
+                        ReAct Agent Walkthrough
+                    </div>
+                    <div class="card-desc">Interactive animated ReAct trace with real data.</div>
+                </div>
+            </a>
+            <a href="https://docs.anthropic.com/en/docs/build-with-claude/agentic" target="_blank" style="text-decoration:none;">
+                <div class="card card-accent-green" style="cursor:pointer;">
+                    <div class="card-title" style="display:flex; align-items:center; gap:0.5rem;">
+                        <i data-lucide="book-open" style="width:16px; height:16px; color:var(--green);"></i>
+                        Anthropic Agent Docs
+                    </div>
+                    <div class="card-desc">Official guide to building agentic systems with Claude.</div>
+                </div>
+            </a>
+            <a href="https://modelcontextprotocol.io" target="_blank" style="text-decoration:none;">
+                <div class="card card-accent-yellow" style="cursor:pointer;">
+                    <div class="card-title" style="display:flex; align-items:center; gap:0.5rem;">
+                        <i data-lucide="plug-zap" style="width:16px; height:16px; color:var(--yellow);"></i>
+                        Model Context Protocol
+                    </div>
+                    <div class="card-desc">Browse 1,000+ MCP servers. The USB-C of AI.</div>
+                </div>
+            </a>
+        </div>
+
+        <div style="text-align:center; margin-top:3rem; padding:2rem 0;">
+            <div style="font-family:'JetBrains Mono',monospace; font-size:0.7rem; color:var(--text-dim); letter-spacing:0.1em; text-transform:uppercase;">
+                Next Session
+            </div>
+            <div style="font-family:'Sora',sans-serif; font-size:1.2rem; font-weight:600; margin-top:0.5rem; color:var(--text-secondary);">
+                Session 7: Knowledge Agents — <span style="color:var(--cyan);">RAG</span>
+            </div>
+            <div style="font-size:0.85rem; color:var(--text-dim); margin-top:0.3rem;">
+                Your agent is smart, but it doesn't know YOUR business. Add company knowledge with Retrieval-Augmented Generation.
+            </div>
+        </div>
+    </section>
+
+</div><!-- /container -->
+
+<script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+
+    // Sections
+    const sections = document.querySelectorAll('.slide-section');
+    const dotItems = document.querySelectorAll('.dot-nav-item');
+    const progressFill = document.getElementById('progressFill');
+
+    // Progress bar
+    function updateProgress() {
+        const height = document.documentElement.scrollHeight - window.innerHeight;
+        if (height <= 0) return;
+        const scrolled = (window.scrollY / height) * 100;
+        progressFill.style.width = scrolled + '%';
+    }
+
+    // Active section detection
+    function updateActiveSection() {
+        let currentIndex = 0;
+        const scrollPos = window.scrollY + window.innerHeight / 3;
+
+        sections.forEach((section, index) => {
+            const top = section.offsetTop;
+            const bottom = top + section.offsetHeight;
+            if (scrollPos >= top && scrollPos < bottom) {
+                currentIndex = index;
+            }
+        });
+
+        dotItems.forEach((dot, index) => {
+            dot.classList.toggle('active', index === currentIndex);
+        });
+    }
+
+    // Dot navigation click
+    dotItems.forEach(dot => {
+        dot.addEventListener('click', () => {
+            const sectionIndex = parseInt(dot.dataset.section);
+            const target = sections[sectionIndex];
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    });
+
+    // Keyboard navigation
+    let currentSection = 0;
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+            e.preventDefault();
+            if (currentSection < sections.length - 1) {
+                currentSection++;
+                sections[currentSection].scrollIntoView({ behavior: 'smooth' });
+            }
+        } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+            e.preventDefault();
+            if (currentSection > 0) {
+                currentSection--;
+                sections[currentSection].scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    });
+
+    // Sync currentSection with scroll position
+    function syncCurrentSection() {
+        const scrollPos = window.scrollY + window.innerHeight / 3;
+        sections.forEach((section, index) => {
+            if (scrollPos >= section.offsetTop) {
+                currentSection = index;
+            }
+        });
+    }
+
+    // Scroll event handler
+    window.addEventListener('scroll', () => {
+        updateProgress();
+        updateActiveSection();
+        syncCurrentSection();
+    }, { passive: true });
+
+    // Fade-in animation with IntersectionObserver
+    const fadeElements = document.querySelectorAll('.fade-in');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, {
+        threshold: 0.15,
+        rootMargin: '0px 0px -50px 0px'
+    });
+
+    fadeElements.forEach(el => observer.observe(el));
+
+    // Initial state
+    updateProgress();
+    updateActiveSection();
+</script>
+
+</body>
+</html>
