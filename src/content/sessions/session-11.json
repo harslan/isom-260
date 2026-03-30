@@ -1,14 +1,222 @@
 {
   "number": 11,
   "slug": "session-11",
-  "title": "Advanced AI Applications",
-  "subtitle": "Generative AI, multimodal models, and cutting-edge applications",
+  "title": "Testing & Evaluating Agents",
+  "subtitle": "If you can't measure it, you can't trust it \u2014 build test suites, run evaluations, and prove your agent works",
+  "heroTitle": "Testing & <span class=\"bg-gradient-to-br from-accent-cyan to-accent-purple bg-clip-text text-transparent\">Evaluating Agents</span>",
   "duration": "150 Minutes",
-  "icon": "sparkles",
-  "tags": ["Generative AI", "Multimodal", "Cutting Edge"],
+  "icon": "check-circle",
+  "tags": ["Testing", "Evaluation", "LLM-as-Judge", "Quality Assurance", "Systematic Evaluation"],
   "objectives": [
-    { "title": "Explore Generative AI", "description": "Understand image generation, video synthesis, and creative AI applications." },
-    { "title": "Work with Multimodal Models", "description": "Build applications that combine text, image, and audio understanding." }
+    {
+      "title": "Build a Test Suite",
+      "description": "Create a 20-case test suite with expected outputs, edge cases, and adversarial inputs. Move from 'vibes-based' to systematic evaluation."
+    },
+    {
+      "title": "Implement LLM-as-Judge",
+      "description": "Use Claude to evaluate Claude: build an automated judge that scores your agent's outputs on accuracy, helpfulness, and safety."
+    },
+    {
+      "title": "Test for Consistency",
+      "description": "Run the same query 3 times and measure output variance. Understand why non-determinism matters for business deployment."
+    },
+    {
+      "title": "Answer 'Does It Work?' with Data",
+      "description": "When a VP asks 'does your agent work?', answer with metrics, not feelings. Build dashboards that show accuracy, coverage, and failure rates."
+    }
   ],
-  "nextSession": { "title": "Session 12: Final Project Workshop", "description": "Hands-on workshop to build and refine your final AI project.", "tags": ["Workshop", "Project", "Building"], "slug": "session-12" }
+  "agenda": [
+    {
+      "time": "5:00 PM - 5:15 PM",
+      "title": "Part 1: Vibes vs. Data",
+      "duration": "15 minutes",
+      "description": "You've been evaluating your agent by trying a few queries and seeing if the output 'looks right.' That's not evaluation \u2014 that's vibes.",
+      "bulletPoints": [
+        "The vibes problem: 'It seems to work' is not a deployment-ready answer. A VP will ask for numbers.",
+        "What systematic evaluation looks like: test suites, automated scoring, consistency checks, failure analysis",
+        "The eval stack: Test cases \u2192 Automated runner \u2192 LLM-as-judge \u2192 Metrics dashboard",
+        "Why this matters for your final project: your deliverable includes a test suite (20% of grade)"
+      ]
+    },
+    {
+      "time": "5:15 PM - 5:40 PM",
+      "title": "Part 2: Building Test Suites",
+      "duration": "25 minutes",
+      "description": "How to write test cases for AI agents \u2014 it's not like testing normal software.",
+      "bulletPoints": [
+        "The challenge: Agent outputs aren't deterministic. Same input \u2192 different (but hopefully equivalent) outputs.",
+        "Test case anatomy: Input, expected behavior (not exact output), evaluation criteria, edge case flag",
+        "Categories: Happy path (10 cases), edge cases (5), adversarial inputs (3), domain-specific risks (2)",
+        "Demo: Building a 20-case test suite for the research agent from Session 6"
+      ]
+    },
+    {
+      "time": "5:40 PM - 6:25 PM",
+      "title": "Part 3: Hands-On \u2014 Build Your Evaluation Pipeline",
+      "duration": "45 minutes",
+      "description": "Build a complete evaluation pipeline for your agent \u2014 test suite, automated runner, and LLM-as-judge.",
+      "bulletPoints": [
+        "Phase 1 (15 min): Write 20 test cases for your agent \u2014 inputs, expected behaviors, and evaluation criteria",
+        "Phase 2 (15 min): Build an automated test runner that runs all 20 cases and an LLM-as-judge that scores each output",
+        "Phase 3 (15 min): Run the consistency test \u2014 same 5 queries, 3 times each. Calculate variance and identify unstable outputs."
+      ]
+    },
+    {
+      "time": "6:25 PM - 6:35 PM",
+      "title": "Break",
+      "duration": "10 minutes",
+      "description": "You now have a systematic evaluation pipeline. Next: what the metrics tell you.",
+      "isBreak": true
+    },
+    {
+      "time": "6:35 PM - 7:05 PM",
+      "title": "Part 5: Interpreting Results & Improving",
+      "duration": "30 minutes",
+      "description": "Run your evaluation, analyze results, and systematically improve your agent.",
+      "bulletPoints": [
+        "Run the full eval: Execute all 20 test cases + consistency tests. See your agent's real performance numbers.",
+        "Failure analysis: Where does your agent fail? Wrong tool selection? Bad reasoning? Hallucination? Guardrail bypass?",
+        "Ethics moment: Test for bias \u2014 does your agent perform differently for different demographics, names, or scenarios?",
+        "Improvement loop: Fix the worst failure, re-run eval, compare scores. Systematic improvement, not guesswork.",
+        "The metrics that matter: Accuracy, relevance, safety score, consistency, cost per query"
+      ]
+    },
+    {
+      "time": "7:05 PM - 7:20 PM",
+      "title": "Part 6: Evaluation for Your Final Project",
+      "duration": "15 minutes",
+      "description": "Your final project requires a test suite. Here's exactly what's expected.",
+      "bulletPoints": [
+        "Final project test suite requirements: 20 test cases, automated runner, LLM-as-judge, consistency check",
+        "Grading: Does the test suite cover happy paths AND edge cases? Does the judge provide useful scores? Are results documented?",
+        "Template: Use today's evaluation pipeline as your starting point. Customize for your domain.",
+        "Pro tip: Build the test suite BEFORE you finish the agent. Tests drive better agent design."
+      ]
+    },
+    {
+      "time": "7:20 PM - 7:30 PM",
+      "title": "Part 7: Wrap-Up",
+      "duration": "10 minutes",
+      "description": "You can now build agents AND prove they work. Next: put it all together for your final project.",
+      "bulletPoints": [
+        "Today: You moved from vibes to data. Your agent now has a test suite, automated scoring, and real metrics.",
+        "The full stack is complete: Build (S4-8) \u2192 Apply (S9) \u2192 Safeguard (S10) \u2192 Evaluate (TODAY)",
+        "Next session: Final Project Workshop \u2014 teams form, scope locks, building begins",
+        "Homework: Refine your test suite, analyze failures, prepare your final project proposal"
+      ]
+    }
+  ],
+  "resources": [
+    {
+      "title": "Evaluation Pipeline Notebook",
+      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-11/ISOM260_Session11_Agent_Evaluation.ipynb",
+      "description": "Build a 20-case test suite, automated runner, and LLM-as-judge evaluator. Includes consistency testing and failure analysis.",
+      "icon": "code",
+      "badge": "Hands-On",
+      "badgeType": "interactive",
+      "linkText": "Open in Colab"
+    },
+    {
+      "title": "Anthropic Evaluation Guide",
+      "url": "https://docs.anthropic.com/en/docs/build-with-claude/develop-tests",
+      "description": "Official guide to testing and evaluating Claude-based applications. Covers test design, automated scoring, and quality metrics.",
+      "icon": "book-open",
+      "badge": "Docs",
+      "badgeType": "code",
+      "linkText": "Read docs"
+    },
+    {
+      "title": "LLM-as-Judge Pattern",
+      "url": "https://www.anthropic.com/engineering/building-effective-agents",
+      "description": "Using one LLM to evaluate another. The pattern behind automated agent evaluation at scale.",
+      "icon": "brain",
+      "badge": "Guide",
+      "badgeType": "interactive",
+      "linkText": "Read guide"
+    }
+  ],
+  "activities": [
+    {
+      "number": 1,
+      "icon": "check-circle",
+      "title": "Build Your Evaluation Pipeline",
+      "description": "45 minutes. Create a complete testing and evaluation system for your agent:",
+      "steps": [
+        {
+          "title": "Write 20 Test Cases (15 min)",
+          "description": "10 happy path, 5 edge cases, 3 adversarial, 2 domain-specific risks. Each case: input, expected behavior, evaluation criteria."
+        },
+        {
+          "title": "Build Automated Runner + LLM-as-Judge (15 min)",
+          "description": "Automated test runner that executes all cases. LLM-as-judge that scores each output on accuracy (1-5), helpfulness (1-5), and safety (pass/fail)."
+        },
+        {
+          "title": "Consistency Test (15 min)",
+          "description": "Run 5 queries 3 times each. Calculate output variance. Flag any query where the agent gives meaningfully different answers."
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "icon": "bar-chart",
+      "title": "Failure Analysis & Improvement",
+      "description": "Analyze your evaluation results and systematically improve:",
+      "steps": [
+        {
+          "title": "Identify Failure Patterns",
+          "description": "Group failures by type: wrong tool, bad reasoning, hallucination, safety issue. Which type is most common?"
+        },
+        {
+          "title": "Fix the Worst Failure",
+          "description": "Pick the most impactful failure. Fix it (usually a system prompt or tool improvement). Re-run that test case."
+        },
+        {
+          "title": "Re-Run Full Eval",
+          "description": "After the fix, re-run all 20 cases. Did overall scores improve? Did the fix break anything else?"
+        }
+      ]
+    }
+  ],
+  "takeaways": [
+    {
+      "icon": "check-circle",
+      "text": "<strong>Vibes are not evaluation.</strong> 'It seems to work' isn't a deployment-ready answer. Systematic test suites, automated scoring, and consistency checks are what production agents need."
+    },
+    {
+      "icon": "brain",
+      "text": "<strong>LLM-as-judge scales evaluation.</strong> You can't manually review every agent output. Using Claude to evaluate Claude gives you automated, consistent scoring at scale."
+    },
+    {
+      "icon": "bar-chart-2",
+      "text": "<strong>Answer with data.</strong> When someone asks 'does it work?', show them: 85% accuracy on 20 test cases, 92% consistency across 3 runs, 0 safety failures. That's deployable."
+    },
+    {
+      "icon": "shield",
+      "text": "<strong>Test for bias and fairness.</strong> Your agent might perform differently for different inputs. Test across demographics, edge cases, and adversarial scenarios to catch hidden biases."
+    }
+  ],
+  "homework": [
+    {
+      "label": "Refine:",
+      "text": "Expand your test suite to 30 cases. Add at least 5 bias/fairness test cases specific to your domain. Re-run the full evaluation."
+    },
+    {
+      "label": "Analyze:",
+      "text": "Write a 1-page evaluation report: accuracy score, consistency score, top 3 failure modes, and a prioritized list of improvements."
+    },
+    {
+      "label": "Prepare:",
+      "text": "Finalize your final project proposal: problem statement, agent architecture, tool list, data sources, and test plan. Bring to Session 12."
+    },
+    {
+      "label": "Read:",
+      "text": "Read about LLM evaluation benchmarks (MMLU, HumanEval, etc.). Write a paragraph on how these relate to evaluating your own agent."
+    }
+  ],
+  "nextSession": {
+    "title": "Session 12: Final Project Workshop",
+    "description": "From notebook to product. From prototype to pitch. Teams form, scope locks, and building begins.",
+    "tags": ["Workshop", "Final Project", "Team Formation", "Building"],
+    "slug": "session-12"
+  }
 }

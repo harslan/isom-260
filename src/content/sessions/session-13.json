@@ -1,13 +1,194 @@
 {
   "number": 13,
   "slug": "session-13",
-  "title": "Final Presentations & Course Wrap-Up",
-  "subtitle": "Present your AI projects and celebrate what you've built",
+  "title": "Demo Day",
+  "subtitle": "Ship it \u2014 live demos, peer voting, and the culmination of your agentic AI journey",
+  "heroTitle": "<span class=\"bg-gradient-to-br from-accent-cyan to-accent-purple bg-clip-text text-transparent\">Demo Day</span>",
   "duration": "150 Minutes",
   "icon": "award",
-  "tags": ["Presentations", "Demo Day", "Celebration"],
+  "tags": ["Demo Day", "Presentations", "Peer Voting", "Live Demos", "Celebration"],
   "objectives": [
-    { "title": "Present Your Project", "description": "Deliver a compelling presentation of your AI-powered business solution." },
-    { "title": "Reflect & Plan Forward", "description": "Look back on what you've learned and plan how to continue your AI journey." }
+    {
+      "title": "Deliver a Live Demo",
+      "description": "Present your agent to the class with a live demo \u2014 not slides, not screenshots. Run it in real-time and show it reasoning, using tools, and producing results."
+    },
+    {
+      "title": "Defend Your Decisions",
+      "description": "Answer Q&A about your architecture, tool choices, guardrails, and business case. Explain trade-offs and what you'd do differently with more time."
+    },
+    {
+      "title": "Evaluate Peer Projects",
+      "description": "Vote on peer projects across four dimensions: Does it work? Is the problem real? Would you trust it? Compelling demo?"
+    },
+    {
+      "title": "Reflect on the Journey",
+      "description": "From 'what is AI?' to 'I built, evaluated, and pitched an agent product.' Articulate what you learned and how to talk about these skills."
+    }
+  ],
+  "agenda": [
+    {
+      "time": "5:00 PM - 5:10 PM",
+      "title": "Part 1: Demo Day Setup",
+      "duration": "10 minutes",
+      "description": "Format, voting criteria, and order of presentations.",
+      "bulletPoints": [
+        "Format: 5 minutes live demo + 3 minutes Q&A per team",
+        "Voting criteria: Does it work? (technical) / Is the problem real? (business) / Would you trust it? (safety) / Compelling demo? (presentation)",
+        "Order: Randomized. Everyone presents. Everyone votes.",
+        "Ground rules: Be supportive. Ask constructive questions. Celebrate ambition even when demos crash."
+      ]
+    },
+    {
+      "time": "5:10 PM - 6:50 PM",
+      "title": "Part 2: Live Demonstrations",
+      "duration": "100 minutes",
+      "description": "Team presentations \u2014 live agent demos with Q&A.",
+      "bulletPoints": [
+        "Each team: 5 min demo + 3 min Q&A (8 min total)",
+        "Demo must be LIVE \u2014 run the agent in Colab/notebook, show reasoning, show tools being called",
+        "Show test results: accuracy score, consistency, notable failures and how you handled them",
+        "Business case: Who needs this? What's the ROI? What are the risks? Would you deploy it?",
+        "Peer voting after each demo via shared form"
+      ]
+    },
+    {
+      "time": "6:50 PM - 7:00 PM",
+      "title": "Break",
+      "duration": "10 minutes",
+      "description": "Catch your breath. Almost done.",
+      "isBreak": true
+    },
+    {
+      "time": "7:00 PM - 7:10 PM",
+      "title": "Part 4: Awards & Recognition",
+      "duration": "10 minutes",
+      "description": "Peer voting results and awards.",
+      "bulletPoints": [
+        "Categories: Best Overall Agent / Most Creative Problem / Best Business Case / Most Trustworthy Agent / Best Live Demo",
+        "Peer vote results announced",
+        "Professor's choice awards",
+        "Every team gets recognition for something they did well"
+      ]
+    },
+    {
+      "time": "7:10 PM - 7:30 PM",
+      "title": "Part 5: Course Reflection & Career Forward",
+      "duration": "20 minutes",
+      "description": "From 'what is AI?' to 'I built an agent product.' What this means for your career.",
+      "bulletPoints": [
+        "The journey: Session 1 (What is AI?) \u2192 Session 6 (Agent Patterns) \u2192 Session 11 (Evaluation) \u2192 TODAY (You shipped a product)",
+        "What you can now do: Build AI agents, connect real APIs, implement RAG, design multi-agent systems, add guardrails, write test suites, pitch business value",
+        "Career implications: How to talk about agent-building skills in interviews. Portfolio pieces from this course.",
+        "The field is moving fast: Agent frameworks, MCP adoption, enterprise deployments \u2014 you're entering at the right time",
+        "Final thought: The code was always simple. The thinking \u2014 choosing the right pattern, the right guardrails, the right level of autonomy \u2014 that's what matters."
+      ]
+    }
+  ],
+  "resources": [
+    {
+      "title": "Peer Voting Form",
+      "url": "#",
+      "description": "Rate each team's demo on four criteria: Does it work? Is the problem real? Would you trust it? Compelling demo?",
+      "icon": "clipboard",
+      "badge": "Voting",
+      "badgeType": "interactive",
+      "linkText": "Open form"
+    },
+    {
+      "title": "All Course Materials",
+      "url": "/",
+      "description": "Every session's materials, notebooks, and resources \u2014 your complete reference for building AI agents.",
+      "icon": "book-open",
+      "badge": "Archive",
+      "badgeType": "code",
+      "linkText": "Browse all sessions"
+    },
+    {
+      "title": "Building Effective Agents (Anthropic)",
+      "url": "https://www.anthropic.com/engineering/building-effective-agents",
+      "description": "The guide that accompanied you all semester. Revisit as you continue building agents after this course.",
+      "icon": "bot",
+      "badge": "Guide",
+      "badgeType": "interactive",
+      "linkText": "Read guide"
+    }
+  ],
+  "activities": [
+    {
+      "number": 1,
+      "icon": "award",
+      "title": "Live Demo Presentations",
+      "description": "Each team presents their final project:",
+      "steps": [
+        {
+          "title": "Problem Statement (30 sec)",
+          "description": "What problem does your agent solve? For whom? Why does it matter?"
+        },
+        {
+          "title": "Live Demo (3 min)",
+          "description": "Run your agent LIVE. Show it reasoning, calling tools, and producing results. Show at least one edge case or failure recovery."
+        },
+        {
+          "title": "Test Results (30 sec)",
+          "description": "Show your evaluation metrics: accuracy, consistency, safety scores. What's your agent's batting average?"
+        },
+        {
+          "title": "Business Case (1 min)",
+          "description": "Who needs this? What's the ROI? What are the risks? Would you deploy it in production?"
+        },
+        {
+          "title": "Q&A (3 min)",
+          "description": "Answer questions from peers and professor. Defend your architecture, tool choices, and guardrails."
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "icon": "message-circle",
+      "title": "Course Reflection",
+      "description": "Look back on the journey and forward to your career:",
+      "steps": [
+        {
+          "title": "What Surprised You?",
+          "description": "What was the most surprising thing you learned about AI agents this semester?"
+        },
+        {
+          "title": "What Would You Build Next?",
+          "description": "If you had another semester, what agent would you build? What tools would you add?"
+        },
+        {
+          "title": "Career Application",
+          "description": "How will you use agent-building skills in your career? What would you put on your resume?"
+        }
+      ]
+    }
+  ],
+  "takeaways": [
+    {
+      "icon": "award",
+      "text": "<strong>You shipped a product.</strong> Not a homework assignment. Not a tutorial. A real agent that solves a real problem, with tests proving it works and a business case explaining why it matters."
+    },
+    {
+      "icon": "brain",
+      "text": "<strong>The code was always simple.</strong> The agent loop is ~50 lines. ReAct is a system prompt. RAG is search + context. The hard part was always the THINKING \u2014 choosing the right pattern for the right problem."
+    },
+    {
+      "icon": "trending-up",
+      "text": "<strong>You're entering at the right time.</strong> AI agents are going from research demos to enterprise products right now. The skills you built this semester are exactly what companies are hiring for."
+    },
+    {
+      "icon": "users",
+      "text": "<strong>Keep building.</strong> The frameworks will change. The models will improve. But the patterns \u2014 ReAct, RAG, multi-agent, guardrails, evaluation \u2014 those are durable. You now speak the language."
+    }
+  ],
+  "homework": [
+    {
+      "label": "Submit:",
+      "text": "Final project deliverables: Colab notebook (agent + test suite), evaluation results document, and business case slide or write-up."
+    },
+    {
+      "label": "Reflect:",
+      "text": "Write a 1-page personal reflection: What did you learn? What surprised you? How will you use these skills? What would you do differently?"
+    }
   ]
 }

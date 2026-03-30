@@ -2,13 +2,198 @@
   "number": 12,
   "slug": "session-12",
   "title": "Final Project Workshop",
-  "subtitle": "Hands-on workshop to build and refine your final AI project",
+  "subtitle": "From notebook to product, from prototype to pitch \u2014 teams form, scope locks, and building begins",
+  "heroTitle": "Final Project <span class=\"bg-gradient-to-br from-accent-cyan to-accent-purple bg-clip-text text-transparent\">Workshop</span>",
   "duration": "150 Minutes",
   "icon": "wrench",
-  "tags": ["Workshop", "Project", "Building"],
+  "tags": ["Workshop", "Final Project", "Team Formation", "Prototyping", "Architecture"],
   "objectives": [
-    { "title": "Build Your Final Project", "description": "Dedicated time to develop your AI-powered business solution with instructor support." },
-    { "title": "Refine Your Pitch", "description": "Prepare your presentation and demo for the final session." }
+    {
+      "title": "Form Teams & Lock Scope",
+      "description": "Teams of 2-3 (or solo) form around a shared problem. Scope is locked by end of class \u2014 no more pivoting after today."
+    },
+    {
+      "title": "Design Agent Architecture",
+      "description": "Sketch the full system: agent roles, tools, data sources, guardrails, and human review gates. Get feedback from instructor and peers."
+    },
+    {
+      "title": "Build a Skeleton Notebook",
+      "description": "Leave class with a working skeleton: agent loop running, at least one tool connected, basic test framework in place."
+    },
+    {
+      "title": "Plan Your Demo",
+      "description": "Outline the 5-minute demo: what you'll show, what questions you'll answer, and how you'll prove it works with live data."
+    }
   ],
-  "nextSession": { "title": "Session 13: Final Presentations", "description": "Present your AI projects and celebrate what you've built.", "tags": ["Presentations", "Demo Day", "Celebration"], "slug": "session-13" }
+  "agenda": [
+    {
+      "time": "5:00 PM - 5:15 PM",
+      "title": "Part 1: Final Project Overview",
+      "duration": "15 minutes",
+      "description": "What's expected, how you'll be graded, and what makes a great final project.",
+      "bulletPoints": [
+        "Deliverables: Working agent (50%) + Test suite (20%) + Business case pitch (30%)",
+        "Working agent: Must run live in Colab during demo. Real tools, real data, visible reasoning.",
+        "Test suite: 20+ test cases, automated runner, LLM-as-judge scores, documented results",
+        "Business case: Who needs this? What's the ROI? What are the risks? Would you deploy it?",
+        "Timeline: Today = scope lock + skeleton. Next session = 5-min live demo + Q&A."
+      ]
+    },
+    {
+      "time": "5:15 PM - 5:40 PM",
+      "title": "Part 2: Team Formation & Problem Statements",
+      "duration": "25 minutes",
+      "description": "Form teams, choose problems, and write a crisp problem statement.",
+      "bulletPoints": [
+        "Team formation: 2-3 people or solo. Find teammates with complementary skills or shared interests.",
+        "Problem statement exercise: In 2 sentences \u2014 what problem does your agent solve? For whom?",
+        "Feasibility check: Can you build it in one session? Can you demo it live? Is the problem real?",
+        "Quick pitches: Each team shares their problem statement (30 seconds). Peer feedback on scope and feasibility."
+      ]
+    },
+    {
+      "time": "5:40 PM - 6:25 PM",
+      "title": "Part 3: Architecture Sketch + Skeleton Build",
+      "duration": "45 minutes",
+      "description": "Design your system on paper, then start building the skeleton in Colab.",
+      "bulletPoints": [
+        "Architecture sketch (15 min): Draw your system \u2014 agent(s), tools, data sources, guardrails, human gates. Get instructor feedback.",
+        "Skeleton build (30 min): Open Colab. Get the agent loop running with at least 1 tool. Connect sample data. Start your test file.",
+        "Professor/TA circulate for scope and feasibility feedback \u2014 this is your chance to get expert guidance."
+      ]
+    },
+    {
+      "time": "6:25 PM - 6:35 PM",
+      "title": "Break",
+      "duration": "10 minutes",
+      "description": "You have a scope, a team, and a skeleton. The rest is execution.",
+      "isBreak": true
+    },
+    {
+      "time": "6:35 PM - 7:15 PM",
+      "title": "Part 5: Build Sprint",
+      "duration": "40 minutes",
+      "description": "Dedicated build time with instructor support. Focus on getting the core agent working.",
+      "bulletPoints": [
+        "Priority: Get the core agent loop working with real tools. Don't worry about polish.",
+        "Second priority: Start your test suite \u2014 at least 10 test cases written (can automate later).",
+        "Ask for help: Professor and TA are here specifically to unblock you. Don't struggle alone.",
+        "Checkpoint: By 7:15, every team should have a running agent and a test plan."
+      ]
+    },
+    {
+      "time": "7:15 PM - 7:30 PM",
+      "title": "Part 6: Demo Prep + Wrap-Up",
+      "duration": "15 minutes",
+      "description": "Plan your 5-minute demo and understand what happens next session.",
+      "bulletPoints": [
+        "Demo format: 5 minutes live demo + 3 minutes Q&A. Must run the agent live (not slides).",
+        "Demo checklist: Problem statement \u2192 Live agent demo \u2192 Test results \u2192 Business case \u2192 Q&A",
+        "Peer voting categories: Does it work? Is the problem real? Would you trust it? Compelling demo?",
+        "Between now and next session: Finish building, run full test suite, prepare your pitch.",
+        "Remember: A simple agent that works perfectly beats a complex agent that crashes during demo."
+      ]
+    }
+  ],
+  "resources": [
+    {
+      "title": "Final Project Template Notebook",
+      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-12/ISOM260_Final_Project_Template.ipynb",
+      "description": "Starter notebook with agent loop, tool template, test suite framework, and cost tracker. Clone and customize for your project.",
+      "icon": "code",
+      "badge": "Template",
+      "badgeType": "interactive",
+      "linkText": "Open in Colab"
+    },
+    {
+      "title": "All Session Resources",
+      "url": "/",
+      "description": "Review any session's materials \u2014 agent patterns (S6), RAG (S7), multi-agent (S8), industry agents (S9), guardrails (S10), evaluation (S11).",
+      "icon": "book-open",
+      "badge": "Review",
+      "badgeType": "code",
+      "linkText": "Browse sessions"
+    },
+    {
+      "title": "Building Effective Agents (Anthropic)",
+      "url": "https://www.anthropic.com/engineering/building-effective-agents",
+      "description": "The agent design guide you've been reading all semester. Revisit for architecture decisions and pattern selection.",
+      "icon": "bot",
+      "badge": "Guide",
+      "badgeType": "interactive",
+      "linkText": "Read guide"
+    }
+  ],
+  "activities": [
+    {
+      "number": 1,
+      "icon": "wrench",
+      "title": "Final Project Workshop",
+      "description": "The entire session is a structured workshop. By the end, you have a team, a scope, and a working skeleton:",
+      "steps": [
+        {
+          "title": "Form Team & Write Problem Statement (15 min)",
+          "description": "Find teammates (2-3 or solo). Write a 2-sentence problem statement: What does your agent solve? For whom? Why does it matter?"
+        },
+        {
+          "title": "Architecture Sketch (15 min)",
+          "description": "Draw your system: agents, tools, data sources, guardrails, human gates. Get instructor feedback on feasibility and scope."
+        },
+        {
+          "title": "Build Skeleton (30 min)",
+          "description": "Get the core agent loop running in Colab. Connect at least 1 real tool. Load sample data. Start test cases."
+        },
+        {
+          "title": "Build Sprint (40 min)",
+          "description": "Dedicated build time. Get the core working. Start your test suite. Use instructor office hours for help."
+        },
+        {
+          "title": "Plan Your Demo (15 min)",
+          "description": "Outline the 5-min demo: problem \u2192 live demo \u2192 test results \u2192 business case \u2192 Q&A. A working demo beats perfect slides."
+        }
+      ]
+    }
+  ],
+  "takeaways": [
+    {
+      "icon": "wrench",
+      "text": "<strong>Scope is king.</strong> A simple agent that works perfectly in your demo beats a complex agent that crashes. Lock your scope today and focus on execution."
+    },
+    {
+      "icon": "check-circle",
+      "text": "<strong>Build the tests first.</strong> Writing test cases before finishing your agent forces you to think about what 'working' actually means for your use case."
+    },
+    {
+      "icon": "users",
+      "text": "<strong>Use the full stack.</strong> Your project should show what you learned: tool use, ReAct reasoning, domain knowledge, guardrails, and evaluation. That's the whole semester in one demo."
+    },
+    {
+      "icon": "trending-up",
+      "text": "<strong>Simple + polished > complex + broken.</strong> Demo day rewards agents that work reliably. Cut scope before you cut quality."
+    }
+  ],
+  "homework": [
+    {
+      "label": "Build:",
+      "text": "Finish your agent implementation. All tools working, guardrails in place, test suite complete. The agent must run live in Colab."
+    },
+    {
+      "label": "Test:",
+      "text": "Run your full 20-case test suite. Document results: accuracy score, consistency score, failure modes, and fixes applied."
+    },
+    {
+      "label": "Pitch:",
+      "text": "Prepare your 5-minute demo: problem statement, live demo script, test results summary, and business case. Practice the timing."
+    },
+    {
+      "label": "Polish:",
+      "text": "Clean up your notebook \u2014 clear explanations, organized cells, visible reasoning. Someone should be able to read your notebook and understand what you built."
+    }
+  ],
+  "nextSession": {
+    "title": "Session 13: Demo Day",
+    "description": "Ship it. Live demos, peer voting, and course celebration. Show the world what you built.",
+    "tags": ["Demo Day", "Presentations", "Peer Voting", "Celebration"],
+    "slug": "session-13"
+  }
 }

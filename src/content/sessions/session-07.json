@@ -1,14 +1,237 @@
 {
   "number": 7,
   "slug": "session-07",
-  "title": "Natural Language Processing",
-  "subtitle": "Text analysis, sentiment detection, and building NLP-powered tools",
+  "title": "Knowledge Agents \u2014 RAG",
+  "subtitle": "Your agent is smart but doesn't know YOUR business \u2014 add company knowledge with Retrieval-Augmented Generation",
+  "heroTitle": "Knowledge Agents \u2014 <span class=\"bg-gradient-to-br from-accent-cyan to-accent-purple bg-clip-text text-transparent\">RAG</span>",
   "duration": "150 Minutes",
-  "icon": "message-circle",
-  "tags": ["Text Analysis", "Sentiment", "NLP Tools"],
+  "icon": "database",
+  "tags": ["RAG", "Knowledge Agents", "Document Search", "Long Context", "Business Data"],
   "objectives": [
-    { "title": "Master NLP Fundamentals", "description": "Understand tokenization, embeddings, and how machines process human language." },
-    { "title": "Build NLP Applications", "description": "Create text classification, sentiment analysis, and summarization tools." }
+    {
+      "title": "Understand the Knowledge Gap",
+      "description": "See why general-purpose LLMs fail on company-specific questions and how Retrieval-Augmented Generation (RAG) solves this by grounding agents in your own data."
+    },
+    {
+      "title": "Build a Company Knowledge Agent",
+      "description": "Load real documents, build a search tool that finds relevant passages, and wire it into your agent loop so Claude answers from YOUR data."
+    },
+    {
+      "title": "Handle RAG Failure Modes",
+      "description": "Learn what happens when documents contradict each other, data is outdated, or the retriever returns irrelevant results. Build agents that say 'I don't know' when they should."
+    },
+    {
+      "title": "Evaluate Retrieval Quality",
+      "description": "Measure whether your agent finds the right documents and gives accurate answers. Introduction to retrieval metrics that matter for business deployment."
+    }
   ],
-  "nextSession": { "title": "Session 8: AI Agents & Automation", "description": "Building autonomous AI agents that can reason, plan, and execute complex tasks.", "tags": ["AI Agents", "Automation", "Workflows"], "slug": "session-08" }
+  "agenda": [
+    {
+      "time": "5:00 PM - 5:15 PM",
+      "title": "Part 1: The Knowledge Problem",
+      "duration": "15 minutes",
+      "description": "Claude knows the internet. It doesn't know your company's SOPs, product catalog, or HR policies. That's a problem \u2014 and RAG is the solution.",
+      "bulletPoints": [
+        "Demo: Ask Claude about your company's refund policy. It hallucinates confidently. This is the problem RAG solves.",
+        "RAG = Retrieval-Augmented Generation: search your documents first, then generate an answer grounded in real data",
+        "The pattern: User question \u2192 Search documents \u2192 Insert relevant passages into prompt \u2192 Claude answers from YOUR data",
+        "Why this matters: Every enterprise AI deployment needs RAG. This is the #1 pattern in production AI."
+      ]
+    },
+    {
+      "time": "5:15 PM - 5:40 PM",
+      "title": "Part 2: RAG Architecture Deep Dive",
+      "duration": "25 minutes",
+      "description": "How RAG works under the hood \u2014 from document loading to retrieval to generation.",
+      "bulletPoints": [
+        "Three approaches: Simple keyword search, Claude's long context window (200K tokens), and vector embeddings",
+        "Our approach today: Long context + smart chunking. No vector DB needed \u2014 Claude can read 200K tokens at once.",
+        "Document processing: Loading, chunking, and creating a searchable index. Why chunk size matters.",
+        "The retrieval tool: A search function your agent calls to find relevant document passages before answering."
+      ]
+    },
+    {
+      "time": "5:40 PM - 6:25 PM",
+      "title": "Part 3: Hands-On \u2014 Build a Knowledge Agent",
+      "duration": "45 minutes",
+      "description": "Build an agent that answers questions about a company using its own documents.",
+      "bulletPoints": [
+        "Phase 1 (15 min): Load sample company documents (policies, FAQs, product info). Build a search_documents tool.",
+        "Phase 2 (15 min): Wire the search tool into your agent loop. Ask company-specific questions \u2014 watch it retrieve and answer.",
+        "Phase 3 (15 min): Test edge cases \u2014 contradicting documents, outdated info, questions with no answer. Does your agent handle them gracefully?"
+      ]
+    },
+    {
+      "time": "6:25 PM - 6:35 PM",
+      "title": "Break",
+      "duration": "10 minutes",
+      "description": "Your agent now knows YOUR business. Next: what happens when the data is wrong?",
+      "isBreak": true
+    },
+    {
+      "time": "6:35 PM - 7:05 PM",
+      "title": "Part 5: RAG Failure Modes & Trust",
+      "duration": "30 minutes",
+      "description": "Your agent is only as trustworthy as its data. What happens when documents are wrong, outdated, or contradictory?",
+      "bulletPoints": [
+        "Ethics moment: The Air Canada chatbot case \u2014 held legally liable for answers based on outdated policy documents",
+        "Failure mode 1: Outdated data. Your agent confidently quotes last year's pricing.",
+        "Failure mode 2: Contradicting documents. Two SOPs say different things. What does your agent do?",
+        "Failure mode 3: No relevant data. The agent should say 'I don't have information on that' \u2014 not hallucinate.",
+        "Building trust: Citation, confidence scores, and 'I don't know' as a feature, not a bug."
+      ]
+    },
+    {
+      "time": "7:05 PM - 7:20 PM",
+      "title": "Part 6: RAG in the Real World",
+      "duration": "15 minutes",
+      "description": "How companies actually deploy RAG \u2014 from customer support to internal knowledge bases to compliance.",
+      "bulletPoints": [
+        "Case studies: Customer support bots, internal wikis, legal document search, medical information retrieval",
+        "The build-vs-buy decision: When to build your own RAG vs. use platforms like Glean, Notion AI, or Perplexity Enterprise",
+        "Scaling: From 10 documents to 10 million. When long context isn't enough and you need vector search."
+      ]
+    },
+    {
+      "time": "7:20 PM - 7:30 PM",
+      "title": "Part 7: Wrap-Up + Homework",
+      "duration": "10 minutes",
+      "description": "Your agents now have memory (Session 5), reasoning (Session 6), and knowledge (today). Next: make them work in teams.",
+      "bulletPoints": [
+        "The stack so far: Tools (S4) \u2192 Real APIs + Memory (S5) \u2192 ReAct Patterns (S6) \u2192 Knowledge/RAG (TODAY)",
+        "Next session: Multi-Agent Systems in Practice \u2014 build a team of agents that collaborate",
+        "Homework preview: Build a RAG agent for a domain you care about, test with edge cases, evaluate retrieval quality"
+      ]
+    }
+  ],
+  "resources": [
+    {
+      "title": "Knowledge Agent Workshop Notebook",
+      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-07/ISOM260_Session7_Knowledge_Agents_RAG.ipynb",
+      "description": "Build a company knowledge agent with document loading, search, and RAG. Uses Claude's long context window \u2014 no vector DB needed.",
+      "icon": "code",
+      "badge": "Hands-On",
+      "badgeType": "interactive",
+      "linkText": "Open in Colab"
+    },
+    {
+      "title": "Anthropic RAG Documentation",
+      "url": "https://docs.anthropic.com/en/docs/build-with-claude/retrieval-augmented-generation",
+      "description": "Official guide to building RAG systems with Claude. Covers chunking strategies, retrieval patterns, and best practices.",
+      "icon": "book-open",
+      "badge": "Docs",
+      "badgeType": "code",
+      "linkText": "Read docs"
+    },
+    {
+      "title": "Claude's Long Context Window",
+      "url": "https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching",
+      "description": "Claude can process 200K tokens at once. Learn how to use long context as a simpler alternative to traditional vector search for smaller document sets.",
+      "icon": "file-text",
+      "badge": "Docs",
+      "badgeType": "code",
+      "linkText": "Read docs"
+    },
+    {
+      "title": "Building Effective Agents (Anthropic)",
+      "url": "https://www.anthropic.com/engineering/building-effective-agents",
+      "description": "Anthropic's guide to agent patterns \u2014 including RAG as a core capability for grounding agents in real data.",
+      "icon": "bot",
+      "badge": "Guide",
+      "badgeType": "interactive",
+      "linkText": "Read guide"
+    }
+  ],
+  "activities": [
+    {
+      "number": 1,
+      "icon": "database",
+      "title": "Build a Company Knowledge Agent",
+      "description": "45 minutes in Google Colab. Build an agent grounded in company documents:",
+      "steps": [
+        {
+          "title": "Load Documents (10 min)",
+          "description": "Load sample company documents \u2014 policies, FAQs, product catalogs. Process them into searchable chunks."
+        },
+        {
+          "title": "Build the Search Tool (10 min)",
+          "description": "Create a search_documents tool that finds relevant passages for any query. Wire it into your agent loop."
+        },
+        {
+          "title": "Test with Real Questions (15 min)",
+          "description": "Ask company-specific questions. Compare: does the agent answer from documents or hallucinate? Test edge cases."
+        },
+        {
+          "title": "Handle Failures Gracefully (10 min)",
+          "description": "Test with contradicting docs, outdated info, and unanswerable questions. Make your agent say 'I don't know' when appropriate."
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "icon": "shield",
+      "title": "RAG Trust Assessment",
+      "description": "Evaluate your knowledge agent's trustworthiness:",
+      "steps": [
+        {
+          "title": "Create 10 Test Questions",
+          "description": "Write 10 questions: 5 answerable from the documents, 3 partially answerable, 2 unanswerable. Run all through your agent."
+        },
+        {
+          "title": "Score Accuracy",
+          "description": "For each answer: Did it use the right document? Is the answer correct? Did it hallucinate? Did it cite sources?"
+        },
+        {
+          "title": "Identify Failure Patterns",
+          "description": "Where does your agent fail? Wrong retrieval? Right retrieval but wrong answer? No retrieval when it should have searched?"
+        },
+        {
+          "title": "Propose Improvements",
+          "description": "List 3 specific improvements: better chunking, better search queries, better system prompt instructions, or additional guardrails."
+        }
+      ]
+    }
+  ],
+  "takeaways": [
+    {
+      "icon": "database",
+      "text": "<strong>RAG grounds agents in reality.</strong> Without RAG, your agent hallucinates about your company. With RAG, it answers from real documents. This is the #1 pattern in enterprise AI."
+    },
+    {
+      "icon": "shield",
+      "text": "<strong>Your agent is only as trustworthy as its data.</strong> Outdated documents, contradictions, and gaps are the real-world challenges. Building trust means handling these gracefully."
+    },
+    {
+      "icon": "brain",
+      "text": "<strong>Long context is the accessible RAG.</strong> Claude's 200K token window means business students can build RAG without vector databases. Start simple, scale later."
+    },
+    {
+      "icon": "trending-up",
+      "text": "<strong>'I don't know' is a feature.</strong> The best knowledge agents know the limits of their data. An agent that refuses to answer is more trustworthy than one that hallucinates."
+    }
+  ],
+  "homework": [
+    {
+      "label": "Build:",
+      "text": "Create a RAG agent for a domain you care about \u2014 load 5+ documents (articles, policies, product pages) and build a search tool. Test with 10 questions."
+    },
+    {
+      "label": "Break:",
+      "text": "Deliberately feed your agent contradicting documents and outdated data. Document 3 failure modes and how you'd fix each one."
+    },
+    {
+      "label": "Evaluate:",
+      "text": "Score your agent's accuracy: For 10 test questions, record whether it retrieved the right document, gave a correct answer, and cited sources properly."
+    },
+    {
+      "label": "Design:",
+      "text": "Write a 1-page proposal for a knowledge agent at a real company. What documents would it need? Who would use it? What's the risk if it's wrong?"
+    }
+  ],
+  "nextSession": {
+    "title": "Session 8: Multi-Agent Systems in Practice",
+    "description": "One agent is useful. A team of agents is powerful. Build a researcher\u2192analyst pipeline and learn coordination patterns.",
+    "tags": ["Multi-Agent", "Pipelines", "Coordination", "Specialization"],
+    "slug": "session-08"
+  }
 }

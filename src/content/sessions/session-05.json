@@ -104,7 +104,7 @@
       "bulletPoints": [
         "The arc: Session 4 built agents with fake tools → Session 5 connected them to the real world",
         "You learned 3 production essentials: real APIs, error handling, conversation memory",
-        "Session 5 vs Session 8: Today = make it work. Session 8 = ReAct reasoning, multi-agent, MCP at scale",
+        "Next session: Agent Patterns & Production Intelligence — ReAct reasoning, multi-agent architectures, and MCP. The patterns that power NanoClaw.",
         "Homework preview: Add a real API tool to your agent, test edge cases, design memory strategy"
       ]
     }
@@ -271,7 +271,7 @@
     },
     {
       "icon": "trending-up",
-      "text": "<strong>Session 4 → Session 5 → Session 8.</strong> Fake tools → real APIs → production systems. Each session builds on the last. Session 8 adds ReAct reasoning, multi-agent, and MCP."
+      "text": "<strong>Session 4 → Session 5 → Session 6.</strong> Fake tools → real APIs → production patterns. Each session builds on the last. Next session adds ReAct reasoning, multi-agent, and MCP."
     },
     {
       "icon": "lightbulb",
@@ -297,9 +297,9 @@
     }
   ],
   "nextSession": {
-    "title": "Session 6: Computer Vision",
-    "description": "How machines see the world — image recognition, object detection, and building vision-powered business applications.",
-    "tags": ["Image Recognition", "Object Detection", "CNNs", "Business Applications"],
+    "title": "Session 6: Agent Patterns & Production Intelligence",
+    "description": "ReAct reasoning, multi-agent architectures, and the patterns that separate demos from production systems.",
+    "tags": ["ReAct Pattern", "Multi-Agent Systems", "MCP", "Business Automation"],
     "slug": "session-06"
   }
 }
