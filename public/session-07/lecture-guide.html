@@ -1,0 +1,1791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture Guide: Session 7 — Knowledge Agents — RAG | ISOM 260</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #0f1424;
+            --bg-card: #141929;
+            --bg-elevated: #1a2035;
+            --bg-code: #0d1117;
+
+            --cyan: #00e5ff;
+            --cyan-dim: #00b8d4;
+            --cyan-glow: rgba(0, 229, 255, 0.15);
+            --cyan-glow-strong: rgba(0, 229, 255, 0.3);
+
+            --magenta: #ff006e;
+            --magenta-glow: rgba(255, 0, 110, 0.15);
+
+            --yellow: #ffd600;
+            --yellow-glow: rgba(255, 214, 0, 0.15);
+
+            --green: #00e676;
+            --green-glow: rgba(0, 230, 118, 0.15);
+
+            --orange: #ff9100;
+            --purple: #b388ff;
+
+            --text-primary: #e8ecf4;
+            --text-secondary: #8892a8;
+            --text-dim: #5a6478;
+
+            --border: rgba(0, 229, 255, 0.1);
+            --border-strong: rgba(0, 229, 255, 0.25);
+            --grid-line: rgba(0, 229, 255, 0.04);
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'DM Sans', sans-serif;
+            line-height: 1.7;
+            overflow-x: hidden;
+            background-image:
+                linear-gradient(var(--grid-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        /* Glow orbs */
+        .glow-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.4;
+        }
+        .glow-orb-1 {
+            width: 500px; height: 500px;
+            background: rgba(0, 229, 255, 0.08);
+            top: -100px; left: -100px;
+        }
+        .glow-orb-2 {
+            width: 400px; height: 400px;
+            background: rgba(255, 0, 110, 0.06);
+            top: 40%; right: -100px;
+        }
+        .glow-orb-3 {
+            width: 350px; height: 350px;
+            background: rgba(0, 230, 118, 0.05);
+            bottom: -50px; left: 30%;
+        }
+
+        /* Progress bar */
+        .progress-bar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: rgba(0, 229, 255, 0.1);
+            z-index: 1000;
+        }
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--cyan), var(--magenta));
+            transition: width 0.15s ease-out;
+        }
+
+        /* Dot navigation */
+        .dot-nav {
+            position: fixed;
+            right: 24px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 100;
+        }
+        .dot-nav-item {
+            width: 10px; height: 10px;
+            border-radius: 50%;
+            border: 2px solid var(--text-dim);
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .dot-nav-item:hover {
+            border-color: var(--cyan);
+        }
+        .dot-nav-item.active {
+            border-color: var(--cyan);
+            background: var(--cyan);
+            box-shadow: 0 0 8px var(--cyan-glow-strong);
+        }
+        .dot-nav-item .dot-label {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            color: var(--text-dim);
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.2s;
+            pointer-events: none;
+        }
+        .dot-nav-item:hover .dot-label {
+            opacity: 1;
+            color: var(--cyan);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Sections */
+        .slide-section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 4rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        .section-label::before {
+            content: '';
+            width: 24px;
+            height: 1px;
+        }
+        .section-label.cyan { color: var(--cyan); }
+        .section-label.cyan::before { background: var(--cyan); }
+        .section-label.magenta { color: var(--magenta); }
+        .section-label.magenta::before { background: var(--magenta); }
+        .section-label.green { color: var(--green); }
+        .section-label.green::before { background: var(--green); }
+        .section-label.yellow { color: var(--yellow); }
+        .section-label.yellow::before { background: var(--yellow); }
+        .section-label.orange { color: var(--orange); }
+        .section-label.orange::before { background: var(--orange); }
+        .section-label.purple { color: var(--purple); }
+        .section-label.purple::before { background: var(--purple); }
+
+        .section-title {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(1.6rem, 3vw, 2.4rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .section-desc {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            max-width: 700px;
+            margin-bottom: 2.5rem;
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 4rem 0;
+        }
+
+        .session-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+            padding: 0.5rem 1.2rem;
+            border-radius: 100px;
+            margin-bottom: 2rem;
+            background: var(--bg-card);
+        }
+        .session-badge .dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: var(--cyan);
+            animation: pulse-dot 2s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 var(--cyan-glow-strong); }
+            50% { opacity: 0.7; box-shadow: 0 0 0 6px transparent; }
+        }
+
+        .hero-title {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(2.2rem, 5vw, 3.8rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.15;
+            margin-bottom: 1.5rem;
+        }
+        .hero-title .gradient-text {
+            background: linear-gradient(135deg, var(--cyan), var(--magenta));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin-bottom: 2.5rem;
+        }
+
+        .hero-tags {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .hero-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.05em;
+            padding: 0.4rem 1rem;
+            border-radius: 100px;
+            border: 1px solid;
+        }
+        .hero-tag.cyan { color: var(--cyan); border-color: rgba(0,229,255,0.3); background: var(--cyan-glow); }
+        .hero-tag.magenta { color: var(--magenta); border-color: rgba(255,0,110,0.3); background: var(--magenta-glow); }
+        .hero-tag.green { color: var(--green); border-color: rgba(0,230,118,0.3); background: var(--green-glow); }
+        .hero-tag.yellow { color: var(--yellow); border-color: rgba(255,214,0,0.3); background: var(--yellow-glow); }
+
+        .hero-nav-hint {
+            margin-top: 3rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            animation: bounce-hint 2s infinite;
+        }
+        @keyframes bounce-hint {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(6px); }
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.75rem;
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            border-color: var(--border-strong);
+            transform: translateY(-2px);
+        }
+        .card-accent-cyan { border-top: 3px solid var(--cyan); }
+        .card-accent-magenta { border-top: 3px solid var(--magenta); }
+        .card-accent-green { border-top: 3px solid var(--green); }
+        .card-accent-yellow { border-top: 3px solid var(--yellow); }
+        .card-accent-orange { border-top: 3px solid var(--orange); }
+        .card-accent-purple { border-top: 3px solid var(--purple); }
+
+        .card-icon {
+            width: 44px; height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+        .card-icon.cyan { background: var(--cyan-glow); color: var(--cyan); }
+        .card-icon.magenta { background: var(--magenta-glow); color: var(--magenta); }
+        .card-icon.green { background: var(--green-glow); color: var(--green); }
+        .card-icon.yellow { background: var(--yellow-glow); color: var(--yellow); }
+        .card-icon.orange { background: rgba(255,145,0,0.15); color: var(--orange); }
+        .card-icon.purple { background: rgba(179,136,255,0.15); color: var(--purple); }
+
+        .card-title {
+            font-family: 'Sora', sans-serif;
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+        .card-desc {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* Grid layouts */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; }
+
+        /* Code window */
+        .code-window {
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 1.5rem 0;
+        }
+        .code-header {
+            padding: 0.75rem 1.5rem;
+            background: var(--bg-elevated);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .dot-row { display: flex; gap: 0.35rem; margin-right: 0.75rem; }
+        .dot-row span { width: 8px; height: 8px; border-radius: 50%; }
+        .dot-red { background: #ff5f56; }
+        .dot-yellow { background: #ffbd2e; }
+        .dot-green { background: #27c93f; }
+        .code-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+        }
+        .code-body {
+            padding: 1.25rem 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            line-height: 1.8;
+            overflow-x: auto;
+            white-space: pre;
+            color: var(--text-secondary);
+        }
+        .code-body .kw { color: var(--magenta); }
+        .code-body .fn { color: var(--cyan); }
+        .code-body .str { color: var(--green); }
+        .code-body .cmt { color: var(--text-dim); font-style: italic; }
+        .code-body .hl { color: var(--yellow); }
+        .code-body .num { color: var(--orange); }
+
+        /* Highlight line */
+        .hl-line {
+            display: block;
+            background: rgba(0, 229, 255, 0.08);
+            border-left: 3px solid var(--cyan);
+            margin: 0 -1.5rem;
+            padding: 0 1.5rem 0 calc(1.5rem - 3px);
+        }
+
+        /* Insight block */
+        .insight-block {
+            background: linear-gradient(135deg, var(--cyan-glow), var(--magenta-glow));
+            border: 1px solid var(--border-strong);
+            border-radius: 12px;
+            padding: 1.75rem 2rem;
+            position: relative;
+            margin: 2rem 0;
+        }
+        .insight-block::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--cyan), var(--magenta));
+            border-radius: 12px 12px 0 0;
+        }
+        .insight-block .insight-title {
+            font-family: 'Sora', sans-serif;
+            font-weight: 600;
+            font-size: 1.05rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .insight-block .insight-text {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Callout */
+        .callout {
+            border-radius: 10px;
+            padding: 1.25rem 1.5rem;
+            margin: 1.5rem 0;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+        .callout-icon {
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        .callout-info { background: var(--cyan-glow); border: 1px solid rgba(0,229,255,0.2); }
+        .callout-info strong { color: var(--cyan); }
+        .callout-warn { background: var(--yellow-glow); border: 1px solid rgba(255,214,0,0.2); }
+        .callout-warn strong { color: var(--yellow); }
+        .callout-success { background: var(--green-glow); border: 1px solid rgba(0,230,118,0.2); }
+        .callout-success strong { color: var(--green); }
+        .callout-error { background: var(--magenta-glow); border: 1px solid rgba(255,0,110,0.2); }
+        .callout-error strong { color: var(--magenta); }
+
+        /* Compare layout */
+        .compare-grid {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 1.5rem;
+            align-items: stretch;
+        }
+        .vs-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .vs-label {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-dim);
+            opacity: 0.5;
+        }
+
+        /* Flow diagram */
+        .flow-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+        .flow-node {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem 1.25rem;
+            text-align: center;
+            min-width: 120px;
+        }
+        .flow-node-title {
+            font-family: 'Sora', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-bottom: 0.3rem;
+        }
+        .flow-node-desc {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .flow-arrow {
+            color: var(--text-dim);
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        /* Equation block */
+        .equation-block {
+            background: linear-gradient(135deg, var(--magenta-glow), var(--cyan-glow));
+            border: 1px solid var(--border-strong);
+            padding: 2rem 2.5rem;
+            text-align: center;
+            border-radius: 12px;
+            margin: 2rem 0;
+        }
+        .equation {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            font-family: 'Sora', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 600;
+        }
+        .eq-part {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+        .eq-cyan { background: var(--cyan-glow); color: var(--cyan); }
+        .eq-magenta { background: var(--magenta-glow); color: var(--magenta); }
+        .eq-green { background: var(--green-glow); color: var(--green); }
+        .eq-yellow { background: var(--yellow-glow); color: var(--yellow); }
+        .eq-op {
+            color: var(--text-dim);
+            font-weight: 400;
+        }
+
+        /* Ladder / Levels */
+        .ladder {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            max-width: 650px;
+            margin: 2rem auto;
+        }
+        .ladder-step {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            padding: 1.25rem 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            transition: all 0.3s ease;
+        }
+        .ladder-step.current {
+            border-color: var(--green);
+            background: linear-gradient(135deg, var(--green-glow), transparent);
+            box-shadow: 0 0 30px rgba(0,230,118,0.08);
+        }
+        .ladder-num {
+            font-family: 'Sora', sans-serif;
+            font-weight: 800;
+            font-size: 1.5rem;
+            min-width: 36px;
+        }
+        .ladder-content .ladder-title {
+            font-family: 'Sora', sans-serif;
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 0.2rem;
+        }
+        .ladder-content .ladder-desc {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* Journey timeline */
+        .journey-timeline {
+            display: flex;
+            align-items: flex-start;
+            gap: 0;
+            margin: 2.5rem 0;
+            position: relative;
+            overflow-x: auto;
+            padding-bottom: 1rem;
+        }
+        .journey-node {
+            flex: 1;
+            text-align: center;
+            min-width: 120px;
+            position: relative;
+        }
+        .journey-node::before {
+            content: '';
+            position: absolute;
+            top: 18px;
+            left: 0; right: 0;
+            height: 2px;
+            background: var(--border);
+        }
+        .journey-node:first-child::before { left: 50%; }
+        .journey-node:last-child::before { right: 50%; }
+        .journey-dot {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            margin: 0 auto 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            font-weight: 700;
+            background: var(--bg-primary);
+            position: relative;
+            z-index: 2;
+        }
+        .journey-node.past .journey-dot {
+            border-color: var(--text-dim);
+            color: var(--text-dim);
+        }
+        .journey-node.current .journey-dot {
+            border-color: var(--cyan);
+            color: var(--cyan);
+            background: var(--cyan-glow);
+            box-shadow: 0 0 12px var(--cyan-glow-strong);
+        }
+        .journey-node.future .journey-dot {
+            border-color: var(--border);
+            color: var(--text-dim);
+        }
+        .journey-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            color: var(--text-dim);
+            line-height: 1.4;
+        }
+        .journey-node.current .journey-label {
+            color: var(--cyan);
+            font-weight: 600;
+        }
+
+        /* Takeaway cards */
+        .takeaway-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1.25rem 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            margin-bottom: 1rem;
+        }
+        .takeaway-icon {
+            flex-shrink: 0;
+            width: 38px; height: 38px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--cyan-glow);
+            color: var(--cyan);
+        }
+        .takeaway-text {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+        .takeaway-text strong {
+            color: var(--text-primary);
+        }
+
+        /* CTA card */
+        .cta-card {
+            background: linear-gradient(135deg, var(--cyan-glow), var(--green-glow));
+            border: 2px solid var(--cyan);
+            border-radius: 16px;
+            padding: 3rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .cta-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--cyan), var(--green));
+        }
+        .cta-title {
+            font-family: 'Sora', sans-serif;
+            font-weight: 700;
+            font-size: 1.6rem;
+            margin-bottom: 0.75rem;
+        }
+        .cta-desc {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--cyan);
+            color: var(--bg-primary);
+            font-family: 'Sora', sans-serif;
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 0.85rem 2rem;
+            border-radius: 10px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .cta-btn:hover {
+            background: #33ebff;
+            box-shadow: 0 0 20px var(--cyan-glow-strong);
+        }
+
+        /* Checklist */
+        .checklist {
+            list-style: none;
+            margin: 1.5rem 0;
+        }
+        .checklist li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.5rem 0;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        .checklist li .check-icon {
+            flex-shrink: 0;
+            color: var(--green);
+            margin-top: 3px;
+        }
+
+        /* Homework items */
+        .homework-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1.25rem 1.5rem;
+            border-radius: 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            margin-bottom: 0.75rem;
+        }
+        .homework-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            font-weight: 600;
+            flex-shrink: 0;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            margin-top: 2px;
+        }
+        .homework-text {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Failure card */
+        .failure-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border-left: 3px solid var(--magenta);
+        }
+        .failure-card .failure-title {
+            font-family: 'Sora', sans-serif;
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 0.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .failure-card .failure-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Trust checklist */
+        .trust-checklist {
+            list-style: none;
+            margin: 1.5rem 0;
+        }
+        .trust-checklist li {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem 1.25rem;
+            border-radius: 10px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+        .trust-checklist li:hover {
+            border-color: var(--border-strong);
+        }
+        .trust-num {
+            font-family: 'Sora', sans-serif;
+            font-weight: 800;
+            font-size: 1.1rem;
+            color: var(--orange);
+            min-width: 24px;
+            flex-shrink: 0;
+        }
+
+        /* Stack visualization */
+        .stack-viz {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            max-width: 600px;
+            margin: 2rem auto;
+        }
+        .stack-layer {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            transition: all 0.3s ease;
+        }
+        .stack-layer.current {
+            border-color: var(--cyan);
+            background: linear-gradient(135deg, var(--cyan-glow), transparent);
+            box-shadow: 0 0 25px var(--cyan-glow);
+        }
+        .stack-layer.future {
+            opacity: 0.5;
+            border-style: dashed;
+        }
+        .stack-session {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            min-width: 28px;
+        }
+        .stack-label {
+            font-family: 'Sora', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .stack-marker {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            margin-left: auto;
+            letter-spacing: 0.05em;
+        }
+
+        /* Big quote */
+        .big-quote {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+            font-weight: 600;
+            text-align: center;
+            color: var(--text-primary);
+            padding: 2rem 0;
+            line-height: 1.4;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .big-quote .highlight {
+            background: linear-gradient(135deg, var(--cyan), var(--magenta));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Fade-in animation */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .fade-in-delay-1 { transition-delay: 0.1s; }
+        .fade-in-delay-2 { transition-delay: 0.2s; }
+        .fade-in-delay-3 { transition-delay: 0.3s; }
+        .fade-in-delay-4 { transition-delay: 0.4s; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+            .compare-grid { grid-template-columns: 1fr; }
+            .vs-divider { display: none; }
+            .dot-nav { display: none; }
+            .slide-section { min-height: auto; padding: 3rem 0; }
+            .hero { min-height: 90vh; }
+            .flow-diagram { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Glow orbs -->
+<div class="glow-orb glow-orb-1"></div>
+<div class="glow-orb glow-orb-2"></div>
+<div class="glow-orb glow-orb-3"></div>
+
+<!-- Progress bar -->
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+<!-- Dot navigation -->
+<nav class="dot-nav" id="dotNav">
+    <button class="dot-nav-item active" data-section="0"><span class="dot-label">Title</span></button>
+    <button class="dot-nav-item" data-section="1"><span class="dot-label">Knowledge Problem</span></button>
+    <button class="dot-nav-item" data-section="2"><span class="dot-label">RAG Architecture</span></button>
+    <button class="dot-nav-item" data-section="3"><span class="dot-label">Three Levels</span></button>
+    <button class="dot-nav-item" data-section="4"><span class="dot-label">Hands-On</span></button>
+    <button class="dot-nav-item" data-section="5"><span class="dot-label">Failure Modes</span></button>
+    <button class="dot-nav-item" data-section="6"><span class="dot-label">Real World</span></button>
+    <button class="dot-nav-item" data-section="7"><span class="dot-label">Trust Equation</span></button>
+    <button class="dot-nav-item" data-section="8"><span class="dot-label">Stack So Far</span></button>
+    <button class="dot-nav-item" data-section="9"><span class="dot-label">Takeaways</span></button>
+    <button class="dot-nav-item" data-section="10"><span class="dot-label">Homework</span></button>
+</nav>
+
+<div class="container">
+
+    <!-- ============================================================ -->
+    <!-- SECTION 0: TITLE SLIDE                                        -->
+    <!-- ============================================================ -->
+    <section class="hero slide-section" id="section-0">
+        <div class="session-badge">
+            <span class="dot"></span> ISOM 260 · Suffolk University
+        </div>
+        <h1 class="hero-title">
+            Knowledge Agents &mdash;<br><span class="gradient-text">RAG</span>
+        </h1>
+        <p class="hero-subtitle">
+            Your agent is smart but doesn't know YOUR business &mdash; add company knowledge with Retrieval-Augmented Generation
+        </p>
+        <div class="hero-tags">
+            <span class="hero-tag cyan">RAG</span>
+            <span class="hero-tag magenta">Knowledge Agents</span>
+            <span class="hero-tag green">Document Search</span>
+            <span class="hero-tag yellow">Long Context</span>
+        </div>
+        <div class="hero-nav-hint">
+            <i data-lucide="chevron-down" style="width:14px; height:14px;"></i>
+            Use arrow keys to navigate
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 1: THE KNOWLEDGE PROBLEM                              -->
+    <!-- ============================================================ -->
+    <section class="slide-section" id="section-1">
+        <div class="section-label cyan">Part 1 &middot; 5:00&ndash;5:15 PM</div>
+        <h2 class="section-title">The Knowledge Problem</h2>
+        <p class="section-desc">
+            Claude knows the internet. It doesn't know your company's SOPs, product catalog, or HR policies. That's a problem &mdash; and RAG is the solution.
+        </p>
+
+        <!-- Without RAG vs With RAG -->
+        <h3 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1rem; margin-bottom:1.25rem; color:var(--text-secondary);">Demo: "What's our refund policy?"</h3>
+        <div class="compare-grid fade-in">
+            <div>
+                <div class="card card-accent-magenta">
+                    <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:1rem;">
+                        <i data-lucide="x-circle" style="width:20px; height:20px; color:var(--magenta);"></i>
+                        <span class="card-title" style="margin-bottom:0; color:var(--magenta);">Without RAG</span>
+                    </div>
+                    <div class="card-desc" style="margin-bottom:1rem;">Claude generates a plausible but <strong style="color:var(--magenta);">completely wrong</strong> refund policy based on general training data.</div>
+                    <div class="code-window" style="margin:0;">
+                        <div class="code-body" style="font-size:0.7rem; padding:1rem;"><span class="cmt"># Claude guesses confidently</span>
+<span class="str">"Your refund policy allows returns</span>
+<span class="str"> within 30 days for a full refund..."</span>
+
+<span class="cmt"># Sounds right. Totally wrong.</span>
+<span class="cmt"># Your actual policy is 14 days,</span>
+<span class="cmt"># store credit only.</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="vs-divider"><span class="vs-label">vs</span></div>
+            <div>
+                <div class="card card-accent-green" style="border-color:var(--border-strong); box-shadow:0 0 30px rgba(0,230,118,0.06);">
+                    <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:1rem;">
+                        <i data-lucide="check-circle" style="width:20px; height:20px; color:var(--green);"></i>
+                        <span class="card-title" style="margin-bottom:0; color:var(--green);">With RAG</span>
+                    </div>
+                    <div class="card-desc" style="margin-bottom:1rem;">Claude searches your documents first, then answers from <strong style="color:var(--green);">actual company data</strong> with citations.</div>
+                    <div class="code-window" style="margin:0; border-color:rgba(0,230,118,0.2);">
+                        <div class="code-body" style="font-size:0.7rem; padding:1rem;"><span class="cmt"># Claude searches your docs first</span>
+<span class="fn">search_documents</span>(<span class="str">"refund policy"</span>)
+<span class="hl">Found: policies/returns.md</span>
+
+<span class="str">"Per your policy (returns.md):</span>
+<span class="str"> 14-day window, store credit only,</span>
+<span class="str"> receipt required."</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RAG flow diagram -->
+        <h3 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1rem; margin:2.5rem 0 1rem; color:var(--text-secondary);">The RAG Pattern</h3>
+        <div class="flow-diagram fade-in">
+            <div class="flow-node" style="border-color:var(--cyan);">
+                <div class="flow-node-title" style="color:var(--cyan);">User Question</div>
+                <div class="flow-node-desc">"What's our refund policy?"</div>
+            </div>
+            <div class="flow-arrow">&rarr;</div>
+            <div class="flow-node" style="border-color:var(--magenta);">
+                <div class="flow-node-title" style="color:var(--magenta);">Search Documents</div>
+                <div class="flow-node-desc">find relevant passages</div>
+            </div>
+            <div class="flow-arrow">&rarr;</div>
+            <div class="flow-node" style="border-color:var(--yellow);">
+                <div class="flow-node-title" style="color:var(--yellow);">Insert Passages</div>
+                <div class="flow-node-desc">add to prompt context</div>
+            </div>
+            <div class="flow-arrow">&rarr;</div>
+            <div class="flow-node" style="border-color:var(--green);">
+                <div class="flow-node-title" style="color:var(--green);">Claude Answers</div>
+                <div class="flow-node-desc">from YOUR data</div>
+            </div>
+        </div>
+
+        <div class="callout callout-info fade-in" style="margin-top:1.5rem;">
+            <span class="callout-icon"><i data-lucide="zap" style="width:18px; height:18px; color:var(--cyan);"></i></span>
+            <div>
+                <strong>Every enterprise AI deployment needs RAG.</strong> This is the #1 pattern in production AI. If your agent answers questions about company data, you need this.
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 2: RAG ARCHITECTURE                                   -->
+    <!-- ============================================================ -->
+    <section class="slide-section" id="section-2">
+        <div class="section-label magenta">Part 2 &middot; 5:15&ndash;5:40 PM</div>
+        <h2 class="section-title">RAG Architecture Deep Dive</h2>
+        <p class="section-desc">
+            How RAG works under the hood &mdash; from document loading to retrieval to generation. Three approaches, one winner for today.
+        </p>
+
+        <!-- Three approaches -->
+        <div class="grid-3 fade-in">
+            <div class="card card-accent-cyan">
+                <div class="card-icon cyan"><i data-lucide="search" style="width:22px; height:22px;"></i></div>
+                <div class="card-title">Keyword Search</div>
+                <div class="card-desc">Simplest approach. Fast and familiar. Limited understanding &mdash; misses synonyms and context.</div>
+                <div style="margin-top:1rem; font-family:'JetBrains Mono',monospace; font-size:0.7rem; color:var(--text-dim);">grep "refund" docs/*.md</div>
+            </div>
+            <div class="card card-accent-yellow">
+                <div class="card-icon yellow"><i data-lucide="file-text" style="width:22px; height:22px;"></i></div>
+                <div class="card-title">Long Context Window</div>
+                <div class="card-desc">Claude reads 200K tokens at once. No database needed. Works great for smaller document sets.</div>
+                <div style="margin-top:1rem; font-family:'JetBrains Mono',monospace; font-size:0.7rem; color:var(--yellow);">Our approach today</div>
+            </div>
+            <div class="card card-accent-magenta">
+                <div class="card-icon magenta"><i data-lucide="database" style="width:22px; height:22px;"></i></div>
+                <div class="card-title">Vector Embeddings</div>
+                <div class="card-desc">Semantic search at scale. Needs infrastructure (Pinecone, Weaviate). The enterprise standard.</div>
+                <div style="margin-top:1rem; font-family:'JetBrains Mono',monospace; font-size:0.7rem; color:var(--text-dim);">Production at scale</div>
+            </div>
+        </div>
+
+        <div class="callout callout-success fade-in" style="margin-top:2rem;">
+            <span class="callout-icon"><i data-lucide="target" style="width:18px; height:18px; color:var(--green);"></i></span>
+            <div>
+                <strong>Our approach today:</strong> Long context + smart search. No vector DB needed &mdash; Claude can read 200K tokens at once. Start simple, scale later.
+            </div>
+        </div>
+
+        <!-- Document processing pipeline -->
+        <h3 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1rem; margin:2.5rem 0 1rem; color:var(--text-secondary);">Document Processing Pipeline</h3>
+        <div class="flow-diagram fade-in">
+            <div class="flow-node" style="border-color:var(--text-dim);">
+                <div class="flow-node-title">Raw Documents</div>
+                <div class="flow-node-desc">PDFs, docs, FAQs</div>
+            </div>
+            <div class="flow-arrow">&rarr;</div>
+            <div class="flow-node" style="border-color:var(--cyan);">
+                <div class="flow-node-title" style="color:var(--cyan);">Chunking</div>
+                <div class="flow-node-desc">split into passages</div>
+            </div>
+            <div class="flow-arrow">&rarr;</div>
+            <div class="flow-node" style="border-color:var(--magenta);">
+                <div class="flow-node-title" style="color:var(--magenta);">Searchable Index</div>
+                <div class="flow-node-desc">tagged &amp; organized</div>
+            </div>
+            <div class="flow-arrow">&rarr;</div>
+            <div class="flow-node" style="border-color:var(--green);">
+                <div class="flow-node-title" style="color:var(--green);">Agent Tool</div>
+                <div class="flow-node-desc">search_documents()</div>
+            </div>
+        </div>
+
+        <!-- Chunk example -->
+        <div class="code-window fade-in">
+            <div class="code-header">
+                <div class="dot-row"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></div>
+                <span class="code-title">Document Chunk Example</span>
+            </div>
+            <div class="code-body">{
+  <span class="fn">"id"</span>: <span class="str">"policy-returns-001"</span>,
+  <span class="fn">"source"</span>: <span class="str">"policies/returns.md"</span>,
+  <span class="fn">"content"</span>: <span class="str">"Customers may return items within 14 days
+    of purchase for store credit. Original receipt
+    required. Sale items are final sale."</span>,
+  <span class="fn">"metadata"</span>: {
+    <span class="fn">"category"</span>: <span class="str">"policy"</span>,
+    <span class="fn">"last_updated"</span>: <span class="str">"2024-11-15"</span>
+  }
+}</div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 3: THREE LEVELS OF KNOWLEDGE                          -->
+    <!-- ============================================================ -->
+    <section class="slide-section" id="section-3">
+        <div class="section-label yellow">Three Levels</div>
+        <h2 class="section-title">Three Levels of Knowledge</h2>
+        <p class="section-desc">
+            Same question, three approaches. Watch how adding documents &mdash; and how you add them &mdash; changes everything.
+        </p>
+
+        <div class="grid-3 fade-in">
+            <!-- Level 0 -->
+            <div class="card" style="border-top:3px solid var(--text-dim);">
+                <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:1rem;">
+                    <span style="font-family:'Sora',sans-serif; font-weight:800; font-size:1.3rem; color:var(--text-dim);">L0</span>
+                    <span style="font-family:'JetBrains Mono',monospace; font-size:0.65rem; color:var(--text-dim); letter-spacing:0.1em; text-transform:uppercase;">No Documents</span>
+                </div>
+                <div class="card-desc" style="margin-bottom:1rem;">
+                    Claude hallucinates company info. Sounds confident, totally wrong.
+                </div>
+                <div class="code-window" style="margin:0;">
+                    <div class="code-body" style="font-size:0.7rem; padding:1rem;"><span class="cmt"># No company data at all</span>
+<span class="str">"Your refund policy is 30 days</span>
+<span class="str"> with full money back..."</span>
+
+<span class="cmt"># Hallucinated. Dangerous.</span></div>
+                </div>
+                <div style="margin-top:1rem; font-family:'JetBrains Mono',monospace; font-size:0.7rem; color:var(--magenta);">&#10060; Confident hallucination.</div>
+            </div>
+
+            <!-- Level 1 -->
+            <div class="card" style="border-top:3px solid var(--orange);">
+                <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:1rem;">
+                    <span style="font-family:'Sora',sans-serif; font-weight:800; font-size:1.3rem; color:var(--orange);">L1</span>
+                    <span style="font-family:'JetBrains Mono',monospace; font-size:0.65rem; color:var(--orange); letter-spacing:0.1em; text-transform:uppercase;">Stuff All Docs</span>
+                </div>
+                <div class="card-desc" style="margin-bottom:1rem;">
+                    Paste ALL documents into the prompt. Works, but prompt is enormous. Doesn't scale.
+                </div>
+                <div class="code-window" style="margin:0;">
+                    <div class="code-body" style="font-size:0.7rem; padding:1rem;"><span class="cmt"># Dump everything in the prompt</span>
+system = <span class="str">"Here are ALL 200 company</span>
+<span class="str"> docs: [50,000 words]..."</span>
+
+<span class="cmt"># Correct but expensive.</span>
+<span class="cmt"># Won't scale to 1000+ docs.</span></div>
+                </div>
+                <div style="margin-top:1rem; font-family:'JetBrains Mono',monospace; font-size:0.7rem; color:var(--yellow);">&#9888;&#65039; Works but doesn't scale.</div>
+            </div>
+
+            <!-- Level 2 -->
+            <div class="card" style="border-top:3px solid var(--green); border-color:var(--border-strong); box-shadow:0 0 30px rgba(0,230,118,0.06);">
+                <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:1rem;">
+                    <span style="font-family:'Sora',sans-serif; font-weight:800; font-size:1.3rem; color:var(--green);">L2</span>
+                    <span style="font-family:'JetBrains Mono',monospace; font-size:0.65rem; color:var(--green); letter-spacing:0.1em; text-transform:uppercase;">RAG Agent</span>
+                </div>
+                <div class="card-desc" style="margin-bottom:1rem;">
+                    Searches relevant docs, reads only what matters. Scales to millions of documents.
+                </div>
+                <div class="code-window" style="margin:0;">
+                    <div class="code-body" style="font-size:0.7rem; padding:1rem;"><span class="hl">THINK:</span> <span class="cmt">Need refund policy</span>
+<span class="fn">search_documents</span>(<span class="str">"refund"</span>)
+<span class="hl">FOUND:</span> <span class="str">policies/returns.md</span>
+<span class="hl">ANSWER:</span> <span class="cmt">From returns.md:</span>
+<span class="str">"14 days, store credit only."</span>
+<span class="hl">SOURCE:</span> <span class="str">policies/returns.md</span></div>
+                </div>
+                <div style="margin-top:1rem; font-family:'JetBrains Mono',monospace; font-size:0.7rem; color:var(--green);">&#10003; Smart retrieval. Cited. Scalable.</div>
+            </div>
+        </div>
+
+        <div class="big-quote fade-in" style="margin-top:2.5rem;">
+            Same question. Same model. <span class="highlight">The data pipeline changed everything.</span>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 4: HANDS-ON CHECKPOINT                                -->
+    <!-- ============================================================ -->
+    <section class="slide-section" id="section-4">
+        <div class="section-label green">Hands-On &middot; 5:40&ndash;6:25 PM</div>
+        <h2 class="section-title">Build a Knowledge Agent</h2>
+        <p class="section-desc">
+            45 minutes in Google Colab. Load company documents, build a search tool, wire it into your agent loop.
+        </p>
+
+        <div class="cta-card fade-in">
+            <div style="margin-bottom:1rem;"><i data-lucide="database" style="width:48px; height:48px; color:var(--cyan);"></i></div>
+            <div class="cta-title">Open Colab Now</div>
+            <div class="cta-desc">Build an agent that answers questions from YOUR company documents. No vector DB needed.</div>
+            <a href="https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-07/ISOM260_Session7_Knowledge_Agents_RAG.ipynb" target="_blank" class="cta-btn">
+                <i data-lucide="external-link" style="width:16px; height:16px;"></i>
+                Open in Google Colab
+            </a>
+        </div>
+
+        <h3 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1.05rem; margin:2.5rem 0 1rem; color:var(--text-primary);">Workshop Phases</h3>
+        <ul class="checklist fade-in">
+            <li>
+                <span class="check-icon"><i data-lucide="circle-dot" style="width:16px; height:16px;"></i></span>
+                <span><strong>Phase 1 (15 min)</strong> &mdash; Load company docs (policies, FAQs, product info). Build a <code style="color:var(--cyan); font-family:'JetBrains Mono',monospace; font-size:0.85rem;">search_documents</code> tool.</span>
+            </li>
+            <li>
+                <span class="check-icon"><i data-lucide="circle-dot" style="width:16px; height:16px;"></i></span>
+                <span><strong>Phase 2 (15 min)</strong> &mdash; Wire the search tool into your agent loop. Ask company-specific questions &mdash; watch it retrieve and answer.</span>
+            </li>
+            <li>
+                <span class="check-icon"><i data-lucide="circle-dot" style="width:16px; height:16px;"></i></span>
+                <span><strong>Phase 3 (15 min)</strong> &mdash; Test edge cases: contradicting documents, outdated info, unanswerable questions. Does your agent handle them gracefully?</span>
+            </li>
+        </ul>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 5: RAG FAILURE MODES                                  -->
+    <!-- ============================================================ -->
+    <section class="slide-section" id="section-5">
+        <div class="section-label magenta">Part 5 &middot; 6:35&ndash;7:05 PM</div>
+        <h2 class="section-title">RAG Failure Modes &amp; Trust</h2>
+        <p class="section-desc">
+            Your agent is only as trustworthy as its data. What happens when documents are wrong, outdated, or contradictory?
+        </p>
+
+        <!-- Air Canada callout -->
+        <div class="callout callout-error fade-in">
+            <span class="callout-icon"><i data-lucide="alert-octagon" style="width:18px; height:18px; color:var(--magenta);"></i></span>
+            <div>
+                <strong>The Air Canada Case (2024):</strong> Air Canada's chatbot was held legally liable for answers based on outdated policy documents. A customer relied on the chatbot's incorrect bereavement fare info and won in court. <strong style="color:var(--text-primary);">Your agent's answers have real consequences.</strong>
+            </div>
+        </div>
+
+        <!-- Four failure cards -->
+        <div class="grid-2 fade-in" style="margin-top:2rem;">
+            <div class="failure-card">
+                <div class="failure-title">
+                    <i data-lucide="clock" style="width:16px; height:16px; color:var(--magenta);"></i>
+                    Outdated Data
+                </div>
+                <div class="failure-desc">
+                    Agent quotes last year's pricing confidently. The document hasn't been updated but the policy changed 3 months ago. Users trust the answer.
+                </div>
+            </div>
+            <div class="failure-card">
+                <div class="failure-title">
+                    <i data-lucide="git-compare" style="width:16px; height:16px; color:var(--magenta);"></i>
+                    Contradicting Documents
+                </div>
+                <div class="failure-desc">
+                    Two policies say different things about the same topic. Which one does the agent choose? Does it flag the contradiction or silently pick one?
+                </div>
+            </div>
+            <div class="failure-card">
+                <div class="failure-title">
+                    <i data-lucide="help-circle" style="width:16px; height:16px; color:var(--magenta);"></i>
+                    No Relevant Data
+                </div>
+                <div class="failure-desc">
+                    Agent should say "I don't have information on that" &mdash; not hallucinate a plausible answer. The hardest failure mode to catch.
+                </div>
+            </div>
+            <div class="failure-card">
+                <div class="failure-title">
+                    <i data-lucide="shuffle" style="width:16px; height:16px; color:var(--magenta);"></i>
+                    Wrong Retrieval
+                </div>
+                <div class="failure-desc">
+                    Search returns irrelevant docs (e.g., finds "refund" in an unrelated context). Agent answers confidently from the wrong source.
+                </div>
+            </div>
+        </div>
+
+        <div class="insight-block fade-in" style="margin-top:2rem;">
+            <div class="insight-title">
+                <i data-lucide="shield" style="width:18px; height:18px; color:var(--green);"></i>
+                Building Trust
+            </div>
+            <div class="insight-text">
+                Citations, confidence scores, and "I don't know" as a <strong style="color:var(--green);">feature, not a bug</strong>. The best knowledge agents know the limits of their data.
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 6: RAG IN THE REAL WORLD                              -->
+    <!-- ============================================================ -->
+    <section class="slide-section" id="section-6">
+        <div class="section-label purple">Part 6 &middot; 7:05&ndash;7:20 PM</div>
+        <h2 class="section-title">RAG in the Real World</h2>
+        <p class="section-desc">
+            How companies actually deploy RAG &mdash; from customer support to legal compliance to medical information retrieval.
+        </p>
+
+        <!-- Use cases grid -->
+        <div class="grid-4 fade-in">
+            <div class="card card-accent-cyan">
+                <div class="card-icon cyan"><i data-lucide="headphones" style="width:22px; height:22px;"></i></div>
+                <div class="card-title">Customer Support</div>
+                <div class="card-desc">Auto-answer FAQs from knowledge base. Deflect tickets, reduce wait times.</div>
+            </div>
+            <div class="card card-accent-magenta">
+                <div class="card-icon magenta"><i data-lucide="book-open" style="width:22px; height:22px;"></i></div>
+                <div class="card-title">Internal Wiki</div>
+                <div class="card-desc">Search company docs with natural language. No more digging through Confluence.</div>
+            </div>
+            <div class="card card-accent-yellow">
+                <div class="card-icon yellow"><i data-lucide="scale" style="width:22px; height:22px;"></i></div>
+                <div class="card-title">Legal / Compliance</div>
+                <div class="card-desc">Find relevant regulations across thousands of documents in seconds.</div>
+            </div>
+            <div class="card card-accent-green">
+                <div class="card-icon green"><i data-lucide="heart-pulse" style="width:22px; height:22px;"></i></div>
+                <div class="card-title">Medical Info</div>
+                <div class="card-desc">Look up drug interactions, treatment protocols from verified medical databases.</div>
+            </div>
+        </div>
+
+        <!-- Build vs Buy -->
+        <h3 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1rem; margin:2.5rem 0 1rem; color:var(--text-secondary);">Build vs Buy</h3>
+        <div class="grid-2 fade-in">
+            <div class="card" style="border-top:3px solid var(--cyan);">
+                <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:1rem;">
+                    <i data-lucide="wrench" style="width:18px; height:18px; color:var(--cyan);"></i>
+                    <span class="card-title" style="margin-bottom:0; color:var(--cyan);">Build Your Own RAG</span>
+                </div>
+                <div class="card-desc">Full control over data pipeline, custom chunking, proprietary data stays in-house. Requires engineering investment and maintenance.</div>
+            </div>
+            <div class="card" style="border-top:3px solid var(--purple);">
+                <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:1rem;">
+                    <i data-lucide="shopping-bag" style="width:18px; height:18px; color:var(--purple);"></i>
+                    <span class="card-title" style="margin-bottom:0; color:var(--purple);">Use Platforms</span>
+                </div>
+                <div class="card-desc">Glean, Notion AI, Perplexity Enterprise &mdash; faster deployment, less control. Great for common use cases. Less customization.</div>
+            </div>
+        </div>
+
+        <div class="insight-block fade-in" style="margin-top:2rem;">
+            <div class="insight-title">
+                <i data-lucide="trending-up" style="width:18px; height:18px; color:var(--yellow);"></i>
+                Scaling Insight
+            </div>
+            <div class="insight-text">
+                From 10 documents to 10 million &mdash; when long context isn't enough and you need <strong style="color:var(--cyan);">vector search</strong>. Start with long context, graduate to embeddings when your data demands it.
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 7: THE TRUST EQUATION                                 -->
+    <!-- ============================================================ -->
+    <section class="slide-section" id="section-7">
+        <div class="section-label orange">Trust Equation</div>
+        <h2 class="section-title">The Trust Equation for Knowledge Agents</h2>
+        <p class="section-desc">
+            What makes a knowledge agent trustworthy? A checklist for production-grade RAG systems.
+        </p>
+
+        <!-- Trust checklist -->
+        <ul class="trust-checklist fade-in">
+            <li>
+                <span class="trust-num">1</span>
+                <div>
+                    <strong style="color:var(--text-primary);">Always cites which document the answer comes from.</strong>
+                    <div style="font-size:0.85rem; margin-top:0.25rem;">Users can verify. "Source: policies/returns.md, updated Nov 2024."</div>
+                </div>
+            </li>
+            <li>
+                <span class="trust-num">2</span>
+                <div>
+                    <strong style="color:var(--text-primary);">Flags when documents are outdated or conflicting.</strong>
+                    <div style="font-size:0.85rem; margin-top:0.25rem;">"Warning: This policy was last updated 8 months ago. Please verify with HR."</div>
+                </div>
+            </li>
+            <li>
+                <span class="trust-num">3</span>
+                <div>
+                    <strong style="color:var(--text-primary);">Says "I don't know" when data isn't available.</strong>
+                    <div style="font-size:0.85rem; margin-top:0.25rem;">"I couldn't find information about parental leave in the company documents."</div>
+                </div>
+            </li>
+            <li>
+                <span class="trust-num">4</span>
+                <div>
+                    <strong style="color:var(--text-primary);">Shows confidence level (high / medium / low).</strong>
+                    <div style="font-size:0.85rem; margin-top:0.25rem;">High: exact match from policy doc. Medium: inferred from related docs. Low: partial match only.</div>
+                </div>
+            </li>
+            <li>
+                <span class="trust-num">5</span>
+                <div>
+                    <strong style="color:var(--text-primary);">Human-in-the-loop for high-stakes answers.</strong>
+                    <div style="font-size:0.85rem; margin-top:0.25rem;">Legal, medical, financial answers should be flagged for human review before delivery.</div>
+                </div>
+            </li>
+        </ul>
+
+        <!-- Equation -->
+        <div class="equation-block fade-in" style="margin-top:2rem;">
+            <div class="equation">
+                <span class="eq-part eq-cyan">Accurate Retrieval</span>
+                <span class="eq-op">+</span>
+                <span class="eq-part eq-magenta">Honest Generation</span>
+                <span class="eq-op">+</span>
+                <span class="eq-part eq-yellow">Source Citation</span>
+                <span class="eq-op">=</span>
+                <span class="eq-part eq-green">Trustworthy RAG</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 8: THE STACK SO FAR                                   -->
+    <!-- ============================================================ -->
+    <section class="slide-section" id="section-8">
+        <div class="section-label cyan">Part 7 &middot; 7:20&ndash;7:30 PM</div>
+        <h2 class="section-title">The Stack So Far</h2>
+        <p class="section-desc">
+            Where we've been, where we're going. Your agents now have tools, memory, reasoning, and knowledge.
+        </p>
+
+        <!-- Journey Timeline -->
+        <div class="journey-timeline fade-in">
+            <div class="journey-node past">
+                <div class="journey-dot">S1-2</div>
+                <div class="journey-label">AI<br>Fundamentals</div>
+            </div>
+            <div class="journey-node past">
+                <div class="journey-dot">S3-4</div>
+                <div class="journey-label">Prompts &<br>Tools</div>
+            </div>
+            <div class="journey-node past">
+                <div class="journey-dot">S5</div>
+                <div class="journey-label">Real APIs<br>+ Memory</div>
+            </div>
+            <div class="journey-node past">
+                <div class="journey-dot">S6</div>
+                <div class="journey-label">ReAct<br>Patterns</div>
+            </div>
+            <div class="journey-node current">
+                <div class="journey-dot">S7</div>
+                <div class="journey-label">Knowledge<br>RAG</div>
+            </div>
+            <div class="journey-node future">
+                <div class="journey-dot">S8</div>
+                <div class="journey-label">Multi-Agent<br>Collab</div>
+            </div>
+            <div class="journey-node future">
+                <div class="journey-dot">S9</div>
+                <div class="journey-label">Industry<br>Agents</div>
+            </div>
+            <div class="journey-node future">
+                <div class="journey-dot">S10</div>
+                <div class="journey-label">Guard-<br>rails</div>
+            </div>
+            <div class="journey-node future">
+                <div class="journey-dot">S11</div>
+                <div class="journey-label">Eval</div>
+            </div>
+            <div class="journey-node future">
+                <div class="journey-dot">S12+</div>
+                <div class="journey-label">Final<br>Project</div>
+            </div>
+        </div>
+
+        <!-- Stack Visualization -->
+        <h3 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1rem; margin:2.5rem 0 1rem; color:var(--text-secondary);">What Each Session Added</h3>
+        <div class="stack-viz fade-in">
+            <div class="stack-layer future">
+                <span class="stack-session" style="color:var(--text-dim);">S8</span>
+                <span class="stack-label" style="color:var(--text-dim);">Multi-Agent Collaboration</span>
+                <span class="stack-marker" style="color:var(--text-dim);">NEXT</span>
+            </div>
+            <div class="stack-layer current">
+                <span class="stack-session" style="color:var(--cyan);">S7</span>
+                <span class="stack-label" style="color:var(--cyan);">Knowledge / RAG</span>
+                <span class="stack-marker" style="color:var(--cyan);">&#8592; YOU ARE HERE</span>
+            </div>
+            <div class="stack-layer">
+                <span class="stack-session" style="color:var(--magenta);">S6</span>
+                <span class="stack-label">ReAct Reasoning</span>
+                <span class="stack-marker" style="color:var(--text-dim);"></span>
+            </div>
+            <div class="stack-layer">
+                <span class="stack-session" style="color:var(--yellow);">S5</span>
+                <span class="stack-label">Real APIs + Memory</span>
+                <span class="stack-marker" style="color:var(--text-dim);"></span>
+            </div>
+            <div class="stack-layer">
+                <span class="stack-session" style="color:var(--green);">S4</span>
+                <span class="stack-label">Tools (Function Calling)</span>
+                <span class="stack-marker" style="color:var(--text-dim);"></span>
+            </div>
+        </div>
+
+        <div class="callout callout-info fade-in" style="margin-top:1.5rem;">
+            <span class="callout-icon"><i data-lucide="layers" style="width:18px; height:18px; color:var(--cyan);"></i></span>
+            <div>
+                <strong>The pattern:</strong> Tools (S4) &rarr; Real APIs + Memory (S5) &rarr; ReAct Patterns (S6) &rarr; Knowledge/RAG (TODAY). Each session adds a capability. Next: agents that work in teams.
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 9: KEY TAKEAWAYS                                      -->
+    <!-- ============================================================ -->
+    <section class="slide-section" id="section-9">
+        <div class="section-label green">Takeaways</div>
+        <h2 class="section-title">Key Takeaways</h2>
+        <p class="section-desc">
+            Four things to remember from today's session on Knowledge Agents and RAG.
+        </p>
+
+        <div class="fade-in">
+            <div class="takeaway-card">
+                <div class="takeaway-icon" style="background:var(--cyan-glow); color:var(--cyan);">
+                    <i data-lucide="database" style="width:18px; height:18px;"></i>
+                </div>
+                <div class="takeaway-text">
+                    <strong>RAG grounds agents in reality.</strong> Without RAG, your agent hallucinates about your company. With RAG, it answers from real documents. This is the #1 pattern in enterprise AI.
+                </div>
+            </div>
+
+            <div class="takeaway-card">
+                <div class="takeaway-icon" style="background:var(--magenta-glow); color:var(--magenta);">
+                    <i data-lucide="shield" style="width:18px; height:18px;"></i>
+                </div>
+                <div class="takeaway-text">
+                    <strong>Your agent is only as trustworthy as its data.</strong> Outdated documents, contradictions, and gaps are the real-world challenges. Building trust means handling these gracefully.
+                </div>
+            </div>
+
+            <div class="takeaway-card">
+                <div class="takeaway-icon" style="background:var(--yellow-glow); color:var(--yellow);">
+                    <i data-lucide="brain" style="width:18px; height:18px;"></i>
+                </div>
+                <div class="takeaway-text">
+                    <strong>Long context is the accessible RAG.</strong> Claude's 200K token window means business students can build RAG without vector databases. Start simple, scale later.
+                </div>
+            </div>
+
+            <div class="takeaway-card">
+                <div class="takeaway-icon" style="background:var(--green-glow); color:var(--green);">
+                    <i data-lucide="trending-up" style="width:18px; height:18px;"></i>
+                </div>
+                <div class="takeaway-text">
+                    <strong>"I don't know" is a feature.</strong> The best knowledge agents know the limits of their data. An agent that refuses to answer is more trustworthy than one that hallucinates.
+                </div>
+            </div>
+        </div>
+
+        <div class="big-quote fade-in" style="margin-top:2rem;">
+            "Your agent is smart. But it doesn't know YOUR business.<br><span class="highlight">Now it does.</span>"
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 10: HOMEWORK & RESOURCES                              -->
+    <!-- ============================================================ -->
+    <section class="slide-section" id="section-10">
+        <div class="section-label yellow">Homework</div>
+        <h2 class="section-title">Homework &amp; Resources</h2>
+        <p class="section-desc">
+            Build a RAG agent for your domain, break it, evaluate it, and design a real-world deployment.
+        </p>
+
+        <div class="fade-in">
+            <div class="homework-item">
+                <span class="homework-label" style="background:var(--cyan-glow); color:var(--cyan);">Build</span>
+                <div class="homework-text">
+                    Create a RAG agent for a domain you care about &mdash; load 5+ documents (articles, policies, product pages) and build a search tool. Test with 10 questions.
+                </div>
+            </div>
+            <div class="homework-item">
+                <span class="homework-label" style="background:var(--magenta-glow); color:var(--magenta);">Break</span>
+                <div class="homework-text">
+                    Deliberately feed your agent contradicting documents and outdated data. Document 3 failure modes and how you'd fix each one.
+                </div>
+            </div>
+            <div class="homework-item">
+                <span class="homework-label" style="background:var(--green-glow); color:var(--green);">Evaluate</span>
+                <div class="homework-text">
+                    Score your agent's accuracy: For 10 test questions, record whether it retrieved the right document, gave a correct answer, and cited sources properly.
+                </div>
+            </div>
+            <div class="homework-item">
+                <span class="homework-label" style="background:var(--yellow-glow); color:var(--yellow);">Design</span>
+                <div class="homework-text">
+                    Write a 1-page proposal for a knowledge agent at a real company. What documents would it need? Who would use it? What's the risk if it's wrong?
+                </div>
+            </div>
+        </div>
+
+        <!-- Resource links -->
+        <h3 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1.05rem; margin:2.5rem 0 1rem; color:var(--text-primary);">Resources</h3>
+        <div class="grid-2 fade-in">
+            <a href="https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-07/ISOM260_Session7_Knowledge_Agents_RAG.ipynb" target="_blank" style="text-decoration:none;">
+                <div class="card card-accent-cyan" style="cursor:pointer;">
+                    <div class="card-title" style="display:flex; align-items:center; gap:0.5rem;">
+                        <i data-lucide="code" style="width:16px; height:16px; color:var(--cyan);"></i>
+                        Knowledge Agent Notebook
+                    </div>
+                    <div class="card-desc">Build a company knowledge agent with document loading, search, and RAG in Colab.</div>
+                </div>
+            </a>
+            <a href="https://docs.anthropic.com/en/docs/build-with-claude/retrieval-augmented-generation" target="_blank" style="text-decoration:none;">
+                <div class="card card-accent-magenta" style="cursor:pointer;">
+                    <div class="card-title" style="display:flex; align-items:center; gap:0.5rem;">
+                        <i data-lucide="book-open" style="width:16px; height:16px; color:var(--magenta);"></i>
+                        Anthropic RAG Docs
+                    </div>
+                    <div class="card-desc">Official guide to building RAG systems with Claude. Chunking, retrieval, best practices.</div>
+                </div>
+            </a>
+            <a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching" target="_blank" style="text-decoration:none;">
+                <div class="card card-accent-green" style="cursor:pointer;">
+                    <div class="card-title" style="display:flex; align-items:center; gap:0.5rem;">
+                        <i data-lucide="file-text" style="width:16px; height:16px; color:var(--green);"></i>
+                        Long Context Window
+                    </div>
+                    <div class="card-desc">Claude processes 200K tokens at once. The simpler alternative to vector search for smaller datasets.</div>
+                </div>
+            </a>
+            <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank" style="text-decoration:none;">
+                <div class="card card-accent-yellow" style="cursor:pointer;">
+                    <div class="card-title" style="display:flex; align-items:center; gap:0.5rem;">
+                        <i data-lucide="bot" style="width:16px; height:16px; color:var(--yellow);"></i>
+                        Building Effective Agents
+                    </div>
+                    <div class="card-desc">Anthropic's guide to agent patterns &mdash; including RAG as a core capability.</div>
+                </div>
+            </a>
+        </div>
+
+        <div style="text-align:center; margin-top:3rem; padding:2rem 0;">
+            <div style="font-family:'JetBrains Mono',monospace; font-size:0.7rem; color:var(--text-dim); letter-spacing:0.1em; text-transform:uppercase;">
+                Next Session
+            </div>
+            <div style="font-family:'Sora',sans-serif; font-size:1.2rem; font-weight:600; margin-top:0.5rem; color:var(--text-secondary);">
+                Session 8: <span style="color:var(--cyan);">Multi-Agent Systems</span> in Practice
+            </div>
+            <div style="font-size:0.85rem; color:var(--text-dim); margin-top:0.3rem;">
+                One agent is useful. A team of agents is powerful. Build a researcher &rarr; analyst pipeline and learn coordination patterns.
+            </div>
+        </div>
+    </section>
+
+</div><!-- /container -->
+
+<script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+
+    // Sections
+    const sections = document.querySelectorAll('.slide-section');
+    const dotItems = document.querySelectorAll('.dot-nav-item');
+    const progressFill = document.getElementById('progressFill');
+
+    // Progress bar
+    function updateProgress() {
+        const height = document.documentElement.scrollHeight - window.innerHeight;
+        if (height <= 0) return;
+        const scrolled = (window.scrollY / height) * 100;
+        progressFill.style.width = scrolled + '%';
+    }
+
+    // Active section detection
+    function updateActiveSection() {
+        let currentIndex = 0;
+        const scrollPos = window.scrollY + window.innerHeight / 3;
+
+        sections.forEach((section, index) => {
+            const top = section.offsetTop;
+            const bottom = top + section.offsetHeight;
+            if (scrollPos >= top && scrollPos < bottom) {
+                currentIndex = index;
+            }
+        });
+
+        dotItems.forEach((dot, index) => {
+            dot.classList.toggle('active', index === currentIndex);
+        });
+    }
+
+    // Dot navigation click
+    dotItems.forEach(dot => {
+        dot.addEventListener('click', () => {
+            const sectionIndex = parseInt(dot.dataset.section);
+            const target = sections[sectionIndex];
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    });
+
+    // Keyboard navigation
+    let currentSection = 0;
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+            e.preventDefault();
+            if (currentSection < sections.length - 1) {
+                currentSection++;
+                sections[currentSection].scrollIntoView({ behavior: 'smooth' });
+            }
+        } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+            e.preventDefault();
+            if (currentSection > 0) {
+                currentSection--;
+                sections[currentSection].scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    });
+
+    // Sync currentSection with scroll position
+    function syncCurrentSection() {
+        const scrollPos = window.scrollY + window.innerHeight / 3;
+        sections.forEach((section, index) => {
+            if (scrollPos >= section.offsetTop) {
+                currentSection = index;
+            }
+        });
+    }
+
+    // Scroll event handler
+    window.addEventListener('scroll', () => {
+        updateProgress();
+        updateActiveSection();
+        syncCurrentSection();
+    }, { passive: true });
+
+    // Fade-in animation with IntersectionObserver
+    const fadeElements = document.querySelectorAll('.fade-in');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, {
+        threshold: 0.15,
+        rootMargin: '0px 0px -50px 0px'
+    });
+
+    fadeElements.forEach(el => observer.observe(el));
+
+    // Initial state
+    updateProgress();
+    updateActiveSection();
+</script>
+
+</body>
+</html>

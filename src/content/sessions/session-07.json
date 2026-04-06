@@ -106,6 +106,15 @@
   ],
   "resources": [
     {
+      "title": "Session 7 Lecture Guide",
+      "url": "/session-07/lecture-guide.html",
+      "description": "Projectable lecture companion — visual slides for the full Session 7 lecture with RAG architecture diagrams, failure mode analysis, and interactive navigation.",
+      "icon": "presentation",
+      "badge": "Lecture",
+      "badgeType": "interactive",
+      "linkText": "Open lecture guide"
+    },
+    {
       "title": "Knowledge Agent Workshop Notebook",
       "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-07/ISOM260_Session7_Knowledge_Agents_RAG.ipynb",
       "description": "Build a company knowledge agent with document loading, search, and RAG. Uses Claude's long context window \u2014 no vector DB needed.",
