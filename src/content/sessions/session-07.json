@@ -106,6 +106,15 @@
   ],
   "resources": [
     {
+      "title": "RAG Agent: Live Walkthrough",
+      "url": "/session-07/rag-trace-demo.html",
+      "description": "Watch a RAG agent search company documents, rank results, detect outdated data, and generate a cited answer. Interactive animated trace with real CloudSync data.",
+      "icon": "play-circle",
+      "badge": "Start Here",
+      "badgeType": "interactive",
+      "linkText": "Watch the agent"
+    },
+    {
       "title": "Session 7 Lecture Guide",
       "url": "/session-07/lecture-guide.html",
       "description": "Projectable lecture companion — visual slides for the full Session 7 lecture with RAG architecture diagrams, failure mode analysis, and interactive navigation.",

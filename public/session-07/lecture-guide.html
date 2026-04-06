@@ -908,10 +908,336 @@
         .fade-in-delay-3 { transition-delay: 0.3s; }
         .fade-in-delay-4 { transition-delay: 0.4s; }
 
+        /* Comparison visual (Section 1) */
+        .comparison-visual {
+            display: flex;
+            gap: 2rem;
+            margin: 2rem 0;
+            align-items: stretch;
+        }
+        .comparison-panel {
+            flex: 1;
+            border-radius: 12px;
+            padding: 1.75rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+        }
+        .comparison-panel.without-rag {
+            border-color: rgba(255, 0, 110, 0.2);
+            opacity: 0.75;
+            filter: saturate(0.3);
+            background: linear-gradient(135deg, rgba(255,0,110,0.06), var(--bg-card));
+            position: relative;
+            overflow: hidden;
+        }
+        .comparison-panel.without-rag::after {
+            content: 'HALLUCINATED';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-25deg);
+            font-family: 'Sora', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--magenta);
+            opacity: 0.08;
+            letter-spacing: 0.1em;
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .comparison-panel.without-rag .panel-answer {
+            color: var(--magenta);
+            opacity: 0.6;
+            filter: blur(0.3px);
+            font-style: italic;
+            text-decoration: line-through;
+            text-decoration-color: rgba(255, 0, 110, 0.4);
+        }
+        .comparison-panel.with-rag {
+            border-color: rgba(0, 230, 118, 0.35);
+            box-shadow: 0 0 40px rgba(0, 230, 118, 0.12);
+            background: linear-gradient(135deg, rgba(0,230,118,0.04), var(--bg-card));
+        }
+        .comparison-panel.with-rag .panel-answer {
+            color: var(--green);
+            font-weight: 500;
+        }
+        .panel-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.25rem;
+            font-family: 'Sora', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+        .panel-question {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            background: var(--bg-elevated);
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        .panel-answer {
+            font-size: 0.92rem;
+            line-height: 1.7;
+            flex: 1;
+        }
+        .panel-label {
+            margin-top: 1.25rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        .panel-label.bad { color: var(--magenta); }
+        .panel-label.good { color: var(--green); }
+        .citation-badge {
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            background: rgba(0, 230, 118, 0.12);
+            color: var(--green);
+            border: 1px solid rgba(0, 230, 118, 0.25);
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+            margin: 0 0.15rem;
+            vertical-align: middle;
+        }
+
+        /* Document chunking diagram (Section 2) */
+        .chunking-diagram {
+            margin: 2rem 0;
+        }
+        .chunk-full-doc {
+            background: var(--bg-card);
+            border: 1px solid var(--border-strong);
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+        .chunk-full-doc .doc-name {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--cyan);
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+        .chunk-full-doc .doc-sections {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+        .chunk-full-doc .doc-section-line {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            background: var(--bg-elevated);
+        }
+        .chunk-arrow-row {
+            text-align: center;
+            padding: 0.5rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-dim);
+        }
+        .chunk-arrow-row .arrow-symbol {
+            font-size: 1.2rem;
+            color: var(--cyan);
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+        .chunk-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.75rem;
+        }
+        .chunk-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+            position: relative;
+        }
+        .chunk-card .chunk-name {
+            font-family: 'Sora', sans-serif;
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            margin-bottom: 0.4rem;
+        }
+        .chunk-card .chunk-content {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.3rem;
+        }
+        .chunk-card .chunk-overlap {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            color: var(--yellow);
+            background: rgba(255, 214, 0, 0.2);
+            border: 1px solid rgba(255, 214, 0, 0.35);
+            border-radius: 3px;
+            padding: 0.15rem 0.45rem;
+            display: inline-block;
+            font-weight: 600;
+        }
+        .chunk-card .chunk-size {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            color: var(--text-dim);
+            margin-top: 0.35rem;
+        }
+        .chunk-card:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 30%;
+            right: -0.75rem;
+            width: 0.75rem;
+            height: 40%;
+            background: linear-gradient(90deg, rgba(255,214,0,0.12), rgba(255,214,0,0.04));
+            border-radius: 2px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Air Canada timeline (Section 5) */
+        .ac-timeline {
+            position: relative;
+            padding-left: 2.5rem;
+            margin: 2rem 0;
+        }
+        .ac-timeline::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, var(--magenta), var(--orange), var(--green));
+            opacity: 0.6;
+        }
+        .ac-event {
+            position: relative;
+            margin-bottom: 1.75rem;
+        }
+        .ac-event:last-child {
+            margin-bottom: 0;
+        }
+        .ac-dot {
+            position: absolute;
+            left: -2.5rem;
+            top: 0.15rem;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            transform: translateX(4px);
+            z-index: 2;
+        }
+        .ac-dot.error { background: var(--magenta); box-shadow: 0 0 10px rgba(255, 0, 110, 0.4); }
+        .ac-dot.ruling { background: var(--orange); box-shadow: 0 0 10px rgba(255, 145, 0, 0.4); }
+        .ac-dot.resolution { background: var(--green); box-shadow: 0 0 10px rgba(0, 230, 118, 0.4); }
+        .ac-year {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            margin-bottom: 0.25rem;
+        }
+        .ac-event-title {
+            font-family: 'Sora', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 0.35rem;
+            color: var(--text-primary);
+        }
+        .ac-event-desc {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            padding: 0.75rem 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+        .ac-dot.error ~ .ac-event-desc { border-left: 3px solid var(--magenta); }
+        .ac-dot.ruling ~ .ac-event-desc { border-left: 3px solid var(--orange); }
+        .ac-dot.resolution ~ .ac-event-desc { border-left: 3px solid var(--green); }
+        .ac-outcome {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        /* Agent says / should say comparison */
+        .agent-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .agent-says {
+            padding: 1rem 1.25rem;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            line-height: 1.6;
+        }
+        .agent-says.bad {
+            border: 1px solid rgba(255, 0, 110, 0.25);
+            border-left: 4px solid var(--magenta);
+            background: linear-gradient(135deg, rgba(255,0,110,0.04), var(--bg-card));
+        }
+        .agent-says.good {
+            border: 1px solid rgba(0, 230, 118, 0.25);
+            border-left: 4px solid var(--green);
+            background: linear-gradient(135deg, rgba(0,230,118,0.04), var(--bg-card));
+        }
+        .agent-says-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .agent-says-label.bad { color: var(--magenta); }
+        .agent-says-label.good { color: var(--green); }
+        .agent-says-text {
+            color: var(--text-secondary);
+        }
+        .agent-says-text em {
+            font-style: normal;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
             .compare-grid { grid-template-columns: 1fr; }
+            .comparison-visual { flex-direction: column; }
+            .chunk-grid { grid-template-columns: repeat(2, 1fr); }
+            .agent-comparison { grid-template-columns: 1fr; }
             .vs-divider { display: none; }
             .dot-nav { display: none; }
             .slide-section { min-height: auto; padding: 3rem 0; }
@@ -982,45 +1308,34 @@
             Claude knows the internet. It doesn't know your company's SOPs, product catalog, or HR policies. That's a problem &mdash; and RAG is the solution.
         </p>
 
-        <!-- Without RAG vs With RAG -->
-        <h3 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1rem; margin-bottom:1.25rem; color:var(--text-secondary);">Demo: "What's our refund policy?"</h3>
-        <div class="compare-grid fade-in">
-            <div>
-                <div class="card card-accent-magenta">
-                    <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:1rem;">
-                        <i data-lucide="x-circle" style="width:20px; height:20px; color:var(--magenta);"></i>
-                        <span class="card-title" style="margin-bottom:0; color:var(--magenta);">Without RAG</span>
-                    </div>
-                    <div class="card-desc" style="margin-bottom:1rem;">Claude generates a plausible but <strong style="color:var(--magenta);">completely wrong</strong> refund policy based on general training data.</div>
-                    <div class="code-window" style="margin:0;">
-                        <div class="code-body" style="font-size:0.7rem; padding:1rem;"><span class="cmt"># Claude guesses confidently</span>
-<span class="str">"Your refund policy allows returns</span>
-<span class="str"> within 30 days for a full refund..."</span>
-
-<span class="cmt"># Sounds right. Totally wrong.</span>
-<span class="cmt"># Your actual policy is 14 days,</span>
-<span class="cmt"># store credit only.</span></div>
-                    </div>
+        <!-- Without RAG vs With RAG — Dramatic Comparison -->
+        <h3 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1rem; margin-bottom:1.25rem; color:var(--text-secondary);">Demo: "What's CloudSync's refund policy?"</h3>
+        <div class="comparison-visual fade-in">
+            <!-- LEFT: Without RAG -->
+            <div class="comparison-panel without-rag">
+                <div class="panel-header" style="color:var(--magenta);">
+                    <i data-lucide="x-circle" style="width:22px; height:22px; color:var(--magenta);"></i>
+                    Without RAG
                 </div>
+                <div class="panel-question">&gt; What's CloudSync's refund policy?</div>
+                <div class="panel-answer">
+                    "CloudSync offers a <strong>60-day money-back guarantee</strong> on all plans. Simply contact <strong>billing@cloudsync.com</strong> for a full refund, no questions asked."
+                </div>
+                <div class="panel-label bad">&#10060; Hallucinated &mdash; No Document Access</div>
             </div>
-            <div class="vs-divider"><span class="vs-label">vs</span></div>
-            <div>
-                <div class="card card-accent-green" style="border-color:var(--border-strong); box-shadow:0 0 30px rgba(0,230,118,0.06);">
-                    <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:1rem;">
-                        <i data-lucide="check-circle" style="width:20px; height:20px; color:var(--green);"></i>
-                        <span class="card-title" style="margin-bottom:0; color:var(--green);">With RAG</span>
-                    </div>
-                    <div class="card-desc" style="margin-bottom:1rem;">Claude searches your documents first, then answers from <strong style="color:var(--green);">actual company data</strong> with citations.</div>
-                    <div class="code-window" style="margin:0; border-color:rgba(0,230,118,0.2);">
-                        <div class="code-body" style="font-size:0.7rem; padding:1rem;"><span class="cmt"># Claude searches your docs first</span>
-<span class="fn">search_documents</span>(<span class="str">"refund policy"</span>)
-<span class="hl">Found: policies/returns.md</span>
-
-<span class="str">"Per your policy (returns.md):</span>
-<span class="str"> 14-day window, store credit only,</span>
-<span class="str"> receipt required."</span></div>
-                    </div>
+            <!-- RIGHT: With RAG -->
+            <div class="comparison-panel with-rag">
+                <div class="panel-header" style="color:var(--green);">
+                    <i data-lucide="check-circle" style="width:22px; height:22px; color:var(--green);"></i>
+                    With RAG
                 </div>
+                <div class="panel-question">&gt; What's CloudSync's refund policy?</div>
+                <div class="panel-answer">
+                    "CloudSync's annual plans have a <strong>30-day full refund window</strong>. After 30 days, you receive a <strong>pro-rated refund</strong>. Contact <strong>support@cloudsync.com</strong>."
+                    <span class="citation-badge">refund-policy-2024.md</span>
+                    <span class="citation-badge">billing-faq.md</span>
+                </div>
+                <div class="panel-label good">&#9989; Grounded &mdash; Cited from Real Documents</div>
             </div>
         </div>
 
@@ -1119,6 +1434,60 @@
             </div>
         </div>
 
+        <!-- Document Chunking Diagram -->
+        <h3 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1rem; margin:2.5rem 0 1rem; color:var(--text-secondary);">How Document Chunking Works</h3>
+        <div class="chunking-diagram fade-in">
+            <!-- Full document -->
+            <div class="chunk-full-doc">
+                <div class="doc-name">refund-policy-2024.md (Full Document)</div>
+                <div class="doc-sections">
+                    <div class="doc-section-line">&sect;1 &nbsp;General Policy</div>
+                    <div class="doc-section-line">&sect;2 &nbsp;Monthly Plans</div>
+                    <div class="doc-section-line">&sect;3 &nbsp;Annual Plans</div>
+                    <div class="doc-section-line">&sect;4 &nbsp;Enterprise Plans</div>
+                    <div class="doc-section-line">&sect;5 &nbsp;Exceptions</div>
+                </div>
+            </div>
+            <!-- Arrow -->
+            <div class="chunk-arrow-row">
+                <span class="arrow-symbol">&darr;</span>
+                Chunking (with overlap)
+            </div>
+            <!-- Chunk cards -->
+            <div class="chunk-grid">
+                <div class="chunk-card" style="border-color:rgba(0,229,255,0.25);">
+                    <div class="chunk-name" style="color:var(--cyan);">Chunk 1</div>
+                    <div class="chunk-content">&sect;1 + &sect;2</div>
+                    <div class="chunk-overlap">&sect;2 overlap</div>
+                    <div class="chunk-size">~500 tokens</div>
+                </div>
+                <div class="chunk-card" style="border-color:rgba(255,0,110,0.25);">
+                    <div class="chunk-name" style="color:var(--magenta);">Chunk 2</div>
+                    <div class="chunk-content">&sect;2 + &sect;3</div>
+                    <div class="chunk-overlap">&sect;2 &sect;3 overlap</div>
+                    <div class="chunk-size">~500 tokens</div>
+                </div>
+                <div class="chunk-card" style="border-color:rgba(255,214,0,0.25);">
+                    <div class="chunk-name" style="color:var(--yellow);">Chunk 3</div>
+                    <div class="chunk-content">&sect;3 + &sect;4</div>
+                    <div class="chunk-overlap">&sect;3 &sect;4 overlap</div>
+                    <div class="chunk-size">~500 tokens</div>
+                </div>
+                <div class="chunk-card" style="border-color:rgba(0,230,118,0.25);">
+                    <div class="chunk-name" style="color:var(--green);">Chunk 4</div>
+                    <div class="chunk-content">&sect;4 + &sect;5</div>
+                    <div class="chunk-overlap">&sect;4 &sect;5 overlap</div>
+                    <div class="chunk-size">~500 tokens</div>
+                </div>
+            </div>
+        </div>
+        <div class="callout callout-warn fade-in" style="margin-top:1rem;">
+            <span class="callout-icon"><i data-lucide="scissors" style="width:18px; height:18px; color:var(--yellow);"></i></span>
+            <div>
+                <strong>Chunks overlap so context isn't lost at boundaries.</strong> If a section gets split between two chunks, the overlap ensures the full meaning is captured in at least one chunk.
+            </div>
+        </div>
+
         <!-- Chunk example -->
         <div class="code-window fade-in">
             <div class="code-header">
@@ -1136,6 +1505,13 @@
     <span class="fn">"last_updated"</span>: <span class="str">"2024-11-15"</span>
   }
 }</div>
+        </div>
+
+        <!-- RAG Trace Demo callout -->
+        <div class="demo-callout" style="border-left: 4px solid var(--cyan); background: var(--cyan-glow); padding: 1.5rem; border-radius: 12px; margin: 2rem 0;">
+            <h4 style="color: var(--cyan); margin-bottom: 0.5rem; font-family: 'Sora', sans-serif; font-weight: 600;">&#127916; See It In Action</h4>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.75rem;">Watch a RAG agent search, rank, verify, and generate &mdash; step by step in our interactive trace demo.</p>
+            <a href="/session-07/rag-trace-demo.html" style="color: var(--cyan); font-weight: 600; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; text-decoration: none;">&rarr; Open RAG Agent: Live Trace</a>
         </div>
     </section>
 
@@ -1262,16 +1638,54 @@ system = <span class="str">"Here are ALL 200 company</span>
             Your agent is only as trustworthy as its data. What happens when documents are wrong, outdated, or contradictory?
         </p>
 
-        <!-- Air Canada callout -->
-        <div class="callout callout-error fade-in">
-            <span class="callout-icon"><i data-lucide="alert-octagon" style="width:18px; height:18px; color:var(--magenta);"></i></span>
-            <div>
-                <strong>The Air Canada Case (2024):</strong> Air Canada's chatbot was held legally liable for answers based on outdated policy documents. A customer relied on the chatbot's incorrect bereavement fare info and won in court. <strong style="color:var(--text-primary);">Your agent's answers have real consequences.</strong>
+        <!-- Air Canada Case — Visual Timeline -->
+        <h3 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1rem; margin-bottom:1.25rem; color:var(--text-secondary);">The Air Canada Case &mdash; A Real-World Warning</h3>
+        <div class="ac-timeline fade-in">
+            <div class="ac-event">
+                <div class="ac-dot error"></div>
+                <div class="ac-year" style="color:var(--magenta);">2022</div>
+                <div class="ac-event-title">Customer Asks Chatbot About Bereavement Fare</div>
+                <div class="ac-event-desc">
+                    Customer asks Air Canada's chatbot about bereavement fares. The chatbot responds: <strong style="color:var(--magenta);">"You can book now and request a retroactive bereavement discount within 90 days."</strong>
+                </div>
+            </div>
+            <div class="ac-event">
+                <div class="ac-dot error"></div>
+                <div class="ac-year" style="color:var(--magenta);">2023</div>
+                <div class="ac-event-title">Air Canada Denies the Discount</div>
+                <div class="ac-event-desc">
+                    Customer requests the retroactive discount. Air Canada responds: <strong style="color:var(--text-primary);">"No, that's not our policy. The chatbot was wrong."</strong> Air Canada argues the chatbot is a separate entity and they aren't liable for its answers.
+                </div>
+            </div>
+            <div class="ac-event">
+                <div class="ac-dot ruling"></div>
+                <div class="ac-year" style="color:var(--orange);">2024</div>
+                <div class="ac-event-title">Civil Resolution Tribunal Rules</div>
+                <div class="ac-event-desc">
+                    The tribunal finds: <strong style="color:var(--orange);">"Air Canada is responsible for information provided by its chatbot. The customer relied on it in good faith."</strong> The company cannot disclaim its own agent's answers.
+                </div>
+            </div>
+            <div class="ac-event">
+                <div class="ac-dot resolution"></div>
+                <div class="ac-year" style="color:var(--green);">Outcome</div>
+                <div class="ac-event-title">Air Canada Pays Damages</div>
+                <div class="ac-outcome" style="background:var(--green-glow); color:var(--green);">
+                    &#128176; Air Canada pays ~$800 in damages + tribunal fees
+                </div>
             </div>
         </div>
 
-        <!-- Four failure cards -->
-        <div class="grid-2 fade-in" style="margin-top:2rem;">
+        <div class="callout callout-error fade-in" style="margin-top:1rem;">
+            <span class="callout-icon"><i data-lucide="alert-octagon" style="width:18px; height:18px; color:var(--magenta);"></i></span>
+            <div>
+                <strong>Your agent's answers have real consequences.</strong> If your chatbot says it, your company owns it. Outdated documents create legal liability.
+            </div>
+        </div>
+
+        <!-- Three failure modes with Agent Says / Should Say -->
+        <h3 style="font-family:'Sora',sans-serif; font-weight:600; font-size:1rem; margin:2.5rem 0 1.25rem; color:var(--text-secondary);">Common Failure Modes</h3>
+        <div style="display:flex; flex-direction:column; gap:1.5rem;" class="fade-in">
+            <!-- Outdated Data -->
             <div class="failure-card">
                 <div class="failure-title">
                     <i data-lucide="clock" style="width:16px; height:16px; color:var(--magenta);"></i>
@@ -1280,7 +1694,18 @@ system = <span class="str">"Here are ALL 200 company</span>
                 <div class="failure-desc">
                     Agent quotes last year's pricing confidently. The document hasn't been updated but the policy changed 3 months ago. Users trust the answer.
                 </div>
+                <div class="agent-comparison">
+                    <div class="agent-says bad">
+                        <div class="agent-says-label bad"><i data-lucide="x-circle" style="width:14px; height:14px;"></i> Agent Says</div>
+                        <div class="agent-says-text">"CloudSync's refund policy allows 60-day full refunds." <em>(from 2022 doc)</em></div>
+                    </div>
+                    <div class="agent-says good">
+                        <div class="agent-says-label good"><i data-lucide="check-circle" style="width:14px; height:14px;"></i> Should Say</div>
+                        <div class="agent-says-text">"CloudSync's current policy (2024) allows 30-day refunds. Note: an older policy referenced 60 days but has been superseded."</div>
+                    </div>
+                </div>
             </div>
+            <!-- Contradicting Documents -->
             <div class="failure-card">
                 <div class="failure-title">
                     <i data-lucide="git-compare" style="width:16px; height:16px; color:var(--magenta);"></i>
@@ -1289,7 +1714,18 @@ system = <span class="str">"Here are ALL 200 company</span>
                 <div class="failure-desc">
                     Two policies say different things about the same topic. Which one does the agent choose? Does it flag the contradiction or silently pick one?
                 </div>
+                <div class="agent-comparison">
+                    <div class="agent-says bad">
+                        <div class="agent-says-label bad"><i data-lucide="x-circle" style="width:14px; height:14px;"></i> Agent Says</div>
+                        <div class="agent-says-text">"You can return the product within 14 days." <em>(picked one randomly)</em></div>
+                    </div>
+                    <div class="agent-says good">
+                        <div class="agent-says-label good"><i data-lucide="check-circle" style="width:14px; height:14px;"></i> Should Say</div>
+                        <div class="agent-says-text">"I found conflicting information: Document A says 14 days, Document B says 30 days. Please check with support for the current policy."</div>
+                    </div>
+                </div>
             </div>
+            <!-- No Relevant Data -->
             <div class="failure-card">
                 <div class="failure-title">
                     <i data-lucide="help-circle" style="width:16px; height:16px; color:var(--magenta);"></i>
@@ -1298,7 +1734,18 @@ system = <span class="str">"Here are ALL 200 company</span>
                 <div class="failure-desc">
                     Agent should say "I don't have information on that" &mdash; not hallucinate a plausible answer. The hardest failure mode to catch.
                 </div>
+                <div class="agent-comparison">
+                    <div class="agent-says bad">
+                        <div class="agent-says-label bad"><i data-lucide="x-circle" style="width:14px; height:14px;"></i> Agent Says</div>
+                        <div class="agent-says-text">"CloudSync's enterprise tier costs $999/month with unlimited users." <em>(hallucinated)</em></div>
+                    </div>
+                    <div class="agent-says good">
+                        <div class="agent-says-label good"><i data-lucide="check-circle" style="width:14px; height:14px;"></i> Should Say</div>
+                        <div class="agent-says-text">"I don't have information about enterprise pricing in my available documents. Please contact sales@cloudsync.com for enterprise pricing."</div>
+                    </div>
+                </div>
             </div>
+            <!-- Wrong Retrieval -->
             <div class="failure-card">
                 <div class="failure-title">
                     <i data-lucide="shuffle" style="width:16px; height:16px; color:var(--magenta);"></i>
