@@ -158,6 +158,42 @@
       "badge": "Guide",
       "badgeType": "interactive",
       "linkText": "Read guide"
+    },
+    {
+      "title": "Speaker Notes \u2014 Professor's Command Center",
+      "url": "/session-07/speaker-notes.html",
+      "description": "Private dashboard with talking points, demo cues, discussion prompts, and live timers for each lecture section. Open on your laptop while projecting the lecture guide.",
+      "icon": "mic",
+      "badge": "Instructor",
+      "badgeType": "interactive",
+      "linkText": "Open speaker notes"
+    },
+    {
+      "title": "Workshop Timer",
+      "url": "/session-07/workshop-timer.html",
+      "description": "Full-screen projectable 45-minute countdown with 3 phases, auto-transitions, audio chimes, and troubleshooting tips for the hands-on Colab session.",
+      "icon": "timer",
+      "badge": "Workshop",
+      "badgeType": "interactive",
+      "linkText": "Start timer"
+    },
+    {
+      "title": "RAG Failure Modes Demo",
+      "url": "/session-07/failure-modes-demo.html",
+      "description": "Interactive demo of three RAG failure scenarios \u2014 outdated documents, contradictions, and unanswerable questions. Toggle between broken and fixed agent behaviors.",
+      "icon": "shield-alert",
+      "badge": "Demo",
+      "badgeType": "interactive",
+      "linkText": "Explore failures"
+    },
+    {
+      "title": "Homework Guide \u2014 Build Your Knowledge Agent",
+      "url": "/session-07/homework-guide.html",
+      "description": "Step-by-step walkthrough for the Session 7 homework: build a RAG agent, stress-test it, evaluate accuracy, and design a real-world proposal. Includes starter code and rubrics.",
+      "icon": "book-check",
+      "badge": "Homework",
+      "badgeType": "interactive",
+      "linkText": "Start homework"
     }
   ],
   "activities": [

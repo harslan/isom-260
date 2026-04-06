@@ -1,0 +1,1694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Build Your Own Knowledge Agent — Homework Guide | ISOM 260</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+    <style>
+        /* ====================================================================
+           DESIGN SYSTEM — matches nanoclaw guides exactly
+           ==================================================================== */
+        :root {
+            --bg: #0a0e1a;
+            --bg-card: #0d1220;
+            --bg-code: #080c16;
+            --bg-elevated: #141929;
+            --bg-line-highlight: rgba(0, 229, 255, 0.06);
+            --cyan: #00e5ff;
+            --cyan-dim: #00b8d4;
+            --cyan-ghost: rgba(0, 229, 255, 0.08);
+            --magenta: #ff006e;
+            --magenta-ghost: rgba(255, 0, 110, 0.08);
+            --yellow: #ffd600;
+            --yellow-ghost: rgba(255, 214, 0, 0.08);
+            --green: #00e676;
+            --green-ghost: rgba(0, 230, 118, 0.08);
+            --orange: #ff9100;
+            --orange-ghost: rgba(255, 145, 0, 0.08);
+            --purple: #b388ff;
+            --purple-ghost: rgba(179, 136, 255, 0.08);
+            --text: #e0e6f0;
+            --text-secondary: #8892a8;
+            --text-dim: #4a5468;
+            --border: rgba(0, 229, 255, 0.1);
+            --border-strong: rgba(0, 229, 255, 0.25);
+            --grid: rgba(0, 229, 255, 0.03);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                linear-gradient(var(--grid) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+        }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 1; }
+
+        /* ====== PROGRESS BAR ====== */
+        .progress-bar {
+            position: fixed; top: 0; left: 0; right: 0;
+            height: 3px; background: var(--bg); z-index: 100;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--green), var(--cyan));
+            width: 0%; transition: width 0.3s;
+        }
+
+        /* ====== HERO ====== */
+        .hero { padding: 5rem 0 2rem; }
+
+        .badge {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            padding: 0.4rem 1rem;
+            background: var(--cyan-ghost);
+            border: 1px solid rgba(0, 229, 255, 0.2);
+            border-radius: 100px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase;
+            color: var(--cyan); margin-bottom: 1.5rem;
+        }
+        .badge .dot { width: 6px; height: 6px; background: var(--cyan); border-radius: 50%; animation: pulse 2s ease-in-out infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+        .hero h1 {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(2.2rem, 5vw, 3.5rem);
+            font-weight: 800; line-height: 1.1; letter-spacing: -0.03em;
+            margin-bottom: 1rem;
+        }
+        .hero h1 .cyan { color: var(--cyan); }
+        .hero h1 .green { color: var(--green); }
+
+        .hero-sub {
+            font-size: 1.1rem; color: var(--text-secondary);
+            max-width: 700px; margin-bottom: 1.5rem;
+        }
+
+        .hero-note {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            padding: 0.6rem 1rem;
+            background: var(--green-ghost);
+            border: 1px solid rgba(0, 230, 118, 0.2);
+            border-radius: 8px;
+            font-size: 0.85rem; color: var(--green);
+            margin-bottom: 2rem;
+        }
+
+        /* ====== STEP INDICATOR (per-section) ====== */
+        .step-indicator {
+            display: flex; align-items: center; gap: 0.5rem;
+            margin-bottom: 1.5rem; flex-wrap: wrap;
+        }
+        .step-dot {
+            width: 32px; height: 32px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Sora', sans-serif;
+            font-weight: 700; font-size: 0.75rem;
+            border: 2px solid var(--border);
+            color: var(--text-dim); transition: all 0.3s; flex-shrink: 0;
+        }
+        .step-dot.active { border-color: var(--cyan); color: var(--cyan); background: rgba(0, 229, 255, 0.08); }
+        .step-dot.done { border-color: var(--green); color: var(--green); background: rgba(0, 230, 118, 0.08); }
+        .step-line { flex: 1; height: 2px; background: var(--border); min-width: 8px; }
+
+        /* ====== SECTIONS ====== */
+        .section { padding: 3.5rem 0; border-top: 1px solid var(--border); }
+
+        .section-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
+            margin-bottom: 0.75rem;
+            display: flex; align-items: center; gap: 0.75rem;
+        }
+        .section-label::before { content: ''; width: 24px; height: 1px; }
+        .section-label.cyan { color: var(--cyan); } .section-label.cyan::before { background: var(--cyan); }
+        .section-label.magenta { color: var(--magenta); } .section-label.magenta::before { background: var(--magenta); }
+        .section-label.green { color: var(--green); } .section-label.green::before { background: var(--green); }
+        .section-label.yellow { color: var(--yellow); } .section-label.yellow::before { background: var(--yellow); }
+        .section-label.orange { color: var(--orange); } .section-label.orange::before { background: var(--orange); }
+        .section-label.purple { color: var(--purple); } .section-label.purple::before { background: var(--purple); }
+
+        .section-title {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 700;
+            letter-spacing: -0.02em; margin-bottom: 0.75rem;
+        }
+
+        .section-desc { color: var(--text-secondary); font-size: 0.95rem; max-width: 700px; margin-bottom: 2rem; }
+
+        /* ====== FLOW DIAGRAM ====== */
+        .flow-horizontal {
+            display: flex; align-items: center;
+            gap: 0; margin: 2rem 0;
+            overflow-x: auto; padding-bottom: 0.5rem;
+        }
+        .flow-h-step {
+            display: flex; flex-direction: column; align-items: center;
+            text-align: center; min-width: 110px; flex-shrink: 0;
+        }
+        .flow-h-icon {
+            width: 48px; height: 48px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem; border: 2px solid var(--cyan);
+            background: var(--bg); margin-bottom: 0.5rem;
+        }
+        .flow-h-icon.green { border-color: var(--green); }
+        .flow-h-icon.magenta { border-color: var(--magenta); }
+        .flow-h-icon.yellow { border-color: var(--yellow); }
+        .flow-h-icon.orange { border-color: var(--orange); }
+        .flow-h-icon.purple { border-color: var(--purple); }
+        .flow-h-label {
+            font-family: 'Sora', sans-serif;
+            font-size: 0.72rem; font-weight: 600;
+            color: var(--text); line-height: 1.3;
+        }
+        .flow-h-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem; color: var(--text-dim);
+            margin-bottom: 0.25rem;
+        }
+        .flow-h-arrow {
+            color: var(--text-dim); font-size: 1.2rem;
+            padding: 0 0.25rem; flex-shrink: 0;
+            margin-top: -1.5rem;
+        }
+
+        .flow-vertical {
+            display: flex; flex-direction: column; align-items: center;
+            gap: 0; margin: 2rem 0;
+        }
+        .flow-step {
+            display: flex; align-items: center; gap: 1rem;
+            width: 100%; max-width: 550px;
+        }
+        .flow-icon-col {
+            display: flex; flex-direction: column; align-items: center;
+            width: 50px; flex-shrink: 0;
+        }
+        .flow-icon {
+            width: 44px; height: 44px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem; border: 2px solid; background: var(--bg); z-index: 1;
+        }
+        .flow-line-v { width: 2px; height: 24px; }
+        .flow-body { padding: 0.75rem 0; }
+        .flow-body h4 { font-family: 'Sora', sans-serif; font-size: 0.95rem; font-weight: 600; margin-bottom: 0.15rem; }
+        .flow-body p { font-size: 0.82rem; color: var(--text-secondary); margin: 0; }
+        .flow-spacer { height: 0; }
+
+        /* ====== DOMAIN / IDEA GRID ====== */
+        .idea-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 1.25rem; margin: 2rem 0;
+        }
+        .idea-grid.five-col {
+            grid-template-columns: repeat(5, 1fr);
+        }
+        .idea-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px; padding: 1.5rem;
+            text-align: center; transition: all 0.3s;
+        }
+        .idea-card:hover { border-color: var(--border-strong); transform: translateY(-2px); }
+        .idea-emoji { font-size: 2.2rem; margin-bottom: 0.5rem; }
+        .idea-card h5 { font-family: 'Sora', sans-serif; font-size: 0.9rem; font-weight: 600; margin-bottom: 0.25rem; }
+        .idea-card p { font-size: 0.78rem; color: var(--text-secondary); margin: 0; }
+
+        .idea-card:nth-child(1) { border-top: 3px solid var(--cyan); }
+        .idea-card:nth-child(2) { border-top: 3px solid var(--magenta); }
+        .idea-card:nth-child(3) { border-top: 3px solid var(--green); }
+        .idea-card:nth-child(4) { border-top: 3px solid var(--yellow); }
+        .idea-card:nth-child(5) { border-top: 3px solid var(--orange); }
+
+        /* ====== ANALOGY CARDS ====== */
+        .analogy-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 1.25rem; margin: 2rem 0;
+        }
+        .analogy-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px; padding: 1.75rem;
+            text-align: center; transition: all 0.3s;
+        }
+        .analogy-card:hover { border-color: var(--border-strong); transform: translateY(-2px); }
+        .analogy-emoji { font-size: 2.5rem; margin-bottom: 0.75rem; }
+        .analogy-card h4 {
+            font-family: 'Sora', sans-serif;
+            font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem;
+        }
+        .analogy-card p { font-size: 0.82rem; color: var(--text-secondary); margin: 0; }
+
+        .analogy-card.card-cyan { border-top: 3px solid var(--cyan); }
+        .analogy-card.card-magenta { border-top: 3px solid var(--magenta); }
+        .analogy-card.card-green { border-top: 3px solid var(--green); }
+        .analogy-card.card-yellow { border-top: 3px solid var(--yellow); }
+        .analogy-card.card-orange { border-top: 3px solid var(--orange); }
+        .analogy-card.card-purple { border-top: 3px solid var(--purple); }
+
+        /* ====== FAILURE MODE CARDS ====== */
+        .failure-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 1.25rem; margin: 2rem 0;
+        }
+        .failure-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px; padding: 1.5rem;
+            transition: all 0.3s; position: relative;
+            overflow: hidden;
+        }
+        .failure-card::before {
+            content: '';
+            position: absolute; top: 0; left: 0; right: 0;
+            height: 3px;
+        }
+        .failure-card:hover { border-color: var(--border-strong); transform: translateY(-2px); }
+        .failure-card .fc-icon {
+            width: 40px; height: 40px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 0.75rem;
+        }
+        .failure-card h4 {
+            font-family: 'Sora', sans-serif;
+            font-size: 0.95rem; font-weight: 700; margin-bottom: 0.5rem;
+        }
+        .failure-card p { font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 0.5rem; }
+        .failure-card .fc-example {
+            background: var(--bg-code); border: 1px solid var(--border);
+            border-radius: 6px; padding: 0.6rem 0.75rem;
+            font-size: 0.78rem; color: var(--text-secondary);
+            margin: 0.5rem 0;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .failure-card .fc-observe {
+            font-size: 0.78rem; font-style: italic;
+            color: var(--text-dim); margin: 0;
+        }
+
+        .failure-card.card-red::before { background: var(--magenta); }
+        .failure-card.card-red .fc-icon { background: var(--magenta-ghost); color: var(--magenta); }
+        .failure-card.card-red h4 { color: var(--magenta); }
+
+        .failure-card.card-orange::before { background: var(--orange); }
+        .failure-card.card-orange .fc-icon { background: var(--orange-ghost); color: var(--orange); }
+        .failure-card.card-orange h4 { color: var(--orange); }
+
+        .failure-card.card-yellow::before { background: var(--yellow); }
+        .failure-card.card-yellow .fc-icon { background: var(--yellow-ghost); color: var(--yellow); }
+        .failure-card.card-yellow h4 { color: var(--yellow); }
+
+        /* ====== SIDE-BY-SIDE ====== */
+        .side-by-side {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 1.5rem; margin: 2rem 0;
+        }
+        .sbs-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px; padding: 1.5rem;
+        }
+        .sbs-card h4 {
+            font-family: 'Sora', sans-serif;
+            font-size: 0.95rem; font-weight: 600;
+            margin-bottom: 0.75rem;
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+        .sbs-card p, .sbs-card li { font-size: 0.85rem; color: var(--text-secondary); }
+        .sbs-card ul { margin: 0.5rem 0 0 1.25rem; }
+        .sbs-card li { margin-bottom: 0.35rem; }
+        .sbs-card strong { color: var(--text); }
+
+        /* ====== INSTRUCTION CARDS ====== */
+        .inst-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px; padding: 1.5rem 1.75rem;
+            margin: 1.5rem 0;
+        }
+        .inst-card h4 {
+            font-family: 'Sora', sans-serif;
+            font-size: 0.95rem; font-weight: 600;
+            margin-bottom: 1rem; color: var(--text);
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+
+        .inst-list {
+            counter-reset: inst; list-style: none; padding: 0;
+        }
+        .inst-list li {
+            counter-increment: inst;
+            padding: 0.6rem 0 0.6rem 2.5rem;
+            position: relative;
+            border-bottom: 1px solid rgba(0, 229, 255, 0.05);
+            font-size: 0.9rem; color: var(--text-secondary);
+        }
+        .inst-list li:last-child { border-bottom: none; }
+        .inst-list li::before {
+            content: counter(inst);
+            position: absolute; left: 0; top: 0.6rem;
+            width: 22px; height: 22px;
+            background: var(--cyan-ghost); color: var(--cyan);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem; font-weight: 700; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            border: 1px solid rgba(0, 229, 255, 0.2);
+        }
+        .inst-list li strong { color: var(--text); }
+        .inst-list li a { color: var(--cyan); text-decoration: none; }
+        .inst-list li a:hover { text-decoration: underline; }
+
+        .inst-list.green-nums li::before { background: var(--green-ghost); color: var(--green); border-color: rgba(0, 230, 118, 0.2); }
+        .inst-list.magenta-nums li::before { background: var(--magenta-ghost); color: var(--magenta); border-color: rgba(255, 0, 110, 0.2); }
+        .inst-list.yellow-nums li::before { background: var(--yellow-ghost); color: var(--yellow); border-color: rgba(255, 214, 0, 0.2); }
+
+        /* ====== CHECKLIST ====== */
+        .checklist {
+            list-style: none; padding: 0; margin: 1.5rem 0;
+        }
+        .checklist li {
+            padding: 0.6rem 0 0.6rem 2.25rem;
+            position: relative;
+            border-bottom: 1px solid rgba(0, 229, 255, 0.05);
+            font-size: 0.9rem; color: var(--text-secondary);
+        }
+        .checklist li:last-child { border-bottom: none; }
+        .checklist li::before {
+            content: '';
+            position: absolute; left: 0; top: 0.75rem;
+            width: 18px; height: 18px;
+            border: 2px solid var(--border-strong);
+            border-radius: 4px;
+        }
+        .checklist li strong { color: var(--text); }
+
+        /* ====== CALLOUTS ====== */
+        .callout {
+            border-radius: 10px; padding: 1.25rem 1.5rem;
+            margin: 1.5rem 0; font-size: 0.9rem; color: var(--text-secondary);
+        }
+        .callout strong { display: block; margin-bottom: 0.25rem; }
+        .callout p { margin-bottom: 0.5rem; }
+        .callout p:last-child { margin-bottom: 0; }
+
+        .callout-warn { background: var(--yellow-ghost); border: 1px solid rgba(255, 214, 0, 0.2); }
+        .callout-warn strong { color: var(--yellow); }
+        .callout-success { background: var(--green-ghost); border: 1px solid rgba(0, 230, 118, 0.2); }
+        .callout-success strong { color: var(--green); }
+        .callout-info { background: var(--cyan-ghost); border: 1px solid rgba(0, 229, 255, 0.2); }
+        .callout-info strong { color: var(--cyan); }
+        .callout-error { background: var(--magenta-ghost); border: 1px solid rgba(255, 0, 110, 0.2); }
+        .callout-error strong { color: var(--magenta); }
+
+        .callout ul { margin: 0.5rem 0 0 1.25rem; }
+        .callout li { margin-bottom: 0.35rem; font-size: 0.88rem; }
+
+        /* ====== CODE WINDOWS (Mac-style) ====== */
+        .code-window {
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-radius: 12px; overflow: hidden; margin: 1.5rem 0;
+        }
+        .code-header {
+            padding: 0.75rem 1.5rem;
+            background: var(--bg-elevated);
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+        .dot-row { display: flex; gap: 0.35rem; margin-right: 0.75rem; }
+        .dot-row span { width: 8px; height: 8px; border-radius: 50%; }
+        .dot-red { background: #ff5f56; }
+        .dot-yellow { background: #ffbd2e; }
+        .dot-green { background: #27c93f; }
+        .code-header .filename {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem; color: var(--text-dim);
+            flex: 1;
+        }
+        .copy-btn {
+            background: none; border: 1px solid var(--border);
+            color: var(--text-dim); padding: 0.3rem 0.65rem;
+            border-radius: 6px; cursor: pointer; font-size: 0.7rem;
+            font-family: 'JetBrains Mono', monospace;
+            transition: all 0.2s; display: flex; align-items: center; gap: 0.35rem;
+        }
+        .copy-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+        .copy-btn.copied { border-color: var(--green); color: var(--green); }
+
+        .code-body { padding: 1.25rem 1.5rem; overflow-x: auto; }
+
+        .code-line {
+            display: flex; min-height: 1.65em;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem; line-height: 1.7;
+        }
+        .code-line.dimmed { opacity: 0.25; }
+        .code-line.hl-cyan { opacity: 1; background: var(--bg-line-highlight); border-left: 3px solid var(--cyan); padding-left: 0.75rem; margin-left: -0.75rem; border-radius: 0 4px 4px 0; }
+        .code-line.hl-magenta { opacity: 1; background: var(--magenta-ghost); border-left: 3px solid var(--magenta); padding-left: 0.75rem; margin-left: -0.75rem; border-radius: 0 4px 4px 0; }
+        .code-line.hl-green { opacity: 1; background: var(--green-ghost); border-left: 3px solid var(--green); padding-left: 0.75rem; margin-left: -0.75rem; border-radius: 0 4px 4px 0; }
+        .code-line.hl-yellow { opacity: 1; background: var(--yellow-ghost); border-left: 3px solid var(--yellow); padding-left: 0.75rem; margin-left: -0.75rem; border-radius: 0 4px 4px 0; }
+
+        .line-num {
+            min-width: 30px; color: var(--text-dim);
+            text-align: right; padding-right: 1.25rem; user-select: none;
+        }
+        .line-code { flex: 1; white-space: pre; }
+
+        .kw { color: var(--magenta); }
+        .fn { color: #82aaff; }
+        .str { color: #c3e88d; }
+        .cm { color: #546e7a; font-style: italic; }
+        .num-lit { color: var(--orange); }
+        .type { color: var(--cyan); }
+
+        .code-annotation {
+            padding: 0.75rem 1.5rem;
+            background: var(--bg-elevated);
+            border-top: 1px solid var(--border);
+            font-size: 0.85rem; color: var(--text-secondary);
+            display: flex; align-items: flex-start; gap: 0.5rem;
+        }
+        .code-annotation .arrow { color: var(--cyan); font-weight: 700; flex-shrink: 0; }
+        .code-annotation strong { color: var(--text); }
+
+        /* ====== TABLES ====== */
+        .styled-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.82rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .styled-table thead { background: var(--bg-elevated); }
+        .styled-table th {
+            padding: 0.85rem 1rem;
+            text-align: left;
+            font-family: 'Sora', sans-serif;
+            font-weight: 600; font-size: 0.78rem;
+            color: var(--cyan);
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--border);
+        }
+        .styled-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid rgba(0, 229, 255, 0.05);
+            color: var(--text-secondary);
+        }
+        .styled-table tr:last-child td { border-bottom: none; }
+        .styled-table td:first-child { color: var(--text); font-weight: 500; }
+        .styled-table .check-yes { color: var(--green); }
+        .styled-table .check-no { color: var(--magenta); }
+        .styled-table .check-warn { color: var(--yellow); }
+
+        /* ====== SCORE CARD ====== */
+        .score-card {
+            background: linear-gradient(135deg, var(--green-ghost), var(--cyan-ghost));
+            border: 1px solid var(--border-strong);
+            border-radius: 16px; padding: 2rem 2.5rem;
+            margin: 2rem 0; position: relative;
+        }
+        .score-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--green), var(--cyan));
+            border-radius: 16px 16px 0 0;
+        }
+        .score-card h4 {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.05rem; font-weight: 700;
+            color: var(--green); margin-bottom: 0.75rem;
+        }
+        .score-card p { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.5rem; }
+        .score-card .score-formula {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem; color: var(--cyan);
+            padding: 0.75rem 1rem;
+            background: var(--bg-code); border: 1px solid var(--border);
+            border-radius: 8px; margin: 0.75rem 0;
+        }
+        .score-card .grading {
+            display: flex; gap: 1.5rem; flex-wrap: wrap;
+            margin-top: 0.75rem;
+        }
+        .score-card .grade {
+            font-size: 0.82rem; display: flex; align-items: center; gap: 0.4rem;
+        }
+        .score-card .grade .dot-g { width: 8px; height: 8px; border-radius: 50%; }
+        .score-card .grade .dot-g.g-green { background: var(--green); }
+        .score-card .grade .dot-g.g-yellow { background: var(--yellow); }
+        .score-card .grade .dot-g.g-red { background: var(--magenta); }
+
+        /* ====== PROPOSAL TEMPLATE ====== */
+        .proposal-template {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px; overflow: hidden; margin: 1.5rem 0;
+        }
+        .proposal-template .pt-header {
+            padding: 1rem 1.5rem;
+            background: var(--bg-elevated);
+            border-bottom: 1px solid var(--border);
+            font-family: 'Sora', sans-serif;
+            font-size: 0.85rem; font-weight: 600;
+            color: var(--purple);
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+        .proposal-template .pt-body { padding: 0; }
+        .pt-row {
+            display: flex; padding: 0.85rem 1.5rem;
+            border-bottom: 1px solid rgba(0, 229, 255, 0.05);
+            font-size: 0.88rem;
+        }
+        .pt-row:last-child { border-bottom: none; }
+        .pt-num {
+            width: 28px; flex-shrink: 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem; font-weight: 700;
+            color: var(--purple); padding-top: 0.1rem;
+        }
+        .pt-label {
+            width: 140px; flex-shrink: 0;
+            font-weight: 600; color: var(--text);
+        }
+        .pt-desc {
+            flex: 1; color: var(--text-secondary);
+        }
+
+        /* ====== EXAMPLE PROPOSAL CARD ====== */
+        .example-card {
+            background: linear-gradient(135deg, var(--purple-ghost), var(--cyan-ghost));
+            border: 1px solid rgba(179, 136, 255, 0.25);
+            border-radius: 16px; padding: 2rem 2.5rem;
+            margin: 2rem 0; position: relative;
+        }
+        .example-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--purple), var(--cyan));
+            border-radius: 16px 16px 0 0;
+        }
+        .example-card h4 {
+            font-family: 'Sora', sans-serif;
+            font-size: 1rem; font-weight: 700;
+            color: var(--purple); margin-bottom: 1rem;
+        }
+        .example-card .ex-row {
+            display: flex; gap: 0.75rem;
+            padding: 0.4rem 0; font-size: 0.88rem;
+        }
+        .example-card .ex-label {
+            font-weight: 600; color: var(--text);
+            min-width: 110px; flex-shrink: 0;
+        }
+        .example-card .ex-val { color: var(--text-secondary); }
+
+        /* ====== FAQ COLLAPSIBLES ====== */
+        .faq-item {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 10px; margin: 0.75rem 0; overflow: hidden;
+        }
+        .faq-q {
+            padding: 1rem 1.5rem; cursor: pointer;
+            display: flex; align-items: center; justify-content: space-between;
+            transition: background 0.2s;
+            font-size: 0.9rem; font-weight: 600; color: var(--text);
+        }
+        .faq-q:hover { background: var(--bg-elevated); }
+        .faq-q .faq-emoji { margin-right: 0.75rem; font-size: 1rem; }
+        .faq-arrow { color: var(--text-dim); transition: transform 0.3s; font-size: 1rem; flex-shrink: 0; margin-left: 1rem; }
+        .faq-item.open .faq-arrow { transform: rotate(90deg); }
+        .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+        .faq-item.open .faq-a { max-height: 500px; }
+        .faq-a-inner {
+            padding: 0 1.5rem 1.25rem; font-size: 0.88rem;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border); padding-top: 1rem;
+        }
+
+        /* ====== TAKEAWAY ====== */
+        .takeaway {
+            background: linear-gradient(135deg, var(--green-ghost), var(--cyan-ghost));
+            border: 1px solid var(--border-strong);
+            border-radius: 16px; padding: 2.5rem; margin: 3rem 0;
+            position: relative;
+        }
+        .takeaway::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--green), var(--cyan));
+            border-radius: 16px 16px 0 0;
+        }
+        .takeaway h3 {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.3rem; font-weight: 700; margin-bottom: 1rem;
+        }
+        .takeaway p { color: var(--text-secondary); margin-bottom: 0.75rem; }
+        .takeaway p:last-child { margin-bottom: 0; }
+        .takeaway strong { color: var(--text); }
+
+        .takeaway-stats {
+            display: flex; gap: 2rem; flex-wrap: wrap;
+            margin-top: 1.5rem; padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+        .takeaway-stat { text-align: center; }
+        .takeaway-stat .stat-num {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.8rem; font-weight: 800; color: var(--cyan);
+        }
+        .takeaway-stat .stat-label { font-size: 0.75rem; color: var(--text-dim); }
+
+        /* ====== INLINE ELEMENTS ====== */
+        code {
+            background: rgba(0, 229, 255, 0.08); padding: 1px 6px;
+            border-radius: 4px; font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem; color: var(--cyan);
+        }
+        a { color: var(--cyan); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        kbd {
+            display: inline-block; background: var(--bg-elevated);
+            border: 1px solid var(--border-strong); border-radius: 4px;
+            padding: 1px 6px; font-size: 0.78rem;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text); box-shadow: 0 1px 0 rgba(0, 229, 255, 0.15);
+        }
+
+        .sub-heading {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.05rem; font-weight: 600;
+            color: var(--text); margin: 2rem 0 0.75rem;
+        }
+
+        .punchy {
+            font-size: 0.9rem; color: var(--text-secondary);
+            text-align: center; margin: 1.5rem 0;
+        }
+        .punchy strong { color: var(--text); }
+
+        /* ====== NAV LINKS ====== */
+        .nav-links {
+            display: flex; gap: 1rem; flex-wrap: wrap;
+            margin: 2rem 0; justify-content: center;
+        }
+        .nav-link {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            padding: 0.7rem 1.25rem;
+            border: 1px solid var(--border);
+            border-radius: 8px; font-size: 0.85rem;
+            color: var(--text-secondary);
+            transition: all 0.2s; text-decoration: none;
+        }
+        .nav-link:hover { border-color: var(--cyan); color: var(--cyan); text-decoration: none; transform: translateY(-1px); }
+        .nav-link i { width: 16px; height: 16px; }
+
+        /* ====== FOOTER ====== */
+        .footer {
+            padding: 3rem 0; border-top: 1px solid var(--border);
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem; color: var(--text-dim);
+        }
+        .footer a { color: var(--cyan); text-decoration: none; }
+
+        /* ====== RESPONSIVE ====== */
+        @media (max-width: 768px) {
+            .container { padding: 0 1.25rem; }
+            .analogy-grid, .idea-grid, .failure-grid { grid-template-columns: 1fr; }
+            .idea-grid.five-col { grid-template-columns: 1fr 1fr; }
+            .side-by-side { grid-template-columns: 1fr; }
+            .flow-horizontal { flex-wrap: wrap; justify-content: center; gap: 0.5rem; }
+            .flow-h-arrow { display: none; }
+            .takeaway-stats { gap: 1.25rem; }
+            .pt-row { flex-direction: column; gap: 0.25rem; }
+            .pt-label { width: auto; }
+            .example-card .ex-row { flex-direction: column; gap: 0.15rem; }
+        }
+
+        /* ====== FADE-UP ====== */
+        .fade-up {
+            opacity: 0; transform: translateY(25px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .fade-up.visible { opacity: 1; transform: translateY(0); }
+    </style>
+</head>
+<body>
+
+<!-- PROGRESS BAR -->
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+<div class="container">
+
+    <!-- ====================================================================== -->
+    <!-- HERO                                                                   -->
+    <!-- ====================================================================== -->
+    <section class="hero">
+        <div class="badge"><span class="dot"></span> Session 7 &mdash; Homework</div>
+        <h1>Build Your Own <span class="cyan">Knowledge Agent</span></h1>
+        <p class="hero-sub">
+            From loading documents to handling failures &mdash; your complete guide to the RAG homework. Follow each task in order and you&rsquo;ll have a working knowledge agent by the end.
+        </p>
+        <div class="hero-note">
+            <i data-lucide="clock" style="width:16px;height:16px;"></i>
+            4 tasks &bull; Estimated time: 3&ndash;4 hours &bull; Due before Session 8
+        </div>
+
+        <!-- Step dots -->
+        <div class="step-indicator" id="heroSteps">
+            <div class="step-dot active">1</div>
+            <div class="step-line"></div>
+            <div class="step-dot">2</div>
+            <div class="step-line"></div>
+            <div class="step-dot">3</div>
+            <div class="step-line"></div>
+            <div class="step-dot">4</div>
+        </div>
+    </section>
+
+
+    <!-- ====================================================================== -->
+    <!-- TASK 1: BUILD                                                          -->
+    <!-- ====================================================================== -->
+    <section class="section fade-up" id="task1">
+        <div class="step-indicator">
+            <div class="step-dot active">1</div>
+            <div class="step-line"></div>
+            <div class="step-dot">2</div>
+            <div class="step-line"></div>
+            <div class="step-dot">3</div>
+            <div class="step-line"></div>
+            <div class="step-dot">4</div>
+        </div>
+
+        <div class="section-label cyan">Task 1 &mdash; Build</div>
+        <h2 class="section-title">Create a RAG Agent for Your Domain</h2>
+        <p class="section-desc">
+            Choose a domain you care about, gather documents, and wire up a complete knowledge agent that retrieves information before answering questions.
+        </p>
+
+        <!-- Flow Diagram -->
+        <h3 class="sub-heading">Your build roadmap</h3>
+        <div class="flow-horizontal">
+            <div class="flow-h-step">
+                <div class="flow-h-num">01</div>
+                <div class="flow-h-icon green"><i data-lucide="compass" style="width:22px;height:22px;color:var(--green);"></i></div>
+                <div class="flow-h-label">Choose Your<br>Domain</div>
+            </div>
+            <div class="flow-h-arrow">&rarr;</div>
+            <div class="flow-h-step">
+                <div class="flow-h-num">02</div>
+                <div class="flow-h-icon"><i data-lucide="file-text" style="width:22px;height:22px;color:var(--cyan);"></i></div>
+                <div class="flow-h-label">Gather 5+<br>Documents</div>
+            </div>
+            <div class="flow-h-arrow">&rarr;</div>
+            <div class="flow-h-step">
+                <div class="flow-h-num">03</div>
+                <div class="flow-h-icon magenta"><i data-lucide="scissors" style="width:22px;height:22px;color:var(--magenta);"></i></div>
+                <div class="flow-h-label">Process<br>&amp; Chunk</div>
+            </div>
+            <div class="flow-h-arrow">&rarr;</div>
+            <div class="flow-h-step">
+                <div class="flow-h-num">04</div>
+                <div class="flow-h-icon yellow"><i data-lucide="search" style="width:22px;height:22px;color:var(--yellow);"></i></div>
+                <div class="flow-h-label">Build Search<br>Tool</div>
+            </div>
+            <div class="flow-h-arrow">&rarr;</div>
+            <div class="flow-h-step">
+                <div class="flow-h-num">05</div>
+                <div class="flow-h-icon orange"><i data-lucide="repeat" style="width:22px;height:22px;color:var(--orange);"></i></div>
+                <div class="flow-h-label">Wire Agent<br>Loop</div>
+            </div>
+            <div class="flow-h-arrow">&rarr;</div>
+            <div class="flow-h-step">
+                <div class="flow-h-num">06</div>
+                <div class="flow-h-icon purple"><i data-lucide="check-circle" style="width:22px;height:22px;color:var(--purple);"></i></div>
+                <div class="flow-h-label">Test 10<br>Questions</div>
+            </div>
+        </div>
+
+        <!-- Domain Idea Cards -->
+        <h3 class="sub-heading">Pick a domain</h3>
+        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem;">
+            Choose something you know well so you can evaluate accuracy. Here are some ideas:
+        </p>
+
+        <div class="idea-grid five-col">
+            <div class="idea-card">
+                <div class="idea-emoji">&#x1F37D;&#xFE0F;</div>
+                <h5>Restaurant</h5>
+                <p>Menu items, allergens, wine pairings, reservation policies</p>
+            </div>
+            <div class="idea-card">
+                <div class="idea-emoji">&#x1F4DA;</div>
+                <h5>Student Handbook</h5>
+                <p>Academic policies, registration deadlines, grading systems</p>
+            </div>
+            <div class="idea-card">
+                <div class="idea-emoji">&#x1F6CD;&#xFE0F;</div>
+                <h5>Product Catalog</h5>
+                <p>Product specs, pricing, compatibility, warranty info</p>
+            </div>
+            <div class="idea-card">
+                <div class="idea-emoji">&#x2696;&#xFE0F;</div>
+                <h5>Legal</h5>
+                <p>Contract templates, compliance checklists, regulation summaries</p>
+            </div>
+            <div class="idea-card">
+                <div class="idea-emoji">&#x1F3E5;</div>
+                <h5>Medical</h5>
+                <p>Patient guidelines, medication info, procedure protocols</p>
+            </div>
+        </div>
+
+        <!-- Code Scaffold -->
+        <h3 class="sub-heading">Complete starter code</h3>
+        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem;">
+            This is the restaurant worked example. Replace the documents with <strong style="color:var(--text);">your</strong> domain content.
+        </p>
+
+        <div class="code-window" id="starterCode">
+            <div class="code-header">
+                <div class="dot-row"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></div>
+                <span class="filename">starter-code.py</span>
+                <button class="copy-btn" onclick="copyCode(this, 'codeContent')">
+                    <i data-lucide="clipboard" style="width:12px;height:12px;"></i> Copy
+                </button>
+            </div>
+            <div class="code-body">
+                <!-- STEP 1: imports + client -->
+                <div class="code-line"><span class="line-num">1</span><span class="line-code"><span class="kw">import</span> anthropic</span></div>
+                <div class="code-line"><span class="line-num">2</span><span class="line-code"><span class="kw">import</span> json</span></div>
+                <div class="code-line"><span class="line-num">3</span><span class="line-code"></span></div>
+                <div class="code-line"><span class="line-num">4</span><span class="line-code">client = anthropic.Anthropic()</span></div>
+                <div class="code-line"><span class="line-num">5</span><span class="line-code"></span></div>
+
+                <!-- STEP 1: Documents -->
+                <div class="code-line hl-cyan"><span class="line-num">6</span><span class="line-code"><span class="cm"># ====== STEP 1: Your Documents ======</span></span></div>
+                <div class="code-line hl-cyan"><span class="line-num">7</span><span class="line-code"><span class="cm"># Replace these with YOUR domain documents</span></span></div>
+                <div class="code-line hl-cyan"><span class="line-num">8</span><span class="line-code">documents = [</span></div>
+                <div class="code-line hl-cyan"><span class="line-num">9</span><span class="line-code">    {</span></div>
+                <div class="code-line hl-cyan"><span class="line-num">10</span><span class="line-code">        <span class="str">"title"</span>: <span class="str">"Menu - Main Courses"</span>,</span></div>
+                <div class="code-line hl-cyan"><span class="line-num">11</span><span class="line-code">        <span class="str">"content"</span>: <span class="str">"""</span></span></div>
+                <div class="code-line hl-cyan"><span class="line-num">12</span><span class="line-code"><span class="str">        Grilled Salmon - $24.99</span></span></div>
+                <div class="code-line hl-cyan"><span class="line-num">13</span><span class="line-code"><span class="str">        Pan-seared with lemon butter sauce. Contains: fish, dairy.</span></span></div>
+                <div class="code-line hl-cyan"><span class="line-num">14</span><span class="line-code"><span class="str">        Pairs well with: Sauvignon Blanc, Pinot Grigio.</span></span></div>
+                <div class="code-line hl-cyan"><span class="line-num">15</span><span class="line-code"><span class="str"></span></span></div>
+                <div class="code-line hl-cyan"><span class="line-num">16</span><span class="line-code"><span class="str">        Ribeye Steak - $34.99</span></span></div>
+                <div class="code-line hl-cyan"><span class="line-num">17</span><span class="line-code"><span class="str">        12oz USDA Prime, chargrilled. Contains: none (GF option available).</span></span></div>
+                <div class="code-line hl-cyan"><span class="line-num">18</span><span class="line-code"><span class="str">        Pairs well with: Cabernet Sauvignon, Malbec.</span></span></div>
+                <div class="code-line hl-cyan"><span class="line-num">19</span><span class="line-code"><span class="str"></span></span></div>
+                <div class="code-line hl-cyan"><span class="line-num">20</span><span class="line-code"><span class="str">        Mushroom Risotto - $18.99</span></span></div>
+                <div class="code-line hl-cyan"><span class="line-num">21</span><span class="line-code"><span class="str">        Arborio rice with wild mushrooms and parmesan. Contains: dairy, gluten.</span></span></div>
+                <div class="code-line hl-cyan"><span class="line-num">22</span><span class="line-code"><span class="str">        Pairs well with: Chardonnay, Pinot Noir.</span></span></div>
+                <div class="code-line hl-cyan"><span class="line-num">23</span><span class="line-code"><span class="str">        """</span>,</span></div>
+                <div class="code-line hl-cyan"><span class="line-num">24</span><span class="line-code">        <span class="str">"source"</span>: <span class="str">"menu_main_courses.md"</span>,</span></div>
+                <div class="code-line hl-cyan"><span class="line-num">25</span><span class="line-code">        <span class="str">"date"</span>: <span class="str">"2024-11-01"</span></span></div>
+                <div class="code-line hl-cyan"><span class="line-num">26</span><span class="line-code">    },</span></div>
+                <div class="code-line hl-cyan"><span class="line-num">27</span><span class="line-code">    {</span></div>
+                <div class="code-line hl-cyan"><span class="line-num">28</span><span class="line-code">        <span class="str">"title"</span>: <span class="str">"Reservation &amp; Dining Policies"</span>,</span></div>
+                <div class="code-line hl-cyan"><span class="line-num">29</span><span class="line-code">        <span class="str">"content"</span>: <span class="str">"""</span></span></div>
+                <div class="code-line hl-cyan"><span class="line-num">30</span><span class="line-code"><span class="str">        Reservations: Required for parties of 6+. Walk-ins welcome for smaller groups.</span></span></div>
+                <div class="code-line hl-cyan"><span class="line-num">31</span><span class="line-code"><span class="str">        Cancellation: 24-hour notice required or $25 per person fee.</span></span></div>
+                <div class="code-line hl-cyan"><span class="line-num">32</span><span class="line-code"><span class="str">        Dress code: Smart casual. No athletic wear.</span></span></div>
+                <div class="code-line hl-cyan"><span class="line-num">33</span><span class="line-code"><span class="str">        Private dining: Available for 12-40 guests. $500 minimum spend.</span></span></div>
+                <div class="code-line hl-cyan"><span class="line-num">34</span><span class="line-code"><span class="str">        Happy hour: Mon-Fri 4-6 PM, 50% off select appetizers and house wine.</span></span></div>
+                <div class="code-line hl-cyan"><span class="line-num">35</span><span class="line-code"><span class="str">        """</span>,</span></div>
+                <div class="code-line hl-cyan"><span class="line-num">36</span><span class="line-code">        <span class="str">"source"</span>: <span class="str">"policies.md"</span>,</span></div>
+                <div class="code-line hl-cyan"><span class="line-num">37</span><span class="line-code">        <span class="str">"date"</span>: <span class="str">"2024-10-15"</span></span></div>
+                <div class="code-line hl-cyan"><span class="line-num">38</span><span class="line-code">    }</span></div>
+                <div class="code-line hl-cyan"><span class="line-num">39</span><span class="line-code">    <span class="cm"># ADD 3+ MORE DOCUMENTS FOR YOUR DOMAIN</span></span></div>
+                <div class="code-line hl-cyan"><span class="line-num">40</span><span class="line-code">]</span></div>
+                <div class="code-line"><span class="line-num">41</span><span class="line-code"></span></div>
+
+                <!-- STEP 2: Search Tool -->
+                <div class="code-line hl-yellow"><span class="line-num">42</span><span class="line-code"><span class="cm"># ====== STEP 2: Search Tool ======</span></span></div>
+                <div class="code-line hl-yellow"><span class="line-num">43</span><span class="line-code"><span class="kw">def</span> <span class="fn">search_documents</span>(query):</span></div>
+                <div class="code-line hl-yellow"><span class="line-num">44</span><span class="line-code">    <span class="str">"""Search documents for relevant information."""</span></span></div>
+                <div class="code-line hl-yellow"><span class="line-num">45</span><span class="line-code">    results = []</span></div>
+                <div class="code-line hl-yellow"><span class="line-num">46</span><span class="line-code">    query_words = query.lower().split()</span></div>
+                <div class="code-line hl-yellow"><span class="line-num">47</span><span class="line-code"></span></div>
+                <div class="code-line hl-yellow"><span class="line-num">48</span><span class="line-code">    <span class="kw">for</span> doc <span class="kw">in</span> documents:</span></div>
+                <div class="code-line hl-yellow"><span class="line-num">49</span><span class="line-code">        content_lower = doc[<span class="str">"content"</span>].lower()</span></div>
+                <div class="code-line hl-yellow"><span class="line-num">50</span><span class="line-code">        <span class="cm"># Count matching words</span></span></div>
+                <div class="code-line hl-yellow"><span class="line-num">51</span><span class="line-code">        score = <span class="fn">sum</span>(<span class="num-lit">1</span> <span class="kw">for</span> word <span class="kw">in</span> query_words <span class="kw">if</span> word <span class="kw">in</span> content_lower)</span></div>
+                <div class="code-line hl-yellow"><span class="line-num">52</span><span class="line-code">        <span class="kw">if</span> score > <span class="num-lit">0</span>:</span></div>
+                <div class="code-line hl-yellow"><span class="line-num">53</span><span class="line-code">            results.append({</span></div>
+                <div class="code-line hl-yellow"><span class="line-num">54</span><span class="line-code">                <span class="str">"title"</span>: doc[<span class="str">"title"</span>],</span></div>
+                <div class="code-line hl-yellow"><span class="line-num">55</span><span class="line-code">                <span class="str">"content"</span>: doc[<span class="str">"content"</span>][:<span class="num-lit">500</span>],</span></div>
+                <div class="code-line hl-yellow"><span class="line-num">56</span><span class="line-code">                <span class="str">"source"</span>: doc[<span class="str">"source"</span>],</span></div>
+                <div class="code-line hl-yellow"><span class="line-num">57</span><span class="line-code">                <span class="str">"relevance"</span>: score</span></div>
+                <div class="code-line hl-yellow"><span class="line-num">58</span><span class="line-code">            })</span></div>
+                <div class="code-line hl-yellow"><span class="line-num">59</span><span class="line-code"></span></div>
+                <div class="code-line hl-yellow"><span class="line-num">60</span><span class="line-code">    results.sort(key=<span class="kw">lambda</span> x: x[<span class="str">"relevance"</span>], reverse=<span class="num-lit">True</span>)</span></div>
+                <div class="code-line hl-yellow"><span class="line-num">61</span><span class="line-code">    <span class="kw">return</span> results[:<span class="num-lit">3</span>]  <span class="cm"># Top 3 results</span></span></div>
+                <div class="code-line"><span class="line-num">62</span><span class="line-code"></span></div>
+
+                <!-- STEP 3: Agent Loop -->
+                <div class="code-line hl-magenta"><span class="line-num">63</span><span class="line-code"><span class="cm"># ====== STEP 3: Agent Loop ======</span></span></div>
+                <div class="code-line hl-magenta"><span class="line-num">64</span><span class="line-code">tools = [{</span></div>
+                <div class="code-line hl-magenta"><span class="line-num">65</span><span class="line-code">    <span class="str">"name"</span>: <span class="str">"search_documents"</span>,</span></div>
+                <div class="code-line hl-magenta"><span class="line-num">66</span><span class="line-code">    <span class="str">"description"</span>: <span class="str">"Search the knowledge base for relevant information. "</span></span></div>
+                <div class="code-line hl-magenta"><span class="line-num">67</span><span class="line-code">                  <span class="str">"Use this for ANY question about our domain."</span>,</span></div>
+                <div class="code-line hl-magenta"><span class="line-num">68</span><span class="line-code">    <span class="str">"input_schema"</span>: {</span></div>
+                <div class="code-line hl-magenta"><span class="line-num">69</span><span class="line-code">        <span class="str">"type"</span>: <span class="str">"object"</span>,</span></div>
+                <div class="code-line hl-magenta"><span class="line-num">70</span><span class="line-code">        <span class="str">"properties"</span>: {</span></div>
+                <div class="code-line hl-magenta"><span class="line-num">71</span><span class="line-code">            <span class="str">"query"</span>: {</span></div>
+                <div class="code-line hl-magenta"><span class="line-num">72</span><span class="line-code">                <span class="str">"type"</span>: <span class="str">"string"</span>,</span></div>
+                <div class="code-line hl-magenta"><span class="line-num">73</span><span class="line-code">                <span class="str">"description"</span>: <span class="str">"The search query"</span></span></div>
+                <div class="code-line hl-magenta"><span class="line-num">74</span><span class="line-code">            }</span></div>
+                <div class="code-line hl-magenta"><span class="line-num">75</span><span class="line-code">        },</span></div>
+                <div class="code-line hl-magenta"><span class="line-num">76</span><span class="line-code">        <span class="str">"required"</span>: [<span class="str">"query"</span>]</span></div>
+                <div class="code-line hl-magenta"><span class="line-num">77</span><span class="line-code">    }</span></div>
+                <div class="code-line hl-magenta"><span class="line-num">78</span><span class="line-code">}]</span></div>
+                <div class="code-line"><span class="line-num">79</span><span class="line-code"></span></div>
+
+                <!-- run_agent function -->
+                <div class="code-line hl-green"><span class="line-num">80</span><span class="line-code"><span class="kw">def</span> <span class="fn">run_agent</span>(question):</span></div>
+                <div class="code-line hl-green"><span class="line-num">81</span><span class="line-code">    <span class="fn">print</span>(<span class="str">f"\n{'='*50}"</span>)</span></div>
+                <div class="code-line hl-green"><span class="line-num">82</span><span class="line-code">    <span class="fn">print</span>(<span class="str">f"Question: {question}"</span>)</span></div>
+                <div class="code-line hl-green"><span class="line-num">83</span><span class="line-code">    <span class="fn">print</span>(<span class="str">f"{'='*50}"</span>)</span></div>
+                <div class="code-line hl-green"><span class="line-num">84</span><span class="line-code"></span></div>
+                <div class="code-line hl-green"><span class="line-num">85</span><span class="line-code">    messages = [{<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: question}]</span></div>
+                <div class="code-line hl-green"><span class="line-num">86</span><span class="line-code"></span></div>
+                <div class="code-line hl-green"><span class="line-num">87</span><span class="line-code">    <span class="kw">while</span> <span class="num-lit">True</span>:</span></div>
+                <div class="code-line hl-green"><span class="line-num">88</span><span class="line-code">        response = client.messages.create(</span></div>
+                <div class="code-line hl-green"><span class="line-num">89</span><span class="line-code">            model=<span class="str">"claude-sonnet-4-20250514"</span>,</span></div>
+                <div class="code-line hl-green"><span class="line-num">90</span><span class="line-code">            max_tokens=<span class="num-lit">1024</span>,</span></div>
+                <div class="code-line hl-green"><span class="line-num">91</span><span class="line-code">            system=<span class="str">"You are a helpful assistant. ALWAYS use the "</span></span></div>
+                <div class="code-line hl-green"><span class="line-num">92</span><span class="line-code">                   <span class="str">"search_documents tool before answering questions. "</span></span></div>
+                <div class="code-line hl-green"><span class="line-num">93</span><span class="line-code">                   <span class="str">"Base your answers ONLY on the search results. If the "</span></span></div>
+                <div class="code-line hl-green"><span class="line-num">94</span><span class="line-code">                   <span class="str">"search results don't contain relevant information, say "</span></span></div>
+                <div class="code-line hl-green"><span class="line-num">95</span><span class="line-code">                   <span class="str">"'I don't have information about that in our "</span></span></div>
+                <div class="code-line hl-green"><span class="line-num">96</span><span class="line-code">                   <span class="str">"knowledge base.'"</span>,</span></div>
+                <div class="code-line hl-green"><span class="line-num">97</span><span class="line-code">            tools=tools,</span></div>
+                <div class="code-line hl-green"><span class="line-num">98</span><span class="line-code">            messages=messages</span></div>
+                <div class="code-line hl-green"><span class="line-num">99</span><span class="line-code">        )</span></div>
+                <div class="code-line hl-green"><span class="line-num">100</span><span class="line-code"></span></div>
+                <div class="code-line hl-green"><span class="line-num">101</span><span class="line-code">        <span class="cm"># Check if done</span></span></div>
+                <div class="code-line hl-green"><span class="line-num">102</span><span class="line-code">        <span class="kw">if</span> response.stop_reason == <span class="str">"end_turn"</span>:</span></div>
+                <div class="code-line hl-green"><span class="line-num">103</span><span class="line-code">            <span class="kw">for</span> block <span class="kw">in</span> response.content:</span></div>
+                <div class="code-line hl-green"><span class="line-num">104</span><span class="line-code">                <span class="kw">if</span> <span class="fn">hasattr</span>(block, <span class="str">'text'</span>):</span></div>
+                <div class="code-line hl-green"><span class="line-num">105</span><span class="line-code">                    <span class="fn">print</span>(<span class="str">f"\nAnswer: {block.text}"</span>)</span></div>
+                <div class="code-line hl-green"><span class="line-num">106</span><span class="line-code">            <span class="kw">return</span> response</span></div>
+                <div class="code-line hl-green"><span class="line-num">107</span><span class="line-code"></span></div>
+                <div class="code-line hl-green"><span class="line-num">108</span><span class="line-code">        <span class="cm"># Handle tool calls</span></span></div>
+                <div class="code-line hl-green"><span class="line-num">109</span><span class="line-code">        <span class="kw">if</span> response.stop_reason == <span class="str">"tool_use"</span>:</span></div>
+                <div class="code-line hl-green"><span class="line-num">110</span><span class="line-code">            tool_results = []</span></div>
+                <div class="code-line hl-green"><span class="line-num">111</span><span class="line-code">            <span class="kw">for</span> block <span class="kw">in</span> response.content:</span></div>
+                <div class="code-line hl-green"><span class="line-num">112</span><span class="line-code">                <span class="kw">if</span> block.type == <span class="str">"tool_use"</span>:</span></div>
+                <div class="code-line hl-green"><span class="line-num">113</span><span class="line-code">                    <span class="fn">print</span>(<span class="str">f"\nSearching: {block.input['query']}"</span>)</span></div>
+                <div class="code-line hl-green"><span class="line-num">114</span><span class="line-code">                    result = <span class="fn">search_documents</span>(block.input[<span class="str">"query"</span>])</span></div>
+                <div class="code-line hl-green"><span class="line-num">115</span><span class="line-code">                    <span class="fn">print</span>(<span class="str">f"   Found {len(result)} results"</span>)</span></div>
+                <div class="code-line hl-green"><span class="line-num">116</span><span class="line-code">                    tool_results.append({</span></div>
+                <div class="code-line hl-green"><span class="line-num">117</span><span class="line-code">                        <span class="str">"type"</span>: <span class="str">"tool_result"</span>,</span></div>
+                <div class="code-line hl-green"><span class="line-num">118</span><span class="line-code">                        <span class="str">"tool_use_id"</span>: block.id,</span></div>
+                <div class="code-line hl-green"><span class="line-num">119</span><span class="line-code">                        <span class="str">"content"</span>: json.dumps(result)</span></div>
+                <div class="code-line hl-green"><span class="line-num">120</span><span class="line-code">                    })</span></div>
+                <div class="code-line hl-green"><span class="line-num">121</span><span class="line-code"></span></div>
+                <div class="code-line hl-green"><span class="line-num">122</span><span class="line-code">            messages.append({<span class="str">"role"</span>: <span class="str">"assistant"</span>, <span class="str">"content"</span>: response.content})</span></div>
+                <div class="code-line hl-green"><span class="line-num">123</span><span class="line-code">            messages.append({<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: tool_results})</span></div>
+                <div class="code-line"><span class="line-num">124</span><span class="line-code"></span></div>
+
+                <!-- STEP 4: Test It -->
+                <div class="code-line"><span class="line-num">125</span><span class="line-code"><span class="cm"># ====== STEP 4: Test It! ======</span></span></div>
+                <div class="code-line"><span class="line-num">126</span><span class="line-code">test_questions = [</span></div>
+                <div class="code-line"><span class="line-num">127</span><span class="line-code">    <span class="str">"What fish dishes do you have?"</span>,</span></div>
+                <div class="code-line"><span class="line-num">128</span><span class="line-code">    <span class="str">"Do you have any gluten-free options?"</span>,</span></div>
+                <div class="code-line"><span class="line-num">129</span><span class="line-code">    <span class="str">"What's your cancellation policy?"</span>,</span></div>
+                <div class="code-line"><span class="line-num">130</span><span class="line-code">    <span class="str">"What wine goes with steak?"</span>,</span></div>
+                <div class="code-line"><span class="line-num">131</span><span class="line-code">    <span class="str">"Do you have outdoor seating?"</span>,  <span class="cm"># Not in docs!</span></span></div>
+                <div class="code-line"><span class="line-num">132</span><span class="line-code">]</span></div>
+                <div class="code-line"><span class="line-num">133</span><span class="line-code"></span></div>
+                <div class="code-line"><span class="line-num">134</span><span class="line-code"><span class="kw">for</span> q <span class="kw">in</span> test_questions:</span></div>
+                <div class="code-line"><span class="line-num">135</span><span class="line-code">    <span class="fn">run_agent</span>(q)</span></div>
+            </div>
+            <div class="code-annotation">
+                <span class="arrow">&rarr;</span>
+                <span><strong>4 color-coded sections.</strong> Documents (<span style="color:var(--cyan)">cyan</span>) &mdash; replace with your domain. Search tool (<span style="color:var(--yellow)">yellow</span>) &mdash; finds relevant passages. Tool definition (<span style="color:var(--magenta)">magenta</span>) &mdash; tells Claude when to search. Agent loop (<span style="color:var(--green)">green</span>) &mdash; the retrieval-generation cycle.</span>
+            </div>
+        </div>
+
+        <!-- Hidden raw code for copy -->
+        <textarea id="codeContent" style="display:none;">import anthropic
+import json
+
+client = anthropic.Anthropic()
+
+# ====== STEP 1: Your Documents ======
+# Replace these with YOUR domain documents
+documents = [
+    {
+        "title": "Menu - Main Courses",
+        "content": """
+        Grilled Salmon - $24.99
+        Pan-seared with lemon butter sauce. Contains: fish, dairy.
+        Pairs well with: Sauvignon Blanc, Pinot Grigio.
+
+        Ribeye Steak - $34.99
+        12oz USDA Prime, chargrilled. Contains: none (GF option available).
+        Pairs well with: Cabernet Sauvignon, Malbec.
+
+        Mushroom Risotto - $18.99
+        Arborio rice with wild mushrooms and parmesan. Contains: dairy, gluten.
+        Pairs well with: Chardonnay, Pinot Noir.
+        """,
+        "source": "menu_main_courses.md",
+        "date": "2024-11-01"
+    },
+    {
+        "title": "Reservation & Dining Policies",
+        "content": """
+        Reservations: Required for parties of 6+. Walk-ins welcome for smaller groups.
+        Cancellation: 24-hour notice required or $25 per person fee.
+        Dress code: Smart casual. No athletic wear.
+        Private dining: Available for 12-40 guests. $500 minimum spend.
+        Happy hour: Mon-Fri 4-6 PM, 50% off select appetizers and house wine.
+        """,
+        "source": "policies.md",
+        "date": "2024-10-15"
+    }
+    # ADD 3+ MORE DOCUMENTS FOR YOUR DOMAIN
+]
+
+# ====== STEP 2: Search Tool ======
+def search_documents(query):
+    """Search documents for relevant information."""
+    results = []
+    query_words = query.lower().split()
+
+    for doc in documents:
+        content_lower = doc["content"].lower()
+        # Count matching words
+        score = sum(1 for word in query_words if word in content_lower)
+        if score > 0:
+            results.append({
+                "title": doc["title"],
+                "content": doc["content"][:500],
+                "source": doc["source"],
+                "relevance": score
+            })
+
+    results.sort(key=lambda x: x["relevance"], reverse=True)
+    return results[:3]  # Top 3 results
+
+# ====== STEP 3: Agent Loop ======
+tools = [{
+    "name": "search_documents",
+    "description": "Search the knowledge base for relevant information. Use this for ANY question about our domain.",
+    "input_schema": {
+        "type": "object",
+        "properties": {
+            "query": {
+                "type": "string",
+                "description": "The search query"
+            }
+        },
+        "required": ["query"]
+    }
+}]
+
+def run_agent(question):
+    print(f"\n{'='*50}")
+    print(f"Question: {question}")
+    print(f"{'='*50}")
+
+    messages = [{"role": "user", "content": question}]
+
+    while True:
+        response = client.messages.create(
+            model="claude-sonnet-4-20250514",
+            max_tokens=1024,
+            system="You are a helpful assistant. ALWAYS use the search_documents tool before answering questions. Base your answers ONLY on the search results. If the search results don't contain relevant information, say 'I don't have information about that in our knowledge base.'",
+            tools=tools,
+            messages=messages
+        )
+
+        # Check if done
+        if response.stop_reason == "end_turn":
+            for block in response.content:
+                if hasattr(block, 'text'):
+                    print(f"\nAnswer: {block.text}")
+            return response
+
+        # Handle tool calls
+        if response.stop_reason == "tool_use":
+            tool_results = []
+            for block in response.content:
+                if block.type == "tool_use":
+                    print(f"\nSearching: {block.input['query']}")
+                    result = search_documents(block.input["query"])
+                    print(f"   Found {len(result)} results")
+                    tool_results.append({
+                        "type": "tool_result",
+                        "tool_use_id": block.id,
+                        "content": json.dumps(result)
+                    })
+
+            messages.append({"role": "assistant", "content": response.content})
+            messages.append({"role": "user", "content": tool_results})
+
+# ====== STEP 4: Test It! ======
+test_questions = [
+    "What fish dishes do you have?",
+    "Do you have any gluten-free options?",
+    "What's your cancellation policy?",
+    "What wine goes with steak?",
+    "Do you have outdoor seating?",  # Not in docs!
+]
+
+for q in test_questions:
+    run_agent(q)</textarea>
+
+        <!-- Deliverable Checklist -->
+        <h3 class="sub-heading">Deliverable checklist</h3>
+        <ul class="checklist">
+            <li><strong>5+ documents</strong> loaded for your chosen domain</li>
+            <li><strong>search_documents</strong> tool finds relevant passages</li>
+            <li><strong>Agent uses tool before answering</strong> (check the logs &mdash; you should see &ldquo;Searching: ...&rdquo; output)</li>
+            <li><strong>Tested with 10 questions</strong> (mix of answerable and unanswerable)</li>
+            <li><strong>Agent says &ldquo;I don&rsquo;t know&rdquo;</strong> for questions outside its knowledge</li>
+        </ul>
+
+        <div class="callout callout-info">
+            <strong>&#x1F4A1; Pro tip: Quality over quantity</strong>
+            <p>Your documents don&rsquo;t need to be long. A paragraph per document is fine. What matters is that they cover different aspects of your domain &mdash; the agent should be able to tell them apart when searching.</p>
+        </div>
+    </section>
+
+
+    <!-- ====================================================================== -->
+    <!-- TASK 2: BREAK                                                          -->
+    <!-- ====================================================================== -->
+    <section class="section fade-up" id="task2">
+        <div class="step-indicator">
+            <div class="step-dot done">1</div>
+            <div class="step-line"></div>
+            <div class="step-dot active">2</div>
+            <div class="step-line"></div>
+            <div class="step-dot">3</div>
+            <div class="step-line"></div>
+            <div class="step-dot">4</div>
+        </div>
+
+        <div class="section-label magenta">Task 2 &mdash; Break</div>
+        <h2 class="section-title">Stress-Test with Bad Data</h2>
+        <p class="section-desc">
+            Deliberately feed your agent bad data and document what breaks. This is how you learn where RAG systems fail &mdash; and every production system has these failure modes.
+        </p>
+
+        <!-- 3 Failure Mode Cards -->
+        <div class="failure-grid">
+            <div class="failure-card card-red">
+                <div class="fc-icon"><i data-lucide="clock" style="width:20px;height:20px;"></i></div>
+                <h4>Outdated Data</h4>
+                <p>Add a document with old pricing or policies. Does the agent quote the outdated info?</p>
+                <div class="fc-example">Add a 2022 menu with different prices alongside your 2024 menu</div>
+                <p class="fc-observe">Observe: Which document does the agent cite? Does it notice the date difference?</p>
+            </div>
+            <div class="failure-card card-orange">
+                <div class="fc-icon"><i data-lucide="git-merge" style="width:20px;height:20px;"></i></div>
+                <h4>Contradicting Documents</h4>
+                <p>Add two documents that say different things about the same topic.</p>
+                <div class="fc-example">One doc says &ldquo;No refunds after 30 days&rdquo;, another says &ldquo;Full refund within 60 days&rdquo;</div>
+                <p class="fc-observe">Observe: Does the agent blend the answers? Flag the conflict? Pick one?</p>
+            </div>
+            <div class="failure-card card-yellow">
+                <div class="fc-icon"><i data-lucide="help-circle" style="width:20px;height:20px;"></i></div>
+                <h4>Knowledge Gaps</h4>
+                <p>Ask questions your documents DON&rsquo;T cover.</p>
+                <div class="fc-example">Ask about competitor products when you only have your own catalog</div>
+                <p class="fc-observe">Observe: Does the agent hallucinate? Admit it doesn&rsquo;t know? Make something up?</p>
+            </div>
+        </div>
+
+        <!-- Documentation Template -->
+        <h3 class="sub-heading">Document your findings</h3>
+        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem;">
+            Use this format (a Markdown table in your notebook or a simple list):
+        </p>
+
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th>Test</th>
+                    <th>What You Tried</th>
+                    <th>What Happened</th>
+                    <th>Why It Happened</th>
+                    <th>How to Fix</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Outdated data</td>
+                    <td>Added 2022 menu</td>
+                    <td>Agent quoted old prices</td>
+                    <td>No date prioritization</td>
+                    <td>Add date metadata, sort by recency</td>
+                </tr>
+                <tr>
+                    <td>Contradiction</td>
+                    <td>Conflicting refund policies</td>
+                    <td>Agent blended both</td>
+                    <td>No conflict detection</td>
+                    <td>Add contradiction check before answering</td>
+                </tr>
+                <tr>
+                    <td>Knowledge gap</td>
+                    <td>Asked about competitors</td>
+                    <td>Agent hallucinated pricing</td>
+                    <td>No guardrails on search results</td>
+                    <td>Add confidence threshold, refuse if no relevant docs</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="callout callout-warn">
+            <strong>&#x26A0; The point is to find failures</strong>
+            <p>If your agent handles everything perfectly, you&rsquo;re not trying hard enough. Real-world RAG systems fail in exactly these ways &mdash; that&rsquo;s why companies spend millions on guardrails.</p>
+        </div>
+    </section>
+
+
+    <!-- ====================================================================== -->
+    <!-- TASK 3: EVALUATE                                                       -->
+    <!-- ====================================================================== -->
+    <section class="section fade-up" id="task3">
+        <div class="step-indicator">
+            <div class="step-dot done">1</div>
+            <div class="step-line"></div>
+            <div class="step-dot done">2</div>
+            <div class="step-line"></div>
+            <div class="step-dot active">3</div>
+            <div class="step-line"></div>
+            <div class="step-dot">4</div>
+        </div>
+
+        <div class="section-label green">Task 3 &mdash; Evaluate</div>
+        <h2 class="section-title">Score Accuracy on 10 Questions</h2>
+        <p class="section-desc">
+            Measure how well your agent actually performs. This is the same evaluation framework real companies use &mdash; just on a smaller scale.
+        </p>
+
+        <!-- Scoring Rubric -->
+        <h3 class="sub-heading">Scoring rubric</h3>
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th>Criteria</th>
+                    <th>Score</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Retrieved right doc?</td>
+                    <td><span class="check-yes">Yes</span> / <span class="check-no">No</span></td>
+                    <td>Did the search tool return the correct document?</td>
+                </tr>
+                <tr>
+                    <td>Answer correct?</td>
+                    <td><span class="check-yes">Yes</span> / <span class="check-warn">Partial</span> / <span class="check-no">No</span></td>
+                    <td>Is the answer factually accurate based on the documents?</td>
+                </tr>
+                <tr>
+                    <td>Hallucinated?</td>
+                    <td><span class="check-yes">No</span> / <span class="check-no">Yes</span></td>
+                    <td>Did the agent add information not in the documents?</td>
+                </tr>
+                <tr>
+                    <td>Cited sources?</td>
+                    <td><span class="check-yes">Yes</span> / <span class="check-no">No</span></td>
+                    <td>Did the agent mention which document it used?</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Example Filled-In -->
+        <h3 class="sub-heading">Example evaluation</h3>
+        <div style="overflow-x: auto;">
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th>Question</th>
+                        <th>Right Doc?</th>
+                        <th>Correct?</th>
+                        <th>Hallucinated?</th>
+                        <th>Cited?</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>&ldquo;What&rsquo;s the salmon price?&rdquo;</td>
+                        <td class="check-yes">Yes</td>
+                        <td class="check-yes">Yes</td>
+                        <td class="check-yes">No</td>
+                        <td class="check-yes">Yes</td>
+                        <td>Found in menu_main_courses.md</td>
+                    </tr>
+                    <tr>
+                        <td>&ldquo;Do you have vegan options?&rdquo;</td>
+                        <td class="check-no">No</td>
+                        <td class="check-no">No</td>
+                        <td class="check-no">Yes</td>
+                        <td class="check-no">No</td>
+                        <td>Agent invented vegan dishes not in our menu</td>
+                    </tr>
+                    <tr>
+                        <td>&ldquo;What are your hours?&rdquo;</td>
+                        <td class="check-no">No</td>
+                        <td class="check-no">No</td>
+                        <td class="check-no">Yes</td>
+                        <td class="check-no">No</td>
+                        <td>Not in docs &mdash; agent should have said &ldquo;I don&rsquo;t know&rdquo;</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Score Summary Card -->
+        <div class="score-card">
+            <h4>Your Agent&rsquo;s Score Card</h4>
+            <p>After testing 10 questions, tally your results:</p>
+            <div class="score-formula">
+                X/10 correct &nbsp;&bull;&nbsp; Y/10 cited sources &nbsp;&bull;&nbsp; Z/10 no hallucination
+            </div>
+            <p style="font-size: 0.85rem; margin-top: 0.75rem;">Grading guidance:</p>
+            <div class="grading">
+                <div class="grade"><span class="dot-g g-green"></span> 7+ correct = Good</div>
+                <div class="grade"><span class="dot-g g-yellow"></span> 5&ndash;6 = Needs work</div>
+                <div class="grade"><span class="dot-g g-red"></span> &lt;5 = Major issues to fix</div>
+            </div>
+        </div>
+
+        <div class="callout callout-success">
+            <strong>&#x2705; A low score is not a bad grade</strong>
+            <p>Your grade is based on the <em>quality of your evaluation</em>, not on how well your agent performs. A score of 4/10 with a thoughtful analysis of why it failed is worth more than 10/10 with no explanation.</p>
+        </div>
+    </section>
+
+
+    <!-- ====================================================================== -->
+    <!-- TASK 4: DESIGN                                                         -->
+    <!-- ====================================================================== -->
+    <section class="section fade-up" id="task4">
+        <div class="step-indicator">
+            <div class="step-dot done">1</div>
+            <div class="step-line"></div>
+            <div class="step-dot done">2</div>
+            <div class="step-line"></div>
+            <div class="step-dot done">3</div>
+            <div class="step-line"></div>
+            <div class="step-dot active">4</div>
+        </div>
+
+        <div class="section-label purple">Task 4 &mdash; Design</div>
+        <h2 class="section-title">1-Page Proposal for a Real Company</h2>
+        <p class="section-desc">
+            Write a 1-page proposal for a knowledge agent at a real company. This is the kind of deliverable consultants charge $50K+ to produce.
+        </p>
+
+        <!-- Proposal Template -->
+        <div class="proposal-template">
+            <div class="pt-header">
+                <i data-lucide="file-text" style="width:16px;height:16px;"></i>
+                Proposal Template
+            </div>
+            <div class="pt-body">
+                <div class="pt-row">
+                    <div class="pt-num">1.</div>
+                    <div class="pt-label">Company &amp; Use Case</div>
+                    <div class="pt-desc">What company? What problem does the knowledge agent solve?</div>
+                </div>
+                <div class="pt-row">
+                    <div class="pt-num">2.</div>
+                    <div class="pt-label">Documents Needed</div>
+                    <div class="pt-desc">What documents would you load? List 5&ndash;10 specific document types.</div>
+                </div>
+                <div class="pt-row">
+                    <div class="pt-num">3.</div>
+                    <div class="pt-label">Target Users</div>
+                    <div class="pt-desc">Who would use this agent? How often? What questions would they ask?</div>
+                </div>
+                <div class="pt-row">
+                    <div class="pt-num">4.</div>
+                    <div class="pt-label">Risk Assessment</div>
+                    <div class="pt-desc">What happens if the agent is wrong? What&rsquo;s the worst case?</div>
+                </div>
+                <div class="pt-row">
+                    <div class="pt-num">5.</div>
+                    <div class="pt-label">Build vs Buy</div>
+                    <div class="pt-desc">Would you build custom RAG or use a platform (Glean, Notion AI)? Why?</div>
+                </div>
+                <div class="pt-row">
+                    <div class="pt-num">6.</div>
+                    <div class="pt-label">Success Metrics</div>
+                    <div class="pt-desc">How would you measure if the agent is working? What&rsquo;s the ROI?</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Example Filled-In Card -->
+        <h3 class="sub-heading">Example proposal</h3>
+        <div class="example-card">
+            <h4>&#x1F3E8; Marriott Hotels &mdash; Front Desk Knowledge Agent</h4>
+            <div class="ex-row">
+                <div class="ex-label">Company:</div>
+                <div class="ex-val">Marriott Hotels</div>
+            </div>
+            <div class="ex-row">
+                <div class="ex-label">Use Case:</div>
+                <div class="ex-val">Customer service agent for front desk staff answering guest questions</div>
+            </div>
+            <div class="ex-row">
+                <div class="ex-label">Documents:</div>
+                <div class="ex-val">Room types &amp; rates, hotel amenities, cancellation policies, local attractions guide, loyalty program rules, accessibility info</div>
+            </div>
+            <div class="ex-row">
+                <div class="ex-label">Users:</div>
+                <div class="ex-val">500+ front desk staff across 50 properties, answering guest questions 24/7</div>
+            </div>
+            <div class="ex-row">
+                <div class="ex-label">Risk:</div>
+                <div class="ex-val">Wrong room rate quoted &rarr; revenue loss. Wrong cancellation policy &rarr; legal exposure. Wrong accessibility info &rarr; ADA compliance issue.</div>
+            </div>
+            <div class="ex-row">
+                <div class="ex-label">Build vs Buy:</div>
+                <div class="ex-val">Buy (Glean or similar) &mdash; 50 properties means thousands of documents across multiple systems. Too complex for simple RAG.</div>
+            </div>
+            <div class="ex-row">
+                <div class="ex-label">Success:</div>
+                <div class="ex-val">Reduce average call handling time by 30%, improve first-call resolution from 72% to 90%, eliminate policy misquotes.</div>
+            </div>
+        </div>
+
+        <div class="callout callout-info">
+            <strong>&#x1F4A1; Pick a company you know</strong>
+            <p>The best proposals come from personal experience. If you worked at Starbucks, write about Starbucks. If you follow Tesla, write about Tesla. Domain knowledge makes your risk assessment and success metrics more realistic.</p>
+        </div>
+    </section>
+
+
+    <!-- ====================================================================== -->
+    <!-- FAQ                                                                    -->
+    <!-- ====================================================================== -->
+    <section class="section fade-up" id="faq">
+        <div class="section-label yellow">Troubleshooting</div>
+        <h2 class="section-title">FAQ &amp; Common Issues</h2>
+        <p class="section-desc">Click any question to expand the answer.</p>
+
+        <div class="faq-item" onclick="this.classList.toggle('open')">
+            <div class="faq-q">
+                <span><span class="faq-emoji">&#x1F4C4;</span> How many documents do I need?</span>
+                <span class="faq-arrow">&#x25B6;</span>
+            </div>
+            <div class="faq-a">
+                <div class="faq-a-inner">
+                    Minimum 5, but more is better. Aim for documents that cover different aspects of your domain. Quality matters more than quantity &mdash; a few well-structured documents beat dozens of messy ones.
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-item" onclick="this.classList.toggle('open')">
+            <div class="faq-q">
+                <span><span class="faq-emoji">&#x1F4CE;</span> Can I use PDFs?</span>
+                <span class="faq-arrow">&#x25B6;</span>
+            </div>
+            <div class="faq-a">
+                <div class="faq-a-inner">
+                    For this homework, convert PDFs to text and paste into your documents list. In production, you&rsquo;d use PDF parsing libraries like PyPDF2 or pdfplumber. The point of this assignment is the agent architecture, not document parsing.
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-item" onclick="this.classList.toggle('open')">
+            <div class="faq-q">
+                <span><span class="faq-emoji">&#x1F6A8;</span> What if my agent never says &ldquo;I don&rsquo;t know&rdquo;?</span>
+                <span class="faq-arrow">&#x25B6;</span>
+            </div>
+            <div class="faq-a">
+                <div class="faq-a-inner">
+                    Update your system prompt to be more explicit: <code>"If the search results don't contain relevant information, you MUST say: I don't have information about that in our knowledge base."</code> You can also add: <code>"NEVER make up information that is not in the search results."</code>
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-item" onclick="this.classList.toggle('open')">
+            <div class="faq-q">
+                <span><span class="faq-emoji">&#x1F50D;</span> How do I improve search accuracy?</span>
+                <span class="faq-arrow">&#x25B6;</span>
+            </div>
+            <div class="faq-a">
+                <div class="faq-a-inner">
+                    Three things to try: (1) <strong>Better chunking</strong> &mdash; split docs by topic so each chunk has a clear subject. (2) <strong>Better queries</strong> &mdash; extract keywords from the question before searching. (3) <strong>Better scoring</strong> &mdash; weight title matches higher than content matches, or check for phrase matches instead of individual words.
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-item" onclick="this.classList.toggle('open')">
+            <div class="faq-q">
+                <span><span class="faq-emoji">&#x1F914;</span> What&rsquo;s a good domain to choose?</span>
+                <span class="faq-arrow">&#x25B6;</span>
+            </div>
+            <div class="faq-a">
+                <div class="faq-a-inner">
+                    Pick something you know well, so you can evaluate accuracy. Restaurant menus, course catalogs, and product specs work great because the information is structured and you can easily check if the agent&rsquo;s answers are correct. Avoid domains where you can&rsquo;t verify the output.
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ====================================================================== -->
+    <!-- TAKEAWAY                                                               -->
+    <!-- ====================================================================== -->
+    <section class="section fade-up">
+        <div class="takeaway">
+            <h3>What You Just Built</h3>
+            <p><strong>You built a complete knowledge agent &mdash; from document loading to failure handling to business proposal.</strong> This is exactly what companies pay $100K+ for consultants to build. The architecture is identical; only the scale is different.</p>
+            <p><strong>RAG is the #1 enterprise AI pattern.</strong> Every company deploying AI today &mdash; from Slack to Salesforce to internal tools at Goldman Sachs &mdash; uses retrieval-augmented generation. You now understand how it works, why it breaks, and how to evaluate it.</p>
+            <p><strong>The proposal matters.</strong> Being able to articulate what to build, who it&rsquo;s for, and what could go wrong is the difference between an engineer and a leader. That&rsquo;s the skill companies pay for.</p>
+
+            <div class="takeaway-stats">
+                <div class="takeaway-stat">
+                    <div class="stat-num">5+</div>
+                    <div class="stat-label">docs loaded</div>
+                </div>
+                <div class="takeaway-stat">
+                    <div class="stat-num">10</div>
+                    <div class="stat-label">questions tested</div>
+                </div>
+                <div class="takeaway-stat">
+                    <div class="stat-num">3</div>
+                    <div class="stat-label">failures found</div>
+                </div>
+                <div class="takeaway-stat">
+                    <div class="stat-num">1</div>
+                    <div class="stat-label">proposal written</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="nav-links">
+            <a href="/sessions/session-07" class="nav-link">
+                <i data-lucide="arrow-left" style="width:16px;height:16px;"></i>
+                Back to Session 7
+            </a>
+            <a href="https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-07/ISOM260_Session7_Knowledge_Agents_RAG.ipynb" target="_blank" class="nav-link">
+                <i data-lucide="external-link" style="width:16px;height:16px;"></i>
+                Open in Colab
+            </a>
+        </div>
+    </section>
+
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <p>
+            ISOM 260: AI for Business &bull; Suffolk University &bull; Sawyer Business School<br>
+            Prof. Hasan Arslan &bull; <a href="https://isom-260.vercel.app">isom-260.vercel.app</a>
+        </p>
+    </footer>
+
+</div>
+
+<script>
+    // ====== PROGRESS BAR ======
+    window.addEventListener('scroll', () => {
+        const h = document.documentElement.scrollHeight - window.innerHeight;
+        const pct = h > 0 ? (window.scrollY / h) * 100 : 0;
+        document.getElementById('progressFill').style.width = pct + '%';
+    });
+
+    // ====== FADE-UP ON SCROLL ======
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) entry.target.classList.add('visible');
+        });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+    // ====== STEP INDICATOR — updates hero dots on scroll ======
+    const taskSections = ['task1', 'task2', 'task3', 'task4'];
+    const heroStepDots = document.querySelectorAll('#heroSteps .step-dot');
+
+    function updateHeroSteps() {
+        let currentIdx = 0;
+        taskSections.forEach((id, i) => {
+            const el = document.getElementById(id);
+            if (el && el.getBoundingClientRect().top < window.innerHeight * 0.5) currentIdx = i;
+        });
+        heroStepDots.forEach((dot, i) => {
+            dot.classList.remove('active', 'done');
+            if (i < currentIdx) dot.classList.add('done');
+            else if (i === currentIdx) dot.classList.add('active');
+        });
+    }
+
+    window.addEventListener('scroll', updateHeroSteps);
+    updateHeroSteps();
+
+    // ====== COPY CODE BUTTON ======
+    function copyCode(btn, textareaId) {
+        const textarea = document.getElementById(textareaId);
+        if (!textarea) return;
+        navigator.clipboard.writeText(textarea.value).then(() => {
+            btn.classList.add('copied');
+            btn.innerHTML = '<i data-lucide="check" style="width:12px;height:12px;"></i> Copied!';
+            lucide.createIcons();
+            setTimeout(() => {
+                btn.classList.remove('copied');
+                btn.innerHTML = '<i data-lucide="clipboard" style="width:12px;height:12px;"></i> Copy';
+                lucide.createIcons();
+            }, 2000);
+        });
+    }
+
+    // ====== LUCIDE ICONS ======
+    lucide.createIcons();
+</script>
+</body>
+</html>

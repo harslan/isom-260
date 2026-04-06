@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session 7: Workshop Timer — ISOM 260</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+    <style>
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #0f1424;
+            --bg-card: #141929;
+            --bg-elevated: #1a2035;
+            --bg-code: #0d1117;
+            --cyan: #00e5ff;
+            --cyan-dim: #00b8d4;
+            --cyan-glow: rgba(0, 229, 255, 0.15);
+            --cyan-glow-strong: rgba(0, 229, 255, 0.3);
+            --magenta: #ff006e;
+            --magenta-glow: rgba(255, 0, 110, 0.15);
+            --yellow: #ffd600;
+            --yellow-glow: rgba(255, 214, 0, 0.15);
+            --green: #00e676;
+            --green-glow: rgba(0, 230, 118, 0.15);
+            --orange: #ff9100;
+            --purple: #b388ff;
+            --text-primary: #e8ecf4;
+            --text-secondary: #8892a8;
+            --text-dim: #5a6478;
+            --border: rgba(0, 229, 255, 0.1);
+            --border-strong: rgba(0, 229, 255, 0.25);
+            --grid-line: rgba(0, 229, 255, 0.04);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background:
+                linear-gradient(var(--grid-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .glow-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .glow-orb-1 { width: 500px; height: 500px; background: rgba(255, 0, 110, 0.06); top: 10%; right: -100px; }
+        .glow-orb-2 { width: 400px; height: 400px; background: rgba(0, 229, 255, 0.05); bottom: 20%; left: -100px; }
+        .glow-orb-3 { width: 350px; height: 350px; background: rgba(255, 214, 0, 0.04); top: 60%; right: 10%; }
+
+        /* Timer glow orb — large pulsing backdrop behind the countdown */
+        .timer-glow {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -60%);
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--cyan-glow-strong) 0%, transparent 70%);
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: 0;
+            animation: timerPulse 4s ease-in-out infinite;
+            transition: background 1s ease;
+        }
+        .timer-glow.warning {
+            background: radial-gradient(circle, var(--yellow-glow) 0%, transparent 70%);
+            animation-duration: 2.5s;
+        }
+        .timer-glow.danger {
+            background: radial-gradient(circle, rgba(255, 0, 110, 0.25) 0%, transparent 70%);
+            animation-duration: 1s;
+        }
+        .timer-glow.finished {
+            background: radial-gradient(circle, rgba(255, 0, 110, 0.35) 0%, transparent 70%);
+            animation: timerPulseFinished 0.6s ease-in-out infinite;
+        }
+
+        @keyframes timerPulse {
+            0%, 100% { opacity: 0.5; transform: translate(-50%, -60%) scale(1); }
+            50% { opacity: 1; transform: translate(-50%, -60%) scale(1.08); }
+        }
+        @keyframes timerPulseFinished {
+            0%, 100% { opacity: 0.4; transform: translate(-50%, -60%) scale(0.95); }
+            50% { opacity: 1; transform: translate(-50%, -60%) scale(1.1); }
+        }
+
+        /* Main content wrapper */
+        .main-content {
+            position: relative;
+            z-index: 1;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1.5rem 2rem 7rem;
+            overflow-y: auto;
+        }
+
+        /* ---- Header ---- */
+        .header {
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+        .header-label {
+            font-family: 'Sora', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--cyan);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 0.25rem;
+        }
+        .header-title {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        /* ---- Countdown ---- */
+        .countdown-container {
+            text-align: center;
+            margin: 0.5rem 0 0.75rem;
+        }
+        .countdown {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 8rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            color: var(--green);
+            text-shadow: 0 0 40px rgba(0, 230, 118, 0.3);
+            transition: color 0.6s ease, text-shadow 0.6s ease;
+            line-height: 1;
+            user-select: none;
+        }
+        .countdown.warning {
+            color: var(--yellow);
+            text-shadow: 0 0 40px rgba(255, 214, 0, 0.35);
+        }
+        .countdown.danger {
+            color: var(--magenta);
+            text-shadow: 0 0 50px rgba(255, 0, 110, 0.4);
+        }
+        .countdown.finished {
+            animation: flashRed 0.6s ease-in-out infinite;
+        }
+        @keyframes flashRed {
+            0%, 100% { color: var(--magenta); text-shadow: 0 0 50px rgba(255, 0, 110, 0.5); }
+            50% { color: #ff4081; text-shadow: 0 0 80px rgba(255, 0, 110, 0.7); }
+        }
+
+        /* ---- Phase Progress Bar ---- */
+        .progress-bar-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto 1.25rem;
+        }
+        .progress-bar {
+            display: flex;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+        }
+        .progress-segment {
+            flex: 1;
+            position: relative;
+            transition: background 0.4s ease, box-shadow 0.4s ease;
+        }
+        .progress-segment:not(:last-child) {
+            border-right: 2px solid var(--bg-primary);
+        }
+        .progress-segment.completed {
+            background: var(--green);
+            box-shadow: 0 0 10px rgba(0, 230, 118, 0.4);
+        }
+        .progress-segment.active {
+            background: linear-gradient(90deg, var(--cyan) var(--fill, 0%), var(--bg-elevated) var(--fill, 0%));
+            box-shadow: 0 0 12px var(--cyan-glow);
+        }
+        .progress-segment.upcoming {
+            background: var(--bg-elevated);
+        }
+        .progress-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.4rem;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* ---- Phase Cards ---- */
+        .phase-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            width: 100%;
+            max-width: 1000px;
+            margin-bottom: 1.25rem;
+        }
+        .phase-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            position: relative;
+            transition: all 0.5s ease;
+            overflow: hidden;
+        }
+        .phase-card.upcoming {
+            opacity: 0.4;
+            border-color: var(--border);
+        }
+        .phase-card.active {
+            opacity: 1;
+            transform: scale(1.03);
+            box-shadow: 0 0 30px var(--phase-glow, var(--cyan-glow));
+        }
+        .phase-card.active .phase-indicator {
+            display: flex;
+        }
+        .phase-card.completed {
+            opacity: 0.55;
+        }
+        .phase-card.completed .phase-check {
+            display: flex;
+        }
+
+        /* Active border glow */
+        .phase-card.active.accent-cyan { border-color: var(--cyan); box-shadow: 0 0 30px var(--cyan-glow), inset 0 0 30px var(--cyan-glow); }
+        .phase-card.active.accent-green { border-color: var(--green); box-shadow: 0 0 30px var(--green-glow), inset 0 0 30px var(--green-glow); }
+        .phase-card.active.accent-orange { border-color: var(--orange); box-shadow: 0 0 30px rgba(255, 145, 0, 0.15), inset 0 0 30px rgba(255, 145, 0, 0.08); }
+
+        .phase-card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin-bottom: 0.75rem;
+        }
+        .phase-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .accent-cyan .phase-icon { background: var(--cyan-glow); color: var(--cyan); }
+        .accent-green .phase-icon { background: var(--green-glow); color: var(--green); }
+        .accent-orange .phase-icon { background: rgba(255, 145, 0, 0.15); color: var(--orange); }
+
+        .phase-icon i { width: 20px; height: 20px; }
+
+        .phase-title {
+            font-family: 'Sora', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            line-height: 1.3;
+        }
+        .phase-time {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            margin-bottom: 0.5rem;
+        }
+        .phase-tasks {
+            list-style: none;
+            padding: 0;
+        }
+        .phase-tasks li {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            padding: 0.2rem 0;
+            padding-left: 1rem;
+            position: relative;
+        }
+        .phase-tasks li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--text-dim);
+        }
+        .accent-cyan .phase-tasks li::before { background: var(--cyan-dim); }
+        .accent-green .phase-tasks li::before { background: var(--green); }
+        .accent-orange .phase-tasks li::before { background: var(--orange); }
+
+        /* Active pulsing indicator */
+        .phase-indicator {
+            display: none;
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--cyan);
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        .accent-cyan .phase-indicator { background: var(--cyan); box-shadow: 0 0 8px var(--cyan); }
+        .accent-green .phase-indicator { background: var(--green); box-shadow: 0 0 8px var(--green); }
+        .accent-orange .phase-indicator { background: var(--orange); box-shadow: 0 0 8px var(--orange); }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.7); }
+        }
+
+        /* Completed green checkmark overlay */
+        .phase-check {
+            display: none;
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--green);
+            align-items: center;
+            justify-content: center;
+            color: var(--bg-primary);
+        }
+        .phase-check i { width: 14px; height: 14px; }
+
+        /* ---- Bottom Panel ---- */
+        .bottom-panel {
+            width: 100%;
+            max-width: 1000px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .colab-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.85rem 2rem;
+            background: linear-gradient(135deg, rgba(0, 229, 255, 0.15), rgba(0, 229, 255, 0.05));
+            border: 1px solid var(--cyan);
+            border-radius: 10px;
+            color: var(--cyan);
+            text-decoration: none;
+            font-family: 'Sora', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px var(--cyan-glow);
+        }
+        .colab-link:hover {
+            background: linear-gradient(135deg, rgba(0, 229, 255, 0.25), rgba(0, 229, 255, 0.1));
+            box-shadow: 0 0 30px var(--cyan-glow-strong);
+            transform: translateY(-2px);
+        }
+        .colab-link i { width: 20px; height: 20px; }
+
+        /* Stuck section */
+        .stuck-section {
+            width: 100%;
+            max-width: 800px;
+        }
+        .stuck-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.6rem 1rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.85rem;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+        .stuck-toggle:hover {
+            border-color: var(--border-strong);
+            color: var(--text-primary);
+        }
+        .stuck-toggle i { width: 16px; height: 16px; transition: transform 0.3s ease; }
+        .stuck-toggle.open i { transform: rotate(180deg); }
+
+        .stuck-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+        .stuck-content.open {
+            max-height: 400px;
+        }
+        .stuck-list {
+            list-style: none;
+            padding: 0.75rem 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .stuck-list li {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            padding: 0.5rem 0.75rem;
+            background: var(--bg-card);
+            border-radius: 6px;
+            border-left: 3px solid var(--yellow);
+        }
+        .stuck-list li strong {
+            color: var(--text-primary);
+        }
+        .stuck-list li .arrow {
+            color: var(--cyan);
+            margin: 0 0.3rem;
+        }
+
+        /* ---- Control Bar ---- */
+        .control-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-strong);
+            padding: 0.75rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .ctrl-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            border: 1px solid var(--border-strong);
+            border-radius: 8px;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.85rem;
+            padding: 0.5rem 1rem;
+            transition: all 0.2s ease;
+        }
+        .ctrl-btn:hover {
+            background: var(--bg-elevated);
+            border-color: var(--cyan);
+        }
+        .ctrl-btn i { width: 18px; height: 18px; }
+
+        .ctrl-btn.primary {
+            background: linear-gradient(135deg, rgba(0, 229, 255, 0.2), rgba(0, 229, 255, 0.08));
+            border-color: var(--cyan);
+            color: var(--cyan);
+            padding: 0.6rem 1.5rem;
+            font-weight: 600;
+        }
+        .ctrl-btn.primary:hover {
+            background: linear-gradient(135deg, rgba(0, 229, 255, 0.35), rgba(0, 229, 255, 0.15));
+            box-shadow: 0 0 15px var(--cyan-glow);
+        }
+
+        .ctrl-btn.small {
+            padding: 0.4rem 0.75rem;
+            font-size: 0.75rem;
+        }
+
+        .ctrl-phase-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            padding: 0 0.5rem;
+            white-space: nowrap;
+        }
+
+        .ctrl-shortcuts {
+            position: absolute;
+            right: 2rem;
+            font-size: 0.65rem;
+            color: var(--text-dim);
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .ctrl-shortcuts kbd {
+            display: inline-block;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 3px;
+            padding: 0.1rem 0.35rem;
+            font-size: 0.6rem;
+            margin: 0 0.1rem;
+        }
+
+        /* ---- Responsive ---- */
+        @media (max-width: 900px) {
+            .countdown { font-size: 5rem; }
+            .phase-cards { grid-template-columns: 1fr; max-width: 500px; }
+            .ctrl-shortcuts { display: none; }
+        }
+        @media (max-width: 600px) {
+            .countdown { font-size: 3.5rem; }
+            .main-content { padding: 1rem 1rem 7rem; }
+            .control-bar { gap: 0.5rem; padding: 0.6rem 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Background elements -->
+<div class="glow-orb glow-orb-1"></div>
+<div class="glow-orb glow-orb-2"></div>
+<div class="glow-orb glow-orb-3"></div>
+<div class="timer-glow" id="timerGlow"></div>
+
+<div class="main-content">
+    <!-- Header -->
+    <div class="header">
+        <div class="header-label">Session 7 — Workshop</div>
+        <h1 class="header-title">Build a Knowledge Agent</h1>
+    </div>
+
+    <!-- Giant Countdown -->
+    <div class="countdown-container">
+        <div class="countdown" id="countdown">45:00</div>
+    </div>
+
+    <!-- Phase Progress Bar -->
+    <div class="progress-bar-container">
+        <div class="progress-bar">
+            <div class="progress-segment active" id="seg0"></div>
+            <div class="progress-segment upcoming" id="seg1"></div>
+            <div class="progress-segment upcoming" id="seg2"></div>
+        </div>
+        <div class="progress-labels">
+            <span>45:00</span>
+            <span>30:00</span>
+            <span>15:00</span>
+            <span>0:00</span>
+        </div>
+    </div>
+
+    <!-- Phase Cards -->
+    <div class="phase-cards">
+        <!-- Phase 1 -->
+        <div class="phase-card active accent-cyan" id="card0">
+            <div class="phase-indicator"></div>
+            <div class="phase-check"><i data-lucide="check"></i></div>
+            <div class="phase-card-header">
+                <div class="phase-icon"><i data-lucide="database"></i></div>
+                <div class="phase-title">Load Documents &amp; Build Search</div>
+            </div>
+            <div class="phase-time">15 min &middot; 45:00 &ndash; 30:01</div>
+            <ul class="phase-tasks">
+                <li>Load company docs</li>
+                <li>Process into chunks</li>
+                <li>Build search_documents tool</li>
+            </ul>
+        </div>
+        <!-- Phase 2 -->
+        <div class="phase-card upcoming accent-green" id="card1">
+            <div class="phase-indicator"></div>
+            <div class="phase-check"><i data-lucide="check"></i></div>
+            <div class="phase-card-header">
+                <div class="phase-icon"><i data-lucide="link"></i></div>
+                <div class="phase-title">Wire Agent Loop &amp; Test</div>
+            </div>
+            <div class="phase-time">15 min &middot; 30:00 &ndash; 15:01</div>
+            <ul class="phase-tasks">
+                <li>Connect search tool to agent</li>
+                <li>Ask company questions</li>
+                <li>Compare RAG vs no-RAG</li>
+            </ul>
+        </div>
+        <!-- Phase 3 -->
+        <div class="phase-card upcoming accent-orange" id="card2">
+            <div class="phase-indicator"></div>
+            <div class="phase-check"><i data-lucide="check"></i></div>
+            <div class="phase-card-header">
+                <div class="phase-icon"><i data-lucide="shield-alert"></i></div>
+                <div class="phase-title">Edge Cases &amp; Failures</div>
+            </div>
+            <div class="phase-time">15 min &middot; 15:00 &ndash; 0:00</div>
+            <ul class="phase-tasks">
+                <li>Test contradicting docs</li>
+                <li>Test outdated data</li>
+                <li>Make agent say "I don't know"</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Bottom Panel -->
+    <div class="bottom-panel">
+        <a class="colab-link" href="https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-07/ISOM260_Session7_Knowledge_Agents_RAG.ipynb" target="_blank" rel="noopener">
+            <i data-lucide="external-link"></i>
+            Open in Google Colab
+        </a>
+
+        <div class="stuck-section">
+            <button class="stuck-toggle" id="stuckToggle" onclick="toggleStuck()">
+                <i data-lucide="chevron-down"></i>
+                Stuck? Common troubleshooting tips
+            </button>
+            <div class="stuck-content" id="stuckContent">
+                <ul class="stuck-list">
+                    <li><strong>API key not working?</strong> <span class="arrow">&rarr;</span> Runtime &gt; Restart and re-run the API key cell</li>
+                    <li><strong>Import errors?</strong> <span class="arrow">&rarr;</span> Run all cells from the top in order</li>
+                    <li><strong>Agent not using tools?</strong> <span class="arrow">&rarr;</span> Check your tool definition matches the expected format</li>
+                    <li><strong>Wrong answers?</strong> <span class="arrow">&rarr;</span> Check your search function returns relevant chunks</li>
+                    <li><strong>Still stuck?</strong> <span class="arrow">&rarr;</span> Ask your neighbor, then raise your hand</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Control Bar -->
+<div class="control-bar">
+    <button class="ctrl-btn primary" id="btnStartPause" onclick="toggleTimer()">
+        <i data-lucide="play" id="playPauseIcon"></i>
+        <span id="playPauseLabel">Start</span>
+    </button>
+    <button class="ctrl-btn" onclick="resetTimer()">
+        <i data-lucide="refresh-cw"></i>
+        Reset
+    </button>
+    <button class="ctrl-btn small" onclick="adjustTime(5)">
+        <i data-lucide="plus"></i> 5 min
+    </button>
+    <button class="ctrl-btn small" onclick="adjustTime(-5)">
+        <i data-lucide="minus"></i> 5 min
+    </button>
+    <span class="ctrl-phase-label" id="phaseLabel">Phase 1 of 3</span>
+    <span class="ctrl-shortcuts">
+        <kbd>Space</kbd> start/pause &nbsp;
+        <kbd>R</kbd> reset &nbsp;
+        <kbd>&uarr;</kbd> +5 &nbsp;
+        <kbd>&darr;</kbd> -5
+    </span>
+</div>
+
+<script>
+    // ============================================================
+    // State
+    // ============================================================
+    const TOTAL_SECONDS = 45 * 60;
+    let remaining = TOTAL_SECONDS;
+    let running = false;
+    let intervalId = null;
+    let currentPhase = 0; // 0, 1, 2
+    let audioCtx = null;
+
+    // DOM refs
+    const countdownEl = document.getElementById('countdown');
+    const timerGlowEl = document.getElementById('timerGlow');
+    const playPauseIcon = document.getElementById('playPauseIcon');
+    const playPauseLabel = document.getElementById('playPauseLabel');
+    const phaseLabel = document.getElementById('phaseLabel');
+    const segments = [document.getElementById('seg0'), document.getElementById('seg1'), document.getElementById('seg2')];
+    const cards = [document.getElementById('card0'), document.getElementById('card1'), document.getElementById('card2')];
+
+    // ============================================================
+    // Formatting
+    // ============================================================
+    function fmt(seconds) {
+        const m = Math.floor(seconds / 60);
+        const s = seconds % 60;
+        return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+    }
+
+    // ============================================================
+    // Phase computation
+    // ============================================================
+    function phaseForTime(sec) {
+        if (sec > 30 * 60) return 0;
+        if (sec > 15 * 60) return 1;
+        return 2;
+    }
+
+    // ============================================================
+    // Rendering
+    // ============================================================
+    function render() {
+        // Countdown text
+        countdownEl.textContent = fmt(remaining);
+
+        // Color classes
+        countdownEl.classList.remove('warning', 'danger', 'finished');
+        timerGlowEl.classList.remove('warning', 'danger', 'finished');
+
+        if (remaining === 0) {
+            countdownEl.classList.add('finished');
+            timerGlowEl.classList.add('finished');
+        } else if (remaining <= 5 * 60) {
+            countdownEl.classList.add('danger');
+            timerGlowEl.classList.add('danger');
+        } else if (remaining <= 15 * 60) {
+            countdownEl.classList.add('warning');
+            timerGlowEl.classList.add('warning');
+        }
+
+        // Phase
+        const newPhase = phaseForTime(remaining);
+
+        // Detect phase transition
+        if (newPhase !== currentPhase && running) {
+            playTransitionChime();
+        }
+        currentPhase = newPhase;
+
+        // Update cards
+        cards.forEach((card, i) => {
+            card.classList.remove('active', 'completed', 'upcoming');
+            if (i < currentPhase) {
+                card.classList.add('completed');
+            } else if (i === currentPhase) {
+                card.classList.add('active');
+            } else {
+                card.classList.add('upcoming');
+            }
+        });
+
+        // Update progress segments
+        segments.forEach((seg, i) => {
+            seg.classList.remove('active', 'completed', 'upcoming');
+            seg.style.removeProperty('--fill');
+            if (i < currentPhase) {
+                seg.classList.add('completed');
+            } else if (i === currentPhase) {
+                seg.classList.add('active');
+                // Compute fill percentage within this phase
+                let phaseStart, phaseEnd;
+                if (i === 0) { phaseStart = TOTAL_SECONDS; phaseEnd = 30 * 60; }
+                else if (i === 1) { phaseStart = 30 * 60; phaseEnd = 15 * 60; }
+                else { phaseStart = 15 * 60; phaseEnd = 0; }
+                const elapsed = phaseStart - remaining;
+                const duration = phaseStart - phaseEnd;
+                const pct = Math.min(100, Math.max(0, (elapsed / duration) * 100));
+                seg.style.setProperty('--fill', pct + '%');
+            } else {
+                seg.classList.add('upcoming');
+            }
+        });
+
+        // Phase label
+        phaseLabel.textContent = 'Phase ' + (currentPhase + 1) + ' of 3';
+    }
+
+    // ============================================================
+    // Timer controls
+    // ============================================================
+    function tick() {
+        if (remaining <= 0) {
+            remaining = 0;
+            stop();
+            playCompletionSound();
+            render();
+            return;
+        }
+
+        // Check for chime triggers before decrement
+        const prev = remaining;
+        remaining--;
+
+        // Warning chime at 5:00
+        if (prev > 5 * 60 && remaining <= 5 * 60) {
+            playWarningChime();
+        }
+
+        render();
+    }
+
+    function start() {
+        if (running) return;
+        if (remaining <= 0) return;
+        running = true;
+        intervalId = setInterval(tick, 1000);
+        playPauseIcon.setAttribute('data-lucide', 'pause');
+        playPauseLabel.textContent = 'Pause';
+        lucide.createIcons();
+    }
+
+    function stop() {
+        running = false;
+        if (intervalId) { clearInterval(intervalId); intervalId = null; }
+        playPauseIcon.setAttribute('data-lucide', 'play');
+        playPauseLabel.textContent = 'Start';
+        lucide.createIcons();
+    }
+
+    function toggleTimer() {
+        running ? stop() : start();
+    }
+
+    function resetTimer() {
+        stop();
+        remaining = TOTAL_SECONDS;
+        currentPhase = 0;
+        render();
+    }
+
+    function adjustTime(minutes) {
+        remaining = Math.max(0, remaining + minutes * 60);
+        // Recalculate phase from new time
+        render();
+    }
+
+    // ============================================================
+    // Keyboard shortcuts
+    // ============================================================
+    document.addEventListener('keydown', (e) => {
+        // Ignore if user is typing in an input
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+        switch (e.code) {
+            case 'Space':
+                e.preventDefault();
+                toggleTimer();
+                break;
+            case 'KeyR':
+                resetTimer();
+                break;
+            case 'ArrowUp':
+                e.preventDefault();
+                adjustTime(5);
+                break;
+            case 'ArrowDown':
+                e.preventDefault();
+                adjustTime(-5);
+                break;
+        }
+    });
+
+    // ============================================================
+    // Stuck toggle
+    // ============================================================
+    function toggleStuck() {
+        const btn = document.getElementById('stuckToggle');
+        const content = document.getElementById('stuckContent');
+        btn.classList.toggle('open');
+        content.classList.toggle('open');
+    }
+
+    // ============================================================
+    // Web Audio API — Programmatic Tones
+    // ============================================================
+    function getAudioCtx() {
+        if (!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        // Resume if suspended (browser autoplay policy)
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+        return audioCtx;
+    }
+
+    function playTone(freq, startTime, duration, type, volume) {
+        const ctx = getAudioCtx();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = type || 'sine';
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0, startTime);
+        gain.gain.linearRampToValueAtTime(volume || 0.15, startTime + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(startTime);
+        osc.stop(startTime + duration);
+    }
+
+    // Gentle ascending chime — 3 short tones going up
+    function playTransitionChime() {
+        const ctx = getAudioCtx();
+        const now = ctx.currentTime;
+        playTone(523.25, now, 0.25, 'sine', 0.12);        // C5
+        playTone(659.25, now + 0.15, 0.25, 'sine', 0.12);  // E5
+        playTone(783.99, now + 0.30, 0.35, 'sine', 0.12);  // G5
+    }
+
+    // Warning chime — slightly more urgent, two quick tones
+    function playWarningChime() {
+        const ctx = getAudioCtx();
+        const now = ctx.currentTime;
+        playTone(880, now, 0.15, 'triangle', 0.15);        // A5
+        playTone(880, now + 0.2, 0.15, 'triangle', 0.15);  // A5 repeat
+        playTone(1046.5, now + 0.4, 0.3, 'triangle', 0.15); // C6
+    }
+
+    // Completion sound — distinctive descending + resolve
+    function playCompletionSound() {
+        const ctx = getAudioCtx();
+        const now = ctx.currentTime;
+        playTone(1046.5, now, 0.2, 'sine', 0.15);          // C6
+        playTone(880, now + 0.15, 0.2, 'sine', 0.15);      // A5
+        playTone(783.99, now + 0.30, 0.2, 'sine', 0.15);   // G5
+        playTone(1046.5, now + 0.55, 0.5, 'sine', 0.18);   // C6 resolve
+    }
+
+    // ============================================================
+    // Init
+    // ============================================================
+    render();
+    lucide.createIcons();
+</script>
+</body>
+</html>

@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speaker Notes: Session 7 — Knowledge Agents &amp; RAG | ISOM 260</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #0f1424;
+            --bg-card: #141929;
+            --bg-elevated: #1a2035;
+            --bg-code: #0d1117;
+            --cyan: #00e5ff;
+            --cyan-dim: #00b8d4;
+            --cyan-glow: rgba(0, 229, 255, 0.15);
+            --cyan-glow-strong: rgba(0, 229, 255, 0.3);
+            --magenta: #ff006e;
+            --magenta-glow: rgba(255, 0, 110, 0.15);
+            --yellow: #ffd600;
+            --yellow-glow: rgba(255, 214, 0, 0.15);
+            --green: #00e676;
+            --green-glow: rgba(0, 230, 118, 0.15);
+            --orange: #ff9100;
+            --purple: #b388ff;
+            --text-primary: #e8ecf4;
+            --text-secondary: #8892a8;
+            --text-dim: #5a6478;
+            --border: rgba(0, 229, 255, 0.1);
+            --border-strong: rgba(0, 229, 255, 0.25);
+            --grid-line: rgba(0, 229, 255, 0.04);
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'DM Sans', sans-serif;
+            line-height: 1.7;
+            overflow-x: hidden;
+            background-image:
+                linear-gradient(var(--grid-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        /* Glow orbs */
+        .glow-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.4;
+        }
+        .glow-orb-1 {
+            width: 500px; height: 500px;
+            background: rgba(0, 229, 255, 0.08);
+            top: -100px; left: -100px;
+        }
+        .glow-orb-2 {
+            width: 400px; height: 400px;
+            background: rgba(255, 0, 110, 0.06);
+            top: 40%; right: -100px;
+        }
+        .glow-orb-3 {
+            width: 350px; height: 350px;
+            background: rgba(0, 230, 118, 0.05);
+            bottom: -50px; left: 30%;
+        }
+
+        /* ── Top Bar ── */
+        .top-bar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1.5rem 0 calc(72px + 1.5rem);
+            background: rgba(10, 14, 26, 0.92);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .top-bar-title {
+            font-family: 'Sora', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--cyan);
+            white-space: nowrap;
+        }
+
+        .top-bar-clock {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-shadow: 0 0 20px var(--cyan-glow-strong);
+        }
+
+        .top-bar-progress {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            white-space: nowrap;
+        }
+
+        .progress-label {
+            font-family: 'Sora', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .progress-bar-track {
+            width: 120px;
+            height: 6px;
+            background: var(--bg-elevated);
+            border-radius: 3px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--cyan), var(--green));
+            border-radius: 3px;
+            transition: width 0.4s ease;
+        }
+
+        /* ── Sticky Sidebar ── */
+        .sidebar {
+            position: fixed;
+            top: 60px;
+            left: 0;
+            bottom: 0;
+            width: 72px;
+            z-index: 999;
+            background: rgba(15, 20, 36, 0.95);
+            backdrop-filter: blur(16px);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem 0;
+            gap: 0.5rem;
+            overflow-y: auto;
+        }
+
+        .sidebar-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.25s ease;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .sidebar-btn:hover {
+            border-color: var(--cyan);
+            color: var(--cyan);
+            background: var(--bg-elevated);
+            box-shadow: 0 0 20px var(--cyan-glow);
+            transform: scale(1.08);
+        }
+
+        .sidebar-btn .tooltip {
+            position: absolute;
+            left: calc(100% + 10px);
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+            font-size: 0.72rem;
+            font-weight: 500;
+            padding: 0.35rem 0.6rem;
+            border-radius: 6px;
+            border: 1px solid var(--border-strong);
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            z-index: 1001;
+        }
+
+        .sidebar-btn:hover .tooltip { opacity: 1; }
+
+        .sidebar-divider {
+            width: 32px;
+            height: 1px;
+            background: var(--border);
+            margin: 0.25rem 0;
+        }
+
+        /* ── Main Content ── */
+        .main-content {
+            margin-left: 72px;
+            padding: 80px 2rem 3rem 2rem;
+            max-width: 1100px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ── Section Cards ── */
+        .section-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .section-card:hover {
+            border-color: var(--border-strong);
+            box-shadow: 0 4px 30px rgba(0, 229, 255, 0.06);
+        }
+
+        .section-card.active {
+            border-color: var(--cyan);
+            box-shadow: 0 0 30px var(--cyan-glow), inset 0 0 30px rgba(0, 229, 255, 0.03);
+        }
+
+        .section-card.completed {
+            opacity: 0.55;
+            border-color: var(--border);
+        }
+
+        .section-card.completed:hover { opacity: 0.8; }
+
+        /* Card Header */
+        .card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+            flex-wrap: wrap;
+        }
+
+        .card-header-left {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .section-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 0.8rem;
+            color: var(--bg-primary);
+            background: var(--cyan);
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .section-card.completed .section-number {
+            background: var(--text-dim);
+        }
+
+        .section-title {
+            font-family: 'Sora', sans-serif;
+            font-weight: 700;
+            font-size: 1.15rem;
+            color: var(--cyan);
+        }
+
+        .section-card.completed .section-title {
+            color: var(--text-dim);
+        }
+
+        .section-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-top: 0.15rem;
+        }
+
+        .meta-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            font-weight: 500;
+            padding: 0.2rem 0.55rem;
+            border-radius: 6px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        .card-header-right {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        /* Countdown timer */
+        .countdown {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 0.35rem 0.75rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--bg-elevated);
+            color: var(--text-dim);
+            min-width: 90px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .countdown.green {
+            color: var(--green);
+            border-color: var(--green);
+            background: var(--green-glow);
+            box-shadow: 0 0 12px var(--green-glow);
+        }
+
+        .countdown.yellow {
+            color: var(--yellow);
+            border-color: var(--yellow);
+            background: var(--yellow-glow);
+            box-shadow: 0 0 12px var(--yellow-glow);
+        }
+
+        .countdown.red {
+            color: var(--magenta);
+            border-color: var(--magenta);
+            background: var(--magenta-glow);
+            box-shadow: 0 0 12px var(--magenta-glow);
+            animation: pulse-red 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse-red {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .countdown.done {
+            color: var(--text-dim);
+            border-color: var(--border);
+            background: var(--bg-elevated);
+        }
+
+        /* Status indicator */
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--text-dim);
+            flex-shrink: 0;
+        }
+
+        .status-dot.active {
+            background: var(--green);
+            box-shadow: 0 0 10px var(--green-glow);
+            animation: status-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes status-pulse {
+            0%, 100% { box-shadow: 0 0 10px var(--green-glow); }
+            50% { box-shadow: 0 0 20px rgba(0, 230, 118, 0.4); }
+        }
+
+        .status-dot.completed {
+            background: var(--text-dim);
+        }
+
+        /* ── Card Body Sections ── */
+
+        /* Talking Points */
+        .talking-points {
+            margin-bottom: 1.25rem;
+        }
+
+        .section-label {
+            font-family: 'Sora', sans-serif;
+            font-weight: 600;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.6rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .section-label.talk { color: var(--green); }
+        .section-label.demo { color: var(--yellow); }
+        .section-label.ask { color: var(--magenta); }
+        .section-label.transition { color: var(--purple); }
+
+        .talk-list {
+            list-style: none;
+        }
+
+        .talk-list li {
+            padding: 0.5rem 0.75rem;
+            margin-bottom: 0.35rem;
+            border-radius: 8px;
+            border-left: 3px solid var(--green);
+            background: var(--green-glow);
+            font-size: 0.92rem;
+            line-height: 1.55;
+            color: var(--text-primary);
+            transition: all 0.2s ease;
+        }
+
+        .talk-list li:hover {
+            background: rgba(0, 230, 118, 0.12);
+            transform: translateX(4px);
+        }
+
+        /* Demo Cues */
+        .demo-cues {
+            margin-bottom: 1.25rem;
+        }
+
+        .demo-btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .demo-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 214, 0, 0.3);
+            background: var(--yellow-glow);
+            color: var(--yellow);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.25s ease;
+            cursor: pointer;
+        }
+
+        .demo-btn:hover {
+            background: rgba(255, 214, 0, 0.2);
+            border-color: var(--yellow);
+            box-shadow: 0 0 20px var(--yellow-glow);
+            transform: translateY(-1px);
+        }
+
+        /* Ask the Class */
+        .ask-section {
+            margin-bottom: 1.25rem;
+        }
+
+        .ask-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.7rem;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 0, 110, 0.2);
+            background: var(--magenta-glow);
+            margin-bottom: 0.4rem;
+        }
+
+        .ask-icon {
+            color: var(--magenta);
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .ask-text {
+            font-size: 0.92rem;
+            color: var(--text-primary);
+            font-style: italic;
+            line-height: 1.5;
+        }
+
+        /* Transition */
+        .transition-block {
+            border-left: 3px solid var(--purple);
+            padding: 0.75rem 1rem;
+            background: rgba(179, 136, 255, 0.06);
+            border-radius: 0 8px 8px 0;
+            font-size: 0.9rem;
+            color: var(--purple);
+            font-weight: 500;
+            line-height: 1.55;
+        }
+
+        .transition-block::before {
+            content: '\201C';
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-right: 0.25rem;
+            opacity: 0.5;
+        }
+
+        .transition-block::after {
+            content: '\201D';
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-left: 0.15rem;
+            opacity: 0.5;
+        }
+
+        /* ── Keyboard Hints ── */
+        .keyboard-hint {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            z-index: 999;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 0.6rem 0.9rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .kbd {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 22px;
+            height: 22px;
+            padding: 0 5px;
+            border-radius: 4px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-strong);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.68rem;
+            font-weight: 600;
+            color: var(--cyan);
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 900px) {
+            .sidebar { display: none; }
+            .main-content { margin-left: 0; }
+            .top-bar { padding-left: 1.5rem; }
+            .top-bar-title { font-size: 0.85rem; }
+        }
+
+        @media (max-width: 600px) {
+            .main-content { padding: 75px 1rem 2rem 1rem; }
+            .card-header { flex-direction: column; }
+            .top-bar-clock { font-size: 1rem; }
+        }
+
+        /* ── Scrollbar ── */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-primary); }
+        ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--cyan-dim); }
+    </style>
+</head>
+<body>
+
+<!-- Glow Orbs -->
+<div class="glow-orb glow-orb-1"></div>
+<div class="glow-orb glow-orb-2"></div>
+<div class="glow-orb glow-orb-3"></div>
+
+<!-- ═══════ Top Bar ═══════ -->
+<header class="top-bar">
+    <div class="top-bar-title">Session 7 — Knowledge Agents &amp; RAG</div>
+    <div class="top-bar-clock" id="liveClock">--:-- --</div>
+    <div class="top-bar-progress">
+        <span class="progress-label" id="progressLabel">Part 1 of 7</span>
+        <div class="progress-bar-track">
+            <div class="progress-bar-fill" id="progressFill" style="width: 14.28%"></div>
+        </div>
+    </div>
+</header>
+
+<!-- ═══════ Sidebar ═══════ -->
+<nav class="sidebar">
+    <a href="/session-07/lecture-guide.html" target="_blank" class="sidebar-btn" title="Lecture Guide">
+        <i data-lucide="presentation" style="width:22px;height:22px"></i>
+        <span class="tooltip">Lecture Guide</span>
+    </a>
+    <a href="/session-07/rag-trace-demo.html" target="_blank" class="sidebar-btn" title="RAG Trace Demo">
+        <i data-lucide="search-code" style="width:22px;height:22px"></i>
+        <span class="tooltip">RAG Trace Demo</span>
+    </a>
+    <a href="https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-07/ISOM260_Session7_Knowledge_Agents_RAG.ipynb" target="_blank" class="sidebar-btn" title="Google Colab">
+        <i data-lucide="notebook-pen" style="width:22px;height:22px"></i>
+        <span class="tooltip">Google Colab</span>
+    </a>
+    <a href="/session-07/workshop-timer.html" target="_blank" class="sidebar-btn" title="Workshop Timer">
+        <i data-lucide="timer" style="width:22px;height:22px"></i>
+        <span class="tooltip">Workshop Timer</span>
+    </a>
+    <div class="sidebar-divider"></div>
+    <a href="/session-07/failure-modes-demo.html" target="_blank" class="sidebar-btn" title="Failure Modes Demo">
+        <i data-lucide="shield-alert" style="width:22px;height:22px"></i>
+        <span class="tooltip">Failure Modes Demo</span>
+    </a>
+    <a href="/session-07/homework-guide.html" target="_blank" class="sidebar-btn" title="Homework Guide">
+        <i data-lucide="clipboard-list" style="width:22px;height:22px"></i>
+        <span class="tooltip">Homework Guide</span>
+    </a>
+    <div class="sidebar-divider"></div>
+    <a href="/sessions/session-07" target="_blank" class="sidebar-btn" title="Session Page">
+        <i data-lucide="layout-dashboard" style="width:22px;height:22px"></i>
+        <span class="tooltip">Session Page</span>
+    </a>
+</nav>
+
+<!-- ═══════ Main Content ═══════ -->
+<main class="main-content">
+
+    <!-- ── Part 1 ── -->
+    <div class="section-card" id="section-1" data-section="1" data-start="17:00" data-end="17:15" data-minutes="15">
+        <div class="card-header">
+            <div class="card-header-left">
+                <div class="section-number">1</div>
+                <div>
+                    <div class="section-title">The Knowledge Problem</div>
+                    <div class="section-meta">
+                        <span class="meta-badge">5:00 – 5:15 PM</span>
+                        <span class="meta-badge">15 min</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-header-right">
+                <div class="status-dot" id="status-1"></div>
+                <div class="countdown" id="countdown-1">--:--</div>
+            </div>
+        </div>
+
+        <div class="talking-points">
+            <div class="section-label talk"><i data-lucide="mic" style="width:14px;height:14px"></i> Key Talking Points</div>
+            <ul class="talk-list">
+                <li>Ask the class: What's your company's refund policy? Now imagine asking Claude — it invents one.</li>
+                <li>This is THE #1 problem in enterprise AI. Claude is smart but doesn't know YOUR business.</li>
+                <li>RAG = search your docs first, then answer. Simple concept, profound impact.</li>
+                <li>Every Fortune 500 company doing AI needs this. You're learning the most in-demand pattern.</li>
+            </ul>
+        </div>
+
+        <div class="demo-cues">
+            <div class="section-label demo"><i data-lucide="monitor" style="width:14px;height:14px"></i> Demo Cues</div>
+            <div class="demo-btn-group">
+                <a href="/session-07/lecture-guide.html" target="_blank" class="demo-btn">
+                    <i data-lucide="external-link" style="width:14px;height:14px"></i> OPEN: lecture-guide.html
+                </a>
+            </div>
+        </div>
+
+        <div class="ask-section">
+            <div class="section-label ask"><i data-lucide="message-circle-question" style="width:14px;height:14px"></i> Ask the Class</div>
+            <div class="ask-card">
+                <i data-lucide="help-circle" style="width:18px;height:18px" class="ask-icon"></i>
+                <span class="ask-text">What's your company's refund policy? Now imagine asking Claude...</span>
+            </div>
+        </div>
+
+        <div>
+            <div class="section-label transition"><i data-lucide="arrow-right" style="width:14px;height:14px"></i> Transition</div>
+            <div class="transition-block">So we know the problem. Now let's look under the hood — HOW does RAG actually work?</div>
+        </div>
+    </div>
+
+    <!-- ── Part 2 ── -->
+    <div class="section-card" id="section-2" data-section="2" data-start="17:15" data-end="17:40" data-minutes="25">
+        <div class="card-header">
+            <div class="card-header-left">
+                <div class="section-number">2</div>
+                <div>
+                    <div class="section-title">RAG Architecture Deep Dive</div>
+                    <div class="section-meta">
+                        <span class="meta-badge">5:15 – 5:40 PM</span>
+                        <span class="meta-badge">25 min</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-header-right">
+                <div class="status-dot" id="status-2"></div>
+                <div class="countdown" id="countdown-2">--:--</div>
+            </div>
+        </div>
+
+        <div class="talking-points">
+            <div class="section-label talk"><i data-lucide="mic" style="width:14px;height:14px"></i> Key Talking Points</div>
+            <ul class="talk-list">
+                <li>Three levels: No data (hallucination), stuffed context (simple but limited), RAG (scalable).</li>
+                <li>We're using Claude's 200K context window — no vector DB needed for our scale.</li>
+                <li>Walk through the trace demo: question &rarr; search &rarr; rank &rarr; verify &rarr; generate.</li>
+                <li>Key insight: the search tool IS the agent's knowledge. No tool = no knowledge.</li>
+            </ul>
+        </div>
+
+        <div class="demo-cues">
+            <div class="section-label demo"><i data-lucide="monitor" style="width:14px;height:14px"></i> Demo Cues</div>
+            <div class="demo-btn-group">
+                <a href="/session-07/rag-trace-demo.html" target="_blank" class="demo-btn">
+                    <i data-lucide="external-link" style="width:14px;height:14px"></i> OPEN: rag-trace-demo.html
+                </a>
+            </div>
+        </div>
+
+        <div class="ask-section">
+            <div class="section-label ask"><i data-lucide="message-circle-question" style="width:14px;height:14px"></i> Ask the Class</div>
+            <div class="ask-card">
+                <i data-lucide="help-circle" style="width:18px;height:18px" class="ask-icon"></i>
+                <span class="ask-text">Why can't we just paste all documents into the prompt every time?</span>
+            </div>
+        </div>
+
+        <div>
+            <div class="section-label transition"><i data-lucide="arrow-right" style="width:14px;height:14px"></i> Transition</div>
+            <div class="transition-block">Enough theory. Time to build. Open your Colab notebooks.</div>
+        </div>
+    </div>
+
+    <!-- ── Part 3 ── -->
+    <div class="section-card" id="section-3" data-section="3" data-start="17:40" data-end="18:25" data-minutes="45">
+        <div class="card-header">
+            <div class="card-header-left">
+                <div class="section-number">3</div>
+                <div>
+                    <div class="section-title">Hands-On — Build a Knowledge Agent</div>
+                    <div class="section-meta">
+                        <span class="meta-badge">5:40 – 6:25 PM</span>
+                        <span class="meta-badge">45 min</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-header-right">
+                <div class="status-dot" id="status-3"></div>
+                <div class="countdown" id="countdown-3">--:--</div>
+            </div>
+        </div>
+
+        <div class="talking-points">
+            <div class="section-label talk"><i data-lucide="mic" style="width:14px;height:14px"></i> Key Talking Points</div>
+            <ul class="talk-list">
+                <li>Everyone open Colab. I'll walk through Phase 1 together, then you fly solo.</li>
+                <li>Walk the room. Common issues: API key not set, wrong model name, tool results format.</li>
+                <li>Celebrate first working queries loudly — momentum matters.</li>
+                <li>If stuck >3 min, ask a neighbor. If neighbor stuck too, raise hand.</li>
+            </ul>
+        </div>
+
+        <div class="demo-cues">
+            <div class="section-label demo"><i data-lucide="monitor" style="width:14px;height:14px"></i> Demo Cues</div>
+            <div class="demo-btn-group">
+                <a href="https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-07/ISOM260_Session7_Knowledge_Agents_RAG.ipynb" target="_blank" class="demo-btn">
+                    <i data-lucide="external-link" style="width:14px;height:14px"></i> SWITCH TO: Google Colab
+                </a>
+                <a href="/session-07/workshop-timer.html" target="_blank" class="demo-btn">
+                    <i data-lucide="external-link" style="width:14px;height:14px"></i> OPEN: workshop-timer.html
+                </a>
+            </div>
+        </div>
+
+        <div class="ask-section">
+            <div class="section-label ask"><i data-lucide="message-circle-question" style="width:14px;height:14px"></i> Ask the Class</div>
+            <div class="ask-card">
+                <i data-lucide="help-circle" style="width:18px;height:18px" class="ask-icon"></i>
+                <span class="ask-text">What's the most surprising answer your agent gave?</span>
+            </div>
+        </div>
+
+        <div>
+            <div class="section-label transition"><i data-lucide="arrow-right" style="width:14px;height:14px"></i> Transition</div>
+            <div class="transition-block">Your agent now knows your business. Grab a coffee — next we break it.</div>
+        </div>
+    </div>
+
+    <!-- ── Part 4: Break ── -->
+    <div class="section-card" id="section-4" data-section="4" data-start="18:25" data-end="18:35" data-minutes="10">
+        <div class="card-header">
+            <div class="card-header-left">
+                <div class="section-number">4</div>
+                <div>
+                    <div class="section-title">Break</div>
+                    <div class="section-meta">
+                        <span class="meta-badge">6:25 – 6:35 PM</span>
+                        <span class="meta-badge">10 min</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-header-right">
+                <div class="status-dot" id="status-4"></div>
+                <div class="countdown" id="countdown-4">--:--</div>
+            </div>
+        </div>
+
+        <div class="talking-points">
+            <div class="section-label talk"><i data-lucide="mic" style="width:14px;height:14px"></i> Key Talking Points</div>
+            <ul class="talk-list">
+                <li>Stretch break. Remind: "Your agent now knows YOUR business. Next: what happens when the data is wrong?"</li>
+                <li>Check: who got all 3 phases done? Partial credit is fine.</li>
+            </ul>
+        </div>
+
+        <div>
+            <div class="section-label transition"><i data-lucide="arrow-right" style="width:14px;height:14px"></i> Transition</div>
+            <div class="transition-block">Welcome back. Your agent works. Now let's see what happens when the data is WRONG.</div>
+        </div>
+    </div>
+
+    <!-- ── Part 5 ── -->
+    <div class="section-card" id="section-5" data-section="5" data-start="18:35" data-end="19:05" data-minutes="30">
+        <div class="card-header">
+            <div class="card-header-left">
+                <div class="section-number">5</div>
+                <div>
+                    <div class="section-title">RAG Failure Modes &amp; Trust</div>
+                    <div class="section-meta">
+                        <span class="meta-badge">6:35 – 7:05 PM</span>
+                        <span class="meta-badge">30 min</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-header-right">
+                <div class="status-dot" id="status-5"></div>
+                <div class="countdown" id="countdown-5">--:--</div>
+            </div>
+        </div>
+
+        <div class="talking-points">
+            <div class="section-label talk"><i data-lucide="mic" style="width:14px;height:14px"></i> Key Talking Points</div>
+            <ul class="talk-list">
+                <li>Air Canada story is REAL. Court ruled them liable. $812. This is not theoretical.</li>
+                <li>Demo each failure mode live — outdated doc, contradicting docs, unanswerable question.</li>
+                <li>Key message: "I don't know" is a FEATURE, not a bug. Best agents know their limits.</li>
+                <li>Link to failure-modes-demo.html for interactive exploration.</li>
+            </ul>
+        </div>
+
+        <div class="demo-cues">
+            <div class="section-label demo"><i data-lucide="monitor" style="width:14px;height:14px"></i> Demo Cues</div>
+            <div class="demo-btn-group">
+                <a href="/session-07/failure-modes-demo.html" target="_blank" class="demo-btn">
+                    <i data-lucide="external-link" style="width:14px;height:14px"></i> OPEN: failure-modes-demo.html
+                </a>
+            </div>
+        </div>
+
+        <div class="ask-section">
+            <div class="section-label ask"><i data-lucide="message-circle-question" style="width:14px;height:14px"></i> Ask the Class</div>
+            <div class="ask-card">
+                <i data-lucide="help-circle" style="width:18px;height:18px" class="ask-icon"></i>
+                <span class="ask-text">Should a company be liable for what its AI chatbot says? Why?</span>
+            </div>
+        </div>
+
+        <div>
+            <div class="section-label transition"><i data-lucide="arrow-right" style="width:14px;height:14px"></i> Transition</div>
+            <div class="transition-block">So how do real companies handle all this? Let's look at the real world.</div>
+        </div>
+    </div>
+
+    <!-- ── Part 6 ── -->
+    <div class="section-card" id="section-6" data-section="6" data-start="19:05" data-end="19:20" data-minutes="15">
+        <div class="card-header">
+            <div class="card-header-left">
+                <div class="section-number">6</div>
+                <div>
+                    <div class="section-title">RAG in the Real World</div>
+                    <div class="section-meta">
+                        <span class="meta-badge">7:05 – 7:20 PM</span>
+                        <span class="meta-badge">15 min</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-header-right">
+                <div class="status-dot" id="status-6"></div>
+                <div class="countdown" id="countdown-6">--:--</div>
+            </div>
+        </div>
+
+        <div class="talking-points">
+            <div class="section-label talk"><i data-lucide="mic" style="width:14px;height:14px"></i> Key Talking Points</div>
+            <ul class="talk-list">
+                <li>Most companies buy (Glean, Notion AI). You learn to build so you can evaluate.</li>
+                <li>Ask: "Who has used a company knowledge base at work? Was it good?" Get stories.</li>
+                <li>Build vs buy framework: &lt;100 docs = long context, &lt;10K = simple RAG, &gt;10K = vector DB.</li>
+            </ul>
+        </div>
+
+        <div class="ask-section">
+            <div class="section-label ask"><i data-lucide="message-circle-question" style="width:14px;height:14px"></i> Ask the Class</div>
+            <div class="ask-card">
+                <i data-lucide="help-circle" style="width:18px;height:18px" class="ask-icon"></i>
+                <span class="ask-text">Who has used a company knowledge base at work? Was it actually good?</span>
+            </div>
+        </div>
+
+        <div>
+            <div class="section-label transition"><i data-lucide="arrow-right" style="width:14px;height:14px"></i> Transition</div>
+            <div class="transition-block">You now know what companies build AND buy. Let's wrap up.</div>
+        </div>
+    </div>
+
+    <!-- ── Part 7 ── -->
+    <div class="section-card" id="section-7" data-section="7" data-start="19:20" data-end="19:30" data-minutes="10">
+        <div class="card-header">
+            <div class="card-header-left">
+                <div class="section-number">7</div>
+                <div>
+                    <div class="section-title">Wrap-Up + Homework</div>
+                    <div class="section-meta">
+                        <span class="meta-badge">7:20 – 7:30 PM</span>
+                        <span class="meta-badge">10 min</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-header-right">
+                <div class="status-dot" id="status-7"></div>
+                <div class="countdown" id="countdown-7">--:--</div>
+            </div>
+        </div>
+
+        <div class="talking-points">
+            <div class="section-label talk"><i data-lucide="mic" style="width:14px;height:14px"></i> Key Talking Points</div>
+            <ul class="talk-list">
+                <li>Stack recap: Tools &rarr; APIs &rarr; Memory &rarr; ReAct &rarr; Knowledge. Next: Multi-Agent.</li>
+                <li>Homework preview: Build YOUR OWN knowledge agent. Domain you actually care about.</li>
+                <li>Tease Session 8: "One agent is useful. A TEAM of agents is powerful."</li>
+            </ul>
+        </div>
+
+        <div class="demo-cues">
+            <div class="section-label demo"><i data-lucide="monitor" style="width:14px;height:14px"></i> Demo Cues</div>
+            <div class="demo-btn-group">
+                <a href="/session-07/homework-guide.html" target="_blank" class="demo-btn">
+                    <i data-lucide="external-link" style="width:14px;height:14px"></i> OPEN: homework-guide.html
+                </a>
+            </div>
+        </div>
+
+        <div class="ask-section">
+            <div class="section-label ask"><i data-lucide="message-circle-question" style="width:14px;height:14px"></i> Ask the Class</div>
+            <div class="ask-card">
+                <i data-lucide="help-circle" style="width:18px;height:18px" class="ask-icon"></i>
+                <span class="ask-text">What domain would YOU build a knowledge agent for?</span>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<!-- Keyboard Hint -->
+<div class="keyboard-hint">
+    <span class="kbd">1</span>–<span class="kbd">7</span> jump to sections
+</div>
+
+<script>
+(function() {
+    'use strict';
+
+    // ── Initialize Lucide icons ──
+    lucide.createIcons();
+
+    // ── Constants ──
+    const TOTAL_SECTIONS = 7;
+    const sections = [
+        { id: 1, start: '17:00', end: '17:15', minutes: 15 },
+        { id: 2, start: '17:15', end: '17:40', minutes: 25 },
+        { id: 3, start: '17:40', end: '18:25', minutes: 45 },
+        { id: 4, start: '18:25', end: '18:35', minutes: 10 },
+        { id: 5, start: '18:35', end: '19:05', minutes: 30 },
+        { id: 6, start: '19:05', end: '19:20', minutes: 15 },
+        { id: 7, start: '19:20', end: '19:30', minutes: 10 },
+    ];
+
+    let currentSection = 1;
+
+    // ── Helpers ──
+    function parseTime(str) {
+        const [h, m] = str.split(':').map(Number);
+        const d = new Date();
+        d.setHours(h, m, 0, 0);
+        return d;
+    }
+
+    function formatClock(date) {
+        let h = date.getHours();
+        const m = date.getMinutes().toString().padStart(2, '0');
+        const ampm = h >= 12 ? 'PM' : 'AM';
+        h = h % 12 || 12;
+        return h + ':' + m + ' ' + ampm;
+    }
+
+    // ── Live Clock ──
+    const clockEl = document.getElementById('liveClock');
+    function updateClock() {
+        clockEl.textContent = formatClock(new Date());
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    // ── Countdown Timers ──
+    function updateCountdowns() {
+        const now = new Date();
+        sections.forEach(function(sec) {
+            const el = document.getElementById('countdown-' + sec.id);
+            const startTime = parseTime(sec.start);
+            const endTime = parseTime(sec.end);
+
+            if (sec.id === currentSection) {
+                // Active section — show time remaining
+                const remaining = Math.max(0, Math.floor((endTime - now) / 1000));
+                const mins = Math.floor(remaining / 60);
+                const secs = remaining % 60;
+                el.textContent = mins + ':' + secs.toString().padStart(2, '0');
+
+                const totalSec = sec.minutes * 60;
+                const pctRemaining = remaining / totalSec;
+
+                el.className = 'countdown';
+                if (remaining <= 0) {
+                    el.classList.add('done');
+                    el.textContent = '0:00';
+                } else if (pctRemaining > 0.5) {
+                    el.classList.add('green');
+                } else if (pctRemaining > 0.25) {
+                    el.classList.add('yellow');
+                } else {
+                    el.classList.add('red');
+                }
+            } else if (sec.id < currentSection) {
+                el.textContent = 'Done';
+                el.className = 'countdown done';
+            } else {
+                el.textContent = sec.minutes + ':00';
+                el.className = 'countdown';
+            }
+        });
+    }
+    setInterval(updateCountdowns, 1000);
+
+    // ── Section Progress ──
+    function setCurrentSection(num) {
+        currentSection = num;
+        // Update progress bar
+        document.getElementById('progressLabel').textContent = 'Part ' + num + ' of ' + TOTAL_SECTIONS;
+        document.getElementById('progressFill').style.width = ((num / TOTAL_SECTIONS) * 100).toFixed(2) + '%';
+
+        // Update card states
+        document.querySelectorAll('.section-card').forEach(function(card) {
+            const sn = parseInt(card.dataset.section);
+            card.classList.remove('active', 'completed');
+            const dot = document.getElementById('status-' + sn);
+            dot.classList.remove('active', 'completed');
+
+            if (sn === num) {
+                card.classList.add('active');
+                dot.classList.add('active');
+            } else if (sn < num) {
+                card.classList.add('completed');
+                dot.classList.add('completed');
+            }
+        });
+
+        // Scroll to section
+        const target = document.getElementById('section-' + num);
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Immediately update countdowns
+        updateCountdowns();
+    }
+
+    // ── Card Click ──
+    document.querySelectorAll('.section-card').forEach(function(card) {
+        card.addEventListener('click', function(e) {
+            // Don't trigger when clicking links
+            if (e.target.closest('a')) return;
+            const sn = parseInt(card.dataset.section);
+            setCurrentSection(sn);
+        });
+    });
+
+    // ── Keyboard Shortcuts ──
+    document.addEventListener('keydown', function(e) {
+        const key = parseInt(e.key);
+        if (key >= 1 && key <= 7 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+            e.preventDefault();
+            setCurrentSection(key);
+        }
+    });
+
+    // ── Initialize ──
+    setCurrentSection(1);
+    updateCountdowns();
+
+})();
+</script>
+</body>
+</html>

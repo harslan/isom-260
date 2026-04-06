@@ -1,0 +1,1428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session 7: When RAG Goes Wrong — ISOM 260</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+    <style>
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #0f1424;
+            --bg-card: #141929;
+            --bg-elevated: #1a2035;
+            --bg-code: #0d1117;
+            --cyan: #00e5ff;
+            --cyan-dim: #00b8d4;
+            --cyan-glow: rgba(0, 229, 255, 0.15);
+            --cyan-glow-strong: rgba(0, 229, 255, 0.3);
+            --magenta: #ff006e;
+            --magenta-glow: rgba(255, 0, 110, 0.15);
+            --yellow: #ffd600;
+            --yellow-glow: rgba(255, 214, 0, 0.15);
+            --green: #00e676;
+            --green-glow: rgba(0, 230, 118, 0.15);
+            --orange: #ff9100;
+            --orange-glow: rgba(255, 145, 0, 0.15);
+            --purple: #b388ff;
+            --text-primary: #e8ecf4;
+            --text-secondary: #8892a8;
+            --text-dim: #5a6478;
+            --border: rgba(0, 229, 255, 0.1);
+            --border-strong: rgba(0, 229, 255, 0.25);
+            --grid-line: rgba(0, 229, 255, 0.04);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background:
+                linear-gradient(var(--grid-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .glow-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .glow-orb-1 { width: 500px; height: 500px; background: rgba(255, 0, 110, 0.06); top: 10%; right: -100px; }
+        .glow-orb-2 { width: 400px; height: 400px; background: rgba(0, 229, 255, 0.05); bottom: 20%; left: -100px; }
+        .glow-orb-3 { width: 350px; height: 350px; background: rgba(255, 214, 0, 0.04); top: 60%; right: 10%; }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ====== HERO ====== */
+        .hero { padding: 4rem 0 2rem; }
+
+        .session-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--magenta-glow);
+            border: 1px solid rgba(255, 0, 110, 0.3);
+            border-radius: 100px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--magenta);
+            margin-bottom: 2rem;
+        }
+
+        .session-badge .dot {
+            width: 6px; height: 6px;
+            background: var(--magenta);
+            border-radius: 50%;
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(255,0,110,0.4); }
+            50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(255,0,110,0); }
+        }
+
+        .hero h1 {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(2.2rem, 4.5vw, 3.5rem);
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero h1 .gradient-text {
+            background: linear-gradient(135deg, var(--magenta), var(--orange));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            max-width: 750px;
+        }
+
+        /* ====== TABS ====== */
+        .tab-nav {
+            display: flex;
+            gap: 0.5rem;
+            padding: 2rem 0 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.65rem 1.25rem;
+            background: transparent;
+            color: var(--text-dim);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            font-family: 'Sora', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .tab-btn i { width: 16px; height: 16px; }
+
+        .tab-btn:hover {
+            border-color: var(--border-strong);
+            color: var(--text-secondary);
+        }
+
+        .tab-btn.active {
+            background: var(--cyan-glow);
+            border-color: var(--cyan);
+            color: var(--cyan);
+            box-shadow: 0 0 20px var(--cyan-glow);
+        }
+
+        /* ====== TAB CONTENT ====== */
+        .tab-content {
+            display: none;
+            animation: fadeInUp 0.4s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ====== SCENARIO SETUP ====== */
+        .scenario-section {
+            padding: 2rem 0;
+        }
+
+        .setup-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--cyan);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .setup-label::before {
+            content: '';
+            width: 24px; height: 1px;
+            background: var(--cyan);
+        }
+
+        .user-question {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem 2rem;
+            margin: 1rem 0 2rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .user-question .q-icon {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            background: var(--cyan-glow);
+            border: 1px solid rgba(0, 229, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .user-question .q-icon i { width: 18px; height: 18px; color: var(--cyan); }
+
+        .user-question .q-text {
+            font-size: 1.15rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            padding-top: 0.3rem;
+        }
+
+        /* ====== DOCUMENT CARDS ====== */
+        .doc-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .doc-grid { grid-template-columns: 1fr; }
+        }
+
+        .doc-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            position: relative;
+        }
+
+        .doc-card.glow-green {
+            border-color: rgba(0, 230, 118, 0.5);
+            box-shadow: 0 0 25px rgba(0, 230, 118, 0.12);
+        }
+
+        .doc-card.glow-red {
+            border-color: rgba(255, 0, 110, 0.5);
+            box-shadow: 0 0 25px rgba(255, 0, 110, 0.12);
+        }
+
+        .doc-card.glow-orange {
+            border-color: rgba(255, 145, 0, 0.5);
+            box-shadow: 0 0 25px rgba(255, 145, 0, 0.12);
+        }
+
+        .doc-card.glow-yellow {
+            border-color: rgba(255, 214, 0, 0.5);
+            box-shadow: 0 0 25px rgba(255, 214, 0, 0.12);
+        }
+
+        .doc-card.border-green { border-color: rgba(0, 230, 118, 0.4); }
+        .doc-card.border-red { border-color: rgba(255, 0, 110, 0.4); }
+        .doc-card.border-yellow { border-color: rgba(255, 214, 0, 0.4); }
+        .doc-card.border-orange { border-color: rgba(255, 145, 0, 0.4); }
+        .doc-card.border-dim { border-color: var(--border); opacity: 0.7; }
+
+        .doc-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.85rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+            background: var(--bg-elevated);
+        }
+
+        .doc-filename {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .doc-filename i { width: 14px; height: 14px; color: var(--text-dim); }
+
+        .doc-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 0.2rem 0.6rem;
+            border-radius: 100px;
+        }
+
+        .doc-badge.current {
+            background: rgba(0, 230, 118, 0.15);
+            color: var(--green);
+            border: 1px solid rgba(0, 230, 118, 0.3);
+        }
+
+        .doc-badge.outdated {
+            background: rgba(255, 0, 110, 0.12);
+            color: var(--magenta);
+            border: 1px solid rgba(255, 0, 110, 0.25);
+        }
+
+        .doc-badge.sop-a {
+            background: rgba(255, 214, 0, 0.12);
+            color: var(--yellow);
+            border: 1px solid rgba(255, 214, 0, 0.25);
+        }
+
+        .doc-badge.sop-b {
+            background: rgba(255, 145, 0, 0.12);
+            color: var(--orange);
+            border: 1px solid rgba(255, 145, 0, 0.25);
+        }
+
+        .doc-date {
+            padding: 0.5rem 1.25rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            color: var(--text-dim);
+        }
+
+        .doc-body {
+            padding: 1rem 1.25rem 1.25rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.65;
+        }
+
+        .doc-note {
+            padding: 0 1.25rem 1rem;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            font-style: italic;
+        }
+
+        /* Diagonal OUTDATED watermark */
+        .doc-card .watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-35deg);
+            font-family: 'Sora', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: rgba(255, 0, 110, 0.08);
+            pointer-events: none;
+            white-space: nowrap;
+            z-index: 1;
+        }
+
+        /* ====== TOGGLE SWITCH ====== */
+        .toggle-area {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .toggle-label {
+            font-family: 'Sora', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: color 0.3s;
+        }
+
+        .toggle-label.active-label { color: var(--text-primary); }
+
+        .toggle-switch {
+            width: 52px;
+            height: 28px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 20px;
+            height: 20px;
+            background: var(--text-dim);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-switch.on {
+            background: var(--cyan-glow);
+            border-color: var(--cyan);
+        }
+
+        .toggle-switch.on::after {
+            left: 27px;
+            background: var(--cyan);
+        }
+
+        /* ====== AGENT RESPONSE (Chat Bubble) ====== */
+        .response-area {
+            margin-bottom: 2rem;
+        }
+
+        .response-bubble {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 2px 16px 16px 16px;
+            padding: 1.5rem;
+            position: relative;
+            transition: all 0.4s ease;
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        .response-bubble.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .response-bubble.error {
+            border-color: rgba(255, 0, 110, 0.35);
+            background: linear-gradient(135deg, rgba(255, 0, 110, 0.04), var(--bg-elevated));
+        }
+
+        .response-bubble.success {
+            border-color: rgba(0, 230, 118, 0.35);
+            background: linear-gradient(135deg, rgba(0, 230, 118, 0.04), var(--bg-elevated));
+        }
+
+        .response-bubble.warning {
+            border-color: rgba(255, 145, 0, 0.35);
+            background: linear-gradient(135deg, rgba(255, 145, 0, 0.04), var(--bg-elevated));
+        }
+
+        .response-bubble .bot-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            margin-bottom: 0.75rem;
+        }
+
+        .response-bubble .bot-label i { width: 14px; height: 14px; }
+
+        .response-bubble .response-text {
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            line-height: 1.7;
+        }
+
+        /* ====== STATUS BADGE ====== */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 100px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            margin-top: 1rem;
+            transition: all 0.4s ease;
+        }
+
+        .status-badge.error-badge {
+            background: rgba(255, 0, 110, 0.12);
+            color: var(--magenta);
+            border: 1px solid rgba(255, 0, 110, 0.25);
+        }
+
+        .status-badge.success-badge {
+            background: rgba(0, 230, 118, 0.12);
+            color: var(--green);
+            border: 1px solid rgba(0, 230, 118, 0.25);
+        }
+
+        .status-badge.warning-badge {
+            background: rgba(255, 145, 0, 0.12);
+            color: var(--orange);
+            border: 1px solid rgba(255, 145, 0, 0.25);
+        }
+
+        .status-badge.yellow-badge {
+            background: rgba(255, 214, 0, 0.12);
+            color: var(--yellow);
+            border: 1px solid rgba(255, 214, 0, 0.25);
+        }
+
+        .agent-note {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            margin-top: 0.75rem;
+            font-style: italic;
+        }
+
+        /* ====== CONFIDENCE METER ====== */
+        .confidence-meter {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            margin-top: 1rem;
+            transition: all 0.4s ease;
+        }
+
+        .confidence-meter .meter-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .confidence-meter .meter-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+        }
+
+        .confidence-meter .meter-value {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            transition: color 0.4s ease;
+        }
+
+        .confidence-meter .meter-track {
+            height: 8px;
+            background: var(--bg-elevated);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .confidence-meter .meter-fill {
+            height: 100%;
+            border-radius: 4px;
+            width: 0;
+            transition: width 1s cubic-bezier(0.22, 1, 0.36, 1), background 0.4s ease;
+        }
+
+        .confidence-meter .meter-note {
+            font-size: 0.78rem;
+            color: var(--text-dim);
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+
+        /* ====== AIR CANADA CALLOUT ====== */
+        .callout-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 0, 110, 0.2);
+            border-left: 4px solid var(--magenta);
+            border-radius: 0 14px 14px 0;
+            padding: 1.5rem 1.75rem;
+            margin: 2rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .callout-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 0, 110, 0.03), transparent);
+            pointer-events: none;
+        }
+
+        .callout-header {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .callout-header .callout-icon {
+            width: 32px; height: 32px;
+            border-radius: 8px;
+            background: rgba(255, 0, 110, 0.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .callout-header .callout-icon i { width: 16px; height: 16px; color: var(--magenta); }
+
+        .callout-header .callout-title {
+            font-family: 'Sora', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--magenta);
+        }
+
+        .callout-body {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            position: relative;
+            z-index: 1;
+        }
+
+        .callout-source {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            color: var(--text-dim);
+            margin-top: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .callout-source a {
+            color: var(--cyan-dim);
+            text-decoration: none;
+        }
+
+        .callout-source a:hover { text-decoration: underline; }
+
+        /* ====== EXPANDABLE CARDS ====== */
+        .expand-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            margin-bottom: 0.75rem;
+            overflow: hidden;
+            transition: border-color 0.3s ease;
+        }
+
+        .expand-card.red-accent { border-left: 3px solid var(--magenta); }
+        .expand-card.orange-accent { border-left: 3px solid var(--orange); }
+        .expand-card.green-accent { border-left: 3px solid var(--green); }
+
+        .expand-card:hover {
+            border-color: var(--border-strong);
+        }
+
+        .expand-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.25rem;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.2s ease;
+        }
+
+        .expand-header:hover {
+            background: var(--bg-elevated);
+        }
+
+        .expand-header .expand-title {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-family: 'Sora', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .expand-header .expand-title i { width: 16px; height: 16px; }
+        .expand-header .expand-title.red { color: var(--magenta); }
+        .expand-header .expand-title.orange { color: var(--orange); }
+        .expand-header .expand-title.green { color: var(--green); }
+
+        .expand-header .chevron {
+            width: 18px; height: 18px;
+            color: var(--text-dim);
+            transition: transform 0.3s ease;
+        }
+
+        .expand-card.open .chevron {
+            transform: rotate(180deg);
+        }
+
+        .expand-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+        }
+
+        .expand-card.open .expand-body {
+            max-height: 800px;
+        }
+
+        .expand-body-inner {
+            padding: 0 1.25rem 1.25rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* ====== CODE BLOCKS ====== */
+        .code-block {
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            margin-top: 1rem;
+            overflow: hidden;
+        }
+
+        .code-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1rem;
+            background: var(--bg-elevated);
+            border-bottom: 1px solid var(--border);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            color: var(--text-dim);
+        }
+
+        .code-header i { width: 12px; height: 12px; }
+
+        .code-body {
+            padding: 1rem 1.25rem;
+            overflow-x: auto;
+        }
+
+        .code-body pre {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
+        }
+
+        .code-body .comment { color: var(--text-dim); }
+        .code-body .keyword { color: var(--magenta); }
+        .code-body .function { color: var(--cyan); }
+        .code-body .string { color: var(--green); }
+        .code-body .param { color: var(--orange); }
+        .code-body .number { color: var(--yellow); }
+        .code-body .builtin { color: var(--purple); }
+
+        /* ====== NAVIGATION ====== */
+        .nav-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: 2.5rem 0;
+            border-top: 1px solid var(--border);
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--cyan);
+            text-decoration: none;
+            font-family: 'Sora', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .nav-link i { width: 16px; height: 16px; }
+
+        .nav-link:hover {
+            color: var(--text-primary);
+            transform: translateX(-2px);
+        }
+
+        .nav-link.forward:hover {
+            transform: translateX(2px);
+        }
+
+        /* ====== FOOTER ====== */
+        .footer {
+            padding: 3rem 0;
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .footer p {
+            color: var(--text-dim);
+            font-size: 0.85rem;
+        }
+
+        .footer a {
+            color: var(--cyan);
+            text-decoration: none;
+        }
+
+        .footer a:hover { text-decoration: underline; }
+
+        /* ====== SINGLE DOC CARD ====== */
+        .doc-grid.single {
+            grid-template-columns: 1fr;
+            max-width: 600px;
+        }
+
+        /* ====== RESPONSIVE ====== */
+        @media (max-width: 640px) {
+            .tab-nav { gap: 0.4rem; }
+            .tab-btn { font-size: 0.78rem; padding: 0.5rem 1rem; }
+            .toggle-area { flex-direction: column; align-items: flex-start; }
+            .nav-footer { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Glow orbs -->
+<div class="glow-orb glow-orb-1"></div>
+<div class="glow-orb glow-orb-2"></div>
+<div class="glow-orb glow-orb-3"></div>
+
+<div class="container">
+
+    <!-- ====== HERO ====== -->
+    <div class="hero">
+        <div class="session-badge">
+            <span class="dot"></span>
+            Session 7 &mdash; Failure Modes
+        </div>
+        <h1>When <span class="gradient-text">RAG Goes Wrong</span></h1>
+        <p>Three scenarios every knowledge agent must handle</p>
+    </div>
+
+    <!-- ====== TAB NAVIGATION ====== -->
+    <div class="tab-nav">
+        <button class="tab-btn active" data-tab="outdated" onclick="switchTab('outdated')">
+            <i data-lucide="clock"></i>
+            The Outdated Document
+        </button>
+        <button class="tab-btn" data-tab="contradicting" onclick="switchTab('contradicting')">
+            <i data-lucide="git-merge"></i>
+            Contradicting Documents
+        </button>
+        <button class="tab-btn" data-tab="unanswerable" onclick="switchTab('unanswerable')">
+            <i data-lucide="help-circle"></i>
+            The Unanswerable Question
+        </button>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SCENARIO 1: THE OUTDATED DOCUMENT                            -->
+    <!-- ============================================================ -->
+    <div class="tab-content active" id="tab-outdated">
+        <div class="scenario-section">
+
+            <!-- Setup -->
+            <div class="setup-label">The Setup</div>
+            <div class="user-question">
+                <div class="q-icon"><i data-lucide="user"></i></div>
+                <div class="q-text">"What is CloudSync's return policy?"</div>
+            </div>
+
+            <!-- Document cards -->
+            <div class="setup-label">Retrieved Documents</div>
+            <div class="doc-grid">
+                <!-- Current doc -->
+                <div class="doc-card border-green" id="doc-current">
+                    <div class="doc-header">
+                        <div class="doc-filename">
+                            <i data-lucide="file-text"></i>
+                            refund-policy-2024.md
+                        </div>
+                        <span class="doc-badge current">Current</span>
+                    </div>
+                    <div class="doc-date">Updated: November 15, 2024</div>
+                    <div class="doc-body">CloudSync offers a 14-day return window. Customers receive store credit for returns within 14 days of purchase. Original payment refunds require manager approval. All returns require receipt or order confirmation.</div>
+                </div>
+
+                <!-- Outdated doc -->
+                <div class="doc-card border-red" id="doc-outdated">
+                    <div class="watermark">OUTDATED</div>
+                    <div class="doc-header">
+                        <div class="doc-filename">
+                            <i data-lucide="file-text"></i>
+                            returns-policy-2022.md
+                        </div>
+                        <span class="doc-badge outdated">Outdated</span>
+                    </div>
+                    <div class="doc-date">Updated: March 20, 2022</div>
+                    <div class="doc-body">CloudSync guarantees a full refund within 30 days of purchase. No questions asked. Return items in original packaging for a complete refund to original payment method.</div>
+                </div>
+            </div>
+
+            <!-- Toggle -->
+            <div class="setup-label">The Problem</div>
+            <div class="toggle-area">
+                <span class="toggle-label active-label" id="label-outdated-off">Without date-awareness</span>
+                <div class="toggle-switch" id="toggle-outdated" onclick="toggleScenario('outdated')"></div>
+                <span class="toggle-label" id="label-outdated-on">With date-awareness</span>
+            </div>
+
+            <!-- Response: OFF -->
+            <div class="response-area" id="response-outdated-off">
+                <div class="response-bubble error visible">
+                    <div class="bot-label"><i data-lucide="bot"></i> Agent Response</div>
+                    <div class="response-text">"CloudSync offers a generous 30-day full refund policy. Simply return items in original packaging for a complete refund to your original payment method. No questions asked!"</div>
+                    <div class="status-badge error-badge">&#9888;&#65039; WRONG &mdash; Used outdated 2022 policy</div>
+                </div>
+            </div>
+
+            <!-- Response: ON -->
+            <div class="response-area" id="response-outdated-on" style="display:none;">
+                <div class="response-bubble success visible">
+                    <div class="bot-label"><i data-lucide="bot"></i> Agent Response</div>
+                    <div class="response-text">"Based on the current policy (updated November 2024), CloudSync offers a 14-day return window with store credit. Full refunds to original payment require manager approval. Please bring your receipt or order confirmation."</div>
+                    <div class="status-badge success-badge">&#10003; CORRECT &mdash; Used current 2024 policy</div>
+                    <div class="agent-note">Agent checked document dates and prioritized the most recent version.</div>
+                </div>
+            </div>
+
+            <!-- Air Canada Callout -->
+            <div class="callout-card">
+                <div class="callout-header">
+                    <div class="callout-icon"><i data-lucide="scale"></i></div>
+                    <div class="callout-title">This Already Happened</div>
+                </div>
+                <div class="callout-body">In 2024, Air Canada was held legally liable when its customer service chatbot quoted an outdated bereavement fare policy. The airline had to honor the incorrect policy. Cost: <strong>$812 per affected customer</strong>.</div>
+                <div class="callout-source">
+                    <i data-lucide="external-link" style="width:12px;height:12px;"></i>
+                    <a href="https://www.canlii.org/en/bc/bccrt/doc/2024/2024bccrt149/2024bccrt149.html" target="_blank" rel="noopener">Air Canada v. Moffatt, 2024</a>
+                </div>
+            </div>
+
+            <!-- Expandable Cards -->
+            <div class="expand-card red-accent" id="expand-outdated-wrong">
+                <div class="expand-header" onclick="toggleExpand('expand-outdated-wrong')">
+                    <div class="expand-title red">
+                        <i data-lucide="alert-triangle"></i>
+                        What went wrong?
+                    </div>
+                    <i data-lucide="chevron-down" class="chevron"></i>
+                </div>
+                <div class="expand-body">
+                    <div class="expand-body-inner">The agent treated all documents equally regardless of dates. In production, this means outdated policies get quoted as current, creating legal and business risk.</div>
+                </div>
+            </div>
+
+            <div class="expand-card green-accent" id="expand-outdated-fix">
+                <div class="expand-header" onclick="toggleExpand('expand-outdated-fix')">
+                    <div class="expand-title green">
+                        <i data-lucide="wrench"></i>
+                        How to fix it
+                    </div>
+                    <i data-lucide="chevron-down" class="chevron"></i>
+                </div>
+                <div class="expand-body">
+                    <div class="expand-body-inner">
+                        Add date metadata and prioritize recent documents during retrieval.
+                        <div class="code-block">
+                            <div class="code-header"><i data-lucide="code"></i> Python</div>
+                            <div class="code-body"><pre><span class="comment"># Add date metadata to documents</span>
+<span class="keyword">def</span> <span class="function">search_with_date_priority</span>(<span class="param">query</span>, <span class="param">documents</span>):
+    results = <span class="function">search</span>(query, documents)
+    <span class="comment"># Sort by date — newest first</span>
+    results.<span class="function">sort</span>(<span class="param">key</span>=<span class="keyword">lambda</span> d: d[<span class="string">'date'</span>], <span class="param">reverse</span>=<span class="builtin">True</span>)
+    <span class="comment"># Warn about outdated docs</span>
+    <span class="keyword">for</span> r <span class="keyword">in</span> results:
+        <span class="keyword">if</span> <span class="function">is_older_than</span>(r[<span class="string">'date'</span>], <span class="param">months</span>=<span class="number">12</span>):
+            r[<span class="string">'warning'</span>] = <span class="string">'OUTDATED - verify current policy'</span>
+    <span class="keyword">return</span> results</pre></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SCENARIO 2: CONTRADICTING DOCUMENTS                          -->
+    <!-- ============================================================ -->
+    <div class="tab-content" id="tab-contradicting">
+        <div class="scenario-section">
+
+            <!-- Setup -->
+            <div class="setup-label">The Setup</div>
+            <div class="user-question">
+                <div class="q-icon"><i data-lucide="user"></i></div>
+                <div class="q-text">"What is the maximum discount we can offer enterprise clients?"</div>
+            </div>
+
+            <!-- Document cards -->
+            <div class="setup-label">Retrieved Documents</div>
+            <div class="doc-grid">
+                <!-- SOP-A -->
+                <div class="doc-card border-yellow" id="doc-sop-a">
+                    <div class="doc-header">
+                        <div class="doc-filename">
+                            <i data-lucide="file-text"></i>
+                            sales-procedures-q4.md
+                        </div>
+                        <span class="doc-badge sop-a">SOP-A</span>
+                    </div>
+                    <div class="doc-body">Enterprise discounts are capped at 25% off list price. Exceptions require VP approval for deals over $100K. Standard enterprise discount is 15-20%.</div>
+                </div>
+
+                <!-- SOP-B -->
+                <div class="doc-card border-orange" id="doc-sop-b">
+                    <div class="doc-header">
+                        <div class="doc-filename">
+                            <i data-lucide="file-text"></i>
+                            enterprise-pricing-guide.md
+                        </div>
+                        <span class="doc-badge sop-b">SOP-B</span>
+                    </div>
+                    <div class="doc-body">For enterprise accounts, sales reps can offer up to 40% discount on annual contracts. Volume discounts of 10-30% are automatically applied for 100+ seats.</div>
+                </div>
+            </div>
+
+            <!-- Toggle -->
+            <div class="setup-label">The Problem</div>
+            <div class="toggle-area">
+                <span class="toggle-label active-label" id="label-contradicting-off">Without conflict detection</span>
+                <div class="toggle-switch" id="toggle-contradicting" onclick="toggleScenario('contradicting')"></div>
+                <span class="toggle-label" id="label-contradicting-on">With conflict detection</span>
+            </div>
+
+            <!-- Response: OFF -->
+            <div class="response-area" id="response-contradicting-off">
+                <div class="response-bubble warning visible">
+                    <div class="bot-label"><i data-lucide="bot"></i> Agent Response</div>
+                    <div class="response-text">"Enterprise clients can receive discounts of up to 40% on annual contracts, with standard discounts ranging from 15-25%. Volume discounts of 10-30% are automatically applied for large orders."</div>
+                    <div class="status-badge warning-badge">&#9888;&#65039; BLENDED &mdash; Mixed contradicting policies into one answer</div>
+                </div>
+            </div>
+
+            <!-- Response: ON -->
+            <div class="response-area" id="response-contradicting-on" style="display:none;">
+                <div class="response-bubble success visible">
+                    <div class="bot-label"><i data-lucide="bot"></i> Agent Response</div>
+                    <div class="response-text">"&#9888;&#65039; I found conflicting information about enterprise discounts. One document (<strong>sales-procedures-q4.md</strong>) caps discounts at 25%, while another (<strong>enterprise-pricing-guide.md</strong>) allows up to 40%. I recommend checking with the sales VP for the current policy before quoting a discount."</div>
+                    <div class="status-badge yellow-badge">&#10003; FLAGGED &mdash; Agent detected contradiction and asked for clarification</div>
+                    <div class="agent-note">Agent compared sources, found the conflict, and refused to guess.</div>
+                </div>
+            </div>
+
+            <!-- Expandable Cards -->
+            <div class="expand-card orange-accent" id="expand-contradict-wrong">
+                <div class="expand-header" onclick="toggleExpand('expand-contradict-wrong')">
+                    <div class="expand-title orange">
+                        <i data-lucide="alert-triangle"></i>
+                        What went wrong?
+                    </div>
+                    <i data-lucide="chevron-down" class="chevron"></i>
+                </div>
+                <div class="expand-body">
+                    <div class="expand-body-inner">The agent blended information from contradicting sources instead of flagging the conflict. Users receive confidently wrong information.</div>
+                </div>
+            </div>
+
+            <div class="expand-card green-accent" id="expand-contradict-fix">
+                <div class="expand-header" onclick="toggleExpand('expand-contradict-fix')">
+                    <div class="expand-title green">
+                        <i data-lucide="wrench"></i>
+                        How to fix it
+                    </div>
+                    <i data-lucide="chevron-down" class="chevron"></i>
+                </div>
+                <div class="expand-body">
+                    <div class="expand-body-inner">
+                        Use the LLM itself to detect contradictions before generating an answer.
+                        <div class="code-block">
+                            <div class="code-header"><i data-lucide="code"></i> Python</div>
+                            <div class="code-body"><pre><span class="comment"># Detect contradictions in retrieved documents</span>
+<span class="keyword">def</span> <span class="function">check_for_conflicts</span>(<span class="param">results</span>, <span class="param">query</span>):
+    <span class="keyword">if</span> <span class="function">len</span>(results) > <span class="number">1</span>:
+        response = client.messages.<span class="function">create</span>(
+            <span class="param">model</span>=<span class="string">"claude-sonnet-4-20250514"</span>,
+            <span class="param">messages</span>=[{
+                <span class="string">"role"</span>: <span class="string">"user"</span>,
+                <span class="string">"content"</span>: <span class="keyword">f</span><span class="string">"Do these documents contradict each other about '</span>{query}<span class="string">'?\n\n"</span> +
+                           <span class="string">"\n---\n"</span>.<span class="function">join</span>([r[<span class="string">'text'</span>] <span class="keyword">for</span> r <span class="keyword">in</span> results])
+            }]
+        )
+        <span class="keyword">if</span> <span class="string">"contradict"</span> <span class="keyword">in</span> response.content[<span class="number">0</span>].text.<span class="function">lower</span>():
+            <span class="keyword">return</span> <span class="string">"CONFLICT DETECTED - escalate to human"</span>
+    <span class="keyword">return</span> <span class="builtin">None</span></pre></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SCENARIO 3: THE UNANSWERABLE QUESTION                        -->
+    <!-- ============================================================ -->
+    <div class="tab-content" id="tab-unanswerable">
+        <div class="scenario-section">
+
+            <!-- Setup -->
+            <div class="setup-label">The Setup</div>
+            <div class="user-question">
+                <div class="q-icon"><i data-lucide="user"></i></div>
+                <div class="q-text">"What are our competitor's pricing plans?"</div>
+            </div>
+
+            <!-- Document cards -->
+            <div class="setup-label">Retrieved Documents</div>
+            <div class="doc-grid single">
+                <div class="doc-card border-dim" id="doc-kb">
+                    <div class="doc-header">
+                        <div class="doc-filename">
+                            <i data-lucide="database"></i>
+                            Company Knowledge Base
+                        </div>
+                    </div>
+                    <div class="doc-body" style="color: var(--text-dim);">Contains: refund-policy.md, sales-procedures.md, product-catalog.md, employee-handbook.md, customer-faq.md</div>
+                    <div class="doc-note">No competitor data in the knowledge base</div>
+                </div>
+            </div>
+
+            <!-- Toggle -->
+            <div class="setup-label">The Problem</div>
+            <div class="toggle-area">
+                <span class="toggle-label active-label" id="label-unanswerable-off">Without guardrails</span>
+                <div class="toggle-switch" id="toggle-unanswerable" onclick="toggleScenario('unanswerable')"></div>
+                <span class="toggle-label" id="label-unanswerable-on">With guardrails</span>
+            </div>
+
+            <!-- Response: OFF -->
+            <div class="response-area" id="response-unanswerable-off">
+                <div class="response-bubble error visible">
+                    <div class="bot-label"><i data-lucide="bot"></i> Agent Response</div>
+                    <div class="response-text">"Based on market analysis, your main competitors typically price their products 10-15% below your list price. CompetitorA offers a basic plan at $29/month, Pro at $79/month, and Enterprise at $199/month. CompetitorB uses a per-seat model starting at $12/user/month."</div>
+                    <div class="status-badge error-badge">&#9888;&#65039; HALLUCINATED &mdash; None of this data exists in the knowledge base</div>
+                </div>
+                <div class="confidence-meter" id="meter-unanswerable-off">
+                    <div class="meter-header">
+                        <span class="meter-label">Agent Confidence</span>
+                        <span class="meter-value" style="color: var(--magenta);" id="meter-value-off">92%</span>
+                    </div>
+                    <div class="meter-track">
+                        <div class="meter-fill" id="meter-fill-off" style="width: 92%; background: linear-gradient(90deg, var(--orange), var(--magenta));"></div>
+                    </div>
+                    <div class="meter-note" style="color: var(--magenta);">Inappropriately high confidence for fabricated data</div>
+                </div>
+            </div>
+
+            <!-- Response: ON -->
+            <div class="response-area" id="response-unanswerable-on" style="display:none;">
+                <div class="response-bubble success visible">
+                    <div class="bot-label"><i data-lucide="bot"></i> Agent Response</div>
+                    <div class="response-text">"I don't have any information about competitor pricing in our knowledge base. Our documents cover internal policies, product catalogs, and customer FAQs, but don't include competitive intelligence. I'd recommend checking with the competitive analysis team or market research for competitor pricing data."</div>
+                    <div class="status-badge success-badge">&#10003; HONEST &mdash; Agent acknowledged its knowledge limits</div>
+                </div>
+                <div class="confidence-meter" id="meter-unanswerable-on">
+                    <div class="meter-header">
+                        <span class="meter-label">Agent Confidence</span>
+                        <span class="meter-value" style="color: var(--green);" id="meter-value-on">15% &rarr; Declined to answer</span>
+                    </div>
+                    <div class="meter-track">
+                        <div class="meter-fill" id="meter-fill-on" style="width: 15%; background: linear-gradient(90deg, var(--cyan), var(--green));"></div>
+                    </div>
+                    <div class="meter-note" style="color: var(--green);">Appropriately low confidence triggered a refusal</div>
+                </div>
+            </div>
+
+            <!-- Expandable Cards -->
+            <div class="expand-card red-accent" id="expand-unans-wrong">
+                <div class="expand-header" onclick="toggleExpand('expand-unans-wrong')">
+                    <div class="expand-title red">
+                        <i data-lucide="alert-triangle"></i>
+                        What went wrong?
+                    </div>
+                    <i data-lucide="chevron-down" class="chevron"></i>
+                </div>
+                <div class="expand-body">
+                    <div class="expand-body-inner">Without retrieval guardrails, the agent generates plausible-sounding information from its training data, not from your documents. This is the classic hallucination problem.</div>
+                </div>
+            </div>
+
+            <div class="expand-card green-accent" id="expand-unans-fix">
+                <div class="expand-header" onclick="toggleExpand('expand-unans-fix')">
+                    <div class="expand-title green">
+                        <i data-lucide="wrench"></i>
+                        How to fix it
+                    </div>
+                    <i data-lucide="chevron-down" class="chevron"></i>
+                </div>
+                <div class="expand-body">
+                    <div class="expand-body-inner">
+                        Use relevance scores to decide whether the agent should answer at all.
+                        <div class="code-block">
+                            <div class="code-header"><i data-lucide="code"></i> Python</div>
+                            <div class="code-body"><pre><span class="comment"># Confidence-based guardrails</span>
+<span class="keyword">def</span> <span class="function">answer_with_guardrails</span>(<span class="param">query</span>, <span class="param">search_results</span>):
+    <span class="keyword">if</span> <span class="keyword">not</span> search_results <span class="keyword">or</span> <span class="function">max_relevance_score</span>(search_results) < <span class="number">0.3</span>:
+        <span class="keyword">return</span> {
+            <span class="string">"answer"</span>: <span class="string">"I don't have information about that in our knowledge base."</span>,
+            <span class="string">"confidence"</span>: <span class="string">"low"</span>,
+            <span class="string">"action"</span>: <span class="string">"Suggest alternative sources"</span>
+        }
+    <span class="comment"># Only answer from retrieved documents</span>
+    <span class="keyword">return</span> <span class="function">generate_answer</span>(query, search_results,
+                          <span class="param">instruction</span>=<span class="string">"ONLY use the provided documents. "</span>
+                                      <span class="string">"If the answer isn't in the documents, say so."</span>)</pre></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ====== NAVIGATION ====== -->
+    <div class="nav-footer">
+        <a href="lecture-guide.html" class="nav-link">
+            <i data-lucide="arrow-left"></i>
+            Back to Lecture Guide
+        </a>
+        <a href="/sessions/session-07" class="nav-link forward">
+            Session 7 Page
+            <i data-lucide="arrow-right"></i>
+        </a>
+    </div>
+
+    <!-- ====== FOOTER ====== -->
+    <div class="footer">
+        <p><strong>ISOM 260: AI Agents in Business</strong> &middot; Suffolk University &middot; Session 7</p>
+        <p style="margin-top: 0.5rem;"><a href="https://isom-260.vercel.app">isom-260.vercel.app</a></p>
+    </div>
+
+</div>
+
+<script>
+    // ====== STATE ======
+    const toggleState = {
+        outdated: false,
+        contradicting: false,
+        unanswerable: false
+    };
+
+    // ====== TAB SWITCHING ======
+    function switchTab(tabId) {
+        // Update buttons
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.tab === tabId);
+        });
+
+        // Update content
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.remove('active');
+        });
+        const target = document.getElementById('tab-' + tabId);
+        if (target) {
+            target.classList.add('active');
+        }
+
+        // Animate confidence meters if unanswerable tab
+        if (tabId === 'unanswerable') {
+            animateConfidenceMeters();
+        }
+    }
+
+    // ====== TOGGLE SCENARIOS ======
+    function toggleScenario(scenario) {
+        toggleState[scenario] = !toggleState[scenario];
+        const isOn = toggleState[scenario];
+
+        // Toggle switch visual
+        const toggle = document.getElementById('toggle-' + scenario);
+        toggle.classList.toggle('on', isOn);
+
+        // Toggle labels
+        const labelOff = document.getElementById('label-' + scenario + '-off');
+        const labelOn = document.getElementById('label-' + scenario + '-on');
+        labelOff.classList.toggle('active-label', !isOn);
+        labelOn.classList.toggle('active-label', isOn);
+
+        // Toggle responses
+        const responseOff = document.getElementById('response-' + scenario + '-off');
+        const responseOn = document.getElementById('response-' + scenario + '-on');
+
+        if (isOn) {
+            responseOff.style.display = 'none';
+            responseOn.style.display = 'block';
+            // Re-trigger animation
+            const bubble = responseOn.querySelector('.response-bubble');
+            bubble.classList.remove('visible');
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    bubble.classList.add('visible');
+                });
+            });
+        } else {
+            responseOff.style.display = 'block';
+            responseOn.style.display = 'none';
+            const bubble = responseOff.querySelector('.response-bubble');
+            bubble.classList.remove('visible');
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    bubble.classList.add('visible');
+                });
+            });
+        }
+
+        // Scenario-specific document card glows
+        if (scenario === 'outdated') {
+            updateOutdatedCards(isOn);
+        } else if (scenario === 'contradicting') {
+            updateContradictingCards(isOn);
+        } else if (scenario === 'unanswerable') {
+            animateConfidenceMeters();
+        }
+    }
+
+    function updateOutdatedCards(isFixed) {
+        const currentCard = document.getElementById('doc-current');
+        const outdatedCard = document.getElementById('doc-outdated');
+
+        // Clear glows
+        currentCard.classList.remove('glow-green', 'glow-red');
+        outdatedCard.classList.remove('glow-green', 'glow-red');
+
+        if (isFixed) {
+            currentCard.classList.add('glow-green');
+        } else {
+            outdatedCard.classList.add('glow-red');
+        }
+    }
+
+    function updateContradictingCards(isFixed) {
+        const sopA = document.getElementById('doc-sop-a');
+        const sopB = document.getElementById('doc-sop-b');
+
+        sopA.classList.remove('glow-orange', 'glow-yellow');
+        sopB.classList.remove('glow-orange', 'glow-yellow');
+
+        if (isFixed) {
+            sopA.classList.add('glow-yellow');
+            sopB.classList.add('glow-yellow');
+        } else {
+            sopA.classList.add('glow-orange');
+            sopB.classList.add('glow-orange');
+        }
+    }
+
+    function animateConfidenceMeters() {
+        const isOn = toggleState.unanswerable;
+
+        // Animate the visible meter's fill bar
+        setTimeout(() => {
+            if (!isOn) {
+                const fillOff = document.getElementById('meter-fill-off');
+                if (fillOff) {
+                    fillOff.style.width = '0%';
+                    requestAnimationFrame(() => {
+                        requestAnimationFrame(() => {
+                            fillOff.style.width = '92%';
+                        });
+                    });
+                }
+            } else {
+                const fillOn = document.getElementById('meter-fill-on');
+                if (fillOn) {
+                    fillOn.style.width = '0%';
+                    requestAnimationFrame(() => {
+                        requestAnimationFrame(() => {
+                            fillOn.style.width = '15%';
+                        });
+                    });
+                }
+            }
+        }, 100);
+    }
+
+    // ====== EXPANDABLE CARDS ======
+    function toggleExpand(cardId) {
+        const card = document.getElementById(cardId);
+        card.classList.toggle('open');
+    }
+
+    // ====== INIT ======
+    document.addEventListener('DOMContentLoaded', () => {
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Set initial doc card glows
+        updateOutdatedCards(false);
+    });
+</script>
+
+</body>
+</html>
