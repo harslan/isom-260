@@ -194,6 +194,15 @@
       "badge": "Homework",
       "badgeType": "interactive",
       "linkText": "Start homework"
+    },
+    {
+      "title": "Homework Notebook \u2014 Build Your Own Knowledge Agent",
+      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-07/ISOM260_Session7_Homework_Knowledge_Agent.ipynb",
+      "description": "Colab notebook for the Session 7 homework. All RAG infrastructure is pre-built \u2014 pick your domain, load your documents, test your agent, break it, and evaluate it.",
+      "icon": "notebook",
+      "badge": "Homework",
+      "badgeType": "interactive",
+      "linkText": "Open in Colab"
     }
   ],
   "activities": [
