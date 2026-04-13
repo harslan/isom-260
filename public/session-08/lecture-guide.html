@@ -1,0 +1,1934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture Guide: Session 8 — Multi-Agent Systems in Practice | ISOM 260</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #0f1424;
+            --bg-card: #141929;
+            --bg-elevated: #1a2035;
+            --bg-code: #0d1117;
+
+            --cyan: #00e5ff;
+            --cyan-dim: #00b8d4;
+            --cyan-glow: rgba(0, 229, 255, 0.15);
+            --cyan-glow-strong: rgba(0, 229, 255, 0.3);
+
+            --magenta: #ff006e;
+            --magenta-glow: rgba(255, 0, 110, 0.15);
+
+            --yellow: #ffd600;
+            --yellow-glow: rgba(255, 214, 0, 0.15);
+
+            --green: #00e676;
+            --green-glow: rgba(0, 230, 118, 0.15);
+
+            --orange: #ff9100;
+            --purple: #b388ff;
+
+            --text-primary: #e8ecf4;
+            --text-secondary: #8892a8;
+            --text-dim: #5a6478;
+
+            --border: rgba(0, 229, 255, 0.1);
+            --border-strong: rgba(0, 229, 255, 0.25);
+            --grid-line: rgba(0, 229, 255, 0.04);
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'DM Sans', sans-serif;
+            line-height: 1.7;
+            overflow-x: hidden;
+            background-image:
+                linear-gradient(var(--grid-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        /* Glow orbs */
+        .glow-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.4;
+        }
+        .glow-orb-1 {
+            width: 500px; height: 500px;
+            background: rgba(0, 229, 255, 0.08);
+            top: -100px; left: -100px;
+        }
+        .glow-orb-2 {
+            width: 400px; height: 400px;
+            background: rgba(255, 0, 110, 0.06);
+            top: 40%; right: -100px;
+        }
+        .glow-orb-3 {
+            width: 350px; height: 350px;
+            background: rgba(0, 230, 118, 0.05);
+            bottom: -50px; left: 30%;
+        }
+
+        /* Progress bar */
+        .progress-bar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: rgba(0, 229, 255, 0.1);
+            z-index: 1000;
+        }
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--cyan), var(--magenta));
+            transition: width 0.15s ease-out;
+        }
+
+        /* Dot navigation */
+        .dot-nav {
+            position: fixed;
+            right: 24px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 100;
+        }
+        .dot-nav-item {
+            width: 10px; height: 10px;
+            border-radius: 50%;
+            border: 2px solid var(--text-dim);
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .dot-nav-item:hover {
+            border-color: var(--cyan);
+        }
+        .dot-nav-item.active {
+            border-color: var(--cyan);
+            background: var(--cyan);
+            box-shadow: 0 0 8px var(--cyan-glow-strong);
+        }
+        .dot-nav-item .dot-label {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            color: var(--text-dim);
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.2s;
+            pointer-events: none;
+        }
+        .dot-nav-item:hover .dot-label {
+            opacity: 1;
+            color: var(--cyan);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Sections */
+        .slide-section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 4rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        .section-label::before {
+            content: '';
+            width: 24px;
+            height: 1px;
+        }
+        .section-label.cyan { color: var(--cyan); }
+        .section-label.cyan::before { background: var(--cyan); }
+        .section-label.magenta { color: var(--magenta); }
+        .section-label.magenta::before { background: var(--magenta); }
+        .section-label.green { color: var(--green); }
+        .section-label.green::before { background: var(--green); }
+        .section-label.yellow { color: var(--yellow); }
+        .section-label.yellow::before { background: var(--yellow); }
+        .section-label.orange { color: var(--orange); }
+        .section-label.orange::before { background: var(--orange); }
+        .section-label.purple { color: var(--purple); }
+        .section-label.purple::before { background: var(--purple); }
+
+        .section-title {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(1.6rem, 3vw, 2.4rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .section-desc {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            max-width: 700px;
+            margin-bottom: 2.5rem;
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 4rem 0;
+        }
+
+        .session-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+            padding: 0.5rem 1.2rem;
+            border-radius: 100px;
+            margin-bottom: 2rem;
+            background: var(--bg-card);
+        }
+        .session-badge .dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: var(--cyan);
+            animation: pulse-dot 2s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 var(--cyan-glow-strong); }
+            50% { opacity: 0.7; box-shadow: 0 0 0 6px transparent; }
+        }
+
+        .hero-title {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(2.2rem, 5vw, 3.8rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.15;
+            margin-bottom: 1.5rem;
+        }
+        .hero-title .gradient-text {
+            background: linear-gradient(135deg, var(--cyan), var(--magenta));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin-bottom: 2.5rem;
+        }
+
+        .hero-tags {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .hero-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.05em;
+            padding: 0.4rem 1rem;
+            border-radius: 100px;
+            border: 1px solid;
+        }
+        .hero-tag.cyan { color: var(--cyan); border-color: rgba(0,229,255,0.3); background: var(--cyan-glow); }
+        .hero-tag.magenta { color: var(--magenta); border-color: rgba(255,0,110,0.3); background: var(--magenta-glow); }
+        .hero-tag.green { color: var(--green); border-color: rgba(0,230,118,0.3); background: var(--green-glow); }
+        .hero-tag.yellow { color: var(--yellow); border-color: rgba(255,214,0,0.3); background: var(--yellow-glow); }
+
+        .hero-nav-hint {
+            margin-top: 3rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            animation: bounce-hint 2s infinite;
+        }
+        @keyframes bounce-hint {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(6px); }
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.75rem;
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            border-color: var(--border-strong);
+            transform: translateY(-2px);
+        }
+        .card-accent-cyan { border-top: 3px solid var(--cyan); }
+        .card-accent-magenta { border-top: 3px solid var(--magenta); }
+        .card-accent-green { border-top: 3px solid var(--green); }
+        .card-accent-yellow { border-top: 3px solid var(--yellow); }
+        .card-accent-orange { border-top: 3px solid var(--orange); }
+        .card-accent-purple { border-top: 3px solid var(--purple); }
+
+        .card-icon {
+            width: 44px; height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+        .card-icon.cyan { background: var(--cyan-glow); color: var(--cyan); }
+        .card-icon.magenta { background: var(--magenta-glow); color: var(--magenta); }
+        .card-icon.green { background: var(--green-glow); color: var(--green); }
+        .card-icon.yellow { background: var(--yellow-glow); color: var(--yellow); }
+        .card-icon.orange { background: rgba(255,145,0,0.15); color: var(--orange); }
+        .card-icon.purple { background: rgba(179,136,255,0.15); color: var(--purple); }
+
+        .card-title {
+            font-family: 'Sora', sans-serif;
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+        .card-desc {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* Grid layouts */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; }
+
+        /* Code window */
+        .code-window {
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+        .code-header {
+            padding: 0.75rem 1.5rem;
+            background: var(--bg-elevated);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .dot-row { display: flex; gap: 0.35rem; margin-right: 0.75rem; }
+        .dot-row span { width: 8px; height: 8px; border-radius: 50%; }
+        .dot-red { background: #ff5f56; }
+        .dot-yellow { background: #ffbd2e; }
+        .dot-green { background: #27c93f; }
+        .code-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+        }
+        .code-body {
+            padding: 1.25rem 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            line-height: 1.8;
+            overflow-x: auto;
+            white-space: pre;
+            color: var(--text-secondary);
+        }
+        .code-body .kw { color: var(--magenta); }
+        .code-body .fn { color: var(--cyan); }
+        .code-body .str { color: var(--green); }
+        .code-body .cmt { color: var(--text-dim); font-style: italic; }
+        .code-body .hl { color: var(--yellow); }
+        .code-body .num { color: var(--orange); }
+
+        /* Highlight line */
+        .hl-line {
+            display: block;
+            background: rgba(0, 229, 255, 0.08);
+            border-left: 3px solid var(--cyan);
+            margin: 0 -1.5rem;
+            padding: 0 1.5rem 0 calc(1.5rem - 3px);
+        }
+
+        /* Insight block */
+        .insight-block {
+            background: linear-gradient(135deg, var(--cyan-glow), var(--magenta-glow));
+            border: 1px solid var(--border-strong);
+            border-radius: 12px;
+            padding: 1.75rem 2rem;
+            position: relative;
+            margin: 2rem 0;
+        }
+        .insight-block::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--cyan), var(--magenta));
+            border-radius: 12px 12px 0 0;
+        }
+        .insight-block .insight-title {
+            font-family: 'Sora', sans-serif;
+            font-weight: 600;
+            font-size: 1.05rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .insight-block .insight-text {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Callout */
+        .callout {
+            border-radius: 10px;
+            padding: 1.25rem 1.5rem;
+            margin: 1.5rem 0;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+        .callout-icon {
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        .callout-info { background: var(--cyan-glow); border: 1px solid rgba(0,229,255,0.2); }
+        .callout-info strong { color: var(--cyan); }
+        .callout-warn { background: var(--yellow-glow); border: 1px solid rgba(255,214,0,0.2); }
+        .callout-warn strong { color: var(--yellow); }
+        .callout-success { background: var(--green-glow); border: 1px solid rgba(0,230,118,0.2); }
+        .callout-success strong { color: var(--green); }
+        .callout-error { background: var(--magenta-glow); border: 1px solid rgba(255,0,110,0.2); }
+        .callout-error strong { color: var(--magenta); }
+
+        /* Compare layout */
+        .compare-grid {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 1.5rem;
+            align-items: stretch;
+        }
+        .vs-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .vs-label {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-dim);
+            opacity: 0.5;
+        }
+
+        /* Flow diagram */
+        .flow-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+        .flow-node {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem 1.25rem;
+            text-align: center;
+            min-width: 120px;
+        }
+        .flow-node-title {
+            font-family: 'Sora', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-bottom: 0.3rem;
+        }
+        .flow-node-desc {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .flow-arrow {
+            color: var(--text-dim);
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        /* Org chart flow */
+        .org-flow {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .org-node {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 0.85rem 1.5rem;
+            text-align: center;
+            width: 100%;
+            max-width: 280px;
+            transition: all 0.3s ease;
+        }
+        .org-node:hover {
+            border-color: var(--border-strong);
+        }
+        .org-node-label {
+            font-family: 'Sora', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .org-node-desc {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--text-dim);
+            margin-top: 0.2rem;
+        }
+        .org-arrow {
+            color: var(--text-dim);
+            font-size: 1.1rem;
+        }
+
+        /* Architecture cards */
+        .arch-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 1.75rem;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        .arch-card:hover {
+            transform: translateY(-2px);
+        }
+        .arch-card.cyan-border { border: 1px solid rgba(0,229,255,0.35); }
+        .arch-card.magenta-border { border: 1px solid rgba(255,0,110,0.35); }
+        .arch-card.green-border { border: 1px solid rgba(0,230,118,0.35); }
+        .arch-title {
+            font-family: 'Sora', sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+        }
+        .arch-diagram {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            background: var(--bg-code);
+            border-radius: 8px;
+            padding: 1rem 1.25rem;
+            margin-bottom: 1rem;
+            line-height: 1.8;
+            text-align: center;
+        }
+        .arch-best {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-top: auto;
+        }
+        .arch-best strong {
+            color: var(--text-primary);
+        }
+
+        /* Comparison table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.85rem;
+        }
+        .comparison-table th {
+            font-family: 'Sora', sans-serif;
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: var(--text-primary);
+            padding: 0.85rem 1rem;
+            text-align: left;
+            border-bottom: 2px solid var(--border-strong);
+            background: var(--bg-elevated);
+        }
+        .comparison-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+        .comparison-table tr:hover td {
+            background: rgba(0, 229, 255, 0.03);
+        }
+        .comparison-table .winner-multi {
+            color: var(--cyan);
+            font-weight: 600;
+        }
+        .comparison-table .winner-single {
+            color: var(--green);
+            font-weight: 600;
+        }
+
+        /* Pipeline flow (horizontal) */
+        .pipeline-flow {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.25rem;
+            margin: 2rem 0;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+        }
+        .pipeline-stage {
+            flex: 1;
+            min-width: 180px;
+            text-align: center;
+        }
+        .pipeline-agent-box {
+            border-radius: 12px;
+            padding: 1.25rem 1rem;
+            margin-bottom: 0.75rem;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+        }
+        .pipeline-agent-box.cyan-bg {
+            border-color: rgba(0,229,255,0.3);
+            background: linear-gradient(135deg, rgba(0,229,255,0.08), var(--bg-card));
+        }
+        .pipeline-agent-box.magenta-bg {
+            border-color: rgba(255,0,110,0.3);
+            background: linear-gradient(135deg, rgba(255,0,110,0.08), var(--bg-card));
+        }
+        .pipeline-agent-box.green-bg {
+            border-color: rgba(0,230,118,0.3);
+            background: linear-gradient(135deg, rgba(0,230,118,0.08), var(--bg-card));
+        }
+        .pipeline-agent-name {
+            font-family: 'Sora', sans-serif;
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+        }
+        .pipeline-agent-role {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--text-dim);
+        }
+        .pipeline-data {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.6rem 0.75rem;
+            text-align: left;
+            line-height: 1.6;
+        }
+        .pipeline-arrow-col {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 32px;
+            padding-top: 1.5rem;
+            color: var(--text-dim);
+            font-size: 1.2rem;
+        }
+
+        /* Distortion steps */
+        .distortion-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin: 2rem 0;
+        }
+        .distortion-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem 1.25rem;
+            border-radius: 10px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+        .distortion-step:hover {
+            border-color: var(--border-strong);
+        }
+        .distortion-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            flex-shrink: 0;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            min-width: 80px;
+            text-align: center;
+        }
+        .distortion-label.original {
+            color: var(--green);
+            background: var(--green-glow);
+        }
+        .distortion-label.subtle {
+            color: var(--cyan);
+            background: var(--cyan-glow);
+        }
+        .distortion-label.general {
+            color: var(--yellow);
+            background: var(--yellow-glow);
+        }
+        .distortion-label.distorted {
+            color: var(--magenta);
+            background: var(--magenta-glow);
+        }
+        .distortion-text {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        .distortion-text .changed {
+            text-decoration: underline;
+            text-decoration-style: wavy;
+        }
+
+        /* Distortion type cards */
+        .distortion-type-cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        .distortion-type-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.25rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .distortion-type-card:hover {
+            border-color: var(--border-strong);
+            transform: translateY(-2px);
+        }
+        .distortion-type-title {
+            font-family: 'Sora', sans-serif;
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 0.4rem;
+        }
+        .distortion-type-desc {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            line-height: 1.5;
+        }
+
+        /* Decision matrix table */
+        .decision-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.85rem;
+        }
+        .decision-table th {
+            font-family: 'Sora', sans-serif;
+            font-weight: 600;
+            font-size: 0.78rem;
+            color: var(--text-primary);
+            padding: 0.85rem 0.75rem;
+            text-align: left;
+            border-bottom: 2px solid var(--border-strong);
+            background: var(--bg-elevated);
+        }
+        .decision-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-size: 0.82rem;
+        }
+        .decision-table tr:hover td {
+            background: rgba(0, 229, 255, 0.03);
+        }
+        .decision-table .use-case {
+            font-family: 'Sora', sans-serif;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .decision-table .winner-cell {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+        .decision-table .winner-single { color: var(--green); }
+        .decision-table .winner-multi { color: var(--cyan); }
+
+        /* Stack visualization */
+        .stack-viz {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            max-width: 600px;
+            margin: 2rem auto;
+        }
+        .stack-layer {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            transition: all 0.3s ease;
+        }
+        .stack-layer.current {
+            border-color: var(--cyan);
+            background: linear-gradient(135deg, var(--cyan-glow), transparent);
+            box-shadow: 0 0 25px var(--cyan-glow);
+            animation: pulse-glow 2.5s ease-in-out infinite;
+        }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(0, 229, 255, 0.2); }
+            50% { box-shadow: 0 0 40px rgba(0, 229, 255, 0.4); }
+        }
+        .stack-layer.future {
+            opacity: 0.5;
+            border-style: dashed;
+        }
+        .stack-session {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            min-width: 28px;
+        }
+        .stack-label {
+            font-family: 'Sora', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .stack-marker {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            margin-left: auto;
+            letter-spacing: 0.05em;
+        }
+
+        /* Takeaway cards */
+        .takeaway-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1.25rem 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            margin-bottom: 1rem;
+        }
+        .takeaway-icon {
+            flex-shrink: 0;
+            width: 38px; height: 38px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--cyan-glow);
+            color: var(--cyan);
+        }
+        .takeaway-text {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+        .takeaway-text strong {
+            color: var(--text-primary);
+        }
+
+        /* CTA card */
+        .cta-card {
+            background: linear-gradient(135deg, var(--cyan-glow), var(--green-glow));
+            border: 2px solid var(--cyan);
+            border-radius: 16px;
+            padding: 3rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .cta-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--cyan), var(--green));
+        }
+        .cta-title {
+            font-family: 'Sora', sans-serif;
+            font-weight: 700;
+            font-size: 1.6rem;
+            margin-bottom: 0.75rem;
+        }
+        .cta-desc {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--cyan);
+            color: var(--bg-primary);
+            font-family: 'Sora', sans-serif;
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 0.85rem 2rem;
+            border-radius: 10px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .cta-btn:hover {
+            background: #33ebff;
+            box-shadow: 0 0 20px var(--cyan-glow-strong);
+        }
+        .cta-btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: transparent;
+            color: var(--cyan);
+            font-family: 'Sora', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 0.65rem 1.5rem;
+            border-radius: 10px;
+            text-decoration: none;
+            border: 1px solid rgba(0,229,255,0.3);
+            transition: all 0.3s ease;
+            margin-left: 0.75rem;
+        }
+        .cta-btn-secondary:hover {
+            background: var(--cyan-glow);
+            border-color: var(--cyan);
+        }
+
+        /* Homework items */
+        .homework-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1.25rem 1.5rem;
+            border-radius: 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            margin-bottom: 0.75rem;
+        }
+        .homework-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            font-weight: 600;
+            flex-shrink: 0;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            margin-top: 2px;
+        }
+        .homework-text {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Build phase cards */
+        .build-phases {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.25rem;
+            margin: 2rem 0;
+        }
+        .build-phase {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .build-phase:hover {
+            border-color: var(--border-strong);
+            transform: translateY(-2px);
+        }
+        .build-phase.cyan-phase { border-top: 3px solid var(--cyan); }
+        .build-phase.magenta-phase { border-top: 3px solid var(--magenta); }
+        .build-phase.green-phase { border-top: 3px solid var(--green); }
+        .build-phase-icon {
+            width: 48px; height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+        }
+        .build-phase-icon.cyan { background: var(--cyan-glow); color: var(--cyan); }
+        .build-phase-icon.magenta { background: var(--magenta-glow); color: var(--magenta); }
+        .build-phase-icon.green { background: var(--green-glow); color: var(--green); }
+        .build-phase-title {
+            font-family: 'Sora', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 0.3rem;
+        }
+        .build-phase-time {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            margin-bottom: 0.5rem;
+        }
+        .build-phase-desc {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* Big quote */
+        .big-quote {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+            font-weight: 600;
+            text-align: center;
+            color: var(--text-primary);
+            padding: 2rem 0;
+            line-height: 1.4;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .big-quote .highlight {
+            background: linear-gradient(135deg, var(--cyan), var(--magenta));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Fade-in animation */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .fade-in-delay-1 { transition-delay: 0.1s; }
+        .fade-in-delay-2 { transition-delay: 0.2s; }
+        .fade-in-delay-3 { transition-delay: 0.3s; }
+        .fade-in-delay-4 { transition-delay: 0.4s; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+            .compare-grid { grid-template-columns: 1fr; }
+            .distortion-type-cards { grid-template-columns: repeat(2, 1fr); }
+            .build-phases { grid-template-columns: 1fr; }
+            .pipeline-flow { flex-direction: column; align-items: stretch; }
+            .pipeline-arrow-col { transform: rotate(90deg); padding-top: 0; }
+            .vs-divider { display: none; }
+            .dot-nav { display: none; }
+            .slide-section { min-height: auto; padding: 3rem 0; }
+            .hero { min-height: 90vh; }
+            .flow-diagram { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Glow orbs -->
+<div class="glow-orb glow-orb-1"></div>
+<div class="glow-orb glow-orb-2"></div>
+<div class="glow-orb glow-orb-3"></div>
+
+<!-- Progress bar -->
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+<!-- Dot navigation -->
+<nav class="dot-nav" id="dotNav">
+    <button class="dot-nav-item active" data-section="0"><span class="dot-label">Title</span></button>
+    <button class="dot-nav-item" data-section="1"><span class="dot-label">Org Chart</span></button>
+    <button class="dot-nav-item" data-section="2"><span class="dot-label">Architectures</span></button>
+    <button class="dot-nav-item" data-section="3"><span class="dot-label">Communication</span></button>
+    <button class="dot-nav-item" data-section="4"><span class="dot-label">Pipeline</span></button>
+    <button class="dot-nav-item" data-section="5"><span class="dot-label">Hands-On</span></button>
+    <button class="dot-nav-item" data-section="6"><span class="dot-label">Telephone Game</span></button>
+    <button class="dot-nav-item" data-section="7"><span class="dot-label">Worth It?</span></button>
+    <button class="dot-nav-item" data-section="8"><span class="dot-label">Stack So Far</span></button>
+    <button class="dot-nav-item" data-section="9"><span class="dot-label">Takeaways</span></button>
+</nav>
+
+<div class="container">
+
+    <!-- ============================================================ -->
+    <!-- SECTION 0: HERO                                               -->
+    <!-- ============================================================ -->
+    <section class="hero slide-section" id="section-0">
+        <div class="session-badge">
+            <span class="dot"></span> ISOM 260 &middot; Suffolk University
+        </div>
+        <h1 class="hero-title">
+            <span class="gradient-text">Multi-Agent Systems</span><br>in Practice
+        </h1>
+        <p class="hero-subtitle">
+            One agent is useful. A team of agents changes everything. Watch three specialists collaborate in real-time &mdash; and learn when a team beats a solo performer.
+        </p>
+        <div class="hero-tags">
+            <span class="hero-tag cyan">Multi-Agent</span>
+            <span class="hero-tag magenta">Pipelines</span>
+            <span class="hero-tag green">Agent Coordination</span>
+            <span class="hero-tag cyan">Handoffs</span>
+            <span class="hero-tag magenta">Specialization</span>
+        </div>
+        <div class="hero-nav-hint">
+            <i data-lucide="chevron-down" style="width:14px; height:14px;"></i>
+            &darr; Scroll to begin &middot; Press Space to advance
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 1: THE ORG CHART ANALOGY                              -->
+    <!-- ============================================================ -->
+    <section class="slide-section" id="section-1">
+        <div class="section-label cyan fade-in">
+            <i data-lucide="building-2" style="width:14px; height:14px;"></i> Section 01 &mdash; The Org Chart Analogy
+        </div>
+        <h2 class="section-title fade-in fade-in-delay-1">Companies Have Departments.<br>Agent Systems Have <span style="color: var(--cyan);">Specialists</span>.</h2>
+        <p class="section-desc fade-in fade-in-delay-2">
+            One person can't do everything well. Neither can one agent. The same organizational principles that drive company structure apply to AI agent design.
+        </p>
+
+        <div class="compare-grid fade-in fade-in-delay-3">
+            <!-- Left: Company departments -->
+            <div class="card" style="border-top: 3px solid var(--orange);">
+                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem;">
+                    <div class="card-icon orange" style="width:36px; height:36px;">
+                        <i data-lucide="building-2" style="width:18px; height:18px;"></i>
+                    </div>
+                    <span style="font-family: 'Sora', sans-serif; font-weight: 700; font-size: 1rem;">Company</span>
+                </div>
+                <div class="org-flow">
+                    <div class="org-node" style="border-color: rgba(0,229,255,0.3); background: linear-gradient(135deg, rgba(0,229,255,0.06), var(--bg-card));">
+                        <div class="org-node-label" style="color: var(--cyan);">Research Dept</div>
+                        <div class="org-node-desc">Gathers data &amp; market intel</div>
+                    </div>
+                    <div class="org-arrow">&darr;</div>
+                    <div class="org-node" style="border-color: rgba(255,0,110,0.3); background: linear-gradient(135deg, rgba(255,0,110,0.06), var(--bg-card));">
+                        <div class="org-node-label" style="color: var(--magenta);">Analysis Dept</div>
+                        <div class="org-node-desc">Finds patterns &amp; insights</div>
+                    </div>
+                    <div class="org-arrow">&darr;</div>
+                    <div class="org-node" style="border-color: rgba(0,230,118,0.3); background: linear-gradient(135deg, rgba(0,230,118,0.06), var(--bg-card));">
+                        <div class="org-node-label" style="color: var(--green);">Editorial Dept</div>
+                        <div class="org-node-desc">Reviews &amp; publishes reports</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VS divider -->
+            <div class="vs-divider">
+                <span class="vs-label">=</span>
+            </div>
+
+            <!-- Right: Agent pipeline -->
+            <div class="card" style="border-top: 3px solid var(--cyan);">
+                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem;">
+                    <div class="card-icon cyan" style="width:36px; height:36px;">
+                        <i data-lucide="bot" style="width:18px; height:18px;"></i>
+                    </div>
+                    <span style="font-family: 'Sora', sans-serif; font-weight: 700; font-size: 1rem;">Agent System</span>
+                </div>
+                <div class="org-flow">
+                    <div class="org-node" style="border-color: rgba(0,229,255,0.3); background: linear-gradient(135deg, rgba(0,229,255,0.06), var(--bg-card));">
+                        <div class="org-node-label" style="color: var(--cyan);"><i data-lucide="search" style="width:14px; height:14px; vertical-align: -2px;"></i> Researcher Agent</div>
+                        <div class="org-node-desc">Searches &amp; structures facts</div>
+                    </div>
+                    <div class="org-arrow">&darr;</div>
+                    <div class="org-node" style="border-color: rgba(255,0,110,0.3); background: linear-gradient(135deg, rgba(255,0,110,0.06), var(--bg-card));">
+                        <div class="org-node-label" style="color: var(--magenta);"><i data-lucide="bar-chart-3" style="width:14px; height:14px; vertical-align: -2px;"></i> Analyst Agent</div>
+                        <div class="org-node-desc">Identifies patterns &amp; insights</div>
+                    </div>
+                    <div class="org-arrow">&darr;</div>
+                    <div class="org-node" style="border-color: rgba(0,230,118,0.3); background: linear-gradient(135deg, rgba(0,230,118,0.06), var(--bg-card));">
+                        <div class="org-node-label" style="color: var(--green);"><i data-lucide="pen-tool" style="width:14px; height:14px; vertical-align: -2px;"></i> Editor Agent</div>
+                        <div class="org-node-desc">Fact-checks &amp; scores quality</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="insight-block fade-in fade-in-delay-4">
+            <div class="insight-title">
+                <i data-lucide="lightbulb" style="width:18px; height:18px; color: var(--yellow);"></i>
+                Key Insight
+            </div>
+            <div class="insight-text">
+                Companies have departments because one person can't do everything. Agent systems work the same way &mdash; division of labor, specialization, and coordination costs apply to AI just like human teams.
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 2: THREE ARCHITECTURE PATTERNS                        -->
+    <!-- ============================================================ -->
+    <section class="slide-section" id="section-2">
+        <div class="section-label magenta fade-in">
+            <i data-lucide="git-branch" style="width:14px; height:14px;"></i> Section 02 &mdash; Three Architecture Patterns
+        </div>
+        <h2 class="section-title fade-in fade-in-delay-1">Pick the Right <span style="color: var(--magenta);">Architecture</span></h2>
+        <p class="section-desc fade-in fade-in-delay-2">
+            Not all multi-agent systems look the same. Three core patterns cover most real-world use cases.
+        </p>
+
+        <div class="grid-3 fade-in fade-in-delay-3">
+            <!-- Pipeline -->
+            <div class="arch-card cyan-border">
+                <h3 class="arch-title" style="color: var(--cyan);">Pipeline</h3>
+                <div class="arch-diagram">
+<span style="color: var(--cyan);">Researcher</span>
+    &darr;
+<span style="color: var(--magenta);">Analyst</span>
+    &darr;
+<span style="color: var(--green);">Editor</span>
+                </div>
+                <div class="arch-best">
+                    <strong>Best for:</strong> Sequential workflows where each stage builds on the last. Most common pattern.
+                </div>
+            </div>
+
+            <!-- Debate -->
+            <div class="arch-card magenta-border">
+                <h3 class="arch-title" style="color: var(--magenta);">Debate</h3>
+                <div class="arch-diagram">
+<span style="color: var(--cyan);">Agent A</span> &harr; <span style="color: var(--magenta);">Agent B</span>
+        &darr;
+   <span style="color: var(--yellow);">[Judge]</span>
+                </div>
+                <div class="arch-best">
+                    <strong>Best for:</strong> Complex decisions needing adversarial review. Think red team / blue team.
+                </div>
+            </div>
+
+            <!-- Orchestrator -->
+            <div class="arch-card green-border">
+                <h3 class="arch-title" style="color: var(--green);">Orchestrator</h3>
+                <div class="arch-diagram">
+     <span style="color: var(--green);">Manager</span>
+    / &ensp; | &ensp; \
+<span style="color: var(--text-secondary);">W1</span> &ensp; <span style="color: var(--text-secondary);">W2</span> &ensp; <span style="color: var(--text-secondary);">W3</span>
+                </div>
+                <div class="arch-best">
+                    <strong>Best for:</strong> Dynamic task allocation, unknown scope. The pattern behind Claude Code's team feature.
+                </div>
+            </div>
+        </div>
+
+        <div class="callout callout-info fade-in fade-in-delay-4">
+            <i data-lucide="info" class="callout-icon" style="width:18px; height:18px; color: var(--cyan);"></i>
+            <div>
+                <strong>Today's focus:</strong> We're building the <strong>Pipeline</strong> pattern. Researcher &rarr; Analyst &rarr; Editor. You designed these architectures in Session 6 &mdash; today you code them.
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 3: AGENT COMMUNICATION                                -->
+    <!-- ============================================================ -->
+    <section class="slide-section" id="section-3">
+        <div class="section-label cyan fade-in">
+            <i data-lucide="messages-square" style="width:14px; height:14px;"></i> Section 03 &mdash; Agent Communication
+        </div>
+        <h2 class="section-title fade-in fade-in-delay-1">How Agents <span style="color: var(--cyan);">Talk</span> to Each Other</h2>
+        <p class="section-desc fade-in fade-in-delay-2">
+            Three patterns for inter-agent communication, each with different tradeoffs.
+        </p>
+
+        <div class="grid-3 fade-in fade-in-delay-3">
+            <!-- Message Passing -->
+            <div class="code-window" style="border-color: rgba(0,229,255,0.3);">
+                <div class="code-header">
+                    <div class="dot-row"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></div>
+                    <span class="code-title" style="color: var(--cyan);">Message Passing</span>
+                </div>
+                <div class="code-body"><span class="cmt"># Agent A output &rarr; Agent B input</span>
+
+<span class="hl">research</span> = <span class="fn">researcher</span>(<span class="str">"AI trends"</span>)
+
+<span class="cmt"># Pass output directly</span>
+<span class="hl">analysis</span> = <span class="fn">analyst</span>(research)
+
+<span class="cmt"># Chain continues</span>
+<span class="hl">report</span> = <span class="fn">editor</span>(analysis)</div>
+            </div>
+
+            <!-- Shared Context -->
+            <div class="code-window" style="border-color: rgba(255,0,110,0.3);">
+                <div class="code-header">
+                    <div class="dot-row"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></div>
+                    <span class="code-title" style="color: var(--magenta);">Shared Context</span>
+                </div>
+                <div class="code-body"><span class="cmt"># All agents read/write shared</span>
+
+<span class="hl">workspace</span> = {
+  <span class="str">"facts"</span>: [],
+  <span class="str">"insights"</span>: [],
+  <span class="str">"report"</span>: <span class="kw">None</span>
+}
+
+<span class="fn">researcher</span>(<span class="hl">workspace</span>)
+<span class="fn">analyst</span>(<span class="hl">workspace</span>)
+<span class="fn">editor</span>(<span class="hl">workspace</span>)</div>
+            </div>
+
+            <!-- Orchestration -->
+            <div class="code-window" style="border-color: rgba(0,230,118,0.3);">
+                <div class="code-header">
+                    <div class="dot-row"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></div>
+                    <span class="code-title" style="color: var(--green);">Orchestration</span>
+                </div>
+                <div class="code-body"><span class="cmt"># Manager decides routing</span>
+
+<span class="kw">def</span> <span class="fn">manager</span>(task):
+  plan = <span class="fn">decide_routing</span>(task)
+
+  <span class="kw">for</span> step <span class="kw">in</span> plan:
+    agent = <span class="fn">pick_agent</span>(step)
+    result = <span class="fn">agent</span>(step)
+    <span class="fn">update_plan</span>(result)
+
+  <span class="kw">return</span> <span class="fn">compile</span>()</div>
+            </div>
+        </div>
+
+        <!-- Comparison table -->
+        <div style="overflow-x: auto;" class="fade-in fade-in-delay-4">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Pattern</th>
+                        <th>Simplicity</th>
+                        <th>Flexibility</th>
+                        <th>Debuggability</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="color: var(--cyan); font-weight: 600;">Message Passing</td>
+                        <td><span style="color: var(--green);">High</span> &mdash; just function calls</td>
+                        <td><span style="color: var(--yellow);">Low</span> &mdash; fixed order</td>
+                        <td><span style="color: var(--green);">High</span> &mdash; clear trace</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--magenta); font-weight: 600;">Shared Context</td>
+                        <td><span style="color: var(--yellow);">Medium</span> &mdash; state mgmt</td>
+                        <td><span style="color: var(--green);">High</span> &mdash; any agent reads</td>
+                        <td><span style="color: var(--magenta);">Low</span> &mdash; who wrote what?</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--green); font-weight: 600;">Orchestration</td>
+                        <td><span style="color: var(--magenta);">Low</span> &mdash; complex setup</td>
+                        <td><span style="color: var(--green);">High</span> &mdash; dynamic routing</td>
+                        <td><span style="color: var(--yellow);">Medium</span> &mdash; manager decides</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 4: THE PIPELINE IN ACTION                             -->
+    <!-- ============================================================ -->
+    <section class="slide-section" id="section-4">
+        <div class="section-label green fade-in">
+            <i data-lucide="workflow" style="width:14px; height:14px;"></i> Section 04 &mdash; The Pipeline in Action
+        </div>
+        <h2 class="section-title fade-in fade-in-delay-1">Watch Data <span style="color: var(--green);">Transform</span> at Each Stage</h2>
+        <p class="section-desc fade-in fade-in-delay-2">
+            Follow a query as it flows through each agent, gaining structure, analysis, and quality at every handoff.
+        </p>
+
+        <div class="pipeline-flow fade-in fade-in-delay-3">
+            <!-- Input -->
+            <div class="pipeline-stage">
+                <div class="pipeline-agent-box" style="border-color: var(--border-strong); background: var(--bg-elevated);">
+                    <div class="pipeline-agent-name" style="color: var(--text-dim);">Query</div>
+                    <div class="pipeline-agent-role">User input</div>
+                </div>
+                <div class="pipeline-data">"What are the trends<br>in enterprise AI<br>adoption for 2026?"</div>
+            </div>
+
+            <div class="pipeline-arrow-col">&rarr;</div>
+
+            <!-- Researcher -->
+            <div class="pipeline-stage">
+                <div class="pipeline-agent-box cyan-bg">
+                    <div class="pipeline-agent-name" style="color: var(--cyan);"><i data-lucide="search" style="width:14px; height:14px; vertical-align: -2px;"></i> Researcher</div>
+                    <div class="pipeline-agent-role">Structured facts</div>
+                </div>
+                <div class="pipeline-data"><span style="color: var(--cyan);">facts:</span> [<br>&ensp;"73% plan to adopt..."<br>&ensp;"$4.1B market size..."<br>&ensp;"Top 3 use cases..."<br>]<br><span style="color: var(--cyan);">sources:</span> 5</div>
+            </div>
+
+            <div class="pipeline-arrow-col">&rarr;</div>
+
+            <!-- Analyst -->
+            <div class="pipeline-stage">
+                <div class="pipeline-agent-box magenta-bg">
+                    <div class="pipeline-agent-name" style="color: var(--magenta);"><i data-lucide="bar-chart-3" style="width:14px; height:14px; vertical-align: -2px;"></i> Analyst</div>
+                    <div class="pipeline-agent-role">Patterns + insights</div>
+                </div>
+                <div class="pipeline-data"><span style="color: var(--magenta);">insights:</span> [<br>&ensp;"Adoption accelerating<br>&ensp; post-2024 AI boom..."<br>]<br><span style="color: var(--magenta);">recommendations:</span> 3</div>
+            </div>
+
+            <div class="pipeline-arrow-col">&rarr;</div>
+
+            <!-- Editor -->
+            <div class="pipeline-stage">
+                <div class="pipeline-agent-box green-bg">
+                    <div class="pipeline-agent-name" style="color: var(--green);"><i data-lucide="pen-tool" style="width:14px; height:14px; vertical-align: -2px;"></i> Editor</div>
+                    <div class="pipeline-agent-role">Verified report + score</div>
+                </div>
+                <div class="pipeline-data"><span style="color: var(--green);">report:</span> "Enterprise AI<br>&ensp;adoption is..."<br><span style="color: var(--green);">quality_score:</span> <span style="color: var(--orange);">8.5</span>/10<br><span style="color: var(--green);">citations:</span> verified</div>
+            </div>
+        </div>
+
+        <!-- Code preview: what students will build -->
+        <div class="code-window fade-in fade-in-delay-3" style="margin-top: 2rem;">
+            <div class="code-header">
+                <div class="dot-row"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></div>
+                <span class="code-title">pipeline.py &mdash; What You'll Build</span>
+            </div>
+            <div class="code-body">
+<span class="kw">def</span> <span class="fn">run_pipeline</span>(query):
+    <span class="cmt"># Stage 1: Researcher gathers structured facts</span>
+    research = <span class="fn">call_agent</span>(<span class="hl">RESEARCHER_PROMPT</span>, query)
+
+    <span class="cmt"># Stage 2: Analyst finds patterns + insights</span>
+    analysis = <span class="fn">call_agent</span>(<span class="hl">ANALYST_PROMPT</span>, research)
+
+    <span class="cmt"># Stage 3: Editor fact-checks + scores quality</span>
+    final    = <span class="fn">call_agent</span>(<span class="hl">EDITOR_PROMPT</span>, research + analysis)
+
+    <span class="kw">return</span> final  <span class="cmt"># verified report with quality score</span>
+            </div>
+        </div>
+
+        <div style="text-align: center;" class="fade-in fade-in-delay-4">
+            <a href="pipeline-demo.html" class="cta-btn">
+                <i data-lucide="play" style="width:16px; height:16px;"></i>
+                See it live &rarr; Pipeline Demo
+            </a>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 5: HANDS-ON CHECKPOINT                                -->
+    <!-- ============================================================ -->
+    <section class="slide-section" id="section-5">
+        <div class="section-label yellow fade-in">
+            <i data-lucide="code" style="width:14px; height:14px;"></i> Section 05 &mdash; Hands-On Checkpoint
+        </div>
+        <h2 class="section-title fade-in fade-in-delay-1">Time to <span style="color: var(--yellow);">Build</span></h2>
+        <p class="section-desc fade-in fade-in-delay-2">
+            45 minutes in Google Colab. Build a Researcher &rarr; Analyst &rarr; Editor pipeline from scratch.
+        </p>
+
+        <div class="cta-card fade-in fade-in-delay-2" style="margin-bottom: 2rem;">
+            <div class="cta-title">Multi-Agent Workshop Notebook</div>
+            <div class="cta-desc">
+                Build a team of specialized AI agents that collaborate on research, analysis, and quality control.
+            </div>
+            <a href="https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-08/ISOM260_Session8_Multi_Agent_Systems.ipynb" class="cta-btn" target="_blank">
+                <i data-lucide="external-link" style="width:16px; height:16px;"></i>
+                Open in Colab
+            </a>
+            <a href="workshop-timer.html" class="cta-btn-secondary" target="_blank">
+                <i data-lucide="timer" style="width:14px; height:14px;"></i>
+                Workshop Timer
+            </a>
+        </div>
+
+        <div class="build-phases fade-in fade-in-delay-3">
+            <!-- Phase 1 -->
+            <div class="build-phase cyan-phase">
+                <div class="build-phase-icon cyan">
+                    <i data-lucide="search" style="width:22px; height:22px;"></i>
+                </div>
+                <div class="build-phase-title" style="color: var(--cyan);">Phase 1</div>
+                <div class="build-phase-time">15 minutes</div>
+                <div class="build-phase-desc">Build the <strong>Researcher</strong> agent &mdash; searches for information, returns structured findings with sources and confidence levels.</div>
+            </div>
+
+            <!-- Phase 2 -->
+            <div class="build-phase magenta-phase">
+                <div class="build-phase-icon magenta">
+                    <i data-lucide="bar-chart-3" style="width:22px; height:22px;"></i>
+                </div>
+                <div class="build-phase-title" style="color: var(--magenta);">Phase 2</div>
+                <div class="build-phase-time">15 minutes</div>
+                <div class="build-phase-desc">Build the <strong>Analyst</strong> agent &mdash; receives research, identifies patterns, generates insights and recommendations.</div>
+            </div>
+
+            <!-- Phase 3 -->
+            <div class="build-phase green-phase">
+                <div class="build-phase-icon green">
+                    <i data-lucide="pen-tool" style="width:22px; height:22px;"></i>
+                </div>
+                <div class="build-phase-title" style="color: var(--green);">Phase 3</div>
+                <div class="build-phase-time">15 minutes</div>
+                <div class="build-phase-desc">Add the <strong>Editor</strong> agent + run the full pipeline end-to-end. Fact-check, improve clarity, score quality 1&ndash;10.</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 6: THE TELEPHONE GAME                                 -->
+    <!-- ============================================================ -->
+    <section class="slide-section" id="section-6">
+        <div class="section-label magenta fade-in">
+            <i data-lucide="alert-triangle" style="width:14px; height:14px;"></i> Section 06 &mdash; The Telephone Game
+        </div>
+        <h2 class="section-title fade-in fade-in-delay-1">Information <span style="color: var(--magenta);">Distortion</span> Across Agents</h2>
+        <p class="section-desc fade-in fade-in-delay-2">
+            Each agent subtly transforms information. After 3 agents, is the output still accurate? Watch a single fact degrade through the pipeline.
+        </p>
+
+        <div class="distortion-steps fade-in fade-in-delay-3">
+            <div class="distortion-step">
+                <div class="distortion-label original">Original</div>
+                <div class="distortion-text">
+                    "73% of enterprises <strong>plan to adopt</strong> AI agents <strong>by 2026</strong>"
+                </div>
+            </div>
+            <div class="distortion-step">
+                <div class="distortion-label subtle">Researcher</div>
+                <div class="distortion-text">
+                    "73% of enterprises <span class="changed" style="color: var(--cyan); text-decoration-color: var(--cyan);">are adopting</span> AI agents" <em style="color: var(--text-dim); font-size: 0.8rem; margin-left: 0.5rem;">&larr; subtle shift: "plan to" removed</em>
+                </div>
+            </div>
+            <div class="distortion-step">
+                <div class="distortion-label general">Analyst</div>
+                <div class="distortion-text">
+                    "<span class="changed" style="color: var(--yellow); text-decoration-color: var(--yellow);">Most enterprises</span> are <span class="changed" style="color: var(--yellow); text-decoration-color: var(--yellow);">rapidly</span> adopting AI agents" <em style="color: var(--text-dim); font-size: 0.8rem; margin-left: 0.5rem;">&larr; generalized: 73% &rarr; "most", added "rapidly"</em>
+                </div>
+            </div>
+            <div class="distortion-step">
+                <div class="distortion-label distorted">Editor</div>
+                <div class="distortion-text">
+                    "<span class="changed" style="color: var(--magenta); text-decoration-color: var(--magenta);">Enterprise AI adoption is nearly universal</span>" <em style="color: var(--text-dim); font-size: 0.8rem; margin-left: 0.5rem;">&larr; distorted: 73% future plan &rarr; "nearly universal"</em>
+                </div>
+            </div>
+        </div>
+
+        <div class="distortion-type-cards fade-in fade-in-delay-4">
+            <div class="distortion-type-card" style="border-top: 3px solid var(--cyan);">
+                <div class="distortion-type-title" style="color: var(--cyan);">Generalization</div>
+                <div class="distortion-type-desc">Specific numbers become vague qualifiers: "73%" &rarr; "most"</div>
+            </div>
+            <div class="distortion-type-card" style="border-top: 3px solid var(--yellow);">
+                <div class="distortion-type-title" style="color: var(--yellow);">Amplification</div>
+                <div class="distortion-type-desc">Adding intensity that wasn't in the source: &rarr; "rapidly"</div>
+            </div>
+            <div class="distortion-type-card" style="border-top: 3px solid var(--orange);">
+                <div class="distortion-type-title" style="color: var(--orange);">Omission</div>
+                <div class="distortion-type-desc">Dropping qualifiers: "plan to adopt" &rarr; "are adopting"</div>
+            </div>
+            <div class="distortion-type-card" style="border-top: 3px solid var(--magenta);">
+                <div class="distortion-type-title" style="color: var(--magenta);">Fabrication</div>
+                <div class="distortion-type-desc">New claims not in the source: &rarr; "nearly universal"</div>
+            </div>
+        </div>
+
+        <div class="insight-block fade-in fade-in-delay-4" style="border-left: 3px solid var(--magenta);">
+            <div class="insight-title">
+                <i data-lucide="alert-triangle" style="width:18px; height:18px; color: var(--magenta);"></i>
+                Real Stakes
+            </div>
+            <div class="insight-text">
+                In a research report, distortion is annoying. In healthcare, legal, or financial AI systems, it's dangerous. Every multi-agent system needs <strong>verification gates</strong> &mdash; points where humans or automated checks confirm accuracy before the pipeline continues.
+            </div>
+        </div>
+
+        <div class="callout callout-warn fade-in" style="margin-top: 2rem;">
+            <i data-lucide="alert-triangle" class="callout-icon" style="width:18px; height:18px; color: var(--yellow);"></i>
+            <div>
+                <strong>Safeguards:</strong> Citation chains (each agent cites where it got each fact), confidence propagation, and human review gates at critical handoffs. If Agent C gives a wrong answer based on Agent A's research &mdash; who's accountable?
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 7: WHEN MULTI-AGENT IS WORTH IT                       -->
+    <!-- ============================================================ -->
+    <section class="slide-section" id="section-7">
+        <div class="section-label green fade-in">
+            <i data-lucide="scale" style="width:14px; height:14px;"></i> Section 07 &mdash; When Multi-Agent Is Worth It
+        </div>
+        <h2 class="section-title fade-in fade-in-delay-1">Multi-Agent <span style="color: var(--green);">Isn't Always Better</span></h2>
+        <p class="section-desc fade-in fade-in-delay-2">
+            Each additional agent adds latency, cost, and complexity. Use the right tool for the right job.
+        </p>
+
+        <div style="overflow-x: auto;" class="fade-in fade-in-delay-3">
+            <table class="decision-table">
+                <thead>
+                    <tr>
+                        <th>Use Case</th>
+                        <th>Single Agent</th>
+                        <th>Multi-Agent</th>
+                        <th>Winner</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="use-case">Simple Q&A</td>
+                        <td><span style="color: var(--green);">&#10003;</span> Fast, cheap</td>
+                        <td><span style="color: var(--magenta);">&#10007;</span> Overkill</td>
+                        <td class="winner-cell winner-single">Single</td>
+                    </tr>
+                    <tr>
+                        <td class="use-case">Research report</td>
+                        <td><span style="color: var(--yellow);">&#9888;</span> Shallow</td>
+                        <td><span style="color: var(--green);">&#10003;</span> Deep, verified</td>
+                        <td class="winner-cell winner-multi">Multi</td>
+                    </tr>
+                    <tr>
+                        <td class="use-case">Code review</td>
+                        <td><span style="color: var(--yellow);">&#9888;</span> One perspective</td>
+                        <td><span style="color: var(--green);">&#10003;</span> Adversarial</td>
+                        <td class="winner-cell winner-multi">Multi</td>
+                    </tr>
+                    <tr>
+                        <td class="use-case">Data lookup</td>
+                        <td><span style="color: var(--green);">&#10003;</span> Direct</td>
+                        <td><span style="color: var(--magenta);">&#10007;</span> Unnecessary</td>
+                        <td class="winner-cell winner-single">Single</td>
+                    </tr>
+                    <tr>
+                        <td class="use-case">Content creation</td>
+                        <td><span style="color: var(--yellow);">&#9888;</span> Generic</td>
+                        <td><span style="color: var(--green);">&#10003;</span> Specialized</td>
+                        <td class="winner-cell winner-multi">Multi</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="insight-block fade-in fade-in-delay-4">
+            <div class="insight-title">
+                <i data-lucide="clock" style="width:18px; height:18px; color: var(--orange);"></i>
+                The Complexity Tax
+            </div>
+            <div class="insight-text">
+                Each agent adds ~2&ndash;5 seconds latency and costs 1 additional API call. A 3-agent pipeline takes 3x longer and costs 3x more than a single agent. Only pay this tax when the quality gain justifies it.
+            </div>
+        </div>
+
+        <div style="text-align: center; margin: 2rem 0; padding: 1.5rem;" class="fade-in fade-in-delay-3">
+            <div style="font-family: 'Sora', sans-serif; font-size: 1.2rem; font-weight: 600; color: var(--text-primary); font-style: italic;">
+                "Don't use a team of agents when one agent with good tools will do.<br>
+                But don't use one agent when the task demands expertise you can't fit in a single prompt."
+            </div>
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--text-dim); margin-top: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase;">
+                The Multi-Agent Decision Rule
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 8: THE STACK SO FAR                                   -->
+    <!-- ============================================================ -->
+    <section class="slide-section" id="section-8">
+        <div class="section-label purple fade-in">
+            <i data-lucide="layers" style="width:14px; height:14px;"></i> Section 08 &mdash; The Stack So Far
+        </div>
+        <h2 class="section-title fade-in fade-in-delay-1">Your <span style="color: var(--purple);">Growing Toolkit</span></h2>
+        <p class="section-desc fade-in fade-in-delay-2">
+            Each session adds a new capability. Here's what you can build now.
+        </p>
+
+        <div class="stack-viz fade-in fade-in-delay-3">
+            <div class="stack-layer future">
+                <span class="stack-session" style="color: var(--text-dim);">S9</span>
+                <span class="stack-label" style="color: var(--text-dim);">Your Industry</span>
+                <span class="stack-marker" style="color: var(--text-dim);">UPCOMING</span>
+            </div>
+            <div class="stack-layer current">
+                <span class="stack-session" style="color: var(--cyan);">S8</span>
+                <span class="stack-label" style="color: var(--cyan);">Multi-Agent Systems</span>
+                <span class="stack-marker" style="color: var(--cyan);">&#9664; YOU ARE HERE</span>
+            </div>
+            <div class="stack-layer">
+                <span class="stack-session" style="color: var(--text-dim);">S7</span>
+                <span class="stack-label" style="color: var(--text-secondary);">RAG &mdash; Knowledge Agents</span>
+                <span class="stack-marker" style="color: var(--text-dim);"></span>
+            </div>
+            <div class="stack-layer">
+                <span class="stack-session" style="color: var(--text-dim);">S6</span>
+                <span class="stack-label" style="color: var(--text-secondary);">ReAct + Agent Design</span>
+                <span class="stack-marker" style="color: var(--text-dim);"></span>
+            </div>
+            <div class="stack-layer">
+                <span class="stack-session" style="color: var(--text-dim);">S5</span>
+                <span class="stack-label" style="color: var(--text-secondary);">Real APIs</span>
+                <span class="stack-marker" style="color: var(--text-dim);"></span>
+            </div>
+            <div class="stack-layer">
+                <span class="stack-session" style="color: var(--text-dim);">S4</span>
+                <span class="stack-label" style="color: var(--text-secondary);">Tool Use</span>
+                <span class="stack-marker" style="color: var(--text-dim);"></span>
+            </div>
+        </div>
+
+        <div class="big-quote fade-in fade-in-delay-4">
+            Tools &rarr; Real APIs &rarr; ReAct &rarr; RAG &rarr; <span class="highlight">Multi-Agent</span>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 9: KEY TAKEAWAYS + HOMEWORK                           -->
+    <!-- ============================================================ -->
+    <section class="slide-section" id="section-9">
+        <div class="section-label cyan fade-in">
+            <i data-lucide="check-circle" style="width:14px; height:14px;"></i> Section 09 &mdash; Key Takeaways + Homework
+        </div>
+        <h2 class="section-title fade-in fade-in-delay-1">What to <span style="color: var(--cyan);">Remember</span></h2>
+
+        <!-- Takeaway cards -->
+        <div class="fade-in fade-in-delay-2" style="margin-bottom: 2.5rem;">
+            <div class="takeaway-card">
+                <div class="takeaway-icon" style="background: var(--cyan-glow); color: var(--cyan);">
+                    <i data-lucide="users" style="width:18px; height:18px;"></i>
+                </div>
+                <div class="takeaway-text">
+                    <strong>Agent teams mirror org charts.</strong> Division of labor, specialization, and coordination costs apply to AI agents just like human teams. Design your agent system like you'd design a department.
+                </div>
+            </div>
+            <div class="takeaway-card">
+                <div class="takeaway-icon" style="background: var(--magenta-glow); color: var(--magenta);">
+                    <i data-lucide="alert-triangle" style="width:18px; height:18px;"></i>
+                </div>
+                <div class="takeaway-text">
+                    <strong>Watch for the telephone game.</strong> Information degrades across agents. Citation chains and confidence propagation are your safeguards against compounding errors.
+                </div>
+            </div>
+            <div class="takeaway-card">
+                <div class="takeaway-icon" style="background: var(--yellow-glow); color: var(--yellow);">
+                    <i data-lucide="brain" style="width:18px; height:18px;"></i>
+                </div>
+                <div class="takeaway-text">
+                    <strong>Multi-agent isn't always better.</strong> Each agent adds latency, cost, and complexity. Use the decision framework: multi-agent for complex, multi-expertise tasks. Single-agent for everything else.
+                </div>
+            </div>
+            <div class="takeaway-card">
+                <div class="takeaway-icon" style="background: var(--green-glow); color: var(--green);">
+                    <i data-lucide="trending-up" style="width:18px; height:18px;"></i>
+                </div>
+                <div class="takeaway-text">
+                    <strong>The pipeline pattern is your workhorse.</strong> Research &rarr; Analysis &rarr; Review is the most common multi-agent pattern. Master it and you can adapt it to any domain.
+                </div>
+            </div>
+        </div>
+
+        <!-- Homework -->
+        <h3 style="font-family: 'Sora', sans-serif; font-weight: 700; font-size: 1.2rem; margin-bottom: 1rem;" class="fade-in fade-in-delay-3">
+            <i data-lucide="book-open" style="width:18px; height:18px; color: var(--cyan); vertical-align: -3px;"></i>
+            Homework
+        </h3>
+
+        <div class="fade-in fade-in-delay-3">
+            <div class="homework-item">
+                <span class="homework-label" style="background: var(--cyan-glow); color: var(--cyan);">Extend</span>
+                <span class="homework-text">Add a 4th agent to your pipeline (e.g., a Fact-Checker, Summarizer, or Domain Expert). Test the full pipeline with 3 business questions.</span>
+            </div>
+            <div class="homework-item">
+                <span class="homework-label" style="background: var(--magenta-glow); color: var(--magenta);">Analyze</span>
+                <span class="homework-text">Run your pipeline 5 times on the same question. Document how outputs differ, where distortion occurs, and what safeguards would help.</span>
+            </div>
+            <div class="homework-item">
+                <span class="homework-label" style="background: var(--green-glow); color: var(--green);">Design</span>
+                <span class="homework-text">Propose a multi-agent system for your target industry (the one you'll use for your final project). Include: agent roles, handoff logic, human gates, and cost estimate.</span>
+            </div>
+            <div class="homework-item">
+                <span class="homework-label" style="background: var(--yellow-glow); color: var(--yellow);">Read</span>
+                <span class="homework-text">Read about Claude Code's multi-agent "team" feature. Write a paragraph on how it applies the orchestrator pattern from Session 6.</span>
+            </div>
+        </div>
+
+        <!-- Next session CTA -->
+        <div class="cta-card fade-in fade-in-delay-4" style="margin-top: 2.5rem;">
+            <div class="cta-title">Next: Session 9 &mdash; Agents for Your Industry</div>
+            <div class="cta-desc">
+                Next session is different. No more tutorials. No more following along. YOU pick the industry. YOU design the agent. YOU build it. Session 9 is where everything you've learned becomes YOUR competitive advantage.
+            </div>
+            <a href="/sessions/session-09" class="cta-btn">
+                <i data-lucide="arrow-right" style="width:16px; height:16px;"></i>
+                Preview Session 9
+            </a>
+        </div>
+    </section>
+
+</div>
+
+<script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+
+    // Sections
+    const sections = document.querySelectorAll('.slide-section');
+    const dotItems = document.querySelectorAll('.dot-nav-item');
+    const progressFill = document.getElementById('progressFill');
+
+    // Progress bar
+    function updateProgress() {
+        const height = document.documentElement.scrollHeight - window.innerHeight;
+        if (height <= 0) return;
+        const scrolled = (window.scrollY / height) * 100;
+        progressFill.style.width = scrolled + '%';
+    }
+
+    // Active section detection
+    function updateActiveSection() {
+        let currentIndex = 0;
+        const scrollPos = window.scrollY + window.innerHeight / 3;
+
+        sections.forEach((section, index) => {
+            const top = section.offsetTop;
+            const bottom = top + section.offsetHeight;
+            if (scrollPos >= top && scrollPos < bottom) {
+                currentIndex = index;
+            }
+        });
+
+        dotItems.forEach((dot, index) => {
+            dot.classList.toggle('active', index === currentIndex);
+        });
+    }
+
+    // Dot navigation click
+    dotItems.forEach(dot => {
+        dot.addEventListener('click', () => {
+            const sectionIndex = parseInt(dot.dataset.section);
+            const target = sections[sectionIndex];
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    });
+
+    // Keyboard navigation
+    let currentSection = 0;
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') {
+            e.preventDefault();
+            if (currentSection < sections.length - 1) {
+                currentSection++;
+                sections[currentSection].scrollIntoView({ behavior: 'smooth' });
+            }
+        } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+            e.preventDefault();
+            if (currentSection > 0) {
+                currentSection--;
+                sections[currentSection].scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    });
+
+    // Sync currentSection with scroll position
+    function syncCurrentSection() {
+        const scrollPos = window.scrollY + window.innerHeight / 3;
+        sections.forEach((section, index) => {
+            if (scrollPos >= section.offsetTop) {
+                currentSection = index;
+            }
+        });
+    }
+
+    // Scroll event handler
+    window.addEventListener('scroll', () => {
+        updateProgress();
+        updateActiveSection();
+        syncCurrentSection();
+    }, { passive: true });
+
+    // Fade-in animation with IntersectionObserver
+    const fadeElements = document.querySelectorAll('.fade-in');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, {
+        threshold: 0.15,
+        rootMargin: '0px 0px -50px 0px'
+    });
+
+    fadeElements.forEach(el => observer.observe(el));
+
+    // Initial state
+    updateProgress();
+    updateActiveSection();
+</script>
+
+</body>
+</html>

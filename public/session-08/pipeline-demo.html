@@ -1,0 +1,2314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session 8: Multi-Agent Pipeline Trace — ISOM 260</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+    <style>
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #0f1424;
+            --bg-card: #141929;
+            --bg-elevated: #1a2035;
+            --cyan: #00e5ff;
+            --cyan-dim: #00b8d4;
+            --cyan-glow: rgba(0, 229, 255, 0.15);
+            --cyan-glow-strong: rgba(0, 229, 255, 0.3);
+            --magenta: #ff006e;
+            --magenta-glow: rgba(255, 0, 110, 0.15);
+            --yellow: #ffd600;
+            --yellow-glow: rgba(255, 214, 0, 0.15);
+            --green: #00e676;
+            --green-glow: rgba(0, 230, 118, 0.15);
+            --green-glow-strong: rgba(0, 230, 118, 0.3);
+            --orange: #ff9100;
+            --orange-glow: rgba(255, 145, 0, 0.15);
+            --text-primary: #e8ecf4;
+            --text-secondary: #8892a8;
+            --text-dim: #5a6478;
+            --border: rgba(0, 229, 255, 0.1);
+            --border-strong: rgba(0, 229, 255, 0.25);
+            --grid-line: rgba(0, 229, 255, 0.04);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background:
+                linear-gradient(var(--grid-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .glow-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .glow-orb-1 { width: 500px; height: 500px; background: rgba(0, 229, 255, 0.06); top: 10%; right: -100px; }
+        .glow-orb-2 { width: 400px; height: 400px; background: rgba(255, 0, 110, 0.05); bottom: 20%; left: -100px; }
+        .glow-orb-3 { width: 350px; height: 350px; background: rgba(0, 230, 118, 0.04); top: 60%; right: 10%; }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ====== HERO ====== */
+        .hero { padding: 4rem 0 2rem; }
+
+        .session-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--cyan-glow);
+            border: 1px solid rgba(0, 229, 255, 0.3);
+            border-radius: 100px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--cyan);
+            margin-bottom: 2rem;
+        }
+
+        .session-badge .dot {
+            width: 6px; height: 6px;
+            background: var(--cyan);
+            border-radius: 50%;
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(0,229,255,0.4); }
+            50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(0,229,255,0); }
+        }
+
+        .hero h1 {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(2.2rem, 4.5vw, 3.5rem);
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero h1 .cyan {
+            background: linear-gradient(135deg, var(--cyan), var(--cyan-dim));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            max-width: 750px;
+            margin-bottom: 1.5rem;
+        }
+
+        /* ====== PHASE LEGEND ====== */
+        .phase-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .phase-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 0.3rem 0.75rem;
+            border-radius: 100px;
+            border: 1px solid;
+        }
+
+        .phase-tag.researcher { color: var(--cyan); border-color: rgba(0,229,255,0.3); background: rgba(0,229,255,0.08); }
+        .phase-tag.analyst { color: var(--magenta); border-color: rgba(255,0,110,0.3); background: rgba(255,0,110,0.08); }
+        .phase-tag.editor { color: var(--green); border-color: rgba(0,230,118,0.3); background: rgba(0,230,118,0.08); }
+
+        .phase-tag .tag-dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+        }
+
+        .phase-tag.researcher .tag-dot { background: var(--cyan); }
+        .phase-tag.analyst .tag-dot { background: var(--magenta); }
+        .phase-tag.editor .tag-dot { background: var(--green); }
+
+        /* ====== SECTIONS ====== */
+        .section {
+            padding: 3.5rem 0;
+            border-top: 1px solid var(--border);
+        }
+
+        .section-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--cyan);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-label::before {
+            content: '';
+            width: 24px; height: 1px;
+            background: var(--cyan);
+        }
+
+        /* ====== CONTROL BAR ====== */
+        .control-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            padding: 1rem 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .play-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, var(--cyan), var(--cyan-dim));
+            color: var(--bg-primary);
+            border: none;
+            border-radius: 8px;
+            font-family: 'Sora', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 140px;
+            justify-content: center;
+        }
+
+        .play-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 20px var(--cyan-glow-strong);
+        }
+
+        .play-btn.paused {
+            background: linear-gradient(135deg, var(--yellow), #e6c200);
+        }
+
+        .nav-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.5rem 0.85rem;
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            border-color: var(--border-strong);
+            color: var(--text-primary);
+        }
+
+        .step-indicator {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            min-width: 110px;
+            text-align: center;
+        }
+
+        .speed-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.5rem 1rem;
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .speed-btn:hover {
+            border-color: var(--border-strong);
+            color: var(--text-primary);
+        }
+
+        .speed-btn.active {
+            background: rgba(0, 229, 255, 0.1);
+            border-color: var(--cyan);
+            color: var(--cyan);
+        }
+
+        .reset-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: 'Sora', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .reset-btn:hover {
+            border-color: var(--border-strong);
+            color: var(--text-primary);
+        }
+
+        /* ====== STATS ROW ====== */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 700px) {
+            .stats-row { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .stat-card .stat-value {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin-bottom: 0.2rem;
+        }
+
+        .stat-card .stat-label {
+            font-size: 0.72rem;
+            color: var(--text-dim);
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: 0.02em;
+        }
+
+        .stat-card:nth-child(1) .stat-value { color: var(--cyan); }
+        .stat-card:nth-child(2) .stat-value { color: var(--magenta); }
+        .stat-card:nth-child(3) .stat-value { color: var(--yellow); }
+        .stat-card:nth-child(4) .stat-value { color: var(--green); }
+
+        @keyframes stat-flash {
+            0% { background: var(--bg-card); }
+            50% { background: var(--bg-elevated); border-color: var(--cyan); }
+            100% { background: var(--bg-card); }
+        }
+        .stat-card.flash {
+            animation: stat-flash 0.6s ease-out;
+        }
+
+        /* ====== PHASE TIMELINE BAR ====== */
+        .phase-bar {
+            display: flex;
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            background: var(--bg-elevated);
+        }
+
+        .phase-bar-segment {
+            height: 100%;
+            opacity: 0.2;
+            transition: opacity 0.5s ease, filter 0.5s ease, box-shadow 0.5s ease;
+        }
+
+        .phase-bar-segment.active {
+            opacity: 1;
+            filter: brightness(1.2);
+        }
+
+        .phase-bar-segment.active.researcher { box-shadow: 0 0 8px var(--cyan); }
+        .phase-bar-segment.active.analyst { box-shadow: 0 0 8px var(--magenta); }
+        .phase-bar-segment.active.editor { box-shadow: 0 0 8px var(--green); }
+
+        .phase-bar-segment.researcher { background: var(--cyan); flex: 7; }
+        .phase-bar-segment.analyst { background: var(--magenta); flex: 7; }
+        .phase-bar-segment.editor { background: var(--green); flex: 7; }
+
+        /* ====== PHASE BAR LABELS ====== */
+        .phase-bar-labels {
+            display: flex;
+            margin-bottom: 0.5rem;
+        }
+
+        .phase-bar-label {
+            flex: 7;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            text-align: center;
+            opacity: 0.4;
+            transition: opacity 0.5s;
+        }
+
+        .phase-bar-label.active { opacity: 1; }
+
+        .phase-bar-label.researcher { color: var(--cyan); }
+        .phase-bar-label.analyst { color: var(--magenta); }
+        .phase-bar-label.editor { color: var(--green); }
+
+        /* ====== PHASE GLOW on trace-area ====== */
+        @keyframes phase-glow-fade {
+            0% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+        .trace-area.phase-glow-researcher {
+            box-shadow: inset 0 0 60px rgba(0, 229, 255, 0.08), 0 0 30px rgba(0, 229, 255, 0.06);
+            animation: phase-glow-fade 1.2s ease-out forwards;
+        }
+        .trace-area.phase-glow-analyst {
+            box-shadow: inset 0 0 60px rgba(255, 0, 110, 0.08), 0 0 30px rgba(255, 0, 110, 0.06);
+            animation: phase-glow-fade 1.2s ease-out forwards;
+        }
+        .trace-area.phase-glow-editor {
+            box-shadow: inset 0 0 60px rgba(0, 230, 118, 0.08), 0 0 30px rgba(0, 230, 118, 0.06);
+            animation: phase-glow-fade 1.2s ease-out forwards;
+        }
+
+        /* ====== TRACE AREA ====== */
+        .trace-area {
+            position: relative;
+            transition: box-shadow 0.4s ease;
+            min-height: 200px;
+            padding-left: 2rem;
+        }
+
+        .trace-area::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 5px;
+            width: 2px;
+            background: linear-gradient(180deg, var(--cyan), var(--magenta), var(--green));
+            opacity: 0.2;
+            pointer-events: none;
+        }
+
+        .trace-dot {
+            position: absolute;
+            left: -2rem;
+            top: 1.5rem;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            z-index: 2;
+        }
+
+        .trace-dot.researcher { background: var(--cyan); box-shadow: 0 0 8px var(--cyan); }
+        .trace-dot.analyst { background: var(--magenta); box-shadow: 0 0 8px var(--magenta); }
+        .trace-dot.editor { background: var(--green); box-shadow: 0 0 8px var(--green); }
+
+        /* ====== PHASE ENTERING GLOW ====== */
+        .phase-entering.researcher .step-card { box-shadow: 0 0 30px var(--cyan-glow-strong); transition: box-shadow 0.4s ease; }
+        .phase-entering.analyst .step-card { box-shadow: 0 0 30px var(--magenta-glow); transition: box-shadow 0.4s ease; }
+        .phase-entering.editor .step-card { box-shadow: 0 0 30px var(--green-glow); transition: box-shadow 0.4s ease; }
+
+        /* ====== STEP CARDS (General) ====== */
+        .trace-step {
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+            display: none;
+            position: relative;
+        }
+
+        .trace-step.visible {
+            opacity: 1;
+            transform: translateY(0);
+            display: block;
+        }
+
+        .step-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem 1.75rem;
+            transition: border-color 0.3s;
+        }
+
+        .step-card:hover {
+            border-color: var(--border-strong);
+        }
+
+        /* Phase-colored left border */
+        .trace-step[data-phase="researcher"] .step-card { border-left: 3px solid var(--cyan); }
+        .trace-step[data-phase="analyst"] .step-card { border-left: 3px solid var(--magenta); }
+        .trace-step[data-phase="editor"] .step-card { border-left: 3px solid var(--green); }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .step-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 0.25rem 0.75rem;
+            border-radius: 100px;
+            white-space: nowrap;
+        }
+
+        .step-badge.researcher {
+            background: rgba(0, 229, 255, 0.12);
+            color: var(--cyan);
+            border: 1px solid rgba(0, 229, 255, 0.25);
+        }
+        .step-badge.analyst {
+            background: rgba(255, 0, 110, 0.12);
+            color: var(--magenta);
+            border: 1px solid rgba(255, 0, 110, 0.25);
+        }
+        .step-badge.editor {
+            background: rgba(0, 230, 118, 0.12);
+            color: var(--green);
+            border: 1px solid rgba(0, 230, 118, 0.25);
+        }
+
+        .type-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+
+        .type-badge.query { background: rgba(0, 229, 255, 0.15); color: var(--cyan); }
+        .type-badge.thought { background: rgba(255, 214, 0, 0.12); color: var(--yellow); }
+        .type-badge.tool { background: rgba(255, 145, 0, 0.15); color: var(--orange); }
+        .type-badge.result { background: rgba(0, 230, 118, 0.12); color: var(--green); }
+        .type-badge.output { background: rgba(0, 229, 255, 0.12); color: var(--cyan); }
+        .type-badge.handoff { background: linear-gradient(135deg, rgba(255,0,110,0.2), rgba(0,229,255,0.2)); color: var(--text-primary); }
+        .type-badge.receive { background: rgba(255, 0, 110, 0.12); color: var(--magenta); }
+        .type-badge.final { background: linear-gradient(135deg, rgba(0,230,118,0.2), rgba(0,229,255,0.2)); color: var(--green); }
+
+        .step-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            margin-left: auto;
+        }
+
+        .step-content {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .step-content strong {
+            color: var(--text-primary);
+        }
+
+        .step-content code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            background: var(--bg-elevated);
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+            color: var(--cyan);
+        }
+
+        /* ====== TYPING ANIMATION ====== */
+        @keyframes typing-cursor {
+            0%, 100% { border-right-color: var(--cyan); }
+            50% { border-right-color: transparent; }
+        }
+
+        .typing-text {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            border-right: 2px solid var(--cyan);
+            animation: typing-cursor 0.8s step-end infinite;
+            padding-right: 2px;
+            display: inline;
+        }
+
+        .typing-text.done {
+            border-right: none;
+            animation: none;
+        }
+
+        /* ====== QUERY BOX ====== */
+        .query-box {
+            background: linear-gradient(135deg, var(--cyan-glow), var(--magenta-glow));
+            border: 1px solid var(--border-strong);
+            border-radius: 16px;
+            padding: 1.5rem 2rem;
+            margin-top: 0.75rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .query-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--cyan), var(--magenta));
+        }
+
+        .query-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--cyan);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* ====== THOUGHT BUBBLE ====== */
+        .thought-bubble {
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+            margin-top: 0.75rem;
+            font-style: italic;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            display: flex;
+            gap: 0.5rem;
+            align-items: flex-start;
+        }
+
+        .thought-bubble.researcher-thought {
+            background: rgba(0, 229, 255, 0.06);
+            border: 1px solid rgba(0, 229, 255, 0.15);
+        }
+
+        .thought-bubble.analyst-thought {
+            background: rgba(255, 0, 110, 0.06);
+            border: 1px solid rgba(255, 0, 110, 0.15);
+        }
+
+        .thought-bubble.editor-thought {
+            background: rgba(0, 230, 118, 0.06);
+            border: 1px solid rgba(0, 230, 118, 0.15);
+        }
+
+        .thought-bubble .tb-icon {
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .thought-bubble.researcher-thought .tb-icon { color: var(--cyan); }
+        .thought-bubble.analyst-thought .tb-icon { color: var(--magenta); }
+        .thought-bubble.editor-thought .tb-icon { color: var(--green); }
+
+        /* ====== TOOL CALL BOX ====== */
+        .tool-call-box {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.85rem 1.15rem;
+            margin-top: 0.75rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--orange);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tool-call-box .tool-icon {
+            color: var(--orange);
+            flex-shrink: 0;
+        }
+
+        .tool-call-box .loading-bar {
+            position: absolute;
+            bottom: 0; left: 0;
+            height: 2px;
+            background: var(--orange);
+            width: 0;
+            transition: width 1s ease;
+        }
+
+        .tool-call-box.loaded .loading-bar {
+            width: 100%;
+        }
+
+        /* ====== RESULT LIST ====== */
+        .result-list {
+            margin-top: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .result-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            background: var(--bg-elevated);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .result-item.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .result-item .result-source {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        /* ====== STRUCTURED OUTPUT BOX ====== */
+        .structured-output {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem 1.25rem;
+            margin-top: 0.75rem;
+        }
+
+        .structured-output h4 {
+            font-family: 'Sora', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 0.6rem;
+        }
+
+        .structured-output ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .structured-output ul li {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            padding: 0.2rem 0;
+            padding-left: 1.2rem;
+            position: relative;
+        }
+
+        .structured-output ul li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.65rem;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+
+        .output-cyan ul li::before { background: var(--cyan); }
+        .output-magenta ul li::before { background: var(--magenta); }
+        .output-green ul li::before { background: var(--green); }
+
+        .output-cyan h4 { color: var(--cyan); }
+        .output-magenta h4 { color: var(--magenta); }
+        .output-green h4 { color: var(--green); }
+
+        .output-section {
+            margin-bottom: 0.75rem;
+        }
+
+        .output-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .output-section-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 0.3rem;
+        }
+
+        .output-cyan .output-section-label { color: var(--cyan); }
+        .output-magenta .output-section-label { color: var(--magenta); }
+        .output-green .output-section-label { color: var(--green); }
+
+        .confidence-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.25rem 0.65rem;
+            border-radius: 100px;
+            margin-top: 0.5rem;
+        }
+
+        .confidence-high {
+            background: rgba(0, 230, 118, 0.15);
+            color: var(--green);
+            border: 1px solid rgba(0, 230, 118, 0.3);
+        }
+
+        /* ====== HANDOFF CARD ====== */
+        .handoff-card {
+            background: linear-gradient(135deg, var(--bg-card), var(--bg-elevated));
+            border-radius: 16px;
+            padding: 1.5rem 2rem;
+            position: relative;
+            overflow: hidden;
+            margin-top: 0.75rem;
+        }
+
+        .handoff-card.researcher-to-analyst {
+            border: 2px solid transparent;
+            background-image: linear-gradient(var(--bg-card), var(--bg-card)),
+                              linear-gradient(135deg, var(--cyan), var(--magenta));
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
+        }
+
+        .handoff-card.analyst-to-editor {
+            border: 2px solid transparent;
+            background-image: linear-gradient(var(--bg-card), var(--bg-card)),
+                              linear-gradient(135deg, var(--magenta), var(--green));
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
+        }
+
+        .handoff-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .handoff-from, .handoff-to {
+            font-family: 'Sora', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .handoff-arrow {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            animation: handoff-pulse 1.5s ease-in-out infinite;
+        }
+
+        .handoff-arrow-line {
+            width: 30px;
+            height: 2px;
+            background: var(--text-dim);
+            position: relative;
+        }
+
+        @keyframes handoff-pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .handoff-payload {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            background: var(--bg-primary);
+            border-radius: 6px;
+            padding: 0.6rem 0.85rem;
+            white-space: pre-line;
+            line-height: 1.5;
+        }
+
+        /* ====== FACT CHECK ITEMS ====== */
+        .fact-check-list {
+            margin-top: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .fact-check-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            padding: 0.4rem 0.75rem;
+            border-radius: 6px;
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .fact-check-item.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .fact-check-item.verified {
+            background: rgba(0, 230, 118, 0.06);
+            color: var(--green);
+        }
+
+        .fact-check-item.flagged {
+            background: rgba(255, 214, 0, 0.06);
+            color: var(--yellow);
+        }
+
+        /* ====== FINAL OUTPUT CARD ====== */
+        .final-card {
+            background: linear-gradient(135deg, rgba(0, 230, 118, 0.04), rgba(0, 229, 255, 0.04));
+            border: 1px solid rgba(0, 230, 118, 0.2);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-top: 0.75rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .final-card.glow {
+            box-shadow: 0 0 40px rgba(0, 230, 118, 0.15), 0 0 80px rgba(0, 229, 255, 0.08);
+            animation: final-glow 3s ease-in-out infinite;
+        }
+
+        @keyframes final-glow {
+            0%, 100% { box-shadow: 0 0 40px rgba(0, 230, 118, 0.15), 0 0 80px rgba(0, 229, 255, 0.08); }
+            50% { box-shadow: 0 0 60px rgba(0, 230, 118, 0.25), 0 0 100px rgba(0, 229, 255, 0.12); }
+        }
+
+        .final-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--cyan), var(--magenta), var(--green));
+        }
+
+        .final-card h3 {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--green);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .final-summary {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+
+        .final-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .final-meta-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 0.3rem 0.75rem;
+            border-radius: 100px;
+        }
+
+        .final-meta-tag.score {
+            background: rgba(0, 230, 118, 0.15);
+            color: var(--green);
+            border: 1px solid rgba(0, 230, 118, 0.3);
+        }
+
+        .final-meta-tag.verified {
+            background: rgba(0, 229, 255, 0.12);
+            color: var(--cyan);
+            border: 1px solid rgba(0, 229, 255, 0.25);
+        }
+
+        .final-meta-tag.agents {
+            background: rgba(255, 0, 110, 0.12);
+            color: var(--magenta);
+            border: 1px solid rgba(255, 0, 110, 0.25);
+        }
+
+        /* ====== FOOTER ====== */
+        .footer {
+            padding: 3rem 0;
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .footer p {
+            color: var(--text-dim);
+            font-size: 0.85rem;
+        }
+
+        .footer a {
+            color: var(--cyan);
+            text-decoration: none;
+        }
+
+        .footer a:hover { text-decoration: underline; }
+
+        /* ====== KEYBOARD HINT ====== */
+        .keyboard-hint {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .key-hint {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--text-dim);
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .key-hint kbd {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 0.1rem 0.4rem;
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+        }
+
+        /* ====== RESPONSIVE ====== */
+        @media (max-width: 768px) {
+            .container { padding: 0 1rem; }
+            .control-bar { gap: 0.5rem; padding: 0.75rem 1rem; }
+            .play-btn { padding: 0.6rem 1rem; font-size: 0.85rem; min-width: auto; }
+            .stats-row { grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+            .stat-card { padding: 0.75rem; }
+            .stat-card .stat-value { font-size: 1.3rem; }
+            .keyboard-hint { display: none; }
+            .phase-legend { gap: 0.5rem; }
+            .handoff-header { flex-wrap: wrap; }
+            .final-meta { gap: 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="glow-orb glow-orb-1"></div>
+    <div class="glow-orb glow-orb-2"></div>
+    <div class="glow-orb glow-orb-3"></div>
+
+    <div class="container">
+        <!-- HERO -->
+        <div class="hero">
+            <div class="session-badge">
+                <span class="dot"></span>
+                Session 8 &middot; Multi-Agent Systems
+            </div>
+            <h1>Multi-Agent Pipeline <span class="cyan">Live Trace</span></h1>
+            <p>Watch three AI specialists work together in real time. The Researcher gathers facts, the Analyst finds patterns, and the Editor catches what the others missed. 21 steps. 3 agents. One polished result.</p>
+
+            <div class="phase-legend">
+                <span class="phase-tag researcher"><span class="tag-dot"></span><i data-lucide="search" style="width:12px;height:12px;"></i> Researcher</span>
+                <span class="phase-tag analyst"><span class="tag-dot"></span><i data-lucide="bar-chart-3" style="width:12px;height:12px;"></i> Analyst</span>
+                <span class="phase-tag editor"><span class="tag-dot"></span><i data-lucide="pen-tool" style="width:12px;height:12px;"></i> Editor</span>
+            </div>
+        </div>
+
+        <!-- MAIN TRACE SECTION -->
+        <div class="section">
+            <div class="section-label">Live Pipeline Trace</div>
+
+            <!-- CONTROL BAR -->
+            <div class="control-bar">
+                <button class="nav-btn" onclick="stepBackward()">
+                    <i data-lucide="arrow-left" style="width:14px;height:14px;"></i>
+                </button>
+                <button class="play-btn" id="playBtn" onclick="togglePlay()">
+                    <i data-lucide="play" style="width:16px;height:16px;" id="playIcon"></i>
+                    <span id="playLabel">Play</span>
+                </button>
+                <button class="nav-btn" onclick="stepForward()">
+                    <i data-lucide="arrow-right" style="width:14px;height:14px;"></i>
+                </button>
+                <span class="step-indicator" id="stepIndicator">Step 0 of 21</span>
+                <button class="speed-btn" data-speed="1" onclick="setSpeed(1)" id="speed1">1&times;</button>
+                <button class="speed-btn" data-speed="2" onclick="setSpeed(2)" id="speed2">2&times;</button>
+                <button class="speed-btn" data-speed="4" onclick="setSpeed(4)" id="speed4">4&times;</button>
+                <button class="reset-btn" onclick="resetTrace()">
+                    <i data-lucide="rotate-ccw" style="width:14px;height:14px;"></i>
+                    Reset
+                </button>
+            </div>
+
+            <div class="keyboard-hint">
+                <span class="key-hint"><kbd>Space</kbd> Play / Pause</span>
+                <span class="key-hint"><kbd>&rarr;</kbd> Step Forward</span>
+                <span class="key-hint"><kbd>&larr;</kbd> Step Back</span>
+                <span class="key-hint"><kbd>R</kbd> Reset</span>
+                <span class="key-hint"><kbd>1</kbd> <kbd>2</kbd> <kbd>4</kbd> Speed</span>
+            </div>
+
+            <!-- STATS ROW -->
+            <div class="stats-row" style="margin-top:1.5rem;">
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-duration">0.0s</div>
+                    <div class="stat-label">Pipeline Duration</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-agents">0/3</div>
+                    <div class="stat-label">Agent Calls</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-facts">0</div>
+                    <div class="stat-label">Facts Tracked</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-quality">&mdash;</div>
+                    <div class="stat-label">Quality Score</div>
+                </div>
+            </div>
+
+            <!-- PHASE BAR LABELS -->
+            <div class="phase-bar-labels">
+                <div class="phase-bar-label researcher" id="labelResearcher">Researcher</div>
+                <div class="phase-bar-label analyst" id="labelAnalyst">Analyst</div>
+                <div class="phase-bar-label editor" id="labelEditor">Editor</div>
+            </div>
+
+            <!-- PHASE BAR -->
+            <div class="phase-bar" id="phaseBar">
+                <div class="phase-bar-segment researcher" data-phase="researcher"></div>
+                <div class="phase-bar-segment analyst" data-phase="analyst"></div>
+                <div class="phase-bar-segment editor" data-phase="editor"></div>
+            </div>
+
+            <!-- TRACE AREA -->
+            <div class="trace-area" id="traceArea">
+
+                <!-- ============================================================ -->
+                <!-- RESEARCHER PHASE (Cyan, Steps 1-7) -->
+                <!-- ============================================================ -->
+
+                <!-- STEP 1: [QUERY] Incoming query -->
+                <div class="trace-step" data-step="1" data-phase="researcher">
+                    <div class="step-card">
+                        <div class="step-header">
+                            <span class="step-badge researcher"><i data-lucide="search" style="width:12px;height:12px;"></i> Researcher</span>
+                            <span class="type-badge query">Query</span>
+                            <span class="step-number">Step 1 of 21</span>
+                        </div>
+                        <div class="step-content">
+                            Incoming pipeline query:
+                            <div class="query-box">
+                                <div class="query-label">
+                                    <i data-lucide="message-circle" style="width:14px;height:14px;"></i>
+                                    User Input
+                                </div>
+                                <div id="queryTyping" class="typing-text"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 2: [THOUGHT] Researcher thinking -->
+                <div class="trace-step" data-step="2" data-phase="researcher">
+                    <div class="step-card">
+                        <div class="step-header">
+                            <span class="step-badge researcher"><i data-lucide="search" style="width:12px;height:12px;"></i> Researcher</span>
+                            <span class="type-badge thought">Thought</span>
+                            <span class="step-number">Step 2 of 21</span>
+                        </div>
+                        <div class="step-content">
+                            <div class="thought-bubble researcher-thought">
+                                <span class="tb-icon"><i data-lucide="brain" style="width:16px;height:16px;"></i></span>
+                                <span>I need to gather structured facts about enterprise AI agent adoption. Let me search for recent data, statistics, and trends.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 3: [TOOL] web_search -->
+                <div class="trace-step" data-step="3" data-phase="researcher">
+                    <div class="step-card">
+                        <div class="step-header">
+                            <span class="step-badge researcher"><i data-lucide="search" style="width:12px;height:12px;"></i> Researcher</span>
+                            <span class="type-badge tool">Tool</span>
+                            <span class="step-number">Step 3 of 21</span>
+                        </div>
+                        <div class="step-content">
+                            <div class="tool-call-box" id="toolCall1">
+                                <span class="tool-icon"><i data-lucide="terminal" style="width:14px;height:14px;"></i></span>
+                                web_search("enterprise AI agent adoption 2024 2025 statistics")
+                                <div class="loading-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 4: [RESULT] Search results -->
+                <div class="trace-step" data-step="4" data-phase="researcher">
+                    <div class="step-card">
+                        <div class="step-header">
+                            <span class="step-badge researcher"><i data-lucide="search" style="width:12px;height:12px;"></i> Researcher</span>
+                            <span class="type-badge result">Result</span>
+                            <span class="step-number">Step 4 of 21</span>
+                        </div>
+                        <div class="step-content">
+                            Search returned 5 results:
+                            <div class="result-list" id="searchResults">
+                                <div class="result-item" data-idx="0">
+                                    <span class="result-source">Gartner</span>
+                                    "By 2028, 33% of enterprise software will include agentic AI, up from less than 1% in 2024."
+                                </div>
+                                <div class="result-item" data-idx="1">
+                                    <span class="result-source">McKinsey</span>
+                                    "Companies deploying AI agents report 20-35% efficiency gains in knowledge work tasks."
+                                </div>
+                                <div class="result-item" data-idx="2">
+                                    <span class="result-source">Deloitte</span>
+                                    "67% of enterprises are piloting or planning multi-agent systems for complex workflows."
+                                </div>
+                                <div class="result-item" data-idx="3">
+                                    <span class="result-source">Forrester</span>
+                                    "The AI agent market is projected to reach $47B by 2030, driven by enterprise adoption."
+                                </div>
+                                <div class="result-item" data-idx="4">
+                                    <span class="result-source">HBR</span>
+                                    "Skills gap is the #1 barrier to AI agent adoption &mdash; 58% of firms cite lack of internal expertise."
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 5: [TOOL] extract_facts -->
+                <div class="trace-step" data-step="5" data-phase="researcher">
+                    <div class="step-card">
+                        <div class="step-header">
+                            <span class="step-badge researcher"><i data-lucide="search" style="width:12px;height:12px;"></i> Researcher</span>
+                            <span class="type-badge tool">Tool</span>
+                            <span class="step-number">Step 5 of 21</span>
+                        </div>
+                        <div class="step-content">
+                            <div class="tool-call-box" id="toolCall2">
+                                <span class="tool-icon"><i data-lucide="terminal" style="width:14px;height:14px;"></i></span>
+                                extract_facts(results)
+                                <div class="loading-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 6: [OUTPUT] Structured findings -->
+                <div class="trace-step" data-step="6" data-phase="researcher">
+                    <div class="step-card">
+                        <div class="step-header">
+                            <span class="step-badge researcher"><i data-lucide="search" style="width:12px;height:12px;"></i> Researcher</span>
+                            <span class="type-badge output">Output</span>
+                            <span class="step-number">Step 6 of 21</span>
+                        </div>
+                        <div class="step-content">
+                            <div class="structured-output output-cyan" id="researcherOutput">
+                                <div class="output-section">
+                                    <div class="output-section-label">Key Facts</div>
+                                    <ul>
+                                        <li>33% of enterprise software will include agentic AI by 2028</li>
+                                        <li>67% of enterprises piloting multi-agent systems</li>
+                                        <li>AI agent market projected at $47B by 2030</li>
+                                        <li>20-35% efficiency gains in knowledge work</li>
+                                        <li>58% of firms cite skills gap as top barrier</li>
+                                    </ul>
+                                </div>
+                                <div class="output-section">
+                                    <div class="output-section-label">Statistics</div>
+                                    <ul>
+                                        <li>Less than 1% agentic AI penetration in 2024</li>
+                                        <li>$47B projected market size by 2030</li>
+                                        <li>20-35% productivity improvement range</li>
+                                    </ul>
+                                </div>
+                                <div class="output-section">
+                                    <div class="output-section-label">Trends</div>
+                                    <ul>
+                                        <li>Rapid enterprise adoption curve (2024-2028)</li>
+                                        <li>Multi-agent systems gaining traction over single-agent</li>
+                                        <li>Skills gap creating bottleneck in scaling</li>
+                                    </ul>
+                                </div>
+                                <span class="confidence-tag confidence-high">
+                                    <i data-lucide="shield-check" style="width:12px;height:12px;"></i>
+                                    Confidence: HIGH
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 7: [HANDOFF] Researcher -> Analyst -->
+                <div class="trace-step" data-step="7" data-phase="researcher">
+                    <div class="step-card" style="border-left-color: var(--cyan);">
+                        <div class="step-header">
+                            <span class="step-badge researcher"><i data-lucide="search" style="width:12px;height:12px;"></i> Researcher</span>
+                            <span class="type-badge handoff">Handoff</span>
+                            <span class="step-number">Step 7 of 21</span>
+                        </div>
+                        <div class="step-content">
+                            <div class="handoff-card researcher-to-analyst">
+                                <div class="handoff-header">
+                                    <span class="handoff-from" style="color:var(--cyan);">Researcher</span>
+                                    <span class="handoff-arrow">
+                                        <i data-lucide="arrow-right" style="width:20px;height:20px;color:var(--text-dim);"></i>
+                                    </span>
+                                    <span class="handoff-to" style="color:var(--magenta);">Analyst</span>
+                                </div>
+                                <div class="handoff-payload">{
+  "key_facts": [
+    "33% enterprise software agentic by 2028 (Gartner)",
+    "20-35% efficiency gains in knowledge work (McKinsey)",
+    "67% of enterprises piloting multi-agent systems (Deloitte)",
+    "$47B projected market by 2030 (Forrester)",
+    "58% cite skills gap as top barrier (HBR)"
+  ],
+  "statistics": { "adoption_2024": "&lt;1%", "adoption_2028": "33%", "market_size_2030": "$47B" },
+  "trends": ["rapid_enterprise_adoption", "multi_agent_over_single", "skills_gap_bottleneck"],
+  "confidence": "HIGH",
+  "sources_count": 5
+}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ============================================================ -->
+                <!-- ANALYST PHASE (Magenta, Steps 8-14) -->
+                <!-- ============================================================ -->
+
+                <!-- STEP 8: [RECEIVE] Analyst receives -->
+                <div class="trace-step" data-step="8" data-phase="analyst">
+                    <div class="step-card">
+                        <div class="step-header">
+                            <span class="step-badge analyst"><i data-lucide="bar-chart-3" style="width:12px;height:12px;"></i> Analyst</span>
+                            <span class="type-badge receive">Receive</span>
+                            <span class="step-number">Step 8 of 21</span>
+                        </div>
+                        <div class="step-content">
+                            <div style="display:flex;align-items:center;gap:0.5rem;color:var(--magenta);font-weight:600;">
+                                <i data-lucide="download" style="width:16px;height:16px;"></i>
+                                Receiving research findings from Researcher agent...
+                            </div>
+                            <div style="margin-top:0.5rem;font-size:0.85rem;color:var(--text-dim);">
+                                Ingesting 5 key facts, 3 statistics, 3 trends (confidence: HIGH)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 9: [THOUGHT] Analyst thinking -->
+                <div class="trace-step" data-step="9" data-phase="analyst">
+                    <div class="step-card">
+                        <div class="step-header">
+                            <span class="step-badge analyst"><i data-lucide="bar-chart-3" style="width:12px;height:12px;"></i> Analyst</span>
+                            <span class="type-badge thought">Thought</span>
+                            <span class="step-number">Step 9 of 21</span>
+                        </div>
+                        <div class="step-content">
+                            <div class="thought-bubble analyst-thought">
+                                <span class="tb-icon"><i data-lucide="brain" style="width:16px;height:16px;"></i></span>
+                                <span>I have 5 key facts, 3 statistics, and 3 trends. Let me identify patterns across these data points and generate actionable recommendations.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 10: [TOOL] identify_patterns -->
+                <div class="trace-step" data-step="10" data-phase="analyst">
+                    <div class="step-card">
+                        <div class="step-header">
+                            <span class="step-badge analyst"><i data-lucide="bar-chart-3" style="width:12px;height:12px;"></i> Analyst</span>
+                            <span class="type-badge tool">Tool</span>
+                            <span class="step-number">Step 10 of 21</span>
+                        </div>
+                        <div class="step-content">
+                            <div class="tool-call-box" id="toolCall3">
+                                <span class="tool-icon"><i data-lucide="terminal" style="width:14px;height:14px;"></i></span>
+                                identify_patterns(facts, statistics, trends)
+                                <div class="loading-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 11: [RESULT] Patterns identified -->
+                <div class="trace-step" data-step="11" data-phase="analyst">
+                    <div class="step-card">
+                        <div class="step-header">
+                            <span class="step-badge analyst"><i data-lucide="bar-chart-3" style="width:12px;height:12px;"></i> Analyst</span>
+                            <span class="type-badge result">Result</span>
+                            <span class="step-number">Step 11 of 21</span>
+                        </div>
+                        <div class="step-content">
+                            3 patterns identified:
+                            <div class="result-list" id="patternResults">
+                                <div class="result-item" data-idx="0">
+                                    <span style="color:var(--magenta);font-weight:700;flex-shrink:0;">Pattern 1</span>
+                                    <strong>Rapid adoption curve</strong> &mdash; From &lt;1% to 33% in 4 years signals exponential enterprise adoption.
+                                </div>
+                                <div class="result-item" data-idx="1">
+                                    <span style="color:var(--magenta);font-weight:700;flex-shrink:0;">Pattern 2</span>
+                                    <strong>Skills gap bottleneck</strong> &mdash; 58% barrier rate will constrain market growth despite demand.
+                                </div>
+                                <div class="result-item" data-idx="2">
+                                    <span style="color:var(--magenta);font-weight:700;flex-shrink:0;">Pattern 3</span>
+                                    <strong>ROI validation phase</strong> &mdash; 20-35% efficiency gains are driving budget approval for broader rollout.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 12: [TOOL] generate_recommendations -->
+                <div class="trace-step" data-step="12" data-phase="analyst">
+                    <div class="step-card">
+                        <div class="step-header">
+                            <span class="step-badge analyst"><i data-lucide="bar-chart-3" style="width:12px;height:12px;"></i> Analyst</span>
+                            <span class="type-badge tool">Tool</span>
+                            <span class="step-number">Step 12 of 21</span>
+                        </div>
+                        <div class="step-content">
+                            <div class="tool-call-box" id="toolCall4">
+                                <span class="tool-icon"><i data-lucide="terminal" style="width:14px;height:14px;"></i></span>
+                                generate_recommendations(patterns)
+                                <div class="loading-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 13: [OUTPUT] Analysis report -->
+                <div class="trace-step" data-step="13" data-phase="analyst">
+                    <div class="step-card">
+                        <div class="step-header">
+                            <span class="step-badge analyst"><i data-lucide="bar-chart-3" style="width:12px;height:12px;"></i> Analyst</span>
+                            <span class="type-badge output">Output</span>
+                            <span class="step-number">Step 13 of 21</span>
+                        </div>
+                        <div class="step-content">
+                            <div class="structured-output output-magenta" id="analystOutput">
+                                <div class="output-section">
+                                    <div class="output-section-label">Patterns (3)</div>
+                                    <ul>
+                                        <li>Rapid adoption curve (2024-2028)</li>
+                                        <li>Skills gap bottleneck constraining growth</li>
+                                        <li>ROI validation driving budget approval</li>
+                                    </ul>
+                                </div>
+                                <div class="output-section">
+                                    <div class="output-section-label">Insights (2)</div>
+                                    <ul>
+                                        <li>First-movers in agent adoption will compound advantages as skills gap widens</li>
+                                        <li>Multi-agent systems are replacing single-agent as the enterprise standard</li>
+                                    </ul>
+                                </div>
+                                <div class="output-section">
+                                    <div class="output-section-label">Recommendations (3)</div>
+                                    <ul>
+                                        <li>Invest in agent literacy programs to close the skills gap</li>
+                                        <li>Start with pipeline architectures before scaling to orchestrators</li>
+                                        <li>Establish ROI metrics before enterprise-wide deployment</li>
+                                    </ul>
+                                </div>
+                                <span class="confidence-tag confidence-high">
+                                    <i data-lucide="shield-check" style="width:12px;height:12px;"></i>
+                                    Confidence: HIGH
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 14: [HANDOFF] Analyst -> Editor -->
+                <div class="trace-step" data-step="14" data-phase="analyst">
+                    <div class="step-card" style="border-left-color: var(--magenta);">
+                        <div class="step-header">
+                            <span class="step-badge analyst"><i data-lucide="bar-chart-3" style="width:12px;height:12px;"></i> Analyst</span>
+                            <span class="type-badge handoff">Handoff</span>
+                            <span class="step-number">Step 14 of 21</span>
+                        </div>
+                        <div class="step-content">
+                            <div class="handoff-card analyst-to-editor">
+                                <div class="handoff-header">
+                                    <span class="handoff-from" style="color:var(--magenta);">Analyst</span>
+                                    <span class="handoff-arrow">
+                                        <i data-lucide="arrow-right" style="width:20px;height:20px;color:var(--text-dim);"></i>
+                                    </span>
+                                    <span class="handoff-to" style="color:var(--green);">Editor</span>
+                                </div>
+                                <div class="handoff-payload">{
+  "research_output": {
+    "facts": 5, "stats": 3, "trends": 3, "sources": 5
+  },
+  "analysis_output": {
+    "patterns": ["rapid_adoption_curve", "skills_gap_bottleneck", "roi_validation"],
+    "insights": ["first_mover_advantage", "multi_agent_standard"],
+    "recommendations": ["invest_agent_literacy", "start_with_pipelines", "establish_roi_metrics"]
+  },
+  "total_data_points": 19,
+  "confidence": "HIGH"
+}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ============================================================ -->
+                <!-- EDITOR PHASE (Green, Steps 15-21) -->
+                <!-- ============================================================ -->
+
+                <!-- STEP 15: [RECEIVE] Editor receives -->
+                <div class="trace-step" data-step="15" data-phase="editor">
+                    <div class="step-card">
+                        <div class="step-header">
+                            <span class="step-badge editor"><i data-lucide="pen-tool" style="width:12px;height:12px;"></i> Editor</span>
+                            <span class="type-badge receive">Receive</span>
+                            <span class="step-number">Step 15 of 21</span>
+                        </div>
+                        <div class="step-content">
+                            <div style="display:flex;align-items:center;gap:0.5rem;color:var(--green);font-weight:600;">
+                                <i data-lucide="download" style="width:16px;height:16px;"></i>
+                                Receiving research + analysis from upstream agents...
+                            </div>
+                            <div style="margin-top:0.5rem;font-size:0.85rem;color:var(--text-dim);">
+                                Ingesting research (5 facts, 3 stats, 3 trends) + analysis (3 patterns, 2 insights, 3 recommendations)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 16: [THOUGHT] Editor thinking -->
+                <div class="trace-step" data-step="16" data-phase="editor">
+                    <div class="step-card">
+                        <div class="step-header">
+                            <span class="step-badge editor"><i data-lucide="pen-tool" style="width:12px;height:12px;"></i> Editor</span>
+                            <span class="type-badge thought">Thought</span>
+                            <span class="step-number">Step 16 of 21</span>
+                        </div>
+                        <div class="step-content">
+                            <div class="thought-bubble editor-thought">
+                                <span class="tb-icon"><i data-lucide="brain" style="width:16px;height:16px;"></i></span>
+                                <span>I need to fact-check every claim against the original research and score overall quality. Let me cross-reference the analysis output with the raw findings.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 17: [TOOL] fact_check -->
+                <div class="trace-step" data-step="17" data-phase="editor">
+                    <div class="step-card">
+                        <div class="step-header">
+                            <span class="step-badge editor"><i data-lucide="pen-tool" style="width:12px;height:12px;"></i> Editor</span>
+                            <span class="type-badge tool">Tool</span>
+                            <span class="step-number">Step 17 of 21</span>
+                        </div>
+                        <div class="step-content">
+                            <div class="tool-call-box" id="toolCall5">
+                                <span class="tool-icon"><i data-lucide="terminal" style="width:14px;height:14px;"></i></span>
+                                fact_check(research_output, analysis_output)
+                                <div class="loading-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 18: [RESULT] Fact check results -->
+                <div class="trace-step" data-step="18" data-phase="editor">
+                    <div class="step-card">
+                        <div class="step-header">
+                            <span class="step-badge editor"><i data-lucide="pen-tool" style="width:12px;height:12px;"></i> Editor</span>
+                            <span class="type-badge result">Result</span>
+                            <span class="step-number">Step 18 of 21</span>
+                        </div>
+                        <div class="step-content">
+                            Fact verification results:
+                            <div class="fact-check-list" id="factCheckList">
+                                <div class="fact-check-item verified" data-idx="0">
+                                    <i data-lucide="check-circle" style="width:14px;height:14px;"></i>
+                                    33% enterprise software by 2028 &mdash; verified (Gartner)
+                                </div>
+                                <div class="fact-check-item verified" data-idx="1">
+                                    <i data-lucide="check-circle" style="width:14px;height:14px;"></i>
+                                    67% piloting multi-agent systems &mdash; verified (Deloitte)
+                                </div>
+                                <div class="fact-check-item verified" data-idx="2">
+                                    <i data-lucide="check-circle" style="width:14px;height:14px;"></i>
+                                    $47B market projection by 2030 &mdash; verified (Forrester)
+                                </div>
+                                <div class="fact-check-item verified" data-idx="3">
+                                    <i data-lucide="check-circle" style="width:14px;height:14px;"></i>
+                                    58% skills gap barrier &mdash; verified (HBR)
+                                </div>
+                                <div class="fact-check-item verified" data-idx="4">
+                                    <i data-lucide="check-circle" style="width:14px;height:14px;"></i>
+                                    20-35% efficiency gains &mdash; verified (McKinsey)
+                                </div>
+                                <div class="fact-check-item flagged" data-idx="5">
+                                    <i data-lucide="alert-triangle" style="width:14px;height:14px;"></i>
+                                    "Rapid adoption curve" framing may be overstated &mdash; adoption rate could plateau if skills gap persists
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 19: [TOOL] improve_clarity -->
+                <div class="trace-step" data-step="19" data-phase="editor">
+                    <div class="step-card">
+                        <div class="step-header">
+                            <span class="step-badge editor"><i data-lucide="pen-tool" style="width:12px;height:12px;"></i> Editor</span>
+                            <span class="type-badge tool">Tool</span>
+                            <span class="step-number">Step 19 of 21</span>
+                        </div>
+                        <div class="step-content">
+                            <div class="tool-call-box" id="toolCall6">
+                                <span class="tool-icon"><i data-lucide="terminal" style="width:14px;height:14px;"></i></span>
+                                improve_clarity(analysis_report)
+                                <div class="loading-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 20: [TOOL] score_quality -->
+                <div class="trace-step" data-step="20" data-phase="editor">
+                    <div class="step-card">
+                        <div class="step-header">
+                            <span class="step-badge editor"><i data-lucide="pen-tool" style="width:12px;height:12px;"></i> Editor</span>
+                            <span class="type-badge tool">Tool</span>
+                            <span class="step-number">Step 20 of 21</span>
+                        </div>
+                        <div class="step-content">
+                            <div class="tool-call-box" id="toolCall7">
+                                <span class="tool-icon"><i data-lucide="terminal" style="width:14px;height:14px;"></i></span>
+                                score_quality(final_output) &rarr; <strong style="color:var(--green);">8.5/10</strong>
+                                <div class="loading-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 21: [FINAL] Pipeline Complete -->
+                <div class="trace-step" data-step="21" data-phase="editor">
+                    <div class="step-card" style="border-left-color: var(--green);">
+                        <div class="step-header">
+                            <span class="step-badge editor"><i data-lucide="pen-tool" style="width:12px;height:12px;"></i> Editor</span>
+                            <span class="type-badge final">Final</span>
+                            <span class="step-number">Step 21 of 21</span>
+                        </div>
+                        <div class="step-content">
+                            <div class="final-card" id="finalCard">
+                                <h3>
+                                    <i data-lucide="check-circle" style="width:20px;height:20px;"></i>
+                                    Pipeline Complete
+                                </h3>
+                                <div class="final-summary" id="finalSummary">
+                                    <strong>Executive Summary &mdash; AI Agent Adoption: Strategic Outlook</strong>
+                                    <br><br>
+                                    The enterprise AI agent market is at an inflection point. Agentic AI is embedded in less than 1% of enterprise software today, but Gartner projects that figure will reach <strong style="color:var(--cyan);">33% by 2028</strong> &mdash; a 33x expansion in four years. Early adopters are already seeing results: McKinsey data shows <strong style="color:var(--cyan);">20&ndash;35% efficiency gains</strong> in knowledge work, and Deloitte reports that 67% of enterprises are piloting multi-agent architectures.
+                                    <br><br>
+                                    The opportunity is clear, but so is the constraint. HBR research identifies the skills gap as the single largest barrier, with <strong style="color:var(--yellow);">58% of firms</strong> citing lack of internal expertise. Organizations that invest in agent literacy now will compound first-mover advantages as this bottleneck widens. The $47B market projection (Forrester) will reward companies that move early and move deliberately.
+                                    <br><br>
+                                    <strong>Recommended Actions:</strong> (1) Launch agent literacy programs before competitors do. (2) Start with pipeline architectures to build institutional knowledge, then scale to orchestrators. (3) Define ROI metrics up front &mdash; the 20&ndash;35% efficiency baseline gives you a credible benchmark.
+                                    <br><br>
+                                    <em style="color:var(--yellow);">Editor note: The "rapid adoption curve" framing has been qualified. If the skills gap persists, the 33% target may plateau at 20&ndash;25%. Recommendation language adjusted accordingly.</em>
+                                </div>
+                                <div class="final-meta" id="finalMeta">
+                                    <span class="final-meta-tag score">Quality: 8.5/10</span>
+                                    <span class="final-meta-tag verified">5/5 Facts Verified</span>
+                                    <span class="final-meta-tag agents">3 Agents &middot; 6 Tool Calls</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="footer">
+            <p><strong>ISOM 260: AI Agents in Business</strong> &middot; Suffolk University &middot; Session 8</p>
+            <p style="margin-top: 0.5rem;"><a href="https://isom-260.vercel.app">isom-260.vercel.app</a></p>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // ====== Inject trace dots into every trace-step ======
+        document.querySelectorAll('.trace-step').forEach(el => {
+            const phase = el.getAttribute('data-phase');
+            const dot = document.createElement('span');
+            dot.className = 'trace-dot ' + phase;
+            el.insertBefore(dot, el.firstChild);
+        });
+
+        // ====== STATE ======
+        let currentStep = 0;
+        let isPlaying = false;
+        let speed = 1;
+        let playTimer = null;
+        let animTimers = [];
+        let durationTimer = null;
+        let durationValue = 0;
+
+        const TOTAL_STEPS = 21;
+
+        // ====== Callback-based auto-play ======
+        let onStepAnimationComplete = null;
+        let failsafeTimer = null;
+
+        function signalStepComplete() {
+            if (onStepAnimationComplete) {
+                const cb = onStepAnimationComplete;
+                onStepAnimationComplete = null;
+                if (failsafeTimer) { clearTimeout(failsafeTimer); failsafeTimer = null; }
+                const t = setTimeout(cb, 300 / speed);
+                animTimers.push(t);
+            }
+        }
+
+        // ====== PHASE MAP ======
+        const phaseMap = {
+            1: 'researcher', 2: 'researcher', 3: 'researcher', 4: 'researcher',
+            5: 'researcher', 6: 'researcher', 7: 'researcher',
+            8: 'analyst', 9: 'analyst', 10: 'analyst', 11: 'analyst',
+            12: 'analyst', 13: 'analyst', 14: 'analyst',
+            15: 'editor', 16: 'editor', 17: 'editor', 18: 'editor',
+            19: 'editor', 20: 'editor', 21: 'editor'
+        };
+
+        // ====== DURATION/STATS TRACKING ======
+        const statMap = {
+            1:  { duration: 0.0,  agents: '0/3', facts: 0,  quality: '&mdash;' },
+            2:  { duration: 0.8,  agents: '1/3', facts: 0,  quality: '&mdash;' },
+            3:  { duration: 1.5,  agents: '1/3', facts: 0,  quality: '&mdash;' },
+            4:  { duration: 2.8,  agents: '1/3', facts: 5,  quality: '&mdash;' },
+            5:  { duration: 3.4,  agents: '1/3', facts: 5,  quality: '&mdash;' },
+            6:  { duration: 4.2,  agents: '1/3', facts: 11, quality: '&mdash;' },
+            7:  { duration: 4.8,  agents: '1/3', facts: 11, quality: '&mdash;' },
+            8:  { duration: 5.2,  agents: '2/3', facts: 11, quality: '&mdash;' },
+            9:  { duration: 5.8,  agents: '2/3', facts: 11, quality: '&mdash;' },
+            10: { duration: 6.5,  agents: '2/3', facts: 11, quality: '&mdash;' },
+            11: { duration: 7.4,  agents: '2/3', facts: 14, quality: '&mdash;' },
+            12: { duration: 8.0,  agents: '2/3', facts: 14, quality: '&mdash;' },
+            13: { duration: 8.8,  agents: '2/3', facts: 19, quality: '&mdash;' },
+            14: { duration: 9.2,  agents: '2/3', facts: 19, quality: '&mdash;' },
+            15: { duration: 9.6,  agents: '3/3', facts: 19, quality: '&mdash;' },
+            16: { duration: 10.1, agents: '3/3', facts: 19, quality: '&mdash;' },
+            17: { duration: 10.6, agents: '3/3', facts: 19, quality: '&mdash;' },
+            18: { duration: 11.2, agents: '3/3', facts: 19, quality: '&mdash;' },
+            19: { duration: 11.6, agents: '3/3', facts: 19, quality: '&mdash;' },
+            20: { duration: 12.0, agents: '3/3', facts: 19, quality: '8.5/10' },
+            21: { duration: 12.4, agents: '3/3', facts: 19, quality: '8.5/10' }
+        };
+
+        const QUERY_TEXT = "AI agent adoption in enterprise businesses";
+
+        // ====== HELPER: schedule a timer ======
+        function schedule(fn, delay) {
+            const t = setTimeout(fn, delay / speed);
+            animTimers.push(t);
+            return t;
+        }
+
+        // ====== TYPEWRITER ======
+        function typewrite(element, html, callback, charDelay) {
+            charDelay = charDelay || 30;
+            const text = html;
+            let i = 0;
+            element.innerHTML = '<span class="answer-cursor" style="border-right:2px solid var(--cyan);animation:typing-cursor 0.8s step-end infinite;padding-right:1px;"></span>';
+
+            function typeNext() {
+                if (i < text.length) {
+                    if (text[i] === '<') {
+                        const closeIdx = text.indexOf('>', i);
+                        if (closeIdx !== -1) {
+                            i = closeIdx + 1;
+                            element.innerHTML = text.substring(0, i) + '<span class="answer-cursor" style="border-right:2px solid var(--cyan);animation:typing-cursor 0.8s step-end infinite;padding-right:1px;"></span>';
+                            const t = setTimeout(typeNext, 0);
+                            animTimers.push(t);
+                            return;
+                        }
+                    }
+                    i++;
+                    element.innerHTML = text.substring(0, i) + '<span class="answer-cursor" style="border-right:2px solid var(--cyan);animation:typing-cursor 0.8s step-end infinite;padding-right:1px;"></span>';
+                    const t = setTimeout(typeNext, charDelay / speed);
+                    animTimers.push(t);
+                } else {
+                    element.innerHTML = text;
+                    const cursor = element.querySelector('.answer-cursor');
+                    if (cursor) cursor.remove();
+                    if (callback) {
+                        requestAnimationFrame(() => { callback(); });
+                    }
+                }
+            }
+            typeNext();
+        }
+
+        // ====== UPDATE PHASE BAR ======
+        function updatePhaseBar(step) {
+            const phase = phaseMap[step];
+            const phases = ['researcher', 'analyst', 'editor'];
+            const phaseIdx = phases.indexOf(phase);
+
+            document.querySelectorAll('.phase-bar-segment').forEach((seg, i) => {
+                if (i <= phaseIdx) {
+                    seg.classList.add('active');
+                } else {
+                    seg.classList.remove('active');
+                }
+            });
+
+            // Update labels
+            document.querySelectorAll('.phase-bar-label').forEach((lbl, i) => {
+                if (i <= phaseIdx) {
+                    lbl.classList.add('active');
+                } else {
+                    lbl.classList.remove('active');
+                }
+            });
+        }
+
+        // ====== UPDATE STATS ======
+        function updateStats(step) {
+            const s = statMap[step];
+            if (!s) return;
+            document.getElementById('stat-duration').textContent = s.duration.toFixed(1) + 's';
+            document.getElementById('stat-agents').textContent = s.agents;
+            document.getElementById('stat-facts').textContent = s.facts;
+            document.getElementById('stat-quality').innerHTML = s.quality;
+        }
+
+        // ====== SHOW A STEP (animated) ======
+        function showStep(step) {
+            if (step < 1 || step > TOTAL_STEPS) return;
+
+            const el = document.querySelector(`.trace-step[data-step="${step}"]`);
+            if (!el) return;
+
+            el.style.display = 'block';
+            el.offsetHeight; // Force reflow
+            el.classList.add('visible');
+
+            // Phase transition glow (step card + trace-area background)
+            if (step === 1 || phaseMap[step] !== phaseMap[step - 1]) {
+                const phase = phaseMap[step];
+                el.classList.add('phase-entering', phase);
+                schedule(() => {
+                    el.classList.remove('phase-entering');
+                }, 800);
+
+                // Trace-area phase glow
+                const traceArea = document.getElementById('traceArea');
+                traceArea.classList.remove('phase-glow-researcher', 'phase-glow-analyst', 'phase-glow-editor');
+                void traceArea.offsetWidth; // force reflow to restart animation
+                traceArea.classList.add('phase-glow-' + phase);
+                schedule(() => {
+                    traceArea.classList.remove('phase-glow-' + phase);
+                }, 1200);
+            }
+
+            // Update indicator
+            document.getElementById('stepIndicator').textContent = `Step ${step} of ${TOTAL_STEPS}`;
+
+            // Update phase bar
+            updatePhaseBar(step);
+
+            // Update stats
+            updateStats(step);
+
+            // Run step-specific animations
+            runStepAnimation(step);
+
+            // Scroll step into view
+            setTimeout(() => {
+                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
+        }
+
+        // ====== STEP-SPECIFIC ANIMATIONS ======
+        function runStepAnimation(step) {
+            switch (step) {
+                case 1: animateStep1(); break;
+                case 2: schedule(() => signalStepComplete(), 800); break;
+                case 3: animateToolCall('toolCall1'); break;
+                case 4: animateResultList('searchResults'); break;
+                case 5: animateToolCall('toolCall2'); break;
+                case 6: schedule(() => signalStepComplete(), 800); break;
+                case 7: schedule(() => signalStepComplete(), 1200); break;
+                case 8: schedule(() => signalStepComplete(), 800); break;
+                case 9: schedule(() => signalStepComplete(), 800); break;
+                case 10: animateToolCall('toolCall3'); break;
+                case 11: animateResultList('patternResults'); break;
+                case 12: animateToolCall('toolCall4'); break;
+                case 13: schedule(() => signalStepComplete(), 800); break;
+                case 14: schedule(() => signalStepComplete(), 1200); break;
+                case 15: schedule(() => signalStepComplete(), 800); break;
+                case 16: schedule(() => signalStepComplete(), 800); break;
+                case 17: animateToolCall('toolCall5'); break;
+                case 18: animateFactCheck(); break;
+                case 19: animateToolCall('toolCall6'); break;
+                case 20: animateToolCall('toolCall7'); break;
+                case 21: animateStep21(); break;
+            }
+        }
+
+        // -- Step 1: Typing query --
+        function animateStep1() {
+            const el = document.getElementById('queryTyping');
+            typewrite(el, QUERY_TEXT, () => {
+                el.classList.add('done');
+                signalStepComplete();
+            }, 35);
+        }
+
+        // -- Tool call animation --
+        function animateToolCall(id) {
+            const box = document.getElementById(id);
+            schedule(() => {
+                box.classList.add('loaded');
+                schedule(() => signalStepComplete(), 600);
+            }, 400);
+        }
+
+        // -- Result list stagger --
+        function animateResultList(id) {
+            const items = document.querySelectorAll(`#${id} .result-item`);
+            items.forEach((item, i) => {
+                schedule(() => item.classList.add('visible'), 250 * (i + 1));
+            });
+            schedule(() => signalStepComplete(), 250 * (items.length + 1));
+        }
+
+        // -- Fact check stagger --
+        function animateFactCheck() {
+            const items = document.querySelectorAll('#factCheckList .fact-check-item');
+            items.forEach((item, i) => {
+                schedule(() => item.classList.add('visible'), 300 * (i + 1));
+            });
+            schedule(() => signalStepComplete(), 300 * (items.length + 1));
+        }
+
+        // -- Step 21: Final card glow + stat flash celebration --
+        function animateStep21() {
+            schedule(() => {
+                document.getElementById('finalCard').classList.add('glow');
+
+                // Flash all stat cards on completion
+                document.querySelectorAll('.stat-card').forEach((card, i) => {
+                    setTimeout(() => card.classList.add('flash'), i * 100);
+                    setTimeout(() => card.classList.remove('flash'), i * 100 + 600);
+                });
+
+                signalStepComplete();
+            }, 600);
+        }
+
+        // ====== HIDE A STEP ======
+        function hideStep(step) {
+            const el = document.querySelector(`.trace-step[data-step="${step}"]`);
+            if (!el) return;
+            el.classList.remove('visible');
+            setTimeout(() => {
+                if (!el.classList.contains('visible')) {
+                    el.style.display = 'none';
+                }
+            }, 600);
+        }
+
+        // ====== Callback-based auto-advance ======
+        function scheduleNext() {
+            if (!isPlaying) return;
+            if (currentStep >= TOTAL_STEPS) {
+                finishTrace();
+                return;
+            }
+
+            onStepAnimationComplete = function() {
+                if (!isPlaying) return;
+                if (currentStep >= TOTAL_STEPS) {
+                    finishTrace();
+                    return;
+                }
+                currentStep++;
+                showStep(currentStep);
+                scheduleNext();
+            };
+
+            // 8-second failsafe
+            if (failsafeTimer) clearTimeout(failsafeTimer);
+            failsafeTimer = setTimeout(() => {
+                failsafeTimer = null;
+                signalStepComplete();
+            }, 8000 / speed);
+        }
+
+        function finishTrace() {
+            isPlaying = false;
+            onStepAnimationComplete = null;
+            if (failsafeTimer) { clearTimeout(failsafeTimer); failsafeTimer = null; }
+            updatePlayButton();
+            document.getElementById('stepIndicator').textContent = 'Complete!';
+        }
+
+        // ====== CONTROLS ======
+        function togglePlay() {
+            if (isPlaying) {
+                // Pause
+                isPlaying = false;
+                if (playTimer) clearTimeout(playTimer);
+                playTimer = null;
+                onStepAnimationComplete = null;
+                if (failsafeTimer) { clearTimeout(failsafeTimer); failsafeTimer = null; }
+                updatePlayButton();
+            } else {
+                // Play
+                isPlaying = true;
+                updatePlayButton();
+
+                if (currentStep >= TOTAL_STEPS) {
+                    resetTrace();
+                    setTimeout(() => {
+                        isPlaying = true;
+                        updatePlayButton();
+                        currentStep = 1;
+                        showStep(currentStep);
+                        scheduleNext();
+                    }, 300);
+                } else if (currentStep === 0) {
+                    currentStep = 1;
+                    showStep(currentStep);
+                    scheduleNext();
+                } else {
+                    scheduleNext();
+                }
+            }
+        }
+
+        function updatePlayButton() {
+            const btn = document.getElementById('playBtn');
+            const label = document.getElementById('playLabel');
+            const iconEl = document.getElementById('playIcon');
+
+            if (isPlaying) {
+                label.textContent = 'Pause';
+                btn.classList.add('paused');
+                iconEl.setAttribute('data-lucide', 'pause');
+            } else {
+                label.textContent = currentStep >= TOTAL_STEPS ? 'Replay' : 'Play';
+                btn.classList.remove('paused');
+                iconEl.setAttribute('data-lucide', currentStep >= TOTAL_STEPS ? 'rotate-ccw' : 'play');
+            }
+            lucide.createIcons();
+        }
+
+        function setSpeed(s) {
+            speed = s;
+            document.querySelectorAll('.speed-btn').forEach(btn => {
+                const btnSpeed = parseInt(btn.getAttribute('data-speed'));
+                btn.classList.toggle('active', btnSpeed === s);
+            });
+        }
+
+        // Initialize speed button
+        setSpeed(1);
+
+        function stepForward() {
+            if (currentStep >= TOTAL_STEPS) return;
+
+            if (isPlaying) {
+                isPlaying = false;
+                if (playTimer) clearTimeout(playTimer);
+                playTimer = null;
+                onStepAnimationComplete = null;
+                if (failsafeTimer) { clearTimeout(failsafeTimer); failsafeTimer = null; }
+                updatePlayButton();
+            }
+
+            currentStep++;
+            showStep(currentStep);
+        }
+
+        // ====== INSTANT STEP RENDERING ======
+        function showStepInstant(step) {
+            const el = document.querySelector(`.trace-step[data-step="${step}"]`);
+            if (!el) return;
+
+            el.style.display = 'block';
+            el.classList.add('visible');
+
+            updatePhaseBar(step);
+            updateStats(step);
+
+            switch (step) {
+                case 1: {
+                    const queryEl = document.getElementById('queryTyping');
+                    queryEl.textContent = QUERY_TEXT;
+                    queryEl.classList.add('done');
+                    break;
+                }
+                case 3:
+                    document.getElementById('toolCall1').classList.add('loaded');
+                    break;
+                case 4:
+                    document.querySelectorAll('#searchResults .result-item').forEach(item => item.classList.add('visible'));
+                    break;
+                case 5:
+                    document.getElementById('toolCall2').classList.add('loaded');
+                    break;
+                case 10:
+                    document.getElementById('toolCall3').classList.add('loaded');
+                    break;
+                case 11:
+                    document.querySelectorAll('#patternResults .result-item').forEach(item => item.classList.add('visible'));
+                    break;
+                case 12:
+                    document.getElementById('toolCall4').classList.add('loaded');
+                    break;
+                case 17:
+                    document.getElementById('toolCall5').classList.add('loaded');
+                    break;
+                case 18:
+                    document.querySelectorAll('#factCheckList .fact-check-item').forEach(item => item.classList.add('visible'));
+                    break;
+                case 19:
+                    document.getElementById('toolCall6').classList.add('loaded');
+                    break;
+                case 20:
+                    document.getElementById('toolCall7').classList.add('loaded');
+                    break;
+                case 21:
+                    document.getElementById('finalCard').classList.add('glow');
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        // ====== STEP BACKWARD ======
+        function resetTraceVisuals() {
+            animTimers.forEach(t => clearTimeout(t));
+            animTimers = [];
+            onStepAnimationComplete = null;
+            if (failsafeTimer) { clearTimeout(failsafeTimer); failsafeTimer = null; }
+
+            // Hide all steps
+            document.querySelectorAll('.trace-step').forEach(el => {
+                el.classList.remove('visible', 'phase-entering');
+                el.style.display = 'none';
+            });
+
+            // Reset typing
+            const queryEl = document.getElementById('queryTyping');
+            queryEl.innerHTML = '';
+            queryEl.classList.remove('done');
+
+            // Reset tool calls
+            ['toolCall1','toolCall2','toolCall3','toolCall4','toolCall5','toolCall6','toolCall7'].forEach(id => {
+                document.getElementById(id).classList.remove('loaded');
+            });
+
+            // Reset result lists
+            document.querySelectorAll('#searchResults .result-item').forEach(item => item.classList.remove('visible'));
+            document.querySelectorAll('#patternResults .result-item').forEach(item => item.classList.remove('visible'));
+            document.querySelectorAll('#factCheckList .fact-check-item').forEach(item => item.classList.remove('visible'));
+
+            // Reset final card
+            document.getElementById('finalCard').classList.remove('glow');
+
+            // Reset phase glow on trace area
+            document.getElementById('traceArea').classList.remove('phase-glow-researcher', 'phase-glow-analyst', 'phase-glow-editor');
+
+            // Reset stat card flash
+            document.querySelectorAll('.stat-card').forEach(card => card.classList.remove('flash'));
+
+            // Reset stats
+            resetStats();
+            resetPhaseBar();
+        }
+
+        function stepBackward() {
+            if (currentStep <= 0) return;
+
+            if (isPlaying) {
+                isPlaying = false;
+                if (playTimer) clearTimeout(playTimer);
+                playTimer = null;
+                onStepAnimationComplete = null;
+                if (failsafeTimer) { clearTimeout(failsafeTimer); failsafeTimer = null; }
+                updatePlayButton();
+            }
+
+            const targetStep = currentStep - 1;
+
+            resetTraceVisuals();
+
+            if (targetStep > 0) {
+                for (let s = 1; s <= targetStep; s++) {
+                    showStepInstant(s);
+                }
+                document.getElementById('stepIndicator').textContent = `Step ${targetStep} of ${TOTAL_STEPS}`;
+                const targetEl = document.querySelector(`.trace-step[data-step="${targetStep}"]`);
+                if (targetEl) targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } else {
+                document.getElementById('stepIndicator').textContent = 'Step 0 of ' + TOTAL_STEPS;
+            }
+
+            currentStep = targetStep;
+            updatePlayButton();
+        }
+
+        function resetTrace() {
+            isPlaying = false;
+            if (playTimer) clearTimeout(playTimer);
+            playTimer = null;
+
+            currentStep = 0;
+
+            resetTraceVisuals();
+
+            document.getElementById('stepIndicator').textContent = 'Step 0 of ' + TOTAL_STEPS;
+
+            updatePlayButton();
+        }
+
+        function resetStats() {
+            document.getElementById('stat-duration').textContent = '0.0s';
+            document.getElementById('stat-agents').textContent = '0/3';
+            document.getElementById('stat-facts').textContent = '0';
+            document.getElementById('stat-quality').innerHTML = '&mdash;';
+        }
+
+        function resetPhaseBar() {
+            document.querySelectorAll('.phase-bar-segment').forEach(seg => {
+                seg.classList.remove('active');
+            });
+            document.querySelectorAll('.phase-bar-label').forEach(lbl => {
+                lbl.classList.remove('active');
+            });
+        }
+
+        // ====== KEYBOARD CONTROLS ======
+        document.addEventListener('keydown', (e) => {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+            switch (e.code) {
+                case 'Space':
+                    e.preventDefault();
+                    togglePlay();
+                    break;
+                case 'ArrowRight':
+                    e.preventDefault();
+                    stepForward();
+                    break;
+                case 'ArrowLeft':
+                    e.preventDefault();
+                    stepBackward();
+                    break;
+                case 'KeyR':
+                    e.preventDefault();
+                    resetTrace();
+                    break;
+                case 'Digit1':
+                case 'Numpad1':
+                    e.preventDefault();
+                    setSpeed(1);
+                    break;
+                case 'Digit2':
+                case 'Numpad2':
+                    e.preventDefault();
+                    setSpeed(2);
+                    break;
+                case 'Digit4':
+                case 'Numpad4':
+                    e.preventDefault();
+                    setSpeed(4);
+                    break;
+            }
+        });
+    </script>
+</body>
+</html>

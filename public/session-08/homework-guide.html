@@ -1,0 +1,1409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Agent Pipeline — Homework Guide | ISOM 260</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+    <style>
+        /* ====================================================================
+           DESIGN SYSTEM — matches nanoclaw guides exactly
+           ==================================================================== */
+        :root {
+            --bg: #0a0e1a;
+            --bg-card: #0d1220;
+            --bg-code: #080c16;
+            --bg-elevated: #141929;
+            --bg-line-highlight: rgba(0, 229, 255, 0.06);
+            --cyan: #00e5ff;
+            --cyan-dim: #00b8d4;
+            --cyan-ghost: rgba(0, 229, 255, 0.08);
+            --magenta: #ff006e;
+            --magenta-ghost: rgba(255, 0, 110, 0.08);
+            --yellow: #ffd600;
+            --yellow-ghost: rgba(255, 214, 0, 0.08);
+            --green: #00e676;
+            --green-ghost: rgba(0, 230, 118, 0.08);
+            --orange: #ff9100;
+            --orange-ghost: rgba(255, 145, 0, 0.08);
+            --purple: #b388ff;
+            --purple-ghost: rgba(179, 136, 255, 0.08);
+            --text: #e0e6f0;
+            --text-secondary: #8892a8;
+            --text-dim: #4a5468;
+            --border: rgba(0, 229, 255, 0.1);
+            --border-strong: rgba(0, 229, 255, 0.25);
+            --grid: rgba(0, 229, 255, 0.03);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                linear-gradient(var(--grid) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+        }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 1; }
+
+        /* ====== PROGRESS BAR ====== */
+        .progress-bar {
+            position: fixed; top: 0; left: 0; right: 0;
+            height: 3px; background: var(--bg); z-index: 100;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--green), var(--cyan));
+            width: 0%; transition: width 0.3s;
+        }
+
+        /* ====== HERO ====== */
+        .hero { padding: 5rem 0 2rem; }
+
+        .badge {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            padding: 0.4rem 1rem;
+            background: var(--cyan-ghost);
+            border: 1px solid rgba(0, 229, 255, 0.2);
+            border-radius: 100px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase;
+            color: var(--cyan); margin-bottom: 1.5rem;
+        }
+        .badge .dot { width: 6px; height: 6px; background: var(--cyan); border-radius: 50%; animation: pulse 2s ease-in-out infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+        .hero h1 {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(2.2rem, 5vw, 3.5rem);
+            font-weight: 800; line-height: 1.1; letter-spacing: -0.03em;
+            margin-bottom: 1rem;
+        }
+        .hero h1 .cyan { color: var(--cyan); }
+        .hero h1 .green { color: var(--green); }
+
+        .hero-sub {
+            font-size: 1.1rem; color: var(--text-secondary);
+            max-width: 700px; margin-bottom: 1.5rem;
+        }
+
+        .hero-note {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            padding: 0.6rem 1rem;
+            background: var(--green-ghost);
+            border: 1px solid rgba(0, 230, 118, 0.2);
+            border-radius: 8px;
+            font-size: 0.85rem; color: var(--green);
+            margin-bottom: 2rem;
+        }
+
+        /* ====== STEP INDICATOR (per-section) ====== */
+        .step-indicator {
+            display: flex; align-items: center; gap: 0.5rem;
+            margin-bottom: 1.5rem; flex-wrap: wrap;
+        }
+        .step-dot {
+            width: 32px; height: 32px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Sora', sans-serif;
+            font-weight: 700; font-size: 0.75rem;
+            border: 2px solid var(--border);
+            color: var(--text-dim); transition: all 0.3s; flex-shrink: 0;
+        }
+        .step-dot.active { border-color: var(--cyan); color: var(--cyan); background: rgba(0, 229, 255, 0.08); }
+        .step-dot.done { border-color: var(--green); color: var(--green); background: rgba(0, 230, 118, 0.08); }
+        .step-line { flex: 1; height: 2px; background: var(--border); min-width: 8px; }
+
+        /* ====== SECTIONS ====== */
+        .section { padding: 3.5rem 0; border-top: 1px solid var(--border); }
+
+        .section-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
+            margin-bottom: 0.75rem;
+            display: flex; align-items: center; gap: 0.75rem;
+        }
+        .section-label::before { content: ''; width: 24px; height: 1px; }
+        .section-label.cyan { color: var(--cyan); } .section-label.cyan::before { background: var(--cyan); }
+        .section-label.magenta { color: var(--magenta); } .section-label.magenta::before { background: var(--magenta); }
+        .section-label.green { color: var(--green); } .section-label.green::before { background: var(--green); }
+        .section-label.yellow { color: var(--yellow); } .section-label.yellow::before { background: var(--yellow); }
+        .section-label.orange { color: var(--orange); } .section-label.orange::before { background: var(--orange); }
+        .section-label.purple { color: var(--purple); } .section-label.purple::before { background: var(--purple); }
+
+        .section-title {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 700;
+            letter-spacing: -0.02em; margin-bottom: 0.75rem;
+        }
+
+        .section-desc { color: var(--text-secondary); font-size: 0.95rem; max-width: 700px; margin-bottom: 2rem; }
+
+        /* ====== IDEA GRID ====== */
+        .idea-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 1.25rem; margin: 2rem 0;
+        }
+        .idea-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px; padding: 1.5rem;
+            text-align: center; transition: all 0.3s;
+        }
+        .idea-card:hover { border-color: var(--border-strong); transform: translateY(-2px); }
+        .idea-emoji { font-size: 2.2rem; margin-bottom: 0.5rem; }
+        .idea-card h5 { font-family: 'Sora', sans-serif; font-size: 0.9rem; font-weight: 600; margin-bottom: 0.25rem; }
+        .idea-card p { font-size: 0.78rem; color: var(--text-secondary); margin: 0; }
+
+        .idea-card:nth-child(1) { border-top: 3px solid var(--cyan); }
+        .idea-card:nth-child(2) { border-top: 3px solid var(--magenta); }
+        .idea-card:nth-child(3) { border-top: 3px solid var(--green); }
+
+        /* ====== ANALOGY CARDS ====== */
+        .analogy-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 1.25rem; margin: 2rem 0;
+        }
+        .analogy-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px; padding: 1.75rem;
+            text-align: center; transition: all 0.3s;
+        }
+        .analogy-card:hover { border-color: var(--border-strong); transform: translateY(-2px); }
+        .analogy-emoji { font-size: 2.5rem; margin-bottom: 0.75rem; }
+        .analogy-card h4 {
+            font-family: 'Sora', sans-serif;
+            font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem;
+        }
+        .analogy-card p { font-size: 0.82rem; color: var(--text-secondary); margin: 0; }
+
+        .analogy-card.card-cyan { border-top: 3px solid var(--cyan); }
+        .analogy-card.card-magenta { border-top: 3px solid var(--magenta); }
+        .analogy-card.card-green { border-top: 3px solid var(--green); }
+        .analogy-card.card-yellow { border-top: 3px solid var(--yellow); }
+
+        /* ====== SIDE-BY-SIDE ====== */
+        .side-by-side {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 1.5rem; margin: 2rem 0;
+        }
+        .sbs-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px; padding: 1.5rem;
+        }
+        .sbs-card h4 {
+            font-family: 'Sora', sans-serif;
+            font-size: 0.95rem; font-weight: 600;
+            margin-bottom: 0.75rem;
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+        .sbs-card p, .sbs-card li { font-size: 0.85rem; color: var(--text-secondary); }
+        .sbs-card ul { margin: 0.5rem 0 0 1.25rem; }
+        .sbs-card li { margin-bottom: 0.35rem; }
+        .sbs-card strong { color: var(--text); }
+
+        /* ====== INSTRUCTION CARDS ====== */
+        .inst-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px; padding: 1.5rem 1.75rem;
+            margin: 1.5rem 0;
+        }
+        .inst-card h4 {
+            font-family: 'Sora', sans-serif;
+            font-size: 0.95rem; font-weight: 600;
+            margin-bottom: 1rem; color: var(--text);
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+
+        .inst-list {
+            counter-reset: inst; list-style: none; padding: 0;
+        }
+        .inst-list li {
+            counter-increment: inst;
+            padding: 0.6rem 0 0.6rem 2.5rem;
+            position: relative;
+            border-bottom: 1px solid rgba(0, 229, 255, 0.05);
+            font-size: 0.9rem; color: var(--text-secondary);
+        }
+        .inst-list li:last-child { border-bottom: none; }
+        .inst-list li::before {
+            content: counter(inst);
+            position: absolute; left: 0; top: 0.6rem;
+            width: 22px; height: 22px;
+            background: var(--cyan-ghost); color: var(--cyan);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem; font-weight: 700; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            border: 1px solid rgba(0, 229, 255, 0.2);
+        }
+        .inst-list li strong { color: var(--text); }
+        .inst-list li a { color: var(--cyan); text-decoration: none; }
+        .inst-list li a:hover { text-decoration: underline; }
+
+        .inst-list.green-nums li::before { background: var(--green-ghost); color: var(--green); border-color: rgba(0, 230, 118, 0.2); }
+        .inst-list.magenta-nums li::before { background: var(--magenta-ghost); color: var(--magenta); border-color: rgba(255, 0, 110, 0.2); }
+        .inst-list.yellow-nums li::before { background: var(--yellow-ghost); color: var(--yellow); border-color: rgba(255, 214, 0, 0.2); }
+
+        /* ====== CHECKLIST ====== */
+        .checklist {
+            list-style: none; padding: 0; margin: 1.5rem 0;
+        }
+        .checklist li {
+            padding: 0.6rem 0 0.6rem 2.25rem;
+            position: relative;
+            border-bottom: 1px solid rgba(0, 229, 255, 0.05);
+            font-size: 0.9rem; color: var(--text-secondary);
+        }
+        .checklist li:last-child { border-bottom: none; }
+        .checklist li::before {
+            content: '';
+            position: absolute; left: 0; top: 0.75rem;
+            width: 18px; height: 18px;
+            border: 2px solid var(--border-strong);
+            border-radius: 4px;
+        }
+        .checklist li strong { color: var(--text); }
+
+        /* ====== CALLOUTS ====== */
+        .callout {
+            border-radius: 10px; padding: 1.25rem 1.5rem;
+            margin: 1.5rem 0; font-size: 0.9rem; color: var(--text-secondary);
+        }
+        .callout strong { display: block; margin-bottom: 0.25rem; }
+        .callout p { margin-bottom: 0.5rem; }
+        .callout p:last-child { margin-bottom: 0; }
+
+        .callout-warn { background: var(--yellow-ghost); border: 1px solid rgba(255, 214, 0, 0.2); }
+        .callout-warn strong { color: var(--yellow); }
+        .callout-success { background: var(--green-ghost); border: 1px solid rgba(0, 230, 118, 0.2); }
+        .callout-success strong { color: var(--green); }
+        .callout-info { background: var(--cyan-ghost); border: 1px solid rgba(0, 229, 255, 0.2); }
+        .callout-info strong { color: var(--cyan); }
+        .callout-error { background: var(--magenta-ghost); border: 1px solid rgba(255, 0, 110, 0.2); }
+        .callout-error strong { color: var(--magenta); }
+
+        .callout ul { margin: 0.5rem 0 0 1.25rem; }
+        .callout li { margin-bottom: 0.35rem; font-size: 0.88rem; }
+
+        /* ====== CODE WINDOWS (Mac-style) ====== */
+        .code-window {
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-radius: 12px; overflow: hidden; margin: 1.5rem 0;
+        }
+        .code-header {
+            padding: 0.75rem 1.5rem;
+            background: var(--bg-elevated);
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+        .dot-row { display: flex; gap: 0.35rem; margin-right: 0.75rem; }
+        .dot-row span { width: 8px; height: 8px; border-radius: 50%; }
+        .dot-red { background: #ff5f56; }
+        .dot-yellow { background: #ffbd2e; }
+        .dot-green { background: #27c93f; }
+        .code-header .filename {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem; color: var(--text-dim);
+            flex: 1;
+        }
+        .copy-btn {
+            background: none; border: 1px solid var(--border);
+            color: var(--text-dim); padding: 0.3rem 0.65rem;
+            border-radius: 6px; cursor: pointer; font-size: 0.7rem;
+            font-family: 'JetBrains Mono', monospace;
+            transition: all 0.2s; display: flex; align-items: center; gap: 0.35rem;
+        }
+        .copy-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+        .copy-btn.copied { border-color: var(--green); color: var(--green); }
+
+        .code-body { padding: 1.25rem 1.5rem; overflow-x: auto; }
+
+        .code-line {
+            display: flex; min-height: 1.65em;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem; line-height: 1.7;
+        }
+        .code-line.dimmed { opacity: 0.25; }
+        .code-line.hl-cyan { opacity: 1; background: var(--bg-line-highlight); border-left: 3px solid var(--cyan); padding-left: 0.75rem; margin-left: -0.75rem; border-radius: 0 4px 4px 0; }
+        .code-line.hl-magenta { opacity: 1; background: var(--magenta-ghost); border-left: 3px solid var(--magenta); padding-left: 0.75rem; margin-left: -0.75rem; border-radius: 0 4px 4px 0; }
+        .code-line.hl-green { opacity: 1; background: var(--green-ghost); border-left: 3px solid var(--green); padding-left: 0.75rem; margin-left: -0.75rem; border-radius: 0 4px 4px 0; }
+        .code-line.hl-yellow { opacity: 1; background: var(--yellow-ghost); border-left: 3px solid var(--yellow); padding-left: 0.75rem; margin-left: -0.75rem; border-radius: 0 4px 4px 0; }
+
+        .line-num {
+            min-width: 30px; color: var(--text-dim);
+            text-align: right; padding-right: 1.25rem; user-select: none;
+        }
+        .line-code { flex: 1; white-space: pre; }
+
+        .kw { color: var(--magenta); }
+        .fn { color: #82aaff; }
+        .str { color: #c3e88d; }
+        .cm { color: #546e7a; font-style: italic; }
+        .num-lit { color: var(--orange); }
+        .type { color: var(--cyan); }
+
+        .code-annotation {
+            padding: 0.75rem 1.5rem;
+            background: var(--bg-elevated);
+            border-top: 1px solid var(--border);
+            font-size: 0.85rem; color: var(--text-secondary);
+            display: flex; align-items: flex-start; gap: 0.5rem;
+        }
+        .code-annotation .arrow { color: var(--cyan); font-weight: 700; flex-shrink: 0; }
+        .code-annotation strong { color: var(--text); }
+
+        /* ====== TABLES ====== */
+        .styled-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.82rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .styled-table thead { background: var(--bg-elevated); }
+        .styled-table th {
+            padding: 0.85rem 1rem;
+            text-align: left;
+            font-family: 'Sora', sans-serif;
+            font-weight: 600; font-size: 0.78rem;
+            color: var(--cyan);
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--border);
+        }
+        .styled-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid rgba(0, 229, 255, 0.05);
+            color: var(--text-secondary);
+        }
+        .styled-table tr:last-child td { border-bottom: none; }
+        .styled-table td:first-child { color: var(--text); font-weight: 500; }
+        .styled-table .check-yes { color: var(--green); }
+        .styled-table .check-no { color: var(--magenta); }
+        .styled-table .check-warn { color: var(--yellow); }
+
+        /* ====== PROPOSAL TEMPLATE ====== */
+        .proposal-template {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px; overflow: hidden; margin: 1.5rem 0;
+        }
+        .proposal-template .pt-header {
+            padding: 1rem 1.5rem;
+            background: var(--bg-elevated);
+            border-bottom: 1px solid var(--border);
+            font-family: 'Sora', sans-serif;
+            font-size: 0.85rem; font-weight: 600;
+            color: var(--green);
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+        .proposal-template .pt-body { padding: 0; }
+        .pt-row {
+            display: flex; padding: 0.85rem 1.5rem;
+            border-bottom: 1px solid rgba(0, 229, 255, 0.05);
+            font-size: 0.88rem;
+        }
+        .pt-row:last-child { border-bottom: none; }
+        .pt-num {
+            width: 28px; flex-shrink: 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem; font-weight: 700;
+            color: var(--green); padding-top: 0.1rem;
+        }
+        .pt-label {
+            width: 140px; flex-shrink: 0;
+            font-weight: 600; color: var(--text);
+        }
+        .pt-desc {
+            flex: 1; color: var(--text-secondary);
+        }
+
+        /* ====== EXAMPLE CARD ====== */
+        .example-card {
+            background: linear-gradient(135deg, var(--green-ghost), var(--cyan-ghost));
+            border: 1px solid rgba(0, 230, 118, 0.25);
+            border-radius: 16px; padding: 2rem 2.5rem;
+            margin: 2rem 0; position: relative;
+        }
+        .example-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--green), var(--cyan));
+            border-radius: 16px 16px 0 0;
+        }
+        .example-card h4 {
+            font-family: 'Sora', sans-serif;
+            font-size: 1rem; font-weight: 700;
+            color: var(--green); margin-bottom: 1rem;
+        }
+        .example-card .ex-row {
+            display: flex; gap: 0.75rem;
+            padding: 0.4rem 0; font-size: 0.88rem;
+        }
+        .example-card .ex-label {
+            font-weight: 600; color: var(--text);
+            min-width: 110px; flex-shrink: 0;
+        }
+        .example-card .ex-val { color: var(--text-secondary); }
+
+        /* ====== FAQ COLLAPSIBLES ====== */
+        .faq-item {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 10px; margin: 0.75rem 0; overflow: hidden;
+        }
+        .faq-q {
+            padding: 1rem 1.5rem; cursor: pointer;
+            display: flex; align-items: center; justify-content: space-between;
+            transition: background 0.2s;
+            font-size: 0.9rem; font-weight: 600; color: var(--text);
+        }
+        .faq-q:hover { background: var(--bg-elevated); }
+        .faq-q .faq-emoji { margin-right: 0.75rem; font-size: 1rem; }
+        .faq-arrow { color: var(--text-dim); transition: transform 0.3s; font-size: 1rem; flex-shrink: 0; margin-left: 1rem; }
+        .faq-item.open .faq-arrow { transform: rotate(90deg); }
+        .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+        .faq-item.open .faq-a { max-height: 500px; }
+        .faq-a-inner {
+            padding: 0 1.5rem 1.25rem; font-size: 0.88rem;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border); padding-top: 1rem;
+        }
+
+        /* ====== TAKEAWAY ====== */
+        .takeaway {
+            background: linear-gradient(135deg, var(--green-ghost), var(--cyan-ghost));
+            border: 1px solid var(--border-strong);
+            border-radius: 16px; padding: 2.5rem; margin: 3rem 0;
+            position: relative;
+        }
+        .takeaway::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--green), var(--cyan));
+            border-radius: 16px 16px 0 0;
+        }
+        .takeaway h3 {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.3rem; font-weight: 700; margin-bottom: 1rem;
+        }
+        .takeaway p { color: var(--text-secondary); margin-bottom: 0.75rem; }
+        .takeaway p:last-child { margin-bottom: 0; }
+        .takeaway strong { color: var(--text); }
+
+        .takeaway-stats {
+            display: flex; gap: 2rem; flex-wrap: wrap;
+            margin-top: 1.5rem; padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+        .takeaway-stat { text-align: center; }
+        .takeaway-stat .stat-num {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.8rem; font-weight: 800; color: var(--cyan);
+        }
+        .takeaway-stat .stat-label { font-size: 0.75rem; color: var(--text-dim); }
+
+        /* ====== INLINE ELEMENTS ====== */
+        code {
+            background: rgba(0, 229, 255, 0.08); padding: 1px 6px;
+            border-radius: 4px; font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem; color: var(--cyan);
+        }
+        a { color: var(--cyan); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        kbd {
+            display: inline-block; background: var(--bg-elevated);
+            border: 1px solid var(--border-strong); border-radius: 4px;
+            padding: 1px 6px; font-size: 0.78rem;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text); box-shadow: 0 1px 0 rgba(0, 229, 255, 0.15);
+        }
+
+        .sub-heading {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.05rem; font-weight: 600;
+            color: var(--text); margin: 2rem 0 0.75rem;
+        }
+
+        .punchy {
+            font-size: 0.9rem; color: var(--text-secondary);
+            text-align: center; margin: 1.5rem 0;
+        }
+        .punchy strong { color: var(--text); }
+
+        /* ====== NAV LINKS ====== */
+        .nav-links {
+            display: flex; gap: 1rem; flex-wrap: wrap;
+            margin: 2rem 0; justify-content: center;
+        }
+        .nav-link {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            padding: 0.7rem 1.25rem;
+            border: 1px solid var(--border);
+            border-radius: 8px; font-size: 0.85rem;
+            color: var(--text-secondary);
+            transition: all 0.2s; text-decoration: none;
+        }
+        .nav-link:hover { border-color: var(--cyan); color: var(--cyan); text-decoration: none; transform: translateY(-1px); }
+        .nav-link i { width: 16px; height: 16px; }
+
+        /* ====== FOOTER ====== */
+        .footer {
+            padding: 3rem 0; border-top: 1px solid var(--border);
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem; color: var(--text-dim);
+        }
+        .footer a { color: var(--cyan); text-decoration: none; }
+
+        /* ====== RESPONSIVE ====== */
+        @media (max-width: 768px) {
+            .container { padding: 0 1.25rem; }
+            .analogy-grid, .idea-grid { grid-template-columns: 1fr; }
+            .side-by-side { grid-template-columns: 1fr; }
+            .takeaway-stats { gap: 1.25rem; }
+            .pt-row { flex-direction: column; gap: 0.25rem; }
+            .pt-label { width: auto; }
+            .example-card .ex-row { flex-direction: column; gap: 0.15rem; }
+        }
+
+        /* ====== FADE-UP ====== */
+        .fade-up {
+            opacity: 0; transform: translateY(25px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+        /* ====== AGENT FLOW DIAGRAM ====== */
+        .agent-flow {
+            display: flex; align-items: center;
+            gap: 0; margin: 2rem 0;
+            overflow-x: auto; padding-bottom: 0.5rem;
+        }
+        .agent-flow-step {
+            display: flex; flex-direction: column; align-items: center;
+            text-align: center; min-width: 110px; flex-shrink: 0;
+        }
+        .agent-flow-icon {
+            width: 48px; height: 48px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem; border: 2px solid; background: var(--bg); margin-bottom: 0.5rem;
+        }
+        .agent-flow-label {
+            font-family: 'Sora', sans-serif;
+            font-size: 0.72rem; font-weight: 600;
+            color: var(--text); line-height: 1.3;
+        }
+        .agent-flow-arrow {
+            color: var(--text-dim); font-size: 1.2rem;
+            padding: 0 0.25rem; flex-shrink: 0;
+            margin-top: -1.5rem;
+        }
+
+        /* ====== ANALYSIS Q LIST ====== */
+        .analysis-list {
+            list-style: none; padding: 0; margin: 1.5rem 0;
+        }
+        .analysis-list li {
+            padding: 0.6rem 0 0.6rem 2.25rem;
+            position: relative;
+            border-bottom: 1px solid rgba(0, 229, 255, 0.05);
+            font-size: 0.9rem; color: var(--text-secondary);
+        }
+        .analysis-list li:last-child { border-bottom: none; }
+        .analysis-list li::before {
+            content: '?';
+            position: absolute; left: 0; top: 0.6rem;
+            width: 22px; height: 22px;
+            background: var(--magenta-ghost); color: var(--magenta);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem; font-weight: 700; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            border: 1px solid rgba(255, 0, 110, 0.2);
+        }
+        .analysis-list li strong { color: var(--text); }
+    </style>
+</head>
+<body>
+
+<!-- PROGRESS BAR -->
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+<div class="container">
+
+    <!-- ====================================================================== -->
+    <!-- HERO                                                                   -->
+    <!-- ====================================================================== -->
+    <section class="hero">
+        <div class="badge"><span class="dot"></span> Session 8 &mdash; Homework</div>
+        <h1>Extend Your <span class="cyan">Multi-Agent</span> Pipeline</h1>
+        <p class="hero-sub">
+            Four tasks to deepen your understanding of multi-agent systems. Build a 4th agent, test reliability, and design for your industry.
+        </p>
+        <div class="hero-note">
+            <i data-lucide="clock" style="width:16px;height:16px;"></i>
+            4 tasks &bull; Estimated time: 90&ndash;120 minutes &bull; Due before Session 9
+        </div>
+
+        <!-- Step dots -->
+        <div class="step-indicator" id="heroSteps">
+            <div class="step-dot active">1</div>
+            <div class="step-line"></div>
+            <div class="step-dot">2</div>
+            <div class="step-line"></div>
+            <div class="step-dot">3</div>
+            <div class="step-line"></div>
+            <div class="step-dot">4</div>
+        </div>
+    </section>
+
+
+    <!-- ====================================================================== -->
+    <!-- TASK 1: EXTEND                                                         -->
+    <!-- ====================================================================== -->
+    <section class="section fade-up" id="task1">
+        <div class="step-indicator">
+            <div class="step-dot active">1</div>
+            <div class="step-line"></div>
+            <div class="step-dot">2</div>
+            <div class="step-line"></div>
+            <div class="step-dot">3</div>
+            <div class="step-line"></div>
+            <div class="step-dot">4</div>
+        </div>
+
+        <div class="section-label cyan">Task 1 &mdash; Extend</div>
+        <h2 class="section-title">Add a 4th Agent to Your Pipeline</h2>
+        <p class="section-desc">
+            Your pipeline has Researcher &rarr; Analyst &rarr; Editor. Add a 4th agent. Choose one:
+        </p>
+
+        <!-- Agent Flow Diagram -->
+        <div class="agent-flow">
+            <div class="agent-flow-step">
+                <div class="agent-flow-icon" style="border-color: var(--cyan);">
+                    <i data-lucide="search" style="width:22px;height:22px;color:var(--cyan);"></i>
+                </div>
+                <div class="agent-flow-label">Researcher</div>
+            </div>
+            <div class="agent-flow-arrow">&rarr;</div>
+            <div class="agent-flow-step">
+                <div class="agent-flow-icon" style="border-color: var(--magenta);">
+                    <i data-lucide="bar-chart-3" style="width:22px;height:22px;color:var(--magenta);"></i>
+                </div>
+                <div class="agent-flow-label">Analyst</div>
+            </div>
+            <div class="agent-flow-arrow">&rarr;</div>
+            <div class="agent-flow-step">
+                <div class="agent-flow-icon" style="border-color: var(--green);">
+                    <i data-lucide="pen-tool" style="width:22px;height:22px;color:var(--green);"></i>
+                </div>
+                <div class="agent-flow-label">Editor</div>
+            </div>
+            <div class="agent-flow-arrow">&rarr;</div>
+            <div class="agent-flow-step">
+                <div class="agent-flow-icon" style="border-color: var(--yellow); border-style: dashed;">
+                    <i data-lucide="plus" style="width:22px;height:22px;color:var(--yellow);"></i>
+                </div>
+                <div class="agent-flow-label" style="color: var(--yellow);">Your 4th<br>Agent</div>
+            </div>
+        </div>
+
+        <!-- Option Cards -->
+        <h3 class="sub-heading">Choose your 4th agent</h3>
+        <div class="idea-grid">
+            <div class="idea-card">
+                <div class="idea-emoji">&#x2705;</div>
+                <h5>Fact-Checker</h5>
+                <p>Cross-references claims against known data. Place between Analyst and Editor.</p>
+            </div>
+            <div class="idea-card">
+                <div class="idea-emoji">&#x1F4CB;</div>
+                <h5>Summarizer</h5>
+                <p>Produces a 1-paragraph executive brief. Place after Editor.</p>
+            </div>
+            <div class="idea-card">
+                <div class="idea-emoji">&#x1F3AF;</div>
+                <h5>Domain Expert</h5>
+                <p>Adds industry-specific context (e.g., healthcare, finance). Place between Researcher and Analyst.</p>
+            </div>
+        </div>
+
+        <!-- Code Scaffold -->
+        <h3 class="sub-heading">Starter code</h3>
+        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem;">
+            Define your 4th agent&rsquo;s prompt and wire it into the pipeline.
+        </p>
+
+        <div class="code-window" id="task1Code">
+            <div class="code-header">
+                <div class="dot-row"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></div>
+                <span class="filename">extend_pipeline.py</span>
+                <button class="copy-btn" onclick="copyCode(this, 'codeContent1')">
+                    <i data-lucide="clipboard" style="width:12px;height:12px;"></i> Copy
+                </button>
+            </div>
+            <div class="code-body">
+                <div class="code-line hl-cyan"><span class="line-num">1</span><span class="line-code"><span class="cm"># Choose your 4th agent and define its prompt</span></span></div>
+                <div class="code-line hl-cyan"><span class="line-num">2</span><span class="line-code">FOURTH_AGENT_PROMPT = <span class="str">"""You are a specialized [ROLE] Agent.</span></span></div>
+                <div class="code-line hl-cyan"><span class="line-num">3</span><span class="line-code"><span class="str"></span></span></div>
+                <div class="code-line hl-cyan"><span class="line-num">4</span><span class="line-code"><span class="str">Your job: [DESCRIBE WHAT IT DOES]</span></span></div>
+                <div class="code-line hl-cyan"><span class="line-num">5</span><span class="line-code"><span class="str"></span></span></div>
+                <div class="code-line hl-cyan"><span class="line-num">6</span><span class="line-code"><span class="str">Input: [WHAT IT RECEIVES]</span></span></div>
+                <div class="code-line hl-cyan"><span class="line-num">7</span><span class="line-code"><span class="str"></span></span></div>
+                <div class="code-line hl-cyan"><span class="line-num">8</span><span class="line-code"><span class="str">Output format:</span></span></div>
+                <div class="code-line hl-cyan"><span class="line-num">9</span><span class="line-code"><span class="str">[DEFINE STRUCTURED OUTPUT]</span></span></div>
+                <div class="code-line hl-cyan"><span class="line-num">10</span><span class="line-code"><span class="str"></span></span></div>
+                <div class="code-line hl-cyan"><span class="line-num">11</span><span class="line-code"><span class="str">IMPORTANT: [KEY CONSTRAINT]"""</span></span></div>
+                <div class="code-line"><span class="line-num">12</span><span class="line-code"></span></div>
+                <div class="code-line hl-green"><span class="line-num">13</span><span class="line-code"><span class="cm"># Modify run_pipeline() to include the 4th agent</span></span></div>
+                <div class="code-line hl-green"><span class="line-num">14</span><span class="line-code"><span class="kw">def</span> <span class="fn">run_pipeline_v2</span>(query):</span></div>
+                <div class="code-line hl-green"><span class="line-num">15</span><span class="line-code">    <span class="cm"># Stage 1: Researcher</span></span></div>
+                <div class="code-line hl-green"><span class="line-num">16</span><span class="line-code">    researcher_output = <span class="fn">call_agent</span>(RESEARCHER_PROMPT, query, <span class="str">"Researcher"</span>)</span></div>
+                <div class="code-line hl-green"><span class="line-num">17</span><span class="line-code"></span></div>
+                <div class="code-line hl-yellow"><span class="line-num">18</span><span class="line-code">    <span class="cm"># Stage 2: YOUR 4TH AGENT (if it goes here)</span></span></div>
+                <div class="code-line hl-yellow"><span class="line-num">19</span><span class="line-code">    <span class="cm"># fourth_output = call_agent(FOURTH_AGENT_PROMPT, ..., "Your Agent")</span></span></div>
+                <div class="code-line hl-yellow"><span class="line-num">20</span><span class="line-code"></span></div>
+                <div class="code-line hl-green"><span class="line-num">21</span><span class="line-code">    <span class="cm"># Stage 3: Analyst</span></span></div>
+                <div class="code-line hl-green"><span class="line-num">22</span><span class="line-code">    analyst_output = <span class="fn">call_agent</span>(ANALYST_PROMPT, ..., <span class="str">"Analyst"</span>)</span></div>
+                <div class="code-line hl-green"><span class="line-num">23</span><span class="line-code"></span></div>
+                <div class="code-line hl-green"><span class="line-num">24</span><span class="line-code">    <span class="cm"># Stage 4: Editor</span></span></div>
+                <div class="code-line hl-green"><span class="line-num">25</span><span class="line-code">    editor_output = <span class="fn">call_agent</span>(EDITOR_PROMPT, ..., <span class="str">"Editor"</span>)</span></div>
+                <div class="code-line hl-green"><span class="line-num">26</span><span class="line-code"></span></div>
+                <div class="code-line hl-green"><span class="line-num">27</span><span class="line-code">    <span class="kw">return</span> {...}</span></div>
+                <div class="code-line"><span class="line-num">28</span><span class="line-code"></span></div>
+                <div class="code-line hl-magenta"><span class="line-num">29</span><span class="line-code"><span class="cm"># Test with 3 business questions</span></span></div>
+                <div class="code-line hl-magenta"><span class="line-num">30</span><span class="line-code">questions = [</span></div>
+                <div class="code-line hl-magenta"><span class="line-num">31</span><span class="line-code">    <span class="str">"Impact of AI on supply chain management"</span>,</span></div>
+                <div class="code-line hl-magenta"><span class="line-num">32</span><span class="line-code">    <span class="str">"Remote work trends and productivity data"</span>,</span></div>
+                <div class="code-line hl-magenta"><span class="line-num">33</span><span class="line-code">    <span class="str">"Sustainable business practices ROI"</span></span></div>
+                <div class="code-line hl-magenta"><span class="line-num">34</span><span class="line-code">]</span></div>
+                <div class="code-line hl-magenta"><span class="line-num">35</span><span class="line-code"></span></div>
+                <div class="code-line hl-magenta"><span class="line-num">36</span><span class="line-code"><span class="kw">for</span> q <span class="kw">in</span> questions:</span></div>
+                <div class="code-line hl-magenta"><span class="line-num">37</span><span class="line-code">    result = <span class="fn">run_pipeline_v2</span>(q)</span></div>
+                <div class="code-line hl-magenta"><span class="line-num">38</span><span class="line-code">    <span class="fn">print</span>(<span class="str">f"Query: {q}"</span>)</span></div>
+                <div class="code-line hl-magenta"><span class="line-num">39</span><span class="line-code">    <span class="fn">print</span>(<span class="str">f"Quality Score: [check editor output]"</span>)</span></div>
+                <div class="code-line hl-magenta"><span class="line-num">40</span><span class="line-code">    <span class="fn">print</span>(<span class="str">"---"</span>)</span></div>
+            </div>
+            <div class="code-annotation">
+                <span class="arrow">&rarr;</span>
+                <span><strong>3 color-coded sections.</strong> Agent prompt (<span style="color:var(--cyan)">cyan</span>) &mdash; define your new agent&rsquo;s role. Pipeline logic (<span style="color:var(--green)">green</span>) &mdash; wire in the 4th stage. The <span style="color:var(--yellow)">yellow</span> line is where your agent goes. Test harness (<span style="color:var(--magenta)">magenta</span>) &mdash; run on 3 questions.</span>
+            </div>
+        </div>
+
+        <!-- Hidden raw code for copy -->
+        <textarea id="codeContent1" style="display:none;"># Choose your 4th agent and define its prompt
+FOURTH_AGENT_PROMPT = """You are a specialized [ROLE] Agent.
+
+Your job: [DESCRIBE WHAT IT DOES]
+
+Input: [WHAT IT RECEIVES]
+
+Output format:
+[DEFINE STRUCTURED OUTPUT]
+
+IMPORTANT: [KEY CONSTRAINT]"""
+
+# Modify run_pipeline() to include the 4th agent
+def run_pipeline_v2(query):
+    # Stage 1: Researcher
+    researcher_output = call_agent(RESEARCHER_PROMPT, query, "Researcher")
+
+    # Stage 2: YOUR 4TH AGENT (if it goes here)
+    # fourth_output = call_agent(FOURTH_AGENT_PROMPT, ..., "Your Agent")
+
+    # Stage 3: Analyst
+    analyst_output = call_agent(ANALYST_PROMPT, ..., "Analyst")
+
+    # Stage 4: Editor
+    editor_output = call_agent(EDITOR_PROMPT, ..., "Editor")
+
+    return {...}
+
+# Test with 3 business questions
+questions = [
+    "Impact of AI on supply chain management",
+    "Remote work trends and productivity data",
+    "Sustainable business practices ROI"
+]
+
+for q in questions:
+    result = run_pipeline_v2(q)
+    print(f"Query: {q}")
+    print(f"Quality Score: [check editor output]")
+    print("---")</textarea>
+
+        <!-- Deliverable -->
+        <h3 class="sub-heading">Deliverable</h3>
+        <ul class="checklist">
+            <li><strong>4th agent prompt</strong> defined with clear role, input, output, and constraints</li>
+            <li><strong>Pipeline updated</strong> with the 4th agent wired into the correct position</li>
+            <li><strong>3 business questions</strong> run through the extended pipeline</li>
+            <li><strong>Quality comparison</strong> &mdash; compare scores with and without the 4th agent</li>
+        </ul>
+
+        <div class="callout callout-info">
+            <strong>&#x1F4A1; Placement matters</strong>
+            <p>Where you insert the 4th agent changes the pipeline&rsquo;s behavior. A Fact-Checker between Analyst and Editor catches errors before editing. A Domain Expert between Researcher and Analyst enriches the analysis. Think about <em>information flow</em>.</p>
+        </div>
+    </section>
+
+
+    <!-- ====================================================================== -->
+    <!-- TASK 2: ANALYZE                                                        -->
+    <!-- ====================================================================== -->
+    <section class="section fade-up" id="task2">
+        <div class="step-indicator">
+            <div class="step-dot done">1</div>
+            <div class="step-line"></div>
+            <div class="step-dot active">2</div>
+            <div class="step-line"></div>
+            <div class="step-dot">3</div>
+            <div class="step-line"></div>
+            <div class="step-dot">4</div>
+        </div>
+
+        <div class="section-label magenta">Task 2 &mdash; Analyze</div>
+        <h2 class="section-title">Document Information Distortion</h2>
+        <p class="section-desc">
+            Run your pipeline 5 times on the SAME question. Document how outputs differ. This is the &ldquo;telephone game&rdquo; in action.
+        </p>
+
+        <!-- Template Table -->
+        <h3 class="sub-heading">Record your results</h3>
+        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem;">
+            Use this table format in your notebook. Fill in each row after each pipeline run.
+        </p>
+
+        <div style="overflow-x: auto;">
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th>Run #</th>
+                        <th>Key Facts Found</th>
+                        <th>Quality Score</th>
+                        <th>Unique Claims</th>
+                        <th>Consistent Claims</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td style="color: var(--text-dim); font-style: italic;">fill in...</td>
+                        <td style="color: var(--text-dim); font-style: italic;">fill in...</td>
+                        <td style="color: var(--text-dim); font-style: italic;">fill in...</td>
+                        <td style="color: var(--text-dim); font-style: italic;">fill in...</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td style="color: var(--text-dim); font-style: italic;">fill in...</td>
+                        <td style="color: var(--text-dim); font-style: italic;">fill in...</td>
+                        <td style="color: var(--text-dim); font-style: italic;">fill in...</td>
+                        <td style="color: var(--text-dim); font-style: italic;">fill in...</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td style="color: var(--text-dim); font-style: italic;">fill in...</td>
+                        <td style="color: var(--text-dim); font-style: italic;">fill in...</td>
+                        <td style="color: var(--text-dim); font-style: italic;">fill in...</td>
+                        <td style="color: var(--text-dim); font-style: italic;">fill in...</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td style="color: var(--text-dim); font-style: italic;">fill in...</td>
+                        <td style="color: var(--text-dim); font-style: italic;">fill in...</td>
+                        <td style="color: var(--text-dim); font-style: italic;">fill in...</td>
+                        <td style="color: var(--text-dim); font-style: italic;">fill in...</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td style="color: var(--text-dim); font-style: italic;">fill in...</td>
+                        <td style="color: var(--text-dim); font-style: italic;">fill in...</td>
+                        <td style="color: var(--text-dim); font-style: italic;">fill in...</td>
+                        <td style="color: var(--text-dim); font-style: italic;">fill in...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Code snippet for running 5 times -->
+        <h3 class="sub-heading">Automation snippet</h3>
+        <div class="code-window" id="task2Code">
+            <div class="code-header">
+                <div class="dot-row"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></div>
+                <span class="filename">distortion_test.py</span>
+                <button class="copy-btn" onclick="copyCode(this, 'codeContent2')">
+                    <i data-lucide="clipboard" style="width:12px;height:12px;"></i> Copy
+                </button>
+            </div>
+            <div class="code-body">
+                <div class="code-line hl-magenta"><span class="line-num">1</span><span class="line-code"><span class="cm"># Run the same question 5 times and collect results</span></span></div>
+                <div class="code-line hl-magenta"><span class="line-num">2</span><span class="line-code">test_question = <span class="str">"Impact of AI on supply chain management"</span></span></div>
+                <div class="code-line hl-magenta"><span class="line-num">3</span><span class="line-code">results = []</span></div>
+                <div class="code-line hl-magenta"><span class="line-num">4</span><span class="line-code"></span></div>
+                <div class="code-line hl-magenta"><span class="line-num">5</span><span class="line-code"><span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num-lit">5</span>):</span></div>
+                <div class="code-line hl-magenta"><span class="line-num">6</span><span class="line-code">    <span class="fn">print</span>(<span class="str">f"\n{'='*50}"</span>)</span></div>
+                <div class="code-line hl-magenta"><span class="line-num">7</span><span class="line-code">    <span class="fn">print</span>(<span class="str">f"Run {i+1} of 5"</span>)</span></div>
+                <div class="code-line hl-magenta"><span class="line-num">8</span><span class="line-code">    <span class="fn">print</span>(<span class="str">f"{'='*50}"</span>)</span></div>
+                <div class="code-line hl-magenta"><span class="line-num">9</span><span class="line-code">    result = <span class="fn">run_pipeline</span>(test_question)</span></div>
+                <div class="code-line hl-magenta"><span class="line-num">10</span><span class="line-code">    results.append(result)</span></div>
+                <div class="code-line"><span class="line-num">11</span><span class="line-code"></span></div>
+                <div class="code-line"><span class="line-num">12</span><span class="line-code"><span class="cm"># Compare: What changed between runs?</span></span></div>
+                <div class="code-line"><span class="line-num">13</span><span class="line-code"><span class="kw">for</span> i, r <span class="kw">in</span> <span class="fn">enumerate</span>(results):</span></div>
+                <div class="code-line"><span class="line-num">14</span><span class="line-code">    <span class="fn">print</span>(<span class="str">f"\nRun {i+1}:"</span>)</span></div>
+                <div class="code-line"><span class="line-num">15</span><span class="line-code">    <span class="fn">print</span>(<span class="str">f"  Editor output: {r['editor'][:200]}..."</span>)</span></div>
+            </div>
+        </div>
+
+        <textarea id="codeContent2" style="display:none;"># Run the same question 5 times and collect results
+test_question = "Impact of AI on supply chain management"
+results = []
+
+for i in range(5):
+    print(f"\n{'='*50}")
+    print(f"Run {i+1} of 5")
+    print(f"{'='*50}")
+    result = run_pipeline(test_question)
+    results.append(result)
+
+# Compare: What changed between runs?
+for i, r in enumerate(results):
+    print(f"\nRun {i+1}:")
+    print(f"  Editor output: {r['editor'][:200]}...")</textarea>
+
+        <!-- Analysis Questions -->
+        <h3 class="sub-heading">Analysis questions</h3>
+        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem;">
+            Answer each of these in your submission:
+        </p>
+        <ul class="analysis-list">
+            <li><strong>Which facts appeared in ALL 5 runs?</strong> These are reliable.</li>
+            <li><strong>Which facts appeared in only 1&ndash;2 runs?</strong> These are unstable.</li>
+            <li><strong>What was the quality score range?</strong> (e.g., 7.5&ndash;9.0)</li>
+            <li><strong>What safeguards would improve consistency?</strong></li>
+        </ul>
+
+        <div class="callout callout-error">
+            <strong>&#x26A0; The point is variation, not perfection</strong>
+            <p>If every run produces identical output, try setting <code>temperature=1</code> or using a more open-ended question. LLMs are non-deterministic &mdash; the question is <em>how different</em>, not <em>whether</em> they differ.</p>
+        </div>
+    </section>
+
+
+    <!-- ====================================================================== -->
+    <!-- TASK 3: DESIGN                                                         -->
+    <!-- ====================================================================== -->
+    <section class="section fade-up" id="task3">
+        <div class="step-indicator">
+            <div class="step-dot done">1</div>
+            <div class="step-line"></div>
+            <div class="step-dot done">2</div>
+            <div class="step-line"></div>
+            <div class="step-dot active">3</div>
+            <div class="step-line"></div>
+            <div class="step-dot">4</div>
+        </div>
+
+        <div class="section-label green">Task 3 &mdash; Design</div>
+        <h2 class="section-title">Design a Multi-Agent System for Your Industry</h2>
+        <p class="section-desc">
+            Propose a multi-agent system for your target industry (the one you&rsquo;ll use for your final project). Think like an architect &mdash; agents, handoffs, human gates, and cost.
+        </p>
+
+        <!-- Design Template -->
+        <div class="proposal-template">
+            <div class="pt-header">
+                <i data-lucide="pen-tool" style="width:16px;height:16px;"></i>
+                Design Template
+            </div>
+            <div class="pt-body">
+                <div class="pt-row">
+                    <div class="pt-num">1.</div>
+                    <div class="pt-label">Industry</div>
+                    <div class="pt-desc">[YOUR INDUSTRY] &mdash; the one you&rsquo;ll use for your final project</div>
+                </div>
+                <div class="pt-row">
+                    <div class="pt-num">2.</div>
+                    <div class="pt-label">Use Case</div>
+                    <div class="pt-desc">[SPECIFIC PROBLEM TO SOLVE] &mdash; what multi-step process would benefit from agents?</div>
+                </div>
+                <div class="pt-row">
+                    <div class="pt-num">3.</div>
+                    <div class="pt-label">Agent Roles</div>
+                    <div class="pt-desc">For each agent: Role, Input, Output, System prompt summary (2&ndash;3 sentences)</div>
+                </div>
+                <div class="pt-row">
+                    <div class="pt-num">4.</div>
+                    <div class="pt-label">Handoff Logic</div>
+                    <div class="pt-desc">Agent 1 &rarr; Agent 2: What data passes? What format?</div>
+                </div>
+                <div class="pt-row">
+                    <div class="pt-num">5.</div>
+                    <div class="pt-label">Human Gates</div>
+                    <div class="pt-desc">Where should a human review before proceeding? What decisions are too important for full automation?</div>
+                </div>
+                <div class="pt-row">
+                    <div class="pt-num">6.</div>
+                    <div class="pt-label">Cost Estimate</div>
+                    <div class="pt-desc">API calls per run, estimated tokens, cost per run at ~$3/M input, ~$15/M output</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Code Template -->
+        <h3 class="sub-heading">Agent design template</h3>
+        <div class="code-window" id="task3Code">
+            <div class="code-header">
+                <div class="dot-row"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></div>
+                <span class="filename">design_template.txt</span>
+                <button class="copy-btn" onclick="copyCode(this, 'codeContent3')">
+                    <i data-lucide="clipboard" style="width:12px;height:12px;"></i> Copy
+                </button>
+            </div>
+            <div class="code-body">
+                <div class="code-line hl-green"><span class="line-num">1</span><span class="line-code"><span class="cm">Industry: [YOUR INDUSTRY]</span></span></div>
+                <div class="code-line hl-green"><span class="line-num">2</span><span class="line-code"><span class="cm">Use Case: [SPECIFIC PROBLEM TO SOLVE]</span></span></div>
+                <div class="code-line"><span class="line-num">3</span><span class="line-code"></span></div>
+                <div class="code-line hl-cyan"><span class="line-num">4</span><span class="line-code"><span class="cm">Agent 1: [ROLE]</span></span></div>
+                <div class="code-line hl-cyan"><span class="line-num">5</span><span class="line-code"><span class="cm">  - Input: [What it receives]</span></span></div>
+                <div class="code-line hl-cyan"><span class="line-num">6</span><span class="line-code"><span class="cm">  - Output: [What it produces]</span></span></div>
+                <div class="code-line hl-cyan"><span class="line-num">7</span><span class="line-code"><span class="cm">  - System prompt summary: [2-3 sentences]</span></span></div>
+                <div class="code-line"><span class="line-num">8</span><span class="line-code"></span></div>
+                <div class="code-line hl-magenta"><span class="line-num">9</span><span class="line-code"><span class="cm">Agent 2: [ROLE]</span></span></div>
+                <div class="code-line hl-magenta"><span class="line-num">10</span><span class="line-code"><span class="cm">  - Input: [What it receives from Agent 1]</span></span></div>
+                <div class="code-line hl-magenta"><span class="line-num">11</span><span class="line-code"><span class="cm">  - Output: [What it produces]</span></span></div>
+                <div class="code-line hl-magenta"><span class="line-num">12</span><span class="line-code"><span class="cm">  - System prompt summary: [2-3 sentences]</span></span></div>
+                <div class="code-line"><span class="line-num">13</span><span class="line-code"></span></div>
+                <div class="code-line"><span class="line-num">14</span><span class="line-code"><span class="cm">Agent 3: [ROLE]</span></span></div>
+                <div class="code-line"><span class="line-num">15</span><span class="line-code"><span class="cm">  ...</span></span></div>
+                <div class="code-line"><span class="line-num">16</span><span class="line-code"></span></div>
+                <div class="code-line hl-yellow"><span class="line-num">17</span><span class="line-code"><span class="cm">Handoff Logic:</span></span></div>
+                <div class="code-line hl-yellow"><span class="line-num">18</span><span class="line-code"><span class="cm">  - Agent 1 → Agent 2: [What data passes, what format]</span></span></div>
+                <div class="code-line hl-yellow"><span class="line-num">19</span><span class="line-code"><span class="cm">  - Agent 2 → Agent 3: [What data passes]</span></span></div>
+                <div class="code-line"><span class="line-num">20</span><span class="line-code"></span></div>
+                <div class="code-line"><span class="line-num">21</span><span class="line-code"><span class="cm">Human Gates:</span></span></div>
+                <div class="code-line"><span class="line-num">22</span><span class="line-code"><span class="cm">  - [Where should a human review before proceeding?]</span></span></div>
+                <div class="code-line"><span class="line-num">23</span><span class="line-code"><span class="cm">  - [What decisions are too important for full automation?]</span></span></div>
+                <div class="code-line"><span class="line-num">24</span><span class="line-code"></span></div>
+                <div class="code-line"><span class="line-num">25</span><span class="line-code"><span class="cm">Cost Estimate:</span></span></div>
+                <div class="code-line"><span class="line-num">26</span><span class="line-code"><span class="cm">  - API calls per run: [NUMBER]</span></span></div>
+                <div class="code-line"><span class="line-num">27</span><span class="line-code"><span class="cm">  - Estimated tokens per run: [NUMBER]</span></span></div>
+                <div class="code-line"><span class="line-num">28</span><span class="line-code"><span class="cm">  - Cost per run at ~$3/M input, ~$15/M output: $[ESTIMATE]</span></span></div>
+            </div>
+        </div>
+
+        <textarea id="codeContent3" style="display:none;">Industry: [YOUR INDUSTRY]
+Use Case: [SPECIFIC PROBLEM TO SOLVE]
+
+Agent 1: [ROLE]
+  - Input: [What it receives]
+  - Output: [What it produces]
+  - System prompt summary: [2-3 sentences]
+
+Agent 2: [ROLE]
+  - Input: [What it receives from Agent 1]
+  - Output: [What it produces]
+  - System prompt summary: [2-3 sentences]
+
+Agent 3: [ROLE]
+  ...
+
+Handoff Logic:
+  - Agent 1 → Agent 2: [What data passes, what format]
+  - Agent 2 → Agent 3: [What data passes]
+
+Human Gates:
+  - [Where should a human review before proceeding?]
+  - [What decisions are too important for full automation?]
+
+Cost Estimate:
+  - API calls per run: [NUMBER]
+  - Estimated tokens per run: [NUMBER]
+  - Cost per run at ~$3/M input, ~$15/M output: $[ESTIMATE]</textarea>
+
+        <!-- Example -->
+        <h3 class="sub-heading">Example design</h3>
+        <div class="example-card">
+            <h4>&#x2601; CloudSync &mdash; Customer Support Pipeline</h4>
+            <div class="ex-row">
+                <div class="ex-label">Industry:</div>
+                <div class="ex-val">SaaS / Cloud Computing</div>
+            </div>
+            <div class="ex-row">
+                <div class="ex-label">Use Case:</div>
+                <div class="ex-val">Automated customer support ticket resolution</div>
+            </div>
+            <div class="ex-row">
+                <div class="ex-label">Agent 1:</div>
+                <div class="ex-val"><strong>Triage Agent</strong> &mdash; Classifies incoming tickets by severity and category (billing, technical, account). Routes to the right team.</div>
+            </div>
+            <div class="ex-row">
+                <div class="ex-label">Agent 2:</div>
+                <div class="ex-val"><strong>Research Agent</strong> &mdash; Searches knowledge base and past tickets for relevant solutions. Pulls account context.</div>
+            </div>
+            <div class="ex-row">
+                <div class="ex-label">Agent 3:</div>
+                <div class="ex-val"><strong>Response Agent</strong> &mdash; Drafts a customer-facing reply using the research. Matches brand voice and tone.</div>
+            </div>
+            <div class="ex-row">
+                <div class="ex-label">Agent 4:</div>
+                <div class="ex-val"><strong>QA Agent</strong> &mdash; Checks accuracy, tone, and compliance. Flags responses that need human review.</div>
+            </div>
+            <div class="ex-row">
+                <div class="ex-label">Human Gate:</div>
+                <div class="ex-val">All billing-related and account-deletion responses require human approval before sending.</div>
+            </div>
+            <div class="ex-row">
+                <div class="ex-label">Cost:</div>
+                <div class="ex-val">4 API calls &times; ~2K tokens each = ~8K tokens/run &asymp; $0.14 per ticket</div>
+            </div>
+        </div>
+
+        <div class="callout callout-success">
+            <strong>&#x2705; Any architecture works</strong>
+            <p>The pipeline is the baseline, but feel free to propose a debate pattern (two agents argue), an orchestrator pattern (manager agent delegates), or a hybrid. Just explain <em>why</em> your architecture fits the use case.</p>
+        </div>
+    </section>
+
+
+    <!-- ====================================================================== -->
+    <!-- TASK 4: READ                                                           -->
+    <!-- ====================================================================== -->
+    <section class="section fade-up" id="task4">
+        <div class="step-indicator">
+            <div class="step-dot done">1</div>
+            <div class="step-line"></div>
+            <div class="step-dot done">2</div>
+            <div class="step-line"></div>
+            <div class="step-dot done">3</div>
+            <div class="step-line"></div>
+            <div class="step-dot active">4</div>
+        </div>
+
+        <div class="section-label yellow">Task 4 &mdash; Read</div>
+        <h2 class="section-title">Claude Code&rsquo;s Team Feature</h2>
+        <p class="section-desc">
+            Read about Claude Code&rsquo;s multi-agent &ldquo;team&rdquo; feature and the orchestrator pattern. This is how real production systems coordinate multiple AI agents.
+        </p>
+
+        <!-- Reading Card -->
+        <div class="inst-card">
+            <h4>
+                <i data-lucide="book-open" style="width:18px;height:18px;color:var(--yellow);"></i>
+                Reading Assignment
+            </h4>
+            <ol class="inst-list yellow-nums">
+                <li>Read the <a href="https://docs.anthropic.com/en/docs/claude-code/sub-agents" target="_blank">Claude Code Subagents documentation</a> on Anthropic&rsquo;s site.</li>
+                <li>Also review the <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">Building Effective Agents</a> guide &mdash; focus on the orchestration section.</li>
+                <li>Think about how these patterns connect to what you built in Session 8&rsquo;s lab.</li>
+            </ol>
+        </div>
+
+        <!-- Deliverable -->
+        <h3 class="sub-heading">Deliverable</h3>
+        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1rem;">
+            Write <strong style="color:var(--text);">one paragraph</strong> (5&ndash;8 sentences) explaining how Claude Code&rsquo;s team feature implements the orchestrator pattern from Session 6. Include:
+        </p>
+
+        <ul class="checklist">
+            <li><strong>Who is the orchestrator?</strong> Which component decides what each agent does?</li>
+            <li><strong>How are tasks distributed?</strong> How does the system break work into sub-tasks?</li>
+            <li><strong>How do agents communicate?</strong> What&rsquo;s the message-passing mechanism?</li>
+        </ul>
+
+        <div class="callout callout-warn">
+            <strong>&#x1F4DD; Keep it concise</strong>
+            <p>One paragraph is enough. The goal is to show you understand the orchestrator pattern and can recognize it in real products &mdash; not to write an essay. Connect what you read to the architectures we discussed in Session 6 (Pipeline, Debate, Orchestrator).</p>
+        </div>
+    </section>
+
+
+    <!-- ====================================================================== -->
+    <!-- FAQ                                                                    -->
+    <!-- ====================================================================== -->
+    <section class="section fade-up" id="faq">
+        <div class="section-label yellow">Troubleshooting</div>
+        <h2 class="section-title">FAQ &amp; Common Issues</h2>
+        <p class="section-desc">Click any question to expand the answer.</p>
+
+        <div class="faq-item" onclick="this.classList.toggle('open')">
+            <div class="faq-q">
+                <span><span class="faq-emoji">&#x1F4DD;</span> How long should my 4th agent&rsquo;s prompt be?</span>
+                <span class="faq-arrow">&#x25B6;</span>
+            </div>
+            <div class="faq-a">
+                <div class="faq-a-inner">
+                    Similar to the others &mdash; 10&ndash;20 lines. Focus on role, input format, output format, and key constraints. A great agent prompt is specific enough that the LLM knows exactly what to do, but flexible enough to handle different inputs.
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-item" onclick="this.classList.toggle('open')">
+            <div class="faq-q">
+                <span><span class="faq-emoji">&#x1F3B2;</span> My pipeline gives different results every time &mdash; is that a bug?</span>
+                <span class="faq-arrow">&#x25B6;</span>
+            </div>
+            <div class="faq-a">
+                <div class="faq-a-inner">
+                    No! That&rsquo;s the point of the Telephone Game exercise. LLMs are non-deterministic. The question is: <em>how</em> different? Use <code>temperature=0</code> for more consistency. The goal of Task 2 is to measure and document this variation, not eliminate it.
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-item" onclick="this.classList.toggle('open')">
+            <div class="faq-q">
+                <span><span class="faq-emoji">&#x1F4B0;</span> How do I estimate API costs?</span>
+                <span class="faq-arrow">&#x25B6;</span>
+            </div>
+            <div class="faq-a">
+                <div class="faq-a-inner">
+                    Count your agents &times; average tokens per call. With claude-sonnet-4-20250514 at ~$3/M input and ~$15/M output, a 3-agent pipeline with ~2K tokens each costs roughly $0.10 per run. A 4-agent pipeline costs ~$0.14. For your design in Task 3, multiply agents &times; tokens &times; expected daily runs.
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-item" onclick="this.classList.toggle('open')">
+            <div class="faq-q">
+                <span><span class="faq-emoji">&#x1F504;</span> Can I use a different architecture (debate, orchestrator) instead of pipeline?</span>
+                <span class="faq-arrow">&#x25B6;</span>
+            </div>
+            <div class="faq-a">
+                <div class="faq-a-inner">
+                    Absolutely! The pipeline is the baseline for Tasks 1 and 2, but for Task 3&rsquo;s design exercise, feel free to propose any architecture that fits your use case. Debate patterns work great for adversarial checking (e.g., code review), orchestrators for complex routing (e.g., customer support). Just explain why you chose it.
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ====================================================================== -->
+    <!-- TAKEAWAY                                                               -->
+    <!-- ====================================================================== -->
+    <section class="section fade-up">
+        <div class="takeaway">
+            <h3>Key Takeaways</h3>
+            <p><i data-lucide="users" style="width:16px;height:16px;display:inline;vertical-align:-3px;color:var(--cyan);"></i> <strong>Agent teams mirror org charts.</strong> Division of labor, specialization, and coordination costs apply to AI agents just like human teams. Design your agent system like you&rsquo;d design a department.</p>
+            <p><i data-lucide="alert-triangle" style="width:16px;height:16px;display:inline;vertical-align:-3px;color:var(--yellow);"></i> <strong>Watch for the telephone game.</strong> Information degrades across agents. Citation chains and confidence propagation are your safeguards against compounding errors.</p>
+            <p><i data-lucide="brain" style="width:16px;height:16px;display:inline;vertical-align:-3px;color:var(--magenta);"></i> <strong>Multi-agent isn&rsquo;t always better.</strong> Each agent adds latency, cost, and complexity. Use the decision framework: multi-agent for complex, multi-expertise tasks. Single-agent for everything else.</p>
+            <p><i data-lucide="trending-up" style="width:16px;height:16px;display:inline;vertical-align:-3px;color:var(--green);"></i> <strong>The pipeline pattern is your workhorse.</strong> Research &rarr; Analysis &rarr; Review is the most common multi-agent pattern. Master it and you can adapt it to any domain.</p>
+
+            <div class="takeaway-stats">
+                <div class="takeaway-stat">
+                    <div class="stat-num">4</div>
+                    <div class="stat-label">agents in pipeline</div>
+                </div>
+                <div class="takeaway-stat">
+                    <div class="stat-num">5</div>
+                    <div class="stat-label">distortion runs</div>
+                </div>
+                <div class="takeaway-stat">
+                    <div class="stat-num">1</div>
+                    <div class="stat-label">industry design</div>
+                </div>
+                <div class="takeaway-stat">
+                    <div class="stat-num">3</div>
+                    <div class="stat-label">architectures learned</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="nav-links">
+            <a href="/sessions/session-08" class="nav-link">
+                <i data-lucide="arrow-left" style="width:16px;height:16px;"></i>
+                Back to Session 8
+            </a>
+            <a href="https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-08/ISOM260_Session8_Multi_Agent_Systems.ipynb" target="_blank" class="nav-link">
+                <i data-lucide="external-link" style="width:16px;height:16px;"></i>
+                Open in Colab
+            </a>
+        </div>
+    </section>
+
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <p>
+            ISOM 260: AI for Business &bull; Suffolk University &bull; Sawyer Business School<br>
+            Prof. Hasan Arslan &bull; <a href="https://isom-260.vercel.app">isom-260.vercel.app</a>
+        </p>
+    </footer>
+
+</div>
+
+<script>
+    // ====== PROGRESS BAR ======
+    window.addEventListener('scroll', () => {
+        const h = document.documentElement.scrollHeight - window.innerHeight;
+        const pct = h > 0 ? (window.scrollY / h) * 100 : 0;
+        document.getElementById('progressFill').style.width = pct + '%';
+    });
+
+    // ====== FADE-UP ON SCROLL ======
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) entry.target.classList.add('visible');
+        });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+    // ====== STEP INDICATOR — updates hero dots on scroll ======
+    const taskSections = ['task1', 'task2', 'task3', 'task4'];
+    const heroStepDots = document.querySelectorAll('#heroSteps .step-dot');
+
+    function updateHeroSteps() {
+        let currentIdx = 0;
+        taskSections.forEach((id, i) => {
+            const el = document.getElementById(id);
+            if (el && el.getBoundingClientRect().top < window.innerHeight * 0.5) currentIdx = i;
+        });
+        heroStepDots.forEach((dot, i) => {
+            dot.classList.remove('active', 'done');
+            if (i < currentIdx) dot.classList.add('done');
+            else if (i === currentIdx) dot.classList.add('active');
+        });
+    }
+
+    window.addEventListener('scroll', updateHeroSteps);
+    updateHeroSteps();
+
+    // ====== COPY CODE BUTTON ======
+    function copyCode(btn, textareaId) {
+        const textarea = document.getElementById(textareaId);
+        if (!textarea) return;
+        navigator.clipboard.writeText(textarea.value).then(() => {
+            btn.classList.add('copied');
+            btn.innerHTML = '<i data-lucide="check" style="width:12px;height:12px;"></i> Copied!';
+            lucide.createIcons();
+            setTimeout(() => {
+                btn.classList.remove('copied');
+                btn.innerHTML = '<i data-lucide="clipboard" style="width:12px;height:12px;"></i> Copy';
+                lucide.createIcons();
+            }, 2000);
+        });
+    }
+
+    // ====== LUCIDE ICONS ======
+    lucide.createIcons();
+</script>
+</body>
+</html>

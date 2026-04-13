@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speaker Notes: Session 8 — Multi-Agent Systems in Practice | ISOM 260</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #0f1424;
+            --bg-card: #141929;
+            --bg-elevated: #1a2035;
+            --bg-code: #0d1117;
+            --cyan: #00e5ff;
+            --cyan-dim: #00b8d4;
+            --cyan-glow: rgba(0, 229, 255, 0.15);
+            --cyan-glow-strong: rgba(0, 229, 255, 0.3);
+            --magenta: #ff006e;
+            --magenta-glow: rgba(255, 0, 110, 0.15);
+            --yellow: #ffd600;
+            --yellow-glow: rgba(255, 214, 0, 0.15);
+            --green: #00e676;
+            --green-glow: rgba(0, 230, 118, 0.15);
+            --orange: #ff9100;
+            --purple: #b388ff;
+            --text-primary: #e8ecf4;
+            --text-secondary: #8892a8;
+            --text-dim: #5a6478;
+            --border: rgba(0, 229, 255, 0.1);
+            --border-strong: rgba(0, 229, 255, 0.25);
+            --grid-line: rgba(0, 229, 255, 0.04);
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'DM Sans', sans-serif;
+            line-height: 1.7;
+            overflow-x: hidden;
+            background-image:
+                linear-gradient(var(--grid-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        /* Glow orbs */
+        .glow-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.4;
+        }
+        .glow-orb-1 {
+            width: 500px; height: 500px;
+            background: rgba(0, 229, 255, 0.08);
+            top: -100px; left: -100px;
+        }
+        .glow-orb-2 {
+            width: 400px; height: 400px;
+            background: rgba(255, 0, 110, 0.06);
+            top: 40%; right: -100px;
+        }
+        .glow-orb-3 {
+            width: 350px; height: 350px;
+            background: rgba(0, 230, 118, 0.05);
+            bottom: -50px; left: 30%;
+        }
+
+        /* ── Top Bar ── */
+        .top-bar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1.5rem 0 calc(72px + 1.5rem);
+            background: rgba(10, 14, 26, 0.92);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .top-bar-title {
+            font-family: 'Sora', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--cyan);
+            white-space: nowrap;
+        }
+
+        .top-bar-clock {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-shadow: 0 0 20px var(--cyan-glow-strong);
+        }
+
+        .top-bar-progress {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            white-space: nowrap;
+        }
+
+        .progress-label {
+            font-family: 'Sora', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .progress-bar-track {
+            width: 120px;
+            height: 6px;
+            background: var(--bg-elevated);
+            border-radius: 3px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--cyan), var(--green));
+            border-radius: 3px;
+            transition: width 0.4s ease;
+        }
+
+        /* ── Sticky Sidebar ── */
+        .sidebar {
+            position: fixed;
+            top: 60px;
+            left: 0;
+            bottom: 0;
+            width: 72px;
+            z-index: 999;
+            background: rgba(15, 20, 36, 0.95);
+            backdrop-filter: blur(16px);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem 0;
+            gap: 0.5rem;
+            overflow-y: auto;
+        }
+
+        .sidebar-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.25s ease;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .sidebar-btn:hover {
+            border-color: var(--cyan);
+            color: var(--cyan);
+            background: var(--bg-elevated);
+            box-shadow: 0 0 20px var(--cyan-glow);
+            transform: scale(1.08);
+        }
+
+        .sidebar-btn .tooltip {
+            position: absolute;
+            left: calc(100% + 10px);
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+            font-size: 0.72rem;
+            font-weight: 500;
+            padding: 0.35rem 0.6rem;
+            border-radius: 6px;
+            border: 1px solid var(--border-strong);
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            z-index: 1001;
+        }
+
+        .sidebar-btn:hover .tooltip { opacity: 1; }
+
+        .sidebar-divider {
+            width: 32px;
+            height: 1px;
+            background: var(--border);
+            margin: 0.25rem 0;
+        }
+
+        /* ── Main Content ── */
+        .main-content {
+            margin-left: 72px;
+            padding: 80px 2rem 3rem 2rem;
+            max-width: 1100px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ── Section Cards ── */
+        .section-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .section-card:hover {
+            border-color: var(--border-strong);
+            box-shadow: 0 4px 30px rgba(0, 229, 255, 0.06);
+        }
+
+        .section-card.active {
+            border-color: var(--cyan);
+            box-shadow: 0 0 30px var(--cyan-glow), inset 0 0 30px rgba(0, 229, 255, 0.03);
+        }
+
+        .section-card.completed {
+            opacity: 0.55;
+            border-color: var(--border);
+        }
+
+        .section-card.completed:hover { opacity: 0.8; }
+
+        /* Card Header */
+        .card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+            flex-wrap: wrap;
+        }
+
+        .card-header-left {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .section-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 0.8rem;
+            color: var(--bg-primary);
+            background: var(--cyan);
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .section-card.completed .section-number {
+            background: var(--text-dim);
+        }
+
+        .section-title {
+            font-family: 'Sora', sans-serif;
+            font-weight: 700;
+            font-size: 1.15rem;
+            color: var(--cyan);
+        }
+
+        .section-card.completed .section-title {
+            color: var(--text-dim);
+        }
+
+        .section-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-top: 0.15rem;
+        }
+
+        .meta-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            font-weight: 500;
+            padding: 0.2rem 0.55rem;
+            border-radius: 6px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        .card-header-right {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        /* Countdown timer */
+        .countdown {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 0.35rem 0.75rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--bg-elevated);
+            color: var(--text-dim);
+            min-width: 90px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .countdown.green {
+            color: var(--green);
+            border-color: var(--green);
+            background: var(--green-glow);
+            box-shadow: 0 0 12px var(--green-glow);
+        }
+
+        .countdown.yellow {
+            color: var(--yellow);
+            border-color: var(--yellow);
+            background: var(--yellow-glow);
+            box-shadow: 0 0 12px var(--yellow-glow);
+        }
+
+        .countdown.red {
+            color: var(--magenta);
+            border-color: var(--magenta);
+            background: var(--magenta-glow);
+            box-shadow: 0 0 12px var(--magenta-glow);
+            animation: pulse-red 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse-red {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .countdown.done {
+            color: var(--text-dim);
+            border-color: var(--border);
+            background: var(--bg-elevated);
+        }
+
+        /* Status indicator */
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--text-dim);
+            flex-shrink: 0;
+        }
+
+        .status-dot.active {
+            background: var(--green);
+            box-shadow: 0 0 10px var(--green-glow);
+            animation: status-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes status-pulse {
+            0%, 100% { box-shadow: 0 0 10px var(--green-glow); }
+            50% { box-shadow: 0 0 20px rgba(0, 230, 118, 0.4); }
+        }
+
+        .status-dot.completed {
+            background: var(--text-dim);
+        }
+
+        /* ── Card Body Sections ── */
+
+        /* Talking Points */
+        .talking-points {
+            margin-bottom: 1.25rem;
+        }
+
+        .section-label {
+            font-family: 'Sora', sans-serif;
+            font-weight: 600;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.6rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .section-label.talk { color: var(--green); }
+        .section-label.demo { color: var(--yellow); }
+        .section-label.ask { color: var(--magenta); }
+        .section-label.transition { color: var(--purple); }
+        .section-label.tips { color: var(--orange); }
+
+        .talk-list {
+            list-style: none;
+        }
+
+        .talk-list li {
+            padding: 0.5rem 0.75rem;
+            margin-bottom: 0.35rem;
+            border-radius: 8px;
+            border-left: 3px solid var(--green);
+            background: var(--green-glow);
+            font-size: 0.92rem;
+            line-height: 1.55;
+            color: var(--text-primary);
+            transition: all 0.2s ease;
+        }
+
+        .talk-list li:hover {
+            background: rgba(0, 230, 118, 0.12);
+            transform: translateX(4px);
+        }
+
+        /* Tips list */
+        .tips-list {
+            list-style: none;
+        }
+
+        .tips-list li {
+            padding: 0.5rem 0.75rem;
+            margin-bottom: 0.35rem;
+            border-radius: 8px;
+            border-left: 3px solid var(--orange);
+            background: rgba(255, 145, 0, 0.08);
+            font-size: 0.92rem;
+            line-height: 1.55;
+            color: var(--text-primary);
+            transition: all 0.2s ease;
+        }
+
+        .tips-list li:hover {
+            background: rgba(255, 145, 0, 0.15);
+            transform: translateX(4px);
+        }
+
+        /* Demo Cues */
+        .demo-cues {
+            margin-bottom: 1.25rem;
+        }
+
+        .demo-btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .demo-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 214, 0, 0.3);
+            background: var(--yellow-glow);
+            color: var(--yellow);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.25s ease;
+            cursor: pointer;
+        }
+
+        .demo-btn:hover {
+            background: rgba(255, 214, 0, 0.2);
+            border-color: var(--yellow);
+            box-shadow: 0 0 20px var(--yellow-glow);
+            transform: translateY(-1px);
+        }
+
+        /* Ask the Class */
+        .ask-section {
+            margin-bottom: 1.25rem;
+        }
+
+        .ask-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.7rem;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 0, 110, 0.2);
+            background: var(--magenta-glow);
+            margin-bottom: 0.4rem;
+        }
+
+        .ask-icon {
+            color: var(--magenta);
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .ask-text {
+            font-size: 0.92rem;
+            color: var(--text-primary);
+            font-style: italic;
+            line-height: 1.5;
+        }
+
+        /* Transition */
+        .transition-block {
+            border-left: 3px solid var(--purple);
+            padding: 0.75rem 1rem;
+            background: rgba(179, 136, 255, 0.06);
+            border-radius: 0 8px 8px 0;
+            font-size: 0.9rem;
+            color: var(--purple);
+            font-weight: 500;
+            line-height: 1.55;
+        }
+
+        .transition-block::before {
+            content: '\201C';
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-right: 0.25rem;
+            opacity: 0.5;
+        }
+
+        .transition-block::after {
+            content: '\201D';
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-left: 0.15rem;
+            opacity: 0.5;
+        }
+
+        /* ── Keyboard Hints ── */
+        .keyboard-hint {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            z-index: 999;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 0.6rem 0.9rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .kbd {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 22px;
+            height: 22px;
+            padding: 0 5px;
+            border-radius: 4px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-strong);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.68rem;
+            font-weight: 600;
+            color: var(--cyan);
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 900px) {
+            .sidebar { display: none; }
+            .main-content { margin-left: 0; }
+            .top-bar { padding-left: 1.5rem; }
+            .top-bar-title { font-size: 0.85rem; }
+        }
+
+        @media (max-width: 600px) {
+            .main-content { padding: 75px 1rem 2rem 1rem; }
+            .card-header { flex-direction: column; }
+            .top-bar-clock { font-size: 1rem; }
+        }
+
+        /* ── Scrollbar ── */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-primary); }
+        ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--cyan-dim); }
+    </style>
+</head>
+<body>
+
+<!-- Glow Orbs -->
+<div class="glow-orb glow-orb-1"></div>
+<div class="glow-orb glow-orb-2"></div>
+<div class="glow-orb glow-orb-3"></div>
+
+<!-- ═══════ Top Bar ═══════ -->
+<header class="top-bar">
+    <div class="top-bar-title">S8 &middot; Multi-Agent Systems</div>
+    <div class="top-bar-clock" id="liveClock">--:-- --</div>
+    <div class="top-bar-progress">
+        <span class="progress-label" id="progressLabel">Part 1/7</span>
+        <div class="progress-bar-track">
+            <div class="progress-bar-fill" id="progressFill" style="width: 14.28%"></div>
+        </div>
+    </div>
+</header>
+
+<!-- ═══════ Sidebar ═══════ -->
+<nav class="sidebar">
+    <a href="/session-08/lecture-guide.html" target="_blank" class="sidebar-btn" title="Lecture Guide">
+        <i data-lucide="presentation" style="width:22px;height:22px"></i>
+        <span class="tooltip">Lecture Guide</span>
+    </a>
+    <a href="/session-08/pipeline-demo.html" target="_blank" class="sidebar-btn" title="Pipeline Demo">
+        <i data-lucide="play-circle" style="width:22px;height:22px"></i>
+        <span class="tooltip">Pipeline Demo</span>
+    </a>
+    <a href="https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-08/ISOM260_Session8_Multi_Agent_Systems.ipynb" target="_blank" class="sidebar-btn" title="Colab Notebook">
+        <i data-lucide="notebook-pen" style="width:22px;height:22px"></i>
+        <span class="tooltip">Colab Notebook</span>
+    </a>
+    <a href="/session-08/workshop-timer.html" target="_blank" class="sidebar-btn" title="Workshop Timer">
+        <i data-lucide="timer" style="width:22px;height:22px"></i>
+        <span class="tooltip">Workshop Timer</span>
+    </a>
+    <div class="sidebar-divider"></div>
+    <a href="/session-08/advanced-agent-patterns.html" target="_blank" class="sidebar-btn" title="Advanced Patterns">
+        <i data-lucide="bot" style="width:22px;height:22px"></i>
+        <span class="tooltip">Advanced Patterns</span>
+    </a>
+    <a href="/session-08/homework-guide.html" target="_blank" class="sidebar-btn" title="Homework Guide">
+        <i data-lucide="book-open" style="width:22px;height:22px"></i>
+        <span class="tooltip">Homework Guide</span>
+    </a>
+    <div class="sidebar-divider"></div>
+    <a href="/sessions/session-08" target="_blank" class="sidebar-btn" title="Session Page">
+        <i data-lucide="home" style="width:22px;height:22px"></i>
+        <span class="tooltip">Session Page</span>
+    </a>
+</nav>
+
+<!-- ═══════ Main Content ═══════ -->
+<main class="main-content">
+
+    <!-- ── Part 1: From Design to Build ── -->
+    <div class="section-card" id="section-1" data-section="1" data-start="17:00" data-end="17:15" data-minutes="15">
+        <div class="card-header">
+            <div class="card-header-left">
+                <div class="section-number">1</div>
+                <div>
+                    <div class="section-title">From Design to Build</div>
+                    <div class="section-meta">
+                        <span class="meta-badge">5:00 &ndash; 5:15 PM</span>
+                        <span class="meta-badge">15 min</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-header-right">
+                <div class="status-dot" id="status-1"></div>
+                <div class="countdown" id="countdown-1">--:--</div>
+            </div>
+        </div>
+
+        <div class="talking-points">
+            <div class="section-label talk"><i data-lucide="mic" style="width:14px;height:14px"></i> Key Talking Points</div>
+            <ul class="talk-list">
+                <li>Session 6 was design on paper. Session 7 was knowledge. Today we BUILD a multi-agent system.</li>
+                <li>The org chart analogy: Why do companies have departments? Because one person can't be an expert at everything.</li>
+                <li>Your pipeline today: Researcher &rarr; Analyst &rarr; Editor. Three specialists, one workflow.</li>
+                <li>Key question to plant: "When does adding another agent help vs. just adding complexity?"</li>
+            </ul>
+        </div>
+
+        <div class="demo-cues">
+            <div class="section-label demo"><i data-lucide="monitor" style="width:14px;height:14px"></i> Demo Cues</div>
+            <div class="demo-btn-group">
+                <a href="/session-08/lecture-guide.html" target="_blank" class="demo-btn">
+                    <i data-lucide="external-link" style="width:14px;height:14px"></i> OPEN: Lecture Guide &mdash; Sections 1-2 (Org Chart + Three Patterns)
+                </a>
+            </div>
+        </div>
+
+        <div>
+            <div class="section-label ask"><i data-lucide="message-circle" style="width:14px;height:14px"></i> Ask the Class</div>
+            <div class="ask-card">
+                &ldquo;Think about your job or internship. What happens when one person tries to do research, analysis, AND writing all at once? How does that compare to splitting it across a team?&rdquo;
+            </div>
+        </div>
+
+        <div>
+            <div class="section-label transition"><i data-lucide="arrow-right" style="width:14px;height:14px"></i> Transition</div>
+            <div class="transition-block">Let's look at HOW agents actually talk to each other...</div>
+        </div>
+    </div>
+
+    <!-- ── Part 2: Agent Communication Patterns ── -->
+    <div class="section-card" id="section-2" data-section="2" data-start="17:15" data-end="17:40" data-minutes="25">
+        <div class="card-header">
+            <div class="card-header-left">
+                <div class="section-number">2</div>
+                <div>
+                    <div class="section-title">Agent Communication Patterns</div>
+                    <div class="section-meta">
+                        <span class="meta-badge">5:15 &ndash; 5:40 PM</span>
+                        <span class="meta-badge">25 min</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-header-right">
+                <div class="status-dot" id="status-2"></div>
+                <div class="countdown" id="countdown-2">--:--</div>
+            </div>
+        </div>
+
+        <div class="talking-points">
+            <div class="section-label talk"><i data-lucide="mic" style="width:14px;height:14px"></i> Key Talking Points</div>
+            <ul class="talk-list">
+                <li>Three communication patterns: Message Passing, Shared Context, Orchestration.</li>
+                <li>Message passing is the simplest &mdash; Agent A's output becomes Agent B's input. That's literally it.</li>
+                <li>Shared context = all agents read/write a shared workspace. More flexible but harder to debug.</li>
+                <li>Orchestration = a manager agent decides who works on what. This is what Claude Code's team feature uses.</li>
+                <li>Key insight: Structured JSON handoffs &gt; free text. Show why with Pipeline Demo.</li>
+            </ul>
+        </div>
+
+        <div class="demo-cues">
+            <div class="section-label demo"><i data-lucide="monitor" style="width:14px;height:14px"></i> Demo Cues</div>
+            <div class="demo-btn-group">
+                <a href="/session-08/pipeline-demo.html" target="_blank" class="demo-btn">
+                    <i data-lucide="external-link" style="width:14px;height:14px"></i> OPEN: Pipeline Demo &mdash; Researcher &rarr; Analyst &rarr; Editor trace
+                </a>
+            </div>
+        </div>
+
+        <div class="ask-section">
+            <div class="section-label ask"><i data-lucide="message-circle-question" style="width:14px;height:14px"></i> Ask the Class</div>
+            <div class="ask-card">
+                <i data-lucide="help-circle" style="width:18px;height:18px" class="ask-icon"></i>
+                <span class="ask-text">Which pattern would you use for customer support? Why?</span>
+            </div>
+        </div>
+
+        <div>
+            <div class="section-label transition"><i data-lucide="arrow-right" style="width:14px;height:14px"></i> Transition</div>
+            <div class="transition-block">Now it's YOUR turn to build one...</div>
+        </div>
+    </div>
+
+    <!-- ── Part 3: Hands-On Build ── -->
+    <div class="section-card" id="section-3" data-section="3" data-start="17:40" data-end="18:25" data-minutes="45">
+        <div class="card-header">
+            <div class="card-header-left">
+                <div class="section-number">3</div>
+                <div>
+                    <div class="section-title">Hands-On Build</div>
+                    <div class="section-meta">
+                        <span class="meta-badge">5:40 &ndash; 6:25 PM</span>
+                        <span class="meta-badge">45 min</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-header-right">
+                <div class="status-dot" id="status-3"></div>
+                <div class="countdown" id="countdown-3">--:--</div>
+            </div>
+        </div>
+
+        <div class="talking-points">
+            <div class="section-label talk"><i data-lucide="mic" style="width:14px;height:14px"></i> Key Talking Points</div>
+            <ul class="talk-list">
+                <li>Phase 1 (first 15 min): Walk through building the Researcher agent TOGETHER. Show the system prompt, output format, test it.</li>
+                <li>Phase 2 (next 15 min): Students build the Analyst agent. Walk the room. Common issue: analysts just rephrase instead of adding value.</li>
+                <li>Phase 3 (last 15 min): Add Editor, wire pipeline, run end-to-end. Celebrate first successful pipelines!</li>
+            </ul>
+        </div>
+
+        <div class="demo-cues">
+            <div class="section-label demo"><i data-lucide="monitor" style="width:14px;height:14px"></i> Demo Cues</div>
+            <div class="demo-btn-group">
+                <a href="https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-08/ISOM260_Session8_Multi_Agent_Systems.ipynb" target="_blank" class="demo-btn">
+                    <i data-lucide="external-link" style="width:14px;height:14px"></i> SWITCH TO: Google Colab
+                </a>
+                <a href="/session-08/workshop-timer.html" target="_blank" class="demo-btn">
+                    <i data-lucide="external-link" style="width:14px;height:14px"></i> OPEN: workshop-timer.html
+                </a>
+            </div>
+        </div>
+
+        <div class="talking-points">
+            <div class="section-label tips"><i data-lucide="eye" style="width:14px;height:14px"></i> Tips for Walking the Room</div>
+            <ul class="tips-list">
+                <li>Check that Researcher output is STRUCTURED (not free text)</li>
+                <li>Make sure Analyst actually ADDS patterns, doesn't just summarize</li>
+                <li>Editor should CITE specific facts when fact-checking</li>
+            </ul>
+        </div>
+
+        <div>
+            <div class="section-label transition"><i data-lucide="arrow-right" style="width:14px;height:14px"></i> Transition</div>
+            <div class="transition-block">Take a 10-minute break. You've earned it &mdash; you just built an AI team!</div>
+        </div>
+    </div>
+
+    <!-- ── Part 4: Break ── -->
+    <div class="section-card" id="section-4" data-section="4" data-start="18:25" data-end="18:35" data-minutes="10">
+        <div class="card-header">
+            <div class="card-header-left">
+                <div class="section-number">4</div>
+                <div>
+                    <div class="section-title">Break</div>
+                    <div class="section-meta">
+                        <span class="meta-badge">6:25 &ndash; 6:35 PM</span>
+                        <span class="meta-badge">10 min</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-header-right">
+                <div class="status-dot" id="status-4"></div>
+                <div class="countdown" id="countdown-4">--:--</div>
+            </div>
+        </div>
+
+        <div class="talking-points">
+            <div class="section-label talk"><i data-lucide="mic" style="width:14px;height:14px"></i> Key Talking Points</div>
+            <ul class="talk-list">
+                <li>While they're on break, check completion: How many got the full pipeline running?</li>
+                <li>Tease what's coming: "After break, we're going to break your pipeline on purpose."</li>
+                <li>The telephone game &mdash; information gets distorted as it passes between agents.</li>
+            </ul>
+        </div>
+
+        <div class="ask-section">
+            <div class="section-label ask"><i data-lucide="message-circle-question" style="width:14px;height:14px"></i> Quick Check</div>
+            <div class="ask-card">
+                <i data-lucide="help-circle" style="width:18px;height:18px" class="ask-icon"></i>
+                <span class="ask-text">Hands up if your pipeline is producing output!</span>
+            </div>
+        </div>
+
+        <div>
+            <div class="section-label transition"><i data-lucide="arrow-right" style="width:14px;height:14px"></i> Transition</div>
+            <div class="transition-block">Welcome back. Your pipeline works. Now let's see what happens when information passes through multiple agents...</div>
+        </div>
+    </div>
+
+    <!-- ── Part 5: The Telephone Game ── -->
+    <div class="section-card" id="section-5" data-section="5" data-start="18:35" data-end="19:05" data-minutes="30">
+        <div class="card-header">
+            <div class="card-header-left">
+                <div class="section-number">5</div>
+                <div>
+                    <div class="section-title">The Telephone Game</div>
+                    <div class="section-meta">
+                        <span class="meta-badge">6:35 &ndash; 7:05 PM</span>
+                        <span class="meta-badge">30 min</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-header-right">
+                <div class="status-dot" id="status-5"></div>
+                <div class="countdown" id="countdown-5">--:--</div>
+            </div>
+        </div>
+
+        <div class="talking-points">
+            <div class="section-label talk"><i data-lucide="mic" style="width:14px;height:14px"></i> Key Talking Points</div>
+            <ul class="talk-list">
+                <li>Ethics moment: "Run the same question 3 times. Do you get the same answer? Why not?"</li>
+                <li>The telephone game analogy: facts change subtly at each handoff.</li>
+                <li>Four distortion types: Generalization, Amplification, Omission, Fabrication.</li>
+                <li>Accountability question: "If Agent C gives a wrong answer based on Agent A's research, who's responsible?"</li>
+                <li>Three safeguards: Citation chains, confidence propagation, human review gates.</li>
+            </ul>
+        </div>
+
+        <div class="demo-cues">
+            <div class="section-label demo"><i data-lucide="monitor" style="width:14px;height:14px"></i> Demo Cues</div>
+            <div class="demo-btn-group">
+                <a href="/session-08/lecture-guide.html" target="_blank" class="demo-btn">
+                    <i data-lucide="external-link" style="width:14px;height:14px"></i> OPEN: Lecture Guide &mdash; Section 6 (Telephone Game)
+                </a>
+            </div>
+        </div>
+
+        <div class="ask-section">
+            <div class="section-label ask"><i data-lucide="message-circle-question" style="width:14px;height:14px"></i> Ask the Class</div>
+            <div class="ask-card">
+                <i data-lucide="help-circle" style="width:18px;height:18px" class="ask-icon"></i>
+                <span class="ask-text">In a hospital, would you trust a multi-agent system for diagnosis? Why or why not?</span>
+            </div>
+            <div class="ask-card">
+                <i data-lucide="help-circle" style="width:18px;height:18px" class="ask-icon"></i>
+                <span class="ask-text">Who is liable when an AI pipeline produces harmful output?</span>
+            </div>
+        </div>
+
+        <div>
+            <div class="section-label transition"><i data-lucide="arrow-right" style="width:14px;height:14px"></i> Transition</div>
+            <div class="transition-block">So when IS multi-agent worth the complexity tax?</div>
+        </div>
+    </div>
+
+    <!-- ── Part 6: When Multi-Agent Is Worth It ── -->
+    <div class="section-card" id="section-6" data-section="6" data-start="19:05" data-end="19:20" data-minutes="15">
+        <div class="card-header">
+            <div class="card-header-left">
+                <div class="section-number">6</div>
+                <div>
+                    <div class="section-title">When Multi-Agent Is Worth It</div>
+                    <div class="section-meta">
+                        <span class="meta-badge">7:05 &ndash; 7:20 PM</span>
+                        <span class="meta-badge">15 min</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-header-right">
+                <div class="status-dot" id="status-6"></div>
+                <div class="countdown" id="countdown-6">--:--</div>
+            </div>
+        </div>
+
+        <div class="talking-points">
+            <div class="section-label talk"><i data-lucide="mic" style="width:14px;height:14px"></i> Key Talking Points</div>
+            <ul class="talk-list">
+                <li>The complexity tax: each agent adds latency, cost, and failure points.</li>
+                <li>Decision framework: Use multi-agent when tasks need different expertise, quality review is critical, or adversarial checking is needed.</li>
+                <li>Stick with single-agent for straightforward tasks, when speed matters, or when the pipeline is linear and simple.</li>
+                <li>Real examples: Content creation (multi wins), simple Q&amp;A (single wins), code review (debate wins).</li>
+            </ul>
+        </div>
+
+        <div class="demo-cues">
+            <div class="section-label demo"><i data-lucide="monitor" style="width:14px;height:14px"></i> Demo Cues</div>
+            <div class="demo-btn-group">
+                <a href="/session-08/lecture-guide.html" target="_blank" class="demo-btn">
+                    <i data-lucide="external-link" style="width:14px;height:14px"></i> OPEN: Lecture Guide &mdash; Section 7 (Decision Matrix)
+                </a>
+            </div>
+        </div>
+
+        <div>
+            <div class="section-label ask"><i data-lucide="message-circle" style="width:14px;height:14px"></i> Ask the Class</div>
+            <div class="ask-card">
+                &ldquo;For your final project industry &mdash; would a multi-agent system help? What agents would you need? Or would a single agent with good tools be enough?&rdquo;
+            </div>
+        </div>
+
+        <div>
+            <div class="section-label transition"><i data-lucide="arrow-right" style="width:14px;height:14px"></i> Transition</div>
+            <div class="transition-block">Let's zoom out and see how far we've come...</div>
+        </div>
+    </div>
+
+    <!-- ── Part 7: Wrap-Up + Homework ── -->
+    <div class="section-card" id="section-7" data-section="7" data-start="19:20" data-end="19:30" data-minutes="10">
+        <div class="card-header">
+            <div class="card-header-left">
+                <div class="section-number">7</div>
+                <div>
+                    <div class="section-title">Wrap-Up + Homework</div>
+                    <div class="section-meta">
+                        <span class="meta-badge">7:20 &ndash; 7:30 PM</span>
+                        <span class="meta-badge">10 min</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-header-right">
+                <div class="status-dot" id="status-7"></div>
+                <div class="countdown" id="countdown-7">--:--</div>
+            </div>
+        </div>
+
+        <div class="talking-points">
+            <div class="section-label talk"><i data-lucide="mic" style="width:14px;height:14px"></i> Key Talking Points</div>
+            <ul class="talk-list">
+                <li>The stack: Tools (S4) &rarr; Real APIs (S5) &rarr; ReAct (S6) &rarr; RAG (S7) &rarr; Multi-Agent (TODAY).</li>
+                <li>You started by teaching Claude to use a calculator. Now you've built a team of specialized agents.</li>
+                <li>Session 9 = YOUR industry. Pick your department, build your agent.</li>
+            </ul>
+        </div>
+
+        <div class="talking-points">
+            <div class="section-label tips"><i data-lucide="clipboard-list" style="width:14px;height:14px"></i> Homework Preview</div>
+            <ul class="tips-list">
+                <li><strong>Extend:</strong> Add a 4th agent (Fact-Checker, Summarizer, or Domain Expert)</li>
+                <li><strong>Analyze:</strong> Run pipeline 5&times;, document distortion</li>
+                <li><strong>Design:</strong> Multi-agent system for YOUR industry</li>
+                <li><strong>Read:</strong> Claude Code's team feature</li>
+            </ul>
+        </div>
+
+        <div class="demo-cues">
+            <div class="section-label demo"><i data-lucide="monitor" style="width:14px;height:14px"></i> Demo Cues</div>
+            <div class="demo-btn-group">
+                <a href="/session-08/homework-guide.html" target="_blank" class="demo-btn">
+                    <i data-lucide="external-link" style="width:14px;height:14px"></i> OPEN: homework-guide.html
+                </a>
+            </div>
+        </div>
+
+        <div>
+            <div class="section-label transition"><i data-lucide="arrow-right" style="width:14px;height:14px"></i> Closing</div>
+            <div class="transition-block">Next week, everything you've built comes together for YOUR career.</div>
+        </div>
+    </div>
+
+</main>
+
+<!-- Keyboard Hint -->
+<div class="keyboard-hint">
+    <span class="kbd">1</span>&ndash;<span class="kbd">7</span> jump to sections
+</div>
+
+<script>
+(function() {
+    'use strict';
+
+    // ── Initialize Lucide icons ──
+    lucide.createIcons();
+
+    // ── Constants ──
+    var TOTAL_SECTIONS = 7;
+    var sections = [
+        { id: 1, start: '17:00', end: '17:15', minutes: 15 },
+        { id: 2, start: '17:15', end: '17:40', minutes: 25 },
+        { id: 3, start: '17:40', end: '18:25', minutes: 45 },
+        { id: 4, start: '18:25', end: '18:35', minutes: 10 },
+        { id: 5, start: '18:35', end: '19:05', minutes: 30 },
+        { id: 6, start: '19:05', end: '19:20', minutes: 15 },
+        { id: 7, start: '19:20', end: '19:30', minutes: 10 },
+    ];
+
+    var currentSection = 1;
+
+    // ── Helpers ──
+    function parseTime(str) {
+        var parts = str.split(':').map(Number);
+        var d = new Date();
+        d.setHours(parts[0], parts[1], 0, 0);
+        return d;
+    }
+
+    function formatClock(date) {
+        var h = date.getHours();
+        var m = date.getMinutes().toString().padStart(2, '0');
+        var ampm = h >= 12 ? 'PM' : 'AM';
+        h = h % 12 || 12;
+        return h + ':' + m + ' ' + ampm;
+    }
+
+    // ── Live Clock ──
+    var clockEl = document.getElementById('liveClock');
+    function updateClock() {
+        clockEl.textContent = formatClock(new Date());
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    // ── Countdown Timers ──
+    function updateCountdowns() {
+        var now = new Date();
+        sections.forEach(function(sec) {
+            var el = document.getElementById('countdown-' + sec.id);
+            var startTime = parseTime(sec.start);
+            var endTime = parseTime(sec.end);
+
+            if (sec.id === currentSection) {
+                // Active section — show time remaining
+                var remaining = Math.max(0, Math.floor((endTime - now) / 1000));
+                var mins = Math.floor(remaining / 60);
+                var secs = remaining % 60;
+                el.textContent = mins + ':' + secs.toString().padStart(2, '0');
+
+                var totalSec = sec.minutes * 60;
+                var pctRemaining = remaining / totalSec;
+
+                el.className = 'countdown';
+                if (remaining <= 0) {
+                    el.classList.add('done');
+                    el.textContent = '0:00';
+                } else if (pctRemaining > 0.5) {
+                    el.classList.add('green');
+                } else if (pctRemaining > 0.25) {
+                    el.classList.add('yellow');
+                } else {
+                    el.classList.add('red');
+                }
+            } else if (sec.id < currentSection) {
+                el.textContent = 'Done';
+                el.className = 'countdown done';
+            } else {
+                el.textContent = sec.minutes + ':00';
+                el.className = 'countdown';
+            }
+        });
+    }
+    setInterval(updateCountdowns, 1000);
+
+    // ── Section Progress ──
+    function setCurrentSection(num) {
+        currentSection = num;
+        // Update progress bar
+        document.getElementById('progressLabel').textContent = 'Part ' + num + '/7';
+        document.getElementById('progressFill').style.width = ((num / TOTAL_SECTIONS) * 100).toFixed(2) + '%';
+
+        // Update card states
+        document.querySelectorAll('.section-card').forEach(function(card) {
+            var sn = parseInt(card.dataset.section);
+            card.classList.remove('active', 'completed');
+            var dot = document.getElementById('status-' + sn);
+            dot.classList.remove('active', 'completed');
+
+            if (sn === num) {
+                card.classList.add('active');
+                dot.classList.add('active');
+            } else if (sn < num) {
+                card.classList.add('completed');
+                dot.classList.add('completed');
+            }
+        });
+
+        // Scroll to section
+        var target = document.getElementById('section-' + num);
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Immediately update countdowns
+        updateCountdowns();
+    }
+
+    // ── Card Click ──
+    document.querySelectorAll('.section-card').forEach(function(card) {
+        card.addEventListener('click', function(e) {
+            // Don't trigger when clicking links
+            if (e.target.closest('a')) return;
+            var sn = parseInt(card.dataset.section);
+            setCurrentSection(sn);
+        });
+    });
+
+    // ── Keyboard Shortcuts ──
+    document.addEventListener('keydown', function(e) {
+        var key = parseInt(e.key);
+        if (key >= 1 && key <= 7 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+            e.preventDefault();
+            setCurrentSection(key);
+        }
+    });
+
+    // ── Initialize ──
+    setCurrentSection(1);
+    updateCountdowns();
+
+})();
+</script>
+</body>
+</html>

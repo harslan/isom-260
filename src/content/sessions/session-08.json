@@ -141,6 +141,42 @@
       "badge": "Guide",
       "badgeType": "interactive",
       "linkText": "Read guide"
+    },
+    {
+      "title": "Speaker Notes",
+      "url": "/session-08/speaker-notes.html",
+      "description": "Professor's command center with talking points, demo cues, discussion prompts, and section timers for the full 2.5-hour session.",
+      "icon": "presentation",
+      "badge": "Instructor",
+      "badgeType": "code",
+      "linkText": "Open notes"
+    },
+    {
+      "title": "Workshop Timer",
+      "url": "/session-08/workshop-timer.html",
+      "description": "45-minute projectable countdown with 3 phases: Build Researcher (15 min), Build Analyst (15 min), Add Editor + Run Pipeline (15 min).",
+      "icon": "timer",
+      "badge": "Timer",
+      "badgeType": "interactive",
+      "linkText": "Start timer"
+    },
+    {
+      "title": "Pipeline Demo — Live Trace",
+      "url": "/session-08/pipeline-demo.html",
+      "description": "Interactive step-by-step visualization of a Researcher → Analyst → Editor pipeline. Watch data transform at each handoff with play/pause controls.",
+      "icon": "play-circle",
+      "badge": "Demo",
+      "badgeType": "interactive",
+      "linkText": "Launch demo"
+    },
+    {
+      "title": "Homework Guide",
+      "url": "/session-08/homework-guide.html",
+      "description": "Step-by-step walkthrough for all 4 homework tasks: extend your pipeline, analyze distortion, design for your industry, and read about orchestration.",
+      "icon": "book-open",
+      "badge": "Homework",
+      "badgeType": "code",
+      "linkText": "View guide"
     }
   ],
   "activities": [
