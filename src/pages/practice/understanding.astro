@@ -1,0 +1,329 @@
+---
+import PracticeLayout from '../../layouts/PracticeLayout.astro';
+import Icon from '../../components/Icon.astro';
+import { domains, questions, getDomainQuestions } from '../../data/questions';
+import { misconceptionSummaries } from '../../data/practice-content';
+
+// Build a map of every misconception → the question(s) where it appears.
+// This lets us show students "this misconception comes up in Q01 and Q07" so
+// they can revisit and re-test the underlying judgment.
+const misconceptionIndex: Record<string, { name: string; questionIds: string[] }> = {};
+for (const q of questions) {
+  for (const k of ['A', 'B', 'C', 'D'] as const) {
+    const d = q.distractors[k];
+    if (!d) continue;
+    if (!misconceptionIndex[d.misconception]) {
+      misconceptionIndex[d.misconception] = { name: d.misconception, questionIds: [] };
+    }
+    misconceptionIndex[d.misconception].questionIds.push(q.id);
+  }
+}
+
+const allMisconceptions = Object.values(misconceptionIndex)
+  .map((m) => ({
+    ...m,
+    summary: misconceptionSummaries[m.name] || '',
+  }))
+  .sort((a, b) => a.name.localeCompare(b.name));
+
+const domainsWithIds = domains.map((d) => ({
+  ...d,
+  ids: getDomainQuestions(d.id).map((q) => q.id),
+}));
+
+// Client-side lookup tables
+const questionStems: Record<string, { question: string; domainId: string; domainShortTitle: string }> = {};
+for (const q of questions) {
+  const dom = domains.find((d) => d.id === q.domain)!;
+  questionStems[q.id] = {
+    question: q.question,
+    domainId: q.domain,
+    domainShortTitle: dom.shortTitle,
+  };
+}
+---
+
+<PracticeLayout
+  title="Your understanding | ISOM 260 Practice"
+  description="A map of the misconceptions you've encountered and the judgment you're building."
+>
+  <section class="max-w-[820px] mx-auto px-8 pt-16 pb-12">
+    <a
+      href="/practice"
+      class="inline-flex items-center gap-2 text-text-muted text-sm no-underline hover:text-accent-cyan transition-colors mb-8"
+    >
+      <Icon name="chevron-right" class="w-4 h-4 rotate-180" />
+      Practice home
+    </a>
+
+    <div class="font-mono text-[0.75rem] text-accent-cyan tracking-[3px] uppercase mb-4">
+      Your understanding
+    </div>
+    <h1 class="text-[clamp(2rem,5vw,3rem)] font-bold leading-tight mb-6">
+      A map of how you're thinking, not a score.
+    </h1>
+    <p class="prose-practice text-text-secondary text-lg max-w-[700px]">
+      Every wrong answer in this bank carries a <strong>named misconception</strong> — a specific belief
+      a thoughtful student might hold. This page shows which of those you've encountered, how often,
+      and where to revisit them. The goal isn't to avoid mistakes; it's to develop vocabulary for noticing them.
+    </p>
+  </section>
+
+  <!-- Empty state -->
+  <section id="empty-state" class="max-w-[820px] mx-auto px-8 pb-24 hidden">
+    <div class="bg-bg-card border border-border-subtle rounded-2xl p-10 text-center">
+      <Icon name="brain" class="w-10 h-10 text-accent-purple mx-auto mb-4 opacity-60" />
+      <h2 class="text-xl font-semibold mb-2">No questions attempted yet.</h2>
+      <p class="text-text-secondary text-sm mb-6 max-w-[420px] mx-auto">
+        Start anywhere — pick a domain, or hit "Random question" on the practice home. Your map fills in as you reason through questions.
+      </p>
+      <a
+        href="/practice"
+        class="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-accent-cyan to-accent-purple text-bg-primary rounded-full font-semibold no-underline transition-all duration-300 hover:-translate-y-0.5"
+      >
+        Start practicing
+        <Icon name="arrow-right" class="w-4 h-4" />
+      </a>
+    </div>
+  </section>
+
+  <!-- Populated state -->
+  <section id="populated-state" class="max-w-[820px] mx-auto px-8 pb-24 hidden">
+    <!-- Top-level stats -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-12">
+      <div class="bg-bg-card border border-border-subtle rounded-xl p-5">
+        <div class="font-mono text-[0.65rem] text-text-muted tracking-[2px] uppercase mb-2">Attempted</div>
+        <div class="text-3xl font-bold"><span id="stat-attempted">0</span><span class="text-text-muted text-lg font-normal"> / {questions.length}</span></div>
+      </div>
+      <div class="bg-bg-card border border-border-subtle rounded-xl p-5">
+        <div class="font-mono text-[0.65rem] text-accent-green tracking-[2px] uppercase mb-2">Correct on first try</div>
+        <div class="text-3xl font-bold text-accent-green"><span id="stat-correct">0</span></div>
+      </div>
+      <div class="bg-bg-card border border-border-subtle rounded-xl p-5">
+        <div class="font-mono text-[0.65rem] text-accent-orange tracking-[2px] uppercase mb-2">Misconceptions encountered</div>
+        <div class="text-3xl font-bold text-accent-orange"><span id="stat-misc-count">0</span></div>
+      </div>
+    </div>
+
+    <!-- Per-domain breakdown -->
+    <div class="mb-12">
+      <div class="font-mono text-[0.7rem] text-accent-cyan tracking-[3px] uppercase mb-4">
+        Domain progress
+      </div>
+      <div class="space-y-4" id="domain-list">
+        {domainsWithIds.map((d) => (
+          <div
+            class="bg-bg-card border border-border-subtle rounded-xl p-5"
+            data-domain-id={d.id}
+            data-question-ids={d.ids.join(',')}
+          >
+            <div class="flex items-center justify-between gap-4 mb-2">
+              <a
+                href={`/practice/${d.id}`}
+                class="text-[0.95rem] font-semibold no-underline text-text-primary hover:text-accent-cyan transition-colors"
+              >
+                {d.title}
+              </a>
+              <span class="domain-stat font-mono text-xs text-text-muted">0 / {d.ids.length}</span>
+            </div>
+            <div class="h-1 rounded-full bg-bg-tertiary overflow-hidden">
+              <div class="domain-bar h-full bg-gradient-to-r from-accent-cyan to-accent-purple transition-all duration-500" style="width: 0%"></div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- Misconceptions you've fallen for -->
+    <div class="mb-12">
+      <div class="font-mono text-[0.7rem] text-accent-orange tracking-[3px] uppercase mb-4">
+        Misconceptions you've fallen for
+      </div>
+      <div id="fallen-list" class="space-y-3">
+        <!-- Populated by JS -->
+      </div>
+      <div id="fallen-empty" class="hidden bg-bg-card border border-dashed border-border-subtle rounded-xl p-6 text-center text-text-muted text-sm italic">
+        None yet. Either you've been careful — or you haven't reached the questions where these tend to surface.
+      </div>
+    </div>
+
+    <!-- Review what you got wrong -->
+    <div class="mb-12" id="review-wrong-section">
+      <div class="font-mono text-[0.7rem] text-accent-cyan tracking-[3px] uppercase mb-4">
+        Review what you got wrong
+      </div>
+      <div id="review-wrong-list" class="space-y-3">
+        <!-- Populated by JS -->
+      </div>
+      <div id="review-wrong-empty" class="hidden bg-bg-card border border-dashed border-border-subtle rounded-xl p-6 text-center text-text-muted text-sm italic">
+        Nothing to review — every question you've attempted, you got right on the first try.
+      </div>
+    </div>
+
+    <!-- Full glossary of named misconceptions -->
+    <div class="mb-12">
+      <div class="font-mono text-[0.7rem] text-accent-purple tracking-[3px] uppercase mb-4">
+        Glossary &middot; named misconceptions in this bank
+      </div>
+      <p class="text-text-secondary text-sm mb-5 italic">
+        The vocabulary you're developing. Each item names a specific wrong belief and points to where it appears in the bank.
+      </p>
+      <div class="grid grid-cols-1 gap-3">
+        {allMisconceptions.map((m) => (
+          <div class="bg-bg-card border border-border-subtle rounded-lg px-4 py-3">
+            <div class="flex items-baseline justify-between gap-4 mb-1">
+              <div class="text-[0.95rem] font-medium">{m.name}</div>
+              <div class="font-mono text-xs text-text-muted shrink-0">
+                {m.questionIds.map((id, i) => (
+                  <>
+                    <a href={`/practice/q/${id}`} class="text-text-muted hover:text-accent-cyan transition-colors no-underline">{id}</a>{i < m.questionIds.length - 1 ? ', ' : ''}
+                  </>
+                ))}
+              </div>
+            </div>
+            {m.summary && (
+              <div class="text-text-secondary text-[0.85rem] leading-relaxed italic">
+                {m.summary}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- Reset -->
+    <div class="pt-8 border-t border-border-subtle">
+      <button
+        id="reset-btn"
+        class="text-text-muted text-sm hover:text-accent-orange transition-colors cursor-pointer bg-transparent border-0 p-0"
+      >
+        Reset all practice progress on this device
+      </button>
+      <span id="reset-confirm" class="hidden text-text-muted text-sm ml-2">
+        Are you sure?
+        <button id="reset-yes" class="text-accent-orange hover:underline cursor-pointer bg-transparent border-0 p-0 ml-1">Yes, reset</button>
+        <button id="reset-no" class="text-text-muted hover:underline cursor-pointer bg-transparent border-0 p-0 ml-2">Cancel</button>
+      </span>
+    </div>
+  </section>
+
+  <script is:inline define:vars={{
+    totalQuestions: questions.length,
+    questionStems,
+    misconceptionSummaries,
+  }}>
+    document.addEventListener('DOMContentLoaded', () => {
+      const data = window.PracticeStore.get();
+      const attempted = Object.values(data.questions).filter((q) => q.attempted).length;
+      const correct = Object.values(data.questions).filter((q) => q.correct).length;
+      const miscEntries = Object.entries(data.misconceptions);
+
+      const empty = document.getElementById('empty-state');
+      const populated = document.getElementById('populated-state');
+      if (attempted === 0) {
+        empty.classList.remove('hidden');
+        return;
+      }
+      populated.classList.remove('hidden');
+
+      // Top stats
+      document.getElementById('stat-attempted').textContent = attempted;
+      document.getElementById('stat-correct').textContent = correct;
+      document.getElementById('stat-misc-count').textContent = miscEntries.length;
+
+      // Per-domain
+      document.querySelectorAll('#domain-list > div').forEach((row) => {
+        const ids = row.getAttribute('data-question-ids').split(',').filter(Boolean);
+        const stats = window.PracticeStore.domainStats(ids);
+        const statEl = row.querySelector('.domain-stat');
+        const barEl = row.querySelector('.domain-bar');
+        if (statEl) {
+          statEl.textContent = stats.attempted === 0
+            ? `${stats.total} unseen`
+            : `${stats.correct} / ${stats.total} correct · ${stats.attempted} attempted`;
+        }
+        if (barEl) {
+          const pct = stats.total > 0 ? (stats.attempted / stats.total) * 100 : 0;
+          barEl.style.width = pct + '%';
+        }
+      });
+
+      // Fallen-for list
+      const fallenList = document.getElementById('fallen-list');
+      const fallenEmpty = document.getElementById('fallen-empty');
+      if (miscEntries.length === 0) {
+        fallenList.classList.add('hidden');
+        fallenEmpty.classList.remove('hidden');
+      } else {
+        miscEntries.sort((a, b) => b[1] - a[1]);
+        fallenList.innerHTML = miscEntries.map(([name, count]) => {
+          const label = count === 1 ? 'once' : count + ' times';
+          const summary = misconceptionSummaries[name] || '';
+          return `
+            <div class="bg-bg-card border border-accent-orange/20 rounded-xl p-5">
+              <div class="flex items-baseline justify-between gap-4 mb-2">
+                <div class="text-[0.95rem] font-semibold">${escapeHtml(name)}</div>
+                <div class="font-mono text-xs text-accent-orange shrink-0">picked ${label}</div>
+              </div>
+              ${summary ? `<div class="text-text-secondary text-[0.875rem] leading-relaxed italic">${escapeHtml(summary)}</div>` : ''}
+            </div>
+          `;
+        }).join('');
+      }
+
+      // Review-wrong list
+      const wrongIds = window.PracticeStore.wrongQuestionIds();
+      const reviewList = document.getElementById('review-wrong-list');
+      const reviewEmpty = document.getElementById('review-wrong-empty');
+      if (wrongIds.length === 0) {
+        reviewList.classList.add('hidden');
+        reviewEmpty.classList.remove('hidden');
+      } else {
+        // Order by question id for stable display
+        wrongIds.sort();
+        reviewList.innerHTML = wrongIds.map((id) => {
+          const stem = questionStems[id];
+          if (!stem) return '';
+          const q = data.questions[id] || {};
+          const picked = q.selectedAnswer ? `picked ${escapeHtml(q.selectedAnswer)}` : '';
+          return `
+            <a href="/practice/q/${id}" class="block bg-bg-card border border-border-subtle rounded-xl p-5 no-underline text-inherit transition-all duration-300 hover:border-accent-cyan/30 hover:-translate-y-0.5 group">
+              <div class="flex items-start gap-4">
+                <span class="font-mono text-sm text-text-muted group-hover:text-accent-cyan transition-colors w-12 shrink-0">${id}</span>
+                <div class="flex-1 min-w-0">
+                  <div class="text-[0.95rem] font-medium mb-1 group-hover:text-accent-cyan transition-colors">${escapeHtml(stem.question)}</div>
+                  <div class="font-mono text-[0.7rem] text-text-muted tracking-[2px] uppercase">${escapeHtml(stem.domainShortTitle)}${picked ? ' · ' + picked : ''}</div>
+                </div>
+                <span class="text-text-muted text-xs italic self-center shrink-0">try again →</span>
+              </div>
+            </a>
+          `;
+        }).join('');
+      }
+
+      // Reset
+      const resetBtn = document.getElementById('reset-btn');
+      const resetConfirm = document.getElementById('reset-confirm');
+      const resetYes = document.getElementById('reset-yes');
+      const resetNo = document.getElementById('reset-no');
+      resetBtn.addEventListener('click', () => {
+        resetBtn.classList.add('hidden');
+        resetConfirm.classList.remove('hidden');
+      });
+      resetNo.addEventListener('click', () => {
+        resetConfirm.classList.add('hidden');
+        resetBtn.classList.remove('hidden');
+      });
+      resetYes.addEventListener('click', () => {
+        window.PracticeStore.reset();
+        window.location.reload();
+      });
+
+      function escapeHtml(s) {
+        return s.replace(/[&<>"']/g, (c) => ({
+          '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        }[c]));
+      }
+    });
+  </script>
+</PracticeLayout>

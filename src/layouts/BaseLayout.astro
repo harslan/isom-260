@@ -21,6 +21,7 @@ const siteLinks = [
   { label: 'Sessions', href: '/sessions' },
   { label: 'Syllabus', href: '/syllabus' },
   { label: 'Resources', href: '/resources' },
+  { label: 'Practice', href: '/practice' },
 ];
 
 // Build search index
@@ -63,6 +64,13 @@ for (const session of sorted) {
     });
   }
 }
+
+searchIndex.push({
+  type: 'practice',
+  title: 'Practice — Agentic AI question bank',
+  subtitle: 'Develop production judgment one question at a time',
+  url: '/practice',
+});
 ---
 
 <!DOCTYPE html>
