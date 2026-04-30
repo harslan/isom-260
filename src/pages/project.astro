@@ -1,0 +1,369 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import GradientText from '../components/GradientText.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import Icon from '../components/Icon.astro';
+
+const problemIdeas = [
+  {
+    domain: 'Personal Productivity',
+    examples: [
+      'An agent that reads your week\'s calendar and proposes how to spend Sunday afternoon based on your stated goals',
+      'An agent that takes your week\'s git commits or notes and drafts your Monday standup summary',
+    ],
+  },
+  {
+    domain: 'Study Companion',
+    examples: [
+      'An agent that takes a lecture transcript and produces flashcards on the hardest concepts',
+      'An agent that grades your practice essay against a rubric and highlights weak paragraphs',
+    ],
+  },
+  {
+    domain: 'Decision Support',
+    examples: [
+      'An agent that helps you evaluate apartment listings against your priorities and flags red flags',
+      'An agent that compares three job offers on the dimensions you care about (commute, comp, growth, culture)',
+    ],
+  },
+  {
+    domain: 'Research Helper',
+    examples: [
+      'An agent that takes a research question and finds three credible recent sources with attribution',
+      'An agent that fact-checks specific claims in a paper against its cited references',
+    ],
+  },
+  {
+    domain: 'Job Search',
+    examples: [
+      'An agent that compares a job description against your resume and identifies the gaps to address',
+      'An agent that drafts personalized outreach to alumni based on their LinkedIn role and your shared interests',
+    ],
+  },
+  {
+    domain: 'Real-World Business',
+    examples: [
+      'An agent for a parent\'s small business — inventory check, customer reply drafting, simple bookkeeping',
+      'An agent for a club, RSO, or org you\'re in — meeting summaries, member onboarding, event coordination',
+    ],
+  },
+  {
+    domain: 'Creative Work',
+    examples: [
+      'An agent that takes a paragraph and offers three rewrites in different tones (formal, casual, urgent)',
+      'An agent that helps you brainstorm titles, intros, or hooks for an essay or pitch',
+    ],
+  },
+  {
+    domain: 'Repetitive Side Project',
+    examples: [
+      'An agent that handles one repetitive task in something you already do — Etsy shop, freelance writing, tutoring',
+      'An agent that drafts thank-you notes after networking events using the contact details you captured',
+    ],
+  },
+];
+
+const deliverables = [
+  {
+    icon: 'code',
+    title: 'Working agent',
+    description: 'A Colab notebook (or other deployment) where the agent runs end-to-end on real input. Include your tool, your guardrail, and your test cases.',
+  },
+  {
+    icon: 'file-text',
+    title: '1-page brief',
+    description: 'A short structured reflection — five labeled prompts shown below. Markdown or PDF, one page.',
+  },
+];
+
+const briefPrompts = [
+  {
+    label: 'Problem',
+    description: 'In 1–2 sentences: what specific real problem does your agent solve? Who has it?',
+  },
+  {
+    label: 'Real user',
+    description: 'Who is the actual person this is for (yourself counts)? What did they say when you tested it?',
+  },
+  {
+    label: 'Your agent',
+    description: 'What tool does it use, what\'s the core flow, what guardrail did you add and why?',
+  },
+  {
+    label: 'Test results',
+    description: 'Which test cases passed, which failed, and what failure modes did you discover?',
+  },
+  {
+    label: 'Reflection',
+    description: 'What worked, what didn\'t, and what would you build with another week?',
+  },
+];
+
+const startResources = [
+  {
+    icon: 'code',
+    title: 'Session 4 — Tool use & agent loop',
+    description: 'The foundational `run_agent()` pattern. Calculator, stock, company info tools. Your starter notebook.',
+    href: '/sessions/session-04',
+  },
+  {
+    icon: 'network',
+    title: 'Session 5 — Real APIs & memory',
+    description: 'Wikipedia API, web fetching, error handling, conversation history. The real-world version of Session 4.',
+    href: '/sessions/session-05',
+  },
+  {
+    icon: 'brain',
+    title: 'Session 6 — ReAct & multi-agent',
+    description: 'Reason → Act → Observe. Multi-agent patterns. The Automation Matrix for deciding what to automate.',
+    href: '/sessions/session-06',
+  },
+  {
+    icon: 'database',
+    title: 'Session 7 — Knowledge agents (RAG)',
+    description: 'Use this if your agent needs to ground answers in documents you provide.',
+    href: '/sessions/session-07',
+  },
+  {
+    icon: 'shield',
+    title: 'Session 10 — Guardrails',
+    description: 'Approval gates, confidence thresholds, input/output guardrails. Pick ONE for your agent.',
+    href: '/sessions/session-10',
+  },
+  {
+    icon: 'check',
+    title: 'Session 11 — Testing & evaluation',
+    description: 'How to write 3+ test cases that actually expose problems, not just confirm the happy path.',
+    href: '/sessions/session-11',
+  },
+];
+
+const faqs = [
+  {
+    question: 'I didn\'t engage with earlier homeworks. Can I still do this?',
+    answer: 'Yes. Start with the simplest possible version: ONE tool, ONE flow, ONE real user (yourself counts). The Session 4 starter notebook gives you the agent loop pre-built. Solving an artificially small problem really well beats failing to ship a complex one.',
+  },
+  {
+    question: 'How do I pick a "real problem"?',
+    answer: 'It has to affect a real person. Yourself counts. A friend, a parent, a club, an org you\'re in counts. A hypothetical "small business owner" doesn\'t. The exercise of finding a real user is half the learning. If you\'re stuck, pick from the suggested categories above and adapt one to your life.',
+  },
+  {
+    question: 'What counts as "ONE primary tool"?',
+    answer: 'Anything that does one specific job: calculator, web search, file reader, Wikipedia API, an LLM-as-judge, a date/time function, a regex extractor, a database lookup. The agent itself can have multiple steps in its loop, but the *tool* it calls should be one focused capability.',
+  },
+  {
+    question: 'What counts as a guardrail?',
+    answer: 'Any layer that catches a specific kind of failure before it reaches the user or the world. Examples: confidence threshold ("if certainty < 0.7, escalate to human"), approval gate ("ask before sending email"), input filter ("reject if prompt looks adversarial"), output filter ("don\'t share PII"). Pick ONE that fits your agent\'s actual risk surface.',
+  },
+  {
+    question: 'How long should I spend on this?',
+    answer: 'However much time fits your schedule. The point isn\'t to hit a specific number of hours — it\'s to ship a small working agent that solves one real problem. If you\'re extending an earlier homework, it\'s shorter. In a group of 3 with split work, it\'s shorter per person. Trust your judgment, and remember that simple-and-finished is the goal.',
+  },
+  {
+    question: 'What if my agent doesn\'t work perfectly?',
+    answer: 'That\'s completely fine — and often more useful than pretending it does. Note in your brief\'s Test Results section what worked, what didn\'t, and what you noticed. Understanding where your agent struggles is part of the learning. You don\'t need a flawless agent to get full credit; you need a real one that you understand.',
+  },
+  {
+    question: 'Is this the same as the Final Project?',
+    answer: 'No. This is a smaller capstone that synthesizes what you\'ve learned across the semester. The Final Project (Sessions 12–13) is bigger and includes a live Demo Day with peer voting. This sprint is submission-only and graded asynchronously.',
+  },
+];
+---
+
+<BaseLayout title="ISOM 260 | Build Your Agent">
+  <!-- Hero -->
+  <section class="py-24 px-8 max-w-[1100px] mx-auto">
+    <div class="font-mono text-[0.75rem] text-accent-cyan tracking-[3px] uppercase mb-6">
+      ISOM 260 &middot; Capstone Project
+    </div>
+    <h1 class="text-[clamp(2.5rem,6vw,4rem)] font-extrabold leading-tight mb-6">
+      Build Your <GradientText>Agent</GradientText>
+    </h1>
+    <p class="text-text-secondary text-xl max-w-[800px] mb-10 leading-relaxed">
+      Pick a real problem. Build one agent that solves it. Submit by <strong class="text-text-primary">May 5 at 11:59 PM</strong>.
+    </p>
+
+    <!-- Quick facts -->
+    <div class="grid md:grid-cols-4 gap-4 mb-12">
+      <div class="bg-bg-card border border-border-subtle rounded-xl p-5">
+        <div class="font-mono text-[0.7rem] text-accent-cyan tracking-[2px] uppercase mb-2">Format</div>
+        <div class="text-sm text-text-primary leading-snug">Solo or group of 3</div>
+      </div>
+      <div class="bg-bg-card border border-border-subtle rounded-xl p-5">
+        <div class="font-mono text-[0.7rem] text-accent-cyan tracking-[2px] uppercase mb-2">Deliverable</div>
+        <div class="text-sm text-text-primary leading-snug">Working notebook + 1-page brief</div>
+      </div>
+      <div class="bg-bg-card border border-border-subtle rounded-xl p-5">
+        <div class="font-mono text-[0.7rem] text-accent-cyan tracking-[2px] uppercase mb-2">Due</div>
+        <div class="text-sm text-text-primary leading-snug">Mon May 5 &middot; 11:59 PM</div>
+      </div>
+      <div class="bg-bg-card border border-border-subtle rounded-xl p-5">
+        <div class="font-mono text-[0.7rem] text-accent-cyan tracking-[2px] uppercase mb-2">Submission</div>
+        <div class="text-sm text-text-primary leading-snug">Canvas (async, no live demo)</div>
+      </div>
+    </div>
+
+    <div class="bg-gradient-to-br from-accent-cyan/10 to-accent-purple/10 border border-accent-cyan/30 rounded-2xl p-8">
+      <div class="flex items-start gap-4">
+        <Icon name="rocket" class="w-8 h-8 text-accent-cyan shrink-0 mt-1" />
+        <div>
+          <h2 class="text-xl font-bold mb-3">The brief, in one paragraph</h2>
+          <p class="text-text-secondary leading-relaxed">
+            Pick <strong class="text-text-primary">one specific real problem</strong> that you or someone you know actually has. Build <strong class="text-text-primary">one agent</strong> that solves it — with <strong class="text-text-primary">one primary tool</strong>, <strong class="text-text-primary">one core flow</strong>, and <strong class="text-text-primary">one meaningful guardrail</strong>. Try it on a few different inputs to see how it handles different situations. Submit your notebook and a 1-page brief on Canvas by May 5.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- The "ONE" rule -->
+  <section class="py-12 px-8 max-w-[1100px] mx-auto">
+    <SectionHeader number="01" label="Keep It Simple" title='The "ONE" Rule' description="Five 'ONEs' to keep this doable. Each one is permission to scope down, not a requirement to do more." />
+    <div class="grid md:grid-cols-5 gap-4 fade-in">
+      <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+        <Icon name="target" class="w-6 h-6 text-accent-cyan mb-3" />
+        <div class="font-mono text-[0.7rem] text-accent-cyan tracking-[2px] uppercase mb-2">One</div>
+        <div class="font-bold mb-2">Real problem</div>
+        <p class="text-text-secondary text-sm leading-relaxed">A specific problem affecting a real person — yourself counts.</p>
+      </div>
+      <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+        <Icon name="user" class="w-6 h-6 text-accent-cyan mb-3" />
+        <div class="font-mono text-[0.7rem] text-accent-cyan tracking-[2px] uppercase mb-2">One</div>
+        <div class="font-bold mb-2">Real user</div>
+        <p class="text-text-secondary text-sm leading-relaxed">Yourself counts. A friend, family member, or club you\'re in counts. Real person, reachable for a quick check.</p>
+      </div>
+      <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+        <Icon name="wrench" class="w-6 h-6 text-accent-cyan mb-3" />
+        <div class="font-mono text-[0.7rem] text-accent-cyan tracking-[2px] uppercase mb-2">One</div>
+        <div class="font-bold mb-2">Primary tool</div>
+        <p class="text-text-secondary text-sm leading-relaxed">Calculator, search, file reader, API, RAG — pick one focused capability.</p>
+      </div>
+      <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+        <Icon name="zap" class="w-6 h-6 text-accent-cyan mb-3" />
+        <div class="font-mono text-[0.7rem] text-accent-cyan tracking-[2px] uppercase mb-2">One</div>
+        <div class="font-bold mb-2">Core flow</div>
+        <p class="text-text-secondary text-sm leading-relaxed">Input → reasoning → output. Keep it linear — multi-agent and branching are not needed.</p>
+      </div>
+      <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+        <Icon name="shield" class="w-6 h-6 text-accent-cyan mb-3" />
+        <div class="font-mono text-[0.7rem] text-accent-cyan tracking-[2px] uppercase mb-2">One</div>
+        <div class="font-bold mb-2">Guardrail</div>
+        <p class="text-text-secondary text-sm leading-relaxed">Confidence threshold, approval gate, input/output filter — pick one that fits.</p>
+      </div>
+    </div>
+
+    <div class="mt-8 p-6 bg-bg-tertiary/30 border-l-4 border-accent-purple rounded-r-lg">
+      <p class="text-text-secondary leading-relaxed">
+        <strong class="text-text-primary">Simple is the goal.</strong> One tool is enough. One flow is enough. A small agent that solves one real problem really well is exactly what we\'re looking for — that\'s the whole assignment, not a starting point you have to grow beyond.
+      </p>
+    </div>
+  </section>
+
+  <!-- Deliverables -->
+  <section class="py-12 px-8 max-w-[1100px] mx-auto">
+    <SectionHeader number="02" label="Deliverables" title="What to Submit" description="Two things, one Canvas submission, due May 5 at 11:59 PM." />
+    <div class="grid md:grid-cols-2 gap-6 mb-10">
+      {deliverables.map((d) => (
+        <div class="bg-bg-card border border-border-subtle rounded-2xl p-8 fade-in">
+          <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-accent-cyan/20 to-accent-purple/20 flex items-center justify-center mb-4">
+            <Icon name={d.icon} class="w-6 h-6 text-accent-cyan" />
+          </div>
+          <h3 class="font-bold text-lg mb-3">{d.title}</h3>
+          <p class="text-text-secondary text-sm leading-relaxed">{d.description}</p>
+        </div>
+      ))}
+    </div>
+
+    <!-- Brief structure callout -->
+    <div class="bg-bg-card border border-border-subtle rounded-2xl p-8 fade-in">
+      <h3 class="font-bold text-lg mb-2 flex items-center gap-2">
+        <Icon name="file-text" class="w-5 h-5 text-accent-purple" />
+        The 1-page brief, structured
+      </h3>
+      <p class="text-text-secondary text-sm mb-6 leading-relaxed">
+        Five labeled prompts. About a paragraph each. The point is honest articulation, not polished prose — answer plainly.
+      </p>
+      <ul class="space-y-4">
+        {briefPrompts.map((p) => (
+          <li class="flex gap-4 pl-2 border-l-2 border-accent-cyan/40">
+            <div class="flex-1">
+              <div class="font-mono text-[0.7rem] text-accent-cyan tracking-[2px] uppercase mb-1">{p.label}</div>
+              <div class="text-sm text-text-secondary leading-relaxed">{p.description}</div>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- Suggested Problems -->
+  <section class="py-12 px-8 max-w-[1100px] mx-auto">
+    <SectionHeader number="03" label="Problem Ideas" title="Eight Categories to Adapt" description="Not prescriptive — pick one as a starting point or invent your own. The constraint that matters: real problem, real user." />
+    <div class="grid md:grid-cols-2 gap-6">
+      {problemIdeas.map((cat) => (
+        <div class="bg-bg-card border border-border-subtle rounded-2xl p-6 fade-in">
+          <div class="font-mono text-[0.7rem] text-accent-cyan tracking-[2px] uppercase mb-3">{cat.domain}</div>
+          <ul class="space-y-3">
+            {cat.examples.map((ex) => (
+              <li class="flex gap-3 text-sm text-text-secondary leading-relaxed">
+                <Icon name="sparkles" class="w-4 h-4 text-accent-purple shrink-0 mt-0.5" />
+                <span>{ex}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Starter Resources -->
+  <section class="py-12 px-8 max-w-[1100px] mx-auto">
+    <SectionHeader number="04" label="Starter Resources" title="Where to Begin" description="If you\'re extending earlier homework, you have most of this already. If you\'re starting fresh, these sessions have what you need." />
+    <div class="grid md:grid-cols-2 gap-4">
+      {startResources.map((r) => (
+        <a href={r.href} class="flex gap-4 bg-bg-card border border-border-subtle rounded-xl p-6 transition-all duration-300 no-underline hover:border-accent-cyan/30 hover:translate-x-1 fade-in">
+          <div class="w-10 h-10 rounded-lg bg-bg-tertiary/50 flex items-center justify-center shrink-0">
+            <Icon name={r.icon} class="w-5 h-5 text-accent-cyan" />
+          </div>
+          <div class="flex-1">
+            <div class="font-semibold mb-1 text-text-primary">{r.title}</div>
+            <div class="text-sm text-text-secondary leading-relaxed">{r.description}</div>
+          </div>
+          <Icon name="chevron-right" class="w-4 h-4 text-text-muted shrink-0 self-center" />
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="py-12 px-8 max-w-[900px] mx-auto">
+    <SectionHeader number="05" label="FAQ" title="Common Questions" />
+    <div class="space-y-4">
+      {faqs.map((faq) => (
+        <details class="group bg-bg-card border border-border-subtle rounded-xl overflow-hidden fade-in">
+          <summary class="flex items-center justify-between gap-4 p-6 cursor-pointer list-none hover:bg-bg-tertiary/30 transition-colors">
+            <span class="font-semibold text-text-primary">{faq.question}</span>
+            <Icon name="chevron-right" class="w-5 h-5 text-accent-cyan transition-transform duration-300 group-open:rotate-90 shrink-0" />
+          </summary>
+          <div class="px-6 pb-6 text-text-secondary leading-relaxed">
+            {faq.answer}
+          </div>
+        </details>
+      ))}
+    </div>
+  </section>
+
+  <!-- Final reminder -->
+  <section class="py-24 px-8 max-w-[900px] mx-auto">
+    <div class="bg-gradient-to-br from-accent-cyan/5 to-accent-purple/5 border border-border-subtle rounded-2xl p-10 text-center">
+      <Icon name="rocket" class="w-12 h-12 text-accent-cyan mx-auto mb-6" />
+      <h2 class="text-2xl font-bold mb-4">You\'ve got this.</h2>
+      <p class="text-text-secondary leading-relaxed max-w-[600px] mx-auto mb-8">
+        The point of this project isn\'t to impress anyone — it\'s to leave the course with one working agent you built, that solves a real problem for a real user, that you understand end-to-end. Small and working is the goal. Whatever you ship, you\'ll have something to show for the semester and a foundation you can build on later.
+      </p>
+      <div class="font-mono text-sm text-accent-cyan tracking-[2px]">
+        Due Mon May 5 &middot; 11:59 PM &middot; Canvas
+      </div>
+    </div>
+  </section>
+</BaseLayout>
