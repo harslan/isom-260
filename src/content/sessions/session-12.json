@@ -97,13 +97,13 @@
   ],
   "resources": [
     {
-      "title": "Final Project Template Notebook",
-      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-12/ISOM260_Final_Project_Template.ipynb",
-      "description": "Starter notebook with agent loop, tool template, test suite framework, and cost tracker. Clone and customize for your project.",
-      "icon": "code",
-      "badge": "Template",
+      "title": "Final Project Page — Build Your Agent",
+      "url": "/project",
+      "description": "All Final Project details for this semester: deliverables, problem ideas, starter resources, and FAQ. Submit your notebook + 1-page brief on Canvas by Tue May 5 at 11:59 PM.",
+      "icon": "rocket",
+      "badge": "Final Project",
       "badgeType": "interactive",
-      "linkText": "Open in Colab"
+      "linkText": "Open project page"
     },
     {
       "title": "All Session Resources",
