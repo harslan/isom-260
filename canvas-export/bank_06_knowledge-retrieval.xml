@@ -1,0 +1,540 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<questestinterop xmlns="http://www.imsglobal.org/xsd/ims_qtiasiv1p2">
+  <objectbank ident="ISOM260_knowledge-retrieval">
+    <qtimetadata>
+      <qtimetadatafield>
+        <fieldlabel>bank_title</fieldlabel>
+        <fieldentry>ISOM 260 — Knowledge Agents & RAG (5 questions)</fieldentry>
+      </qtimetadatafield>
+    </qtimetadata>
+  <item ident="Q76" title="Q76">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>A consulting firm&#39;s Claude-based assistant gets asked questions about the firm&#39;s past work — <em>&quot;What was our recommendation for that retail client last year?&quot;</em>, <em>&quot;Have we ever helped a healthcare company with a similar problem?&quot;</em> The assistant currently either makes things up or says it can&#39;t access that data. The firm has 12 years of engagement memos, slide decks, and post-mortems sitting in a SharePoint archive.</p>
+<p>What&#39;s the right architecture?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Fine-tune a custom Claude model on the engagement archive so the firm&#39;s history is &quot;baked in&quot; to the model.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Build a RAG (Retrieval-Augmented Generation) system: index the engagement archive, retrieve the most relevant past engagements at query time, and ground the assistant&#39;s response in the retrieved excerpts with attribution.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Stuff summaries of all 12 years of engagements into the system prompt so they&#39;re always available to the assistant.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Tell users to manually paste relevant past memos into the conversation when they want context.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Custom training over retrieval</p>
+<p>Fine-tuning is expensive, slow, and produces a static snapshot. New engagements would require re-training. RAG handles new data automatically — index it and it&#39;s retrievable. For dynamic knowledge bases, retrieval beats training every time.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> **RAG is the right pattern when an agent needs to ground its responses in <em>your</em> data** — data that&#39;s too large to fit in context, too dynamic to bake into a model, and too specific for the base model to know. The retrieval step finds the most relevant past engagements; the generation step grounds the assistant&#39;s answer in those passages with attribution. This is the architectural answer to the &quot;the agent doesn&#39;t know our business&quot; problem.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> System-prompt stuffing scales</p>
+<p>12 years of engagement summaries is hundreds of thousands of tokens. Stuffing them into every system prompt burns those tokens on every query, including queries that have nothing to do with most of the engagements. Lost-in-the-middle effects mean the assistant won&#39;t reliably use what&#39;s loaded anyway. Retrieve only what&#39;s relevant per query.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> User-side context provision</p>
+<p>If the user has to find and paste the relevant past memo, you&#39;ve built a search interface, not an assistant. The whole point is that the user shouldn&#39;t need to know which past engagement is relevant before asking the question.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q77" title="Q77">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>A RAG-based legal research agent is grounded in a firm&#39;s library of past memos. A junior attorney asks about a niche area of cryptocurrency tax law — an area where the firm has <em>no</em> past memos. The retriever returns three passages with low relevance scores (the highest is 0.31, well below the firm&#39;s typical threshold of 0.65). The agent confidently produces an answer based on... nothing relevant.</p>
+<p>What&#39;s the right behavior?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Generate a plausible answer from the model&#39;s general legal knowledge — partial information beats no information.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Detect that retrieved passages are below the relevance threshold and respond honestly: <em>&quot;I don&#39;t have firm-specific guidance on this — here&#39;s general background, and you should verify with [partner] before advising the client.&quot;</em> Distinguish what&#39;s grounded from what isn&#39;t.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Always include the highest-scoring retrieved passage even when relevance is low, so the response has <em>some</em> grounding.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Refuse to answer and tell the user to search the firm library themselves.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Fall back to the base model when retrieval fails</p>
+<p>A confident answer from the base model defeats the entire RAG architecture — the user thought they were getting firm-grounded guidance and got generic guidance presented identically. The fix is honest signaling, not silent fallback.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Detecting and surfacing retrieval failures is one of the most important behaviors in a RAG agent.</strong> When relevance scores are below threshold, the responsible move is to <em>say so</em> — distinguish base-model knowledge (&quot;here&#39;s general background&quot;) from firm-grounded answers (&quot;here&#39;s what we&#39;ve done before&quot;). That distinction is exactly what makes a RAG agent trustworthy. The &quot;always confidently answer&quot; pattern is what makes RAG agents fail expensively.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Always retrieve regardless of relevance</p>
+<p>A 0.31-relevance passage is noise. Including it pretends the answer is grounded when it isn&#39;t. Worse, the model will partially attend to whatever is there, which can produce subtly wrong answers framed as if they&#39;re from firm precedent.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Refuse rather than degrade gracefully</p>
+<p>A refusal helps no one. Honest signaling (&quot;I don&#39;t have firm-specific guidance, but here&#39;s general background — verify with a partner&quot;) is dramatically more useful than either confident hallucination or silent refusal.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q78" title="Q78">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>A RAG-based sales-policy agent is grounded in the company&#39;s policy documents. A sales rep asks about discount approval limits. The agent retrieves a passage from a 2022 version of the policy and answers based on it. The policy has been updated twice since — the limits the agent quoted are wrong. The reps make discount commitments that management later overrides.</p>
+<p>What&#39;s the architectural fix?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Include effective-date metadata with each indexed document. The agent surfaces document dates when answering, and prefers the most recent applicable version when multiple exist. The retriever returns version metadata; the agent reasons about it.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Re-train the embedding model whenever a policy changes.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Trust the retriever — its job is to return the most relevant document, which should be the current one.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Have the agent always disclaim <em>&quot;policy may have changed&quot;</em> on every answer.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Document staleness is a metadata problem, not a retrieval-quality problem.</strong> The retriever may correctly return a document that <em>was</em> the most relevant match by similarity — but if it&#39;s the 2022 version of a policy that&#39;s since been updated, that&#39;s a versioning failure. The fix is to attach effective-date metadata at indexing time, surface it in retrieved passages, and require the agent to prefer the most recent applicable version when it sees multiple. The retriever doesn&#39;t know about staleness; the architecture has to.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Re-training as the fix for staleness</p>
+<p>Embeddings determine retrieval quality, not version selection. Re-training doesn&#39;t prevent the retriever from returning an old document — it just changes how documents are matched.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Push the staleness problem to the retriever</p>
+<p>Retrievers rank by relevance, not recency. A 2022 policy passage may be more <em>similar</em> to the query than a 2024 version (if the language is closer). Without explicit version handling, the retriever has no reason to prefer the current version.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Generic disclaimers vs specific provenance</p>
+<p>A blanket &quot;policy may have changed&quot; is generic noise that users learn to ignore. Specific provenance — &quot;this answer is based on the policy effective March 2024&quot; — is dramatically more useful and forces the system to actually surface dates.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q79" title="Q79">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>An HR agent&#39;s retriever returns the top-3 most-relevant passages by similarity score. When two versions of a remote-work policy exist in the index — a 2023 doc saying <em>&quot;fully remote available&quot;</em> and a 2024 leadership memo saying <em>&quot;hybrid required&quot;</em> — the retriever usually returns just the higher-scoring one. The agent presents whichever version was retrieved as canonical. Multiple versions never both surface, so the agent never sees the conflict.</p>
+<p>What&#39;s the architectural fix?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Modify the retriever to deduplicate by <em>topic</em>, not just rank by similarity — when multiple versions of the same policy match, return all of them with version metadata so the agent can surface the conflict to the user.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Tell the retriever to always return the top 10 passages instead of the top 3 — more passages will surface conflicts.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Run the same query twice with different phrasings, hoping each phrasing surfaces a different version.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Trust that the highest-similarity match is the authoritative version.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>If you want the agent to surface conflicts, the retriever has to surface them first.</strong> A standard top-K retriever ranking by similarity will return one version of a policy and silently drop the others. Topic-aware deduplication — &quot;if multiple passages cover the same policy topic, return all distinct versions with metadata&quot; — is the architectural fix. The agent can then say <em>&quot;these two policies appear to conflict; please clarify&quot;</em> instead of confidently picking one.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> More passages without structure</p>
+<p>Returning 10 instead of 3 means more random extras. The 8th-most-similar passage might be on a different topic entirely. Conflict surfacing requires <em>structural</em> awareness of when two passages are about the same policy, not just more volume.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Multiple queries as conflict-detection</p>
+<p>Re-querying with different phrasings is a luck-based workaround that may or may not surface the alternate version. It also doubles latency and cost. Topic-aware retrieval is the deterministic fix.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Similarity equals authority</p>
+<p>Similarity scores measure how close a passage is to the query in embedding space — not which version is most current, most authoritative, or most applicable. A higher score on an older policy doesn&#39;t make it correct.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q80" title="Q80">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>A team built a RAG agent for customer support. To know whether it works, they&#39;ve been reading the agent&#39;s final answers and judging whether each &quot;looks right.&quot; They want to deploy it more broadly but the VP is asking <em>&quot;how do you know retrieval is actually working?&quot;</em></p>
+<p>What&#39;s the right evaluation approach?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Build a labeled retrieval test set: queries paired with the documents that <em>should</em> be retrieved. Measure retrieval metrics directly (recall@k, precision@k, mean reciprocal rank) — separately from final-answer quality. This decouples &quot;retrieval is working&quot; from &quot;the model is generating well.&quot;</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Trust user-satisfaction surveys — happy users mean retrieval is working.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Sample 100 random conversations and read them carefully.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Have Claude evaluate the agent&#39;s final answers and report quality scores.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Component-level evaluation beats outcome-only evaluation.</strong> When you measure only the final answer, you can&#39;t tell whether bad answers are due to retrieval (the system found the wrong documents) or generation (the model misread good documents) — and you can&#39;t fix what you can&#39;t isolate. Direct retrieval metrics on a labeled test set tell you &quot;the retriever is/isn&#39;t finding the right documents&quot; as a separate question from &quot;the model is/isn&#39;t using them well.&quot; This is one of the most important moves in RAG evaluation.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Outcome metrics replace component metrics</p>
+<p>User satisfaction is one signal — but it bundles retrieval, generation, latency, UX, and topic coverage into a single number. You can&#39;t debug RAG with bundled metrics; you need to know which component is failing.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Manual review without structure</p>
+<p>Reading 100 conversations is non-systematic. Different reviewers will disagree, edge cases won&#39;t be caught, and you can&#39;t produce a reproducible &quot;retrieval recall&quot; number. Useful as a complement, not as the primary measurement.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> LLM-as-judge before component metrics</p>
+<p>LLM-as-Judge is useful — but for <em>answer</em> evaluation, not for retrieval evaluation. Asking an LLM to judge whether an answer is good doesn&#39;t tell you whether retrieval found the right documents. Component metrics first; LLM-as-judge for the parts where it&#39;s actually informative.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+  </objectbank>
+</questestinterop>

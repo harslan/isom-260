@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest identifier="ISOM260_FinalExam_QuestionBanks"
+  xmlns="http://www.imsglobal.org/xsd/imscp_v1p1"
+  xmlns:imsmd="http://www.imsglobal.org/xsd/imsmd_v1p2">
+  <metadata>
+    <schema>IMS Content</schema>
+    <schemaversion>1.1.3</schemaversion>
+  </metadata>
+  <organizations/>
+  <resources>
+    <resource identifier="bank_01" type="imsqti_xmlv1p2" href="bank_01_agentic-architecture.xml">
+      <file href="bank_01_agentic-architecture.xml"/>
+    </resource>
+    <resource identifier="bank_02" type="imsqti_xmlv1p2" href="bank_02_tool-design-mcp.xml">
+      <file href="bank_02_tool-design-mcp.xml"/>
+    </resource>
+    <resource identifier="bank_03" type="imsqti_xmlv1p2" href="bank_03_claude-code-config.xml">
+      <file href="bank_03_claude-code-config.xml"/>
+    </resource>
+    <resource identifier="bank_04" type="imsqti_xmlv1p2" href="bank_04_prompt-engineering.xml">
+      <file href="bank_04_prompt-engineering.xml"/>
+    </resource>
+    <resource identifier="bank_05" type="imsqti_xmlv1p2" href="bank_05_context-management.xml">
+      <file href="bank_05_context-management.xml"/>
+    </resource>
+    <resource identifier="bank_06" type="imsqti_xmlv1p2" href="bank_06_knowledge-retrieval.xml">
+      <file href="bank_06_knowledge-retrieval.xml"/>
+    </resource>
+    <resource identifier="bank_07" type="imsqti_xmlv1p2" href="bank_07_safety-guardrails.xml">
+      <file href="bank_07_safety-guardrails.xml"/>
+    </resource>
+    <resource identifier="bank_08" type="imsqti_xmlv1p2" href="bank_08_evaluation-testing.xml">
+      <file href="bank_08_evaluation-testing.xml"/>
+    </resource>
+  </resources>
+</manifest>

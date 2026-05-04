@@ -1,0 +1,2346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<questestinterop xmlns="http://www.imsglobal.org/xsd/ims_qtiasiv1p2">
+  <objectbank ident="ISOM260_prompt-engineering">
+    <qtimetadata>
+      <qtimetadatafield>
+        <fieldlabel>bank_title</fieldlabel>
+        <fieldentry>ISOM 260 — Prompt Engineering & Structured Output (22 questions)</fieldentry>
+      </qtimetadatafield>
+    </qtimetadata>
+  <item ident="Q16" title="Q16">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>You&#39;re building a tool that extracts structured data from invoices uploaded by accounting clerks. About 5% of the time, the model returns JSON that&#39;s missing closing braces or has trailing commas, causing your downstream parser to crash.</p>
+<p>What&#39;s the most reliable fix?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Add an instruction to the system prompt: &quot;Make sure all JSON is syntactically valid before returning.&quot;</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Use <code>tool_use</code> with a JSON schema definition — the model is constrained to produce schema-compliant output and JSON syntax errors are eliminated.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Wrap the model&#39;s output in a try/catch and use a JSON repair library to fix malformed responses before parsing.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Add three few-shot examples showing perfectly formatted JSON output.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Prompt instructions enforce structural correctness</p>
+<p>Asking the model to &quot;make sure JSON is valid&quot; relies on probabilistic compliance for a problem that has a deterministic solution. The model is <em>trying</em> to produce valid JSON; it&#39;s failing 5% of the time. More instructions won&#39;t fix what is fundamentally a constraint problem.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> When you use <code>tool_use</code> with a JSON schema, the model is <strong>constrained</strong> to produce output that matches the schema — JSON syntax errors are structurally eliminated. This is the most reliable approach for guaranteed schema-compliant output. Note that this prevents <em>syntax</em> errors but not <em>semantic</em> errors (like a number going in the wrong field) — those need separate validation. But for the specific problem of malformed JSON, tool use is the right answer.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Post-hoc repair is preferable to prevention</p>
+<p>JSON repair libraries are useful as a last-resort safety net, but using them as your primary approach hides the fact that your extraction is producing malformed output. You&#39;re treating the symptom and accepting that some fields will be guessed at by a repair library, which can introduce subtle data corruption.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Examples eliminate format errors</p>
+<p>Few-shot examples can reduce error rates, but they don&#39;t structurally eliminate them — they&#39;re still probabilistic. For format correctness, structural constraint (tool use) beats demonstration (examples) every time.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q17" title="Q17">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>Your extraction tool pulls product information from supplier catalogs. The schema includes a <code>discontinued_date</code> field — but for products that aren&#39;t discontinued, the date doesn&#39;t exist in the source document.</p>
+<p>The model is fabricating dates like <code>&quot;2099-12-31&quot;</code> or <code>&quot;N/A&quot;</code> or <code>&quot;unknown&quot;</code> to populate the field.</p>
+<p>What&#39;s the right schema-level fix?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Make <code>discontinued_date</code> a required field but instruct the model in the prompt to &quot;only fill it in if the date appears in the document.&quot;</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Define <code>discontinued_date</code> as <strong>nullable</strong> in the schema — when the source doesn&#39;t contain a date, the model returns <code>null</code> rather than fabricating one.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Remove <code>discontinued_date</code> from the schema entirely and have the model add it as a free-form note when relevant.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Use a default value like <code>1900-01-01</code> to indicate &quot;not discontinued&quot; and document this convention for downstream consumers.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Prompt instructions can override schema constraints</p>
+<p>If the schema requires the field, the model has to produce something. &quot;Only fill it in when the date appears&quot; contradicts the schema&#39;s requirement, and the model defaults to producing some value to satisfy the structure. Schema and prompt have to agree.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> When a field may not exist in source documents, the schema should make that explicit by allowing <code>null</code>. The model then has a legitimate way to indicate absence and stops needing to fabricate values. This is one of the most common schema design mistakes — treating every field as required forces the model to invent content when the source is silent. <strong>Optional/nullable fields are not a weakness in the schema; they&#39;re an honest reflection of what data is and isn&#39;t available.</strong></p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Removing fields is the fix for messy data</p>
+<p>Removing structured fields and replacing them with free-form notes destroys downstream parseability. You&#39;d be solving a fabrication problem by abandoning structure entirely.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Sentinel values are a clean solution</p>
+<p>Sentinel dates like <code>1900-01-01</code> are a classic anti-pattern. Every downstream consumer has to know about the convention, missed conversions cause bugs (the system thinks a product was discontinued in 1900), and you&#39;ve created a domain-specific magic value where <code>null</code> would have been universally understood.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q18" title="Q18">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>Your code review agent flags issues in pull requests. The team is increasingly frustrated because it produces false positives at a high rate — flagging stylistic patterns that match the team&#39;s actual conventions, complaining about defensive null checks the team explicitly wants, and sometimes contradicting itself across files.</p>
+<p>The current prompt says: <em>&quot;Review this pull request and report any issues. Be conservative and only report high-confidence findings.&quot;</em></p>
+<p>What&#39;s the most effective revision?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Strengthen the conservativeness language: &quot;Be EXTREMELY conservative. Only report findings with overwhelming confidence.&quot;</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Replace &quot;be conservative&quot; with <strong>explicit categorical criteria</strong>: define which categories of issues to report (security vulnerabilities, logic bugs, race conditions) versus which to skip (style preferences, minor inefficiencies, patterns that match existing code).</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Have the agent self-rate confidence on each finding (1–10) and filter to only those above 8.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Reduce the model&#39;s temperature to make outputs more deterministic.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Emphasis improves vague instructions</p>
+<p>Adding emphasis (&quot;EXTREMELY&quot;) to vague instructions doesn&#39;t make them less vague. The model still doesn&#39;t know which categories you care about. This is a common mistake — escalating tone to compensate for missing structure.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <em>&quot;Be conservative&quot;</em> and <em>&quot;high confidence&quot;</em> are vague instructions that don&#39;t define what counts as a valid finding. The model&#39;s calibration of &quot;confidence&quot; doesn&#39;t necessarily match yours. Replacing vague guidance with <strong>explicit categorical criteria</strong> — what to report and what to skip — gives the model the actual decision boundary you want. This is one of the most common and high-leverage prompt engineering moves: <strong>replace adjectives with categories</strong>.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Self-reported confidence is well-calibrated</p>
+<p>Model self-rated confidence is poorly calibrated, especially for false positives — by definition the model doesn&#39;t know it&#39;s wrong, or it wouldn&#39;t be reporting the finding in the first place. Filtering by self-reported confidence often filters out correct findings while leaving false positives untouched.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Temperature controls correctness</p>
+<p>Temperature affects randomness in token selection, not which findings the model considers valid. Lowering temperature might make the same wrong findings appear more consistently, which is the opposite of what you want.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q19" title="Q19">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>You&#39;re extracting research methodology details from academic papers. Some papers describe methods inline in narrative paragraphs (<em>&quot;We collected 1,200 survey responses over six weeks…&quot;</em>); others use a structured &quot;Methodology&quot; section with subheadings; others scatter relevant details across multiple sections.</p>
+<p>Your extraction quality is inconsistent across these formats.</p>
+<p>Which intervention will most improve it?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Add a preprocessing step that converts all papers to a uniform Markdown format before extraction.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Add 3–4 few-shot examples that show successful extraction from each varied format — a paper with inline methodology, a paper with a structured section, a paper with scattered details.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Switch to a larger model with a longer context window to handle the variation in format.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Run the extraction three times and take the most common answer.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Normalization simplifies extraction</p>
+<p>Converting papers to uniform Markdown is a major undertaking that doesn&#39;t necessarily preserve the structural cues the model uses. And the same kinds of variation (scattered vs. structured information) will exist in the converted output. You&#39;re shifting the problem, not solving it.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Few-shot examples are particularly effective for handling format variation</strong> because they demonstrate to the model how to extract from different structural patterns. The model learns: &quot;given a narrative-style paper, here&#39;s what extraction looks like; given a structured paper, here&#39;s what extraction looks like.&quot; This is one of few-shot prompting&#39;s strongest use cases — teaching the model to generalize across surface variations to find the underlying information.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> More capable models eliminate format sensitivity</p>
+<p>Larger models help with many things, but format variation is largely a prompting problem, not a capability problem. Few-shot examples cost less and address the issue more directly.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Ensembling fixes inconsistency</p>
+<p>Running three extractions and taking the consensus is expensive and addresses output variance, not the underlying format-handling problem. If the model handles narrative-style papers poorly, three runs will probably all be wrong in the same way.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q20" title="Q20">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>Your team is generating nightly summaries of customer support tickets across thousands of tickets. The job runs overnight, and results are reviewed the next morning. Your manager suggests switching from real-time API calls to the <strong>Message Batches API</strong> to save 50% on costs.</p>
+<p>The same team also runs a real-time pre-deploy check that must complete in under 60 seconds before code can be merged. The manager wants to switch this to Message Batches too.</p>
+<p>What&#39;s the right call?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Switch both to Message Batches — the cost savings are too significant to ignore, and most batches complete much faster than the 24-hour SLA anyway.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Keep both as real-time API calls — Message Batches add operational complexity not worth the savings.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Switch the nightly summaries to Message Batches; keep the pre-deploy check as a real-time API call.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Switch both to Message Batches but configure a 60-second timeout fallback to real-time for the pre-deploy check.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Typical performance is acceptable for blocking workflows</p>
+<p>&quot;Most batches complete faster&quot; isn&#39;t an acceptable guarantee for a workflow that must complete in 60 seconds. Tail latency on a batch could be hours. Optimistic averages are not a foundation for blocking workflows.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Operational simplicity beats cost optimization</p>
+<p>The cost difference is significant on workloads of any scale, and Message Batches aren&#39;t operationally complex for non-blocking jobs. Refusing to use them at all forfeits real savings on workloads where they&#39;re a perfect fit.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> Message Batches offer 50% cost savings but with up to a <strong>24-hour processing window</strong> and no guaranteed latency SLA. That makes them ideal for non-blocking, latency-tolerant workloads — overnight summaries are a textbook fit. They&#39;re inappropriate for blocking workflows where someone is waiting on the result, like a 60-second pre-deploy check. <strong>Match the API to the workload&#39;s latency tolerance</strong>: synchronous for blocking, batch for asynchronous.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Timeouts make any API suitable for blocking workflows</p>
+<p>A timeout fallback adds complexity and doesn&#39;t actually save time on the affected runs — you&#39;ve still waited 60 seconds before falling back, then need to make the real-time call. Net latency is worse than just using real-time from the start.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q41" title="Q41">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>An invoice-extraction tool fails schema validation about 8% of the time — usually because line items don&#39;t sum to the stated total, or because a required field is missing. Your current handling: when validation fails, re-run the same prompt against the same document. That recovers about 60% of failed cases on the second try.</p>
+<p>What&#39;s the highest-leverage improvement?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Switch to a more capable model for the entire extraction pipeline.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>On retry, include the original document, the failed extraction, and the specific validation errors. The model self-corrects with diagnostic feedback rather than re-attempting blind.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Run three extractions in parallel and pick whichever one validates.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Skip retry entirely and flag every failed extraction for human review.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Capability fixes prompting issues</p>
+<p>Stronger models help at the margin, but the fundamental issue here isn&#39;t capability — it&#39;s that the second attempt has no information the first didn&#39;t. A weaker model with good feedback often beats a stronger model running blind.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Retry-with-error-feedback dramatically outperforms blind retry.</strong> When the second prompt includes the failed output and the specific reason it failed, the model can address a concrete error rather than re-attempting blind. &quot;Your previous extraction returned <code>total: 247</code> but the line items sum to 232&quot; routinely recovers 90%+ of failures versus the ~60% you&#39;re getting now.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Ensemble beats targeted feedback</p>
+<p>Three blind extractions in parallel tend to fail in similar ways, especially on structurally hard documents. Running three at 92% success each doesn&#39;t aggregate to &quot;near 100%&quot; — it produces the same kinds of errors three times.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Human review without trying targeted retry</p>
+<p>Human review is appropriate as a last resort, not as the first response to a failure mode you haven&#39;t yet tried to fix programmatically. Burning a reviewer on every failed extraction when retry-with-feedback would catch most of them is a waste of reviewer capacity.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q42" title="Q42">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>Your expense-report extraction tool repeatedly fails on receipts where the merchant name is genuinely cut off in the photograph — the bottom of the receipt is missing in the scan. A teammate proposes adding a retry-with-error-feedback loop to fix the failure rate.</p>
+<p>Will retry-with-feedback help here?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Yes — the model often surfaces hidden information on retry, especially with feedback about what was missing.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>No — retry-with-feedback helps when the failure is structural (format errors, schema violations). When the required information is genuinely absent from the source, retry produces continued failures or fabrication. The right response is to surface the gap to a human or upstream process, not retry.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Yes, if you increase the temperature on retry to encourage the model to explore alternative interpretations.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Yes, but only with three or more retries — the third or fourth attempt usually finds it.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Retry as universal solvent</p>
+<p>Retries can&#39;t recover information the source doesn&#39;t contain. Asking the model &quot;you missed the merchant name, what is it?&quot; against a receipt that doesn&#39;t show one will produce either honest failure or hallucinated answers.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Retries cannot recover information that isn&#39;t in the source.</strong> When the merchant name is genuinely missing from the photo, no amount of feedback will produce it — the model can either keep failing honestly or start fabricating. Retry-with-feedback is excellent for fixing format errors, schema violations, and arithmetic mistakes, because those are <em>processing</em> failures on information that&#39;s present. They&#39;re wrong for <em>informational</em> failures where the data simply isn&#39;t there. Knowing the difference is one of the most important judgment calls in extraction system design.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Temperature creates information</p>
+<p>Higher temperature explores more interpretations of <em>given</em> input — it doesn&#39;t add information that isn&#39;t there. Cranking temperature on a missing-data problem produces more creative fabrications, not recovery.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> More attempts vs structural impossibility</p>
+<p>If three attempts all fail because the data isn&#39;t there, the fourth will too. Multiplying retries on structurally impossible cases is a category error.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q43" title="Q43">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>Your invoice extractor sometimes returns a total that doesn&#39;t equal the sum of its line items — usually because OCR misread one line ($1,287 read as $287, etc.). The accounting team catches these days later as anomalies, after they&#39;ve already been propagated downstream.</p>
+<p>How can the schema design itself surface these errors at extraction time?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Have the schema return both <code>calculated_total</code> (computed by summing the line items the model extracted) and <code>stated_total</code> (the total as it appears on the document), plus a structured <code>discrepancy_detected</code> boolean — downstream systems can route discrepancies for review.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Only return <code>stated_total</code> and trust the document&#39;s total figure.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Only return <code>calculated_total</code> and ignore the document&#39;s stated total entirely.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Reject any extraction where line items don&#39;t sum to the stated total.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Returning both values plus a discrepancy flag turns a downstream anomaly into an upstream signal.</strong> The extraction now surfaces the disagreement at the moment it&#39;s detected, with both values preserved. Downstream systems can route discrepancies to human review without losing the underlying data. This is a recurring pattern in extraction schema design: when two computations of the same quantity could disagree, capture both and flag the disagreement rather than picking one and hoping.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Trust the source uncritically</p>
+<p>OCR errors on individual line items can produce a stated_total that doesn&#39;t match the actual line items. Trusting <code>stated_total</code> blindly hides that exact failure mode.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Ignore the source&#39;s claim</p>
+<p>OCR errors on the <em>total</em> line are also possible. Ignoring <code>stated_total</code> discards the document&#39;s explicit claim and substitutes your computation, which has its own failure modes.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Hard rejection beats annotation</p>
+<p>Hard-rejecting every discrepancy throws away genuine extractions where the math is fine but a single OCR error caused a small mismatch. The right pattern is to flag the discrepancy and route appropriately, not refuse to return anything.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q44" title="Q44">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>Your expense-categorization schema uses an <code>enum</code> field with five categories: <code>Travel</code>, <code>Meals</code>, <code>Office</code>, <code>Software</code>, <code>Other</code>. About 20% of expenses end up in <code>Other</code>, and the analyst can never tell what they actually were — <em>&quot;Conference registration&quot;</em>, <em>&quot;Subscription renewal&quot;</em>, and <em>&quot;Recruitment fee&quot;</em> all collapse into the same opaque bucket.</p>
+<p>What&#39;s the best schema improvement?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Replace the enum entirely with a free-text category field so the model can use any term it wants.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Drop the <code>Other</code> option from the enum so the model is forced to pick one of the four substantive categories.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Pair the enum with a detail field: <code>{category: &quot;Other&quot;, category_detail: &quot;Conference registration&quot;}</code> — the structure stays parseable, and the analyst sees what <code>Other</code> actually meant.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Add 30 more enum categories to cover the long tail of expense types.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Structure abandoned for flexibility</p>
+<p>Free-text categories destroy downstream aggregation. Now <code>&quot;Travel&quot;</code>, <code>&quot;travel&quot;</code>, <code>&quot;Trip&quot;</code>, and <code>&quot;Business Travel&quot;</code> are all different categories. Enum + detail keeps the structural advantage and adds flexibility only where needed.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Force false categorization</p>
+<p>Removing <code>Other</code> doesn&#39;t eliminate the misfit cases — it just forces the model to mis-categorize them. A Conference registration becomes &quot;Travel&quot; or &quot;Office&quot; in a way that obscures rather than illuminates.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Enum + &quot;other&quot; + detail field is one of the cleanest patterns for extensible categorization.</strong> The enum gives you parseability and consistency on the common categories. The <code>other</code> option gives the model an honest escape hatch when nothing fits. The paired detail field captures what <code>other</code> actually meant, so the analyst can both group (&quot;how many <code>Other</code> cases this quarter?&quot;) and inspect (&quot;what were they?&quot;). You get rigid categorization where you have it and graceful handling where you don&#39;t.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Enumeration races edge cases</p>
+<p>Adding 30 more categories chases the long tail with diminishing returns and introduces the new problem of overlapping categories the model has to choose between. The detail-field pattern handles the long tail without exploding the enum.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q45" title="Q45">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>You&#39;re using Claude to review a 1,200-line consulting proposal before it goes to a client. In a single-pass review, the agent&#39;s comments are shallow on individual sections and miss inconsistencies <em>between</em> sections — recommending a 6-month timeline on page 8 and a 4-month one on page 22 without flagging the contradiction. Sometimes the agent contradicts its own page-1 feedback by page 30.</p>
+<p>What&#39;s the right architectural fix?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Switch to a larger-context-window model and run a single pass.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Run a per-section local-analysis pass for in-section comments, plus a separate cross-section integration pass that focuses specifically on consistency between sections. Local and global concerns are reviewed in different passes designed for each.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Have the agent self-review its own comments at the end of the single pass.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Reduce the proposal length before reviewing.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Context window solves attention dilution</p>
+<p>A larger context window lets the model <em>see</em> more, but doesn&#39;t solve the lost-in-the-middle effect or attention dilution. Single-pass review of long documents produces shallow feedback regardless of context size.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Multi-pass review separates local and global concerns.</strong> A per-section pass produces deeper local feedback because attention isn&#39;t diluted across 1,200 lines. A separate cross-section integration pass exists <em>specifically</em> to catch the inconsistent timelines, contradictory recommendations, and conflicting data that single-pass review systematically misses. Each pass has a coherent role; feedback stops contradicting itself.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Self-review on the same content</p>
+<p>The same session that produced shallow page-1 feedback won&#39;t catch its own shallow page-30 feedback by reviewing itself. Self-review confirms more often than it catches.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Alter the input rather than the architecture</p>
+<p>Sometimes the proposal really does need to be 1,200 lines. The architectural fix is multi-pass review; making the user shorten their document to fit your review approach is the wrong direction.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q66" title="Q66">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>Your code review agent&#39;s findings are dismissed by the team about 30% of the time — and the same patterns keep getting dismissed. Specifically, the agent flags every <code>// eslint-disable-next-line</code> as a &quot;suppressed warning that should be re-evaluated,&quot; but the team uses these intentionally and consistently rejects the finding. The team has no easy way to analyze which patterns produce dismissals because the findings don&#39;t capture <em>what</em> triggered them.</p>
+<p>What&#39;s the right schema improvement?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Add a <code>detected_pattern</code> field to each finding that records the specific code construct that triggered the flag (e.g., <code>&quot;eslint-disable-comment&quot;</code>). Over time, dismissal data shows which patterns systematically produce false positives, and the prompt can be updated to skip them.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Reduce the agent&#39;s flagging confidence threshold so fewer findings are produced overall.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Disable the agent&#39;s eslint-related rules entirely.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Have each developer maintain a personal list of patterns Claude should ignore.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>A <code>detected_pattern</code> field turns dismissal data into a learnable signal.</strong> Without it, all you know is &quot;30% of findings are dismissed&quot; — a number you can&#39;t act on. With it, you can see &quot;94% of <code>eslint-disable-comment</code> findings are dismissed; 6% of <code>unhandled-error</code> findings are dismissed&quot; — and now you know exactly which patterns to suppress in the prompt and which to keep. Naming the trigger turns vague feedback into specific feedback.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Threshold reduction over diagnosis</p>
+<p>Lowering the bar produces fewer findings of all kinds, including the genuinely useful ones. You&#39;re cutting both signal and noise rather than separating them.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Disable rules without analysis</p>
+<p>Some eslint findings are real — disabling the whole category to suppress one common false positive throws out the useful ones too.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Per-developer ignore lists</p>
+<p>Personal ignore lists fragment the team&#39;s quality bar — the same finding gets flagged for one developer, dismissed for another. Team-level analysis of dismissal patterns produces team-level prompt updates.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q67" title="Q67">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>Your team uses the Message Batches API for nightly invoice extraction across 50,000 documents. Anthropic&#39;s SLA on batch processing is <em>up to 24 hours</em>. Your team&#39;s SLA to internal stakeholders is <em>30 hours from data availability</em>. You currently submit one batch per night.</p>
+<p>What&#39;s the right submission cadence to keep your SLA safe?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Submit smaller batches every 4–6 hours rather than one big batch nightly. Each batch has a 24-hour worst-case window plus 6-hour padding before the 30-hour SLA — keeping you safe even on slow batches.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Submit one big batch nightly and trust that batches typically complete in well under 24 hours.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Switch to real-time API calls because batch SLAs aren&#39;t reliable for production.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Reduce your internal SLA to match the batch SLA exactly (24 hours).</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Plan for the SLA, not the median.</strong> Anthropic&#39;s 24-hour batch SLA is a <em>worst-case</em> guarantee — most batches finish much faster, but you can&#39;t plan around &quot;usually fast.&quot; If your downstream SLA is 30 hours, you need a submission cadence that keeps you safe under the worst case. Submitting every 4–6 hours gives each batch its full SLA window plus padding before your downstream commitment.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Trust the median performance for your SLA</p>
+<p>&quot;Most batches finish quickly&quot; isn&#39;t a plannable property of a workload. The day a batch takes 22 hours is the day your stakeholders find out you were depending on luck.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Reject batch when frequency tuning works</p>
+<p>Real-time API calls cost twice as much per token and don&#39;t address the actual question (matching submission cadence to SLA). Switching APIs without exhausting the cheaper tuning is premature.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Match SLAs exactly</p>
+<p>Setting your internal SLA equal to the upstream SLA leaves zero buffer for your own processing, retry, or hand-off time. You&#39;d miss the SLA almost every night even when batches finish on time.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q68" title="Q68">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>You submitted a batch of 10,000 invoices for extraction. 200 came back with validation failures. You want to retry the failed ones with adjusted prompts (you noticed they&#39;re mostly receipts in unusual formats). Your current plan: re-submit all 10,000 invoices to ensure consistency.</p>
+<p>What&#39;s the right approach?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Identify the 200 failed documents by their <code>custom_id</code> from the batch results, and re-submit only those 200 — possibly with prompt adjustments based on the failure pattern (e.g., better few-shot examples for unusual receipt formats).</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Re-submit all 10,000 to ensure consistency across the whole batch.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Process the 200 failed ones through real-time API calls instead of batch.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Discard the 200 failed documents and accept a 98% extraction rate.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong><code>custom_id</code> exists precisely so you can correlate batch responses with their inputs and resubmit selectively.</strong> Re-submitting all 10,000 wastes 50% of the cost on documents that already extracted correctly, and creates the (small but real) risk that some now-correct extractions come back differently. Targeted resubmission with prompt adjustments is dramatically more efficient and exactly what <code>custom_id</code> is designed to support.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Re-process everything for safety</p>
+<p>&quot;Consistency&quot; sounds like a virtue, but the 9,800 documents that already extracted correctly don&#39;t need to be reprocessed. The cost saving is significant; the risk of inconsistency from selective resubmission is small.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Switch APIs without diagnosis</p>
+<p>Real-time calls for 200 documents cost twice as much per token. If the prompt adjustment fixes the underlying issue, those 200 will process successfully in batch on the second attempt.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Accept the failure rate without trying to reduce it</p>
+<p>Discarding 200 documents because they&#39;re inconvenient isn&#39;t a reasoned acceptance of imperfection — it&#39;s giving up on real data. If they&#39;re recoverable with prompt adjustment, recovering them is the right move.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q69" title="Q69">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>Your invoice-extraction tool returns dates in whatever format appeared in the source — sometimes <code>&quot;May 4, 2024&quot;</code>, sometimes <code>&quot;5/4/2024&quot;</code>, sometimes <code>&quot;2024-05-04&quot;</code>, sometimes <code>&quot;04 May 24&quot;</code>. Downstream systems expect ISO 8601 (<code>YYYY-MM-DD</code>). Currently the team runs a post-processing date-parser, which catches most cases but silently mis-parses <code>5/4/2024</code> as April 5 sometimes (DD/MM) and May 4 other times (MM/DD).</p>
+<p>What&#39;s the cleaner fix?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Add format normalization rules to the extraction prompt: &quot;Return all dates in ISO 8601 format (YYYY-MM-DD) regardless of how they appear in the source. If the source uses an ambiguous numeric format, infer from context (e.g., invoice date vs. due date) or return <code>&quot;format_ambiguous&quot;</code>.&quot; The model normalizes during extraction with full context.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Improve the post-processing date parser with more cases.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Have downstream systems accept all formats.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Reject any extraction that doesn&#39;t already use ISO 8601 in the source document.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Normalize at the layer that has full context.</strong> During extraction, the model sees the whole document — it knows which field is the invoice date, what the country is, whether dates elsewhere are formatted MM/DD or DD/MM. A post-processing parser sees only the date string with none of that context, so it has to guess. In-prompt normalization rules let the model use document-level context to produce a correct ISO date the first time, and explicitly flag ambiguous cases instead of silently guessing wrong.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Post-process is preferable to in-prompt rules</p>
+<p>Post-processing parsers are blind to document-level context, which is exactly what disambiguates <code>5/4/2024</code>. More cases in the parser don&#39;t help when the parser fundamentally can&#39;t see the surrounding fields.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Push the normalization downstream</p>
+<p>Asking every downstream system to accept every format multiplies the problem — every consumer now has to parse dates, and every consumer has the same disambiguation issue. Normalize once, at the source.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Reject what doesn&#39;t conform</p>
+<p>Most invoices in the wild aren&#39;t issued in ISO 8601. Rejecting non-ISO sources discards the majority of real documents — solving the format problem by abandoning the data.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q70" title="Q70">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>Your invoice extraction system has a 7% error rate. The CFO has proposed adding an independent verification pass — a second Claude instance reads the source document and the extraction output, with no prior commitment to the original&#39;s reasoning, and flags any discrepancies. Verification doubles per-invoice cost. At 50,000 invoices/month and ~$0.50 per extraction, that&#39;s ~$25,000/month additional spend. Independent verification absolutely <em>would</em> catch most errors. The question is whether to verify <em>all</em> 50,000.</p>
+<p>What&#39;s the most defensible approach?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Verify all 50,000 — financial data justifies the full cost regardless of where errors concentrate.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Stratify first: verify a random sample stratified by document type, vendor, and dollar amount to learn <em>where</em> errors concentrate. Then verify all invoices in high-error strata, sample-verify low-error ones, and direct prompt improvements at the patterns driving most errors.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Skip verification entirely — invest the budget in extraction-prompt improvements and few-shot examples to reduce the error rate at the source.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Have the same extraction instance self-verify with a &quot;review your work&quot; step — half the cost of an independent verifier, without the latency of a second pass.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Uniform verification ignores cost-benefit</p>
+<p>&quot;Financial data justifies the cost&quot; sounds responsible but treats verification as an absolute requirement rather than a cost-benefit decision. If 80% of the volume is on documents with a 1% error rate, you&#39;re spending $20K/month verifying invoices that didn&#39;t need it — and that money was better spent fixing the strata that did.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Verification budget should be spent where errors actually live, not uniformly.</strong> A 7% aggregate error rate almost certainly isn&#39;t uniform — small invoices on standard PDF templates may be 99% accurate, while photo receipts from one-off vendors may be 65% accurate. Verifying everything spends $25K/month; stratifying lets you spend a fraction of that to <em>learn the distribution</em>, then concentrate verification on the strata that actually need it. <strong>Stratification before action is a recurring lesson</strong>: it applies to deciding which cases to automate, which to measure carefully, and — here — which to spend verification budget on.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Improvement-only without measurement</p>
+<p>Improving the extraction prompt is the right long-term move — but &quot;improve without measuring&quot; leaves you optimizing blind. Without stratified data on where errors concentrate, prompt improvements are guided by guesses. Verification on a stratified sample produces the data that tells you which improvements matter.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Self-verification by the same instance</p>
+<p>The same extraction instance retains the same biases that produced the original errors. Self-review systematically validates its own decisions — that&#39;s why independent review (a fresh instance) beats self-review structurally, regardless of cost. Saving 50% of the cost by paying that bias is a bad trade.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q101" title="Q101">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>A finance team is evaluating Claude for two tasks. <strong>Task 1</strong>: Summarize 10-page quarterly earnings reports into one-paragraph briefs. Claude does this beautifully — coherent, accurate, captures the right nuances. <strong>Task 2</strong>: Compute the weighted average of 12 financial figures from the same report. Claude consistently gets arithmetic wrong — sometimes off by orders of magnitude, sometimes plausible-but-wrong, almost never reliably correct. The team is confused: how can the same model handle complex prose flawlessly but fail at arithmetic that any pocket calculator gets right?</p>
+<p>What&#39;s the right framing?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>This is <strong>&quot;jagged intelligence&quot;</strong> — LLMs have unexpectedly strong capabilities in some areas (synthesizing prose, recognizing patterns) and unexpectedly weak ones in others (multi-step arithmetic, precise counting). Strength and weakness don&#39;t track apparent task difficulty. The fix isn&#39;t a smarter model; it&#39;s <strong>giving the model a calculator tool</strong> for arithmetic and letting it call the tool, while leaving the prose work to the model itself.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Switch to a &#39;reasoning&#39; or &#39;thinking&#39; model that does multi-step computation natively — newer reasoning-focused models handle arithmetic far better than general-purpose ones.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>The reports must contain confusing or ambiguous data. Clean up the source documents and the issue will resolve.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>All LLMs are unreliable for any finance work — abandon the use case.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Jagged intelligence is the most important LLM behavior to internalize for production AI work.</strong> LLMs are spiky: extraordinary at some things, surprisingly bad at others, and the boundary doesn&#39;t correspond to human intuitions about difficulty. Multi-step arithmetic is a textbook weak spot — not because the model can&#39;t &quot;do math,&quot; but because token-by-token generation isn&#39;t the right computation for it. The architectural answer isn&#39;t to find a smarter model; it&#39;s to <strong>route arithmetic to a calculator tool</strong> and let the model do what it&#39;s actually good at.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Capability over architecture</p>
+<p>This is the genuinely tempting wrong answer because reasoning models <em>do</em> narrow the arithmetic gap somewhat. But they don&#39;t eliminate jagged intelligence — they shift the boundary, not erase it. They&#39;re also slower and more expensive on the prose tasks the team is already getting right, which means you&#39;re paying more for worse latency to fix one weak spot. The tool-use approach (route arithmetic to a calculator, leave prose to the model) is structurally simpler and more reliable than buying a stronger model for the weakness.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Blame the data when the model has a known weakness</p>
+<p>The reports aren&#39;t ambiguous — the same documents that produce excellent prose summaries also produce wrong arithmetic. Cleaning the source doesn&#39;t address the underlying capability gap.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Defeatism about LLMs</p>
+<p>Abandoning the use case forfeits the value of the prose summarization, which is genuinely excellent. The right response to jagged intelligence is targeted tool use for the weak areas, not blanket avoidance.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q102" title="Q102">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>A marketing team asks Claude: <em>&quot;What were the top three movies at the box office in March 2024?&quot;</em> The model produces a confident-sounding answer with three specific movies and exact box office numbers. The team checks against actual industry sources and discovers two of the three movies didn&#39;t exist. The model didn&#39;t hedge, didn&#39;t express uncertainty, didn&#39;t say it might be wrong — it just confidently invented.</p>
+<p>What&#39;s the most accurate explanation of what happened?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>LLMs generate text <strong>token by token, based on learned probability distributions</strong>. When the model doesn&#39;t have actual data about a specific question, it produces text that <em>looks plausible</em> — because plausible-sounding tokens have high probability — even when the content is fabricated. This is &quot;hallucination,&quot; and it&#39;s structural to how LLMs work, not a bug.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>This is a known limitation of current models that&#39;s being actively worked on — wait for the next major release, where providers say hallucination will be substantially reduced.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>This is bias inherited from the training data — the model learned to invent movie names from social media.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>The model is intentionally deceiving the user to maintain conversational engagement.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Hallucination is structural, not pathological.</strong> LLMs predict the next token based on probability distributions learned during training. When asked about something specific the model doesn&#39;t actually know (a niche fact, a recent event, a specific business), it doesn&#39;t suddenly stop generating — it produces tokens that fit the <em>shape</em> of a plausible answer. The result is fluent, confident, and possibly wrong. The mitigations: ground answers in retrieved data (RAG), call tools for facts that need to be looked up, and design prompts that signal uncertainty rather than commit to specific claims when knowledge is absent.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Hallucination as fixable through model updates</p>
+<p>This is the genuinely tempting wrong answer because hallucination <em>is</em> reduced over time as training improves — the trend line is real. But waiting for a future release means accepting current incorrect outputs as a temporary problem when they&#39;re actually a structural one. Hallucination on facts the model doesn&#39;t have isn&#39;t a defect to be patched; it&#39;s how token-by-token generation works without grounding. The right move <em>now</em> is to ground answers in retrieved data (RAG) or call tools for facts that need to be looked up — not to defer the problem to a future model.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Hallucination as training-data bias</p>
+<p>Bias and hallucination are different phenomena. Bias is systematic skew in outputs based on patterns in training data; hallucination is fabrication of specific facts the model doesn&#39;t have. Conflating them obscures what&#39;s happening.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Anthropomorphizing the model</p>
+<p>The model has no intent to deceive — it doesn&#39;t have intent at all. Attributing intentional deception to an LLM is a category error that distracts from the actual mechanism (probabilistic generation without grounding).</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q103" title="Q103">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>A consultant asks Claude about a public company&#39;s Q4 2024 earnings. The model produces a detailed response with specific revenue numbers, growth percentages, and even quotes from the earnings call. The consultant cross-checks against the actual Q4 2024 press release and finds the numbers are <em>wrong</em> — they appear to be from Q4 2023, presented as if they were current.</p>
+<p>What&#39;s the most likely cause?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>The model has a <strong>training data cutoff date</strong>. When asked about events after the cutoff, it may produce answers based on the most recent similar data it does have (Q4 2023 instead of Q4 2024), without flagging the gap. The fix: <strong>provide the actual current data</strong> via RAG or tool use, or ask the model to first acknowledge what it can and can&#39;t know about recent dates.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>The model is hallucinating randomly — re-running the query will produce different (also wrong) numbers.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>The cross-check source is wrong; trust the model&#39;s output.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>This always happens with all LLMs and is unfixable — abandon any use case involving recent data.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Training cutoffs create a specific failure mode</strong>: the model knows old data well, doesn&#39;t know new data at all, and has no native mechanism to tell you which is which. When asked about recent events, it often substitutes the most recent thing it does know — confidently, without flagging the substitution. The architectural fix is to <strong>never ask LLMs about recent specific facts unaided</strong>: provide current data via tool use (<code>get_earnings_release(ticker, quarter)</code>) or RAG over current sources, and have the agent surface its data sources so the user can verify currency.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Random hallucination explanation when the cause is structural</p>
+<p>Re-running won&#39;t produce randomly different wrong numbers — it&#39;ll likely produce the same wrong numbers, because the model is consistently substituting Q4 2023 data. The cause is the cutoff, not randomness.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Trust the model over external sources</p>
+<p>Press releases are the authoritative source for earnings; the model is the derivative source. When they conflict on facts the cutoff predicts the model wouldn&#39;t know, the press release wins.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Defeatism about recent-data use cases</p>
+<p>Recent-data use cases are exactly where RAG and tool use earn their keep. The fix exists; abandoning the use case is over-correction.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q104" title="Q104">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>A junior analyst writes this prompt: <em>&quot;Write a marketing email about our new product.&quot;</em> The output is generic — bland subject line, off-brand voice, doesn&#39;t fit the audience. They&#39;re considering revising the prompt using the <strong>CRAFT framework</strong> (Context, Role, Action, Format, Tone) they learned in class.</p>
+<p>Which revision applies CRAFT correctly?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Add a stack of quality adjectives to the existing prompt: <em>&quot;Write a marketing email about our new product. Make it engaging, professional, concise, brand-appropriate, conversion-focused, attention-grabbing, on-strategy, and persuasive.&quot;</em></p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p><strong>Context</strong>: We&#39;re a B2B SaaS for HR teams launching a benefits dashboard. <strong>Role</strong>: You&#39;re our senior marketing copywriter who&#39;s shipped successful B2B launches at Notion and Asana. <strong>Action</strong>: Write an email announcing the launch to existing customers. <strong>Format</strong>: Subject line, three short paragraphs, single CTA at the end. <strong>Tone</strong>: Professional but warm, no corporate jargon, conversational like a teammate sharing news.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Just write more detailed instructions in one paragraph: &quot;Write a marketing email that is professional, includes a subject line, has three paragraphs, has a CTA, and is about our new product.&quot;</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Provide three sample marketing emails the company has sent before and add: <em>&quot;Write something like these for our new product launch.&quot;</em> Examples are more powerful than instructions.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Stacking adjectives instead of structuring dimensions</p>
+<p>This is the genuinely tempting wrong answer because adding more adjectives feels like adding more guidance. But adjectives compete with each other — <em>engaging</em> pulls toward attention-grabbing, <em>professional</em> pulls toward restrained, <em>conversion-focused</em> pulls toward sales-y, <em>brand-appropriate</em> depends on a brand the prompt doesn&#39;t specify. Stacking adjectives without structural dimensions gives the model conflicting pulls, and the output reflects whatever the model resolves them as. CRAFT works because it <em>separates</em> the dimensions (Context, Role, Action, Format, Tone) instead of stacking adjectives in one bucket.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>CRAFT works because it forces you to specify what most prompts leave implicit.</strong> <em>Context</em> tells the model the situation (who you are, who the audience is); <em>Role</em> gives it a coherent persona that integrates style and judgment; <em>Action</em> names the specific deliverable; <em>Format</em> constrains structure; <em>Tone</em> sets voice. Each element is doing real work — the prompt isn&#39;t longer for the sake of being longer; it&#39;s longer because each addition removes a degree of freedom that produces generic output. The other options either add no structure (A, D) or add structure without the conceptual scaffolding that makes CRAFT effective (C).</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Instructions in one paragraph vs structured framework</p>
+<p>Listing constraints in one paragraph is better than nothing, but it conflates structural instructions with stylistic ones and provides no role or context. CRAFT separates the dimensions because each plays a different role in shaping output.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Examples without framework</p>
+<p>This is the genuinely tempting wrong answer because examples <em>are</em> powerful — few-shot prompting works, and good marketing teams have actual past emails they can use. The problem: examples without surrounding framework produce <em>variations on the examples</em>, not appropriate output for a <em>different</em> situation. Three past emails don&#39;t tell the model that the new product is a B2B SaaS HR dashboard, or that the audience is existing customers, or that the tone should be conversational like a teammate sharing news. Examples are powerful <em>combined with</em> CRAFT, not as substitutes for it.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q105" title="Q105">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>A team is building an AI assistant to categorize customer feedback into eight categories: pricing, product quality, shipping, support, ease of use, features, bugs, and &quot;other.&quot; The categories are reasonably well-defined in writing, but several have overlap — e.g., <em>&quot;the app crashes whenever I try to upgrade my plan&quot;</em> could plausibly be <strong>bugs</strong>, <strong>pricing</strong>, or <strong>features</strong>. The team is debating whether to use zero-shot prompting (just describe the categories) or few-shot prompting (also include 2–3 example feedback items per category with their correct labels).</p>
+<p>When does few-shot beat zero-shot for this task?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>When the categories overlap or have ambiguous edge cases. <strong>Examples teach the boundary</strong> — they show the model how to handle exactly the cases where category descriptions alone leave room for interpretation. Zero-shot works when categories are crisp; few-shot is needed when judgment between them matters and overlap is real.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Always — few-shot is universally better than zero-shot regardless of task.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Never — well-written category descriptions should always be sufficient if you describe them clearly enough.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Only when the model is small. Larger models don&#39;t need examples.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Few-shot examples are most valuable where category boundaries are ambiguous.</strong> A &quot;the app crashes during upgrade&quot; example labeled as <code>bugs</code> (with reasoning: <em>&quot;the crash is the user&#39;s primary issue; the upgrade is the trigger but not the category&quot;</em>) teaches the model exactly the kind of judgment call it would otherwise guess at. For crisp, non-overlapping categories, zero-shot is fine and cheaper. The decision rule: <strong>use few-shot when judgment between alternatives matters; use zero-shot when categories are unambiguous.</strong></p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Few-shot as universally better</p>
+<p>Few-shot adds token cost on every call. For tasks with crisp categorization, that cost buys nothing. Universal best-ness is a non-criterion; match the technique to the task.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Sufficiently clear descriptions eliminate ambiguity</p>
+<p>Some category boundaries are genuinely fuzzy in the real world — &quot;is this a bug or a feature gap?&quot; is a judgment call humans disagree on. No description, however clear, eliminates that fuzziness; examples encode the actual boundary the team wants drawn.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Capability size as the deciding factor</p>
+<p>Larger models do better at zero-shot in many tasks, but they still benefit from few-shot when the task involves judgment that descriptions can&#39;t fully convey. Capability isn&#39;t the right axis for this decision.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q106" title="Q106">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>A team wants Claude to write technical documentation in a specific voice. They&#39;ve tried writing detailed style instructions (<em>&quot;be concise, use active voice, avoid jargon, write at a 9th-grade reading level, prefer short paragraphs, use code examples&quot;</em>) with mixed results — the model follows some rules and forgets others, especially as documents get longer.</p>
+<p>What&#39;s the right addition?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p><strong>Add role prompting</strong>: <em>&quot;You are a technical writer at a company known for exceptional documentation — think Stripe or Vercel docs. Your readers are intelligent but not domain experts.&quot;</em> The role gives the model a coherent persona that integrates style guidelines naturally — instead of following six rules in isolation, it writes <em>as the persona would</em>, and the persona has internalized those rules.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Add 30 more rules to cover edge cases — the more rules, the more reliable the output.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Reduce the model&#39;s temperature to make output more deterministic.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Switch to a smaller model that&#39;s easier to constrain.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Role prompting integrates style guidelines into a coherent identity.</strong> When the model is &quot;writing as Stripe documentation,&quot; it draws on patterns it associates with that style — concise, active voice, well-structured, code-forward. Six isolated rules produce isolated rule-following (&quot;oh right, I need to use active voice&quot; — but only when it remembers). A role lets the rules cohere. This is one of the most powerful and underused prompt engineering techniques: when style matters, name a persona that embodies the style.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> More rules = more reliability</p>
+<p>Adding rules has diminishing (and eventually negative) returns. The model has limited attention; 30 rules guarantees that some are ignored on any given output. Roles compress style into a single coherent target.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Temperature controls style adherence</p>
+<p>Temperature controls output randomness, not which rules the model follows. Lowering temperature might make wrong-style output more consistent — exactly the opposite of what you want.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Smaller models are easier to constrain</p>
+<p>Smaller models follow nuanced style instructions worse, not better. They produce more variance in style and miss more rules. The constraint capability scales with model size.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q107" title="Q107">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>A team is using Claude for two different tasks. <strong>Task A</strong>: Extracting structured data from invoices (vendor, date, line items, total). <strong>Task B</strong>: Determining whether a refund request is eligible based on a 4-step policy (check time window, check item condition, check customer history, check refund cap). They&#39;re debating whether to add <strong>chain-of-thought</strong> reasoning (<em>&quot;walk through your reasoning step by step before answering&quot;</em>) to one or both tasks.</p>
+<p>For which task is chain-of-thought most beneficial?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p><strong>Task B</strong> (refund eligibility) — multi-step policy application is exactly where chain-of-thought helps. The model has to apply rules in sequence, and laying out the reasoning before the verdict catches errors that would otherwise slip into a one-shot answer. Task A is structural extraction, which doesn&#39;t need step-by-step reasoning — the model maps fields to fields, not a multi-step inference. <strong>Use CoT where there are reasoning steps; skip it where the task is direct transformation.</strong></p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Both tasks equally — chain-of-thought always improves output quality.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Task A (extraction) — chain-of-thought helps the model walk through the document field by field.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Neither — chain-of-thought is overkill for production tasks.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Chain-of-thought helps when there are reasoning steps to lay out.</strong> Multi-step policy application (the refund task) is the textbook fit: each step depends on the previous, and externalizing the reasoning makes errors visible. Structured extraction (the invoice task) doesn&#39;t have this shape — there&#39;s no chain to reason through, just fields to find. Adding &quot;think step by step&quot; to extraction adds tokens without adding reliability.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> CoT as universal quality improver</p>
+<p>CoT adds latency and cost on every call. For tasks without reasoning steps, the cost buys nothing — and can occasionally hurt by encouraging the model to overthink simple transformations.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> CoT for structural extraction</p>
+<p>Field-by-field extraction isn&#39;t reasoning — it&#39;s mapping. Asking the model to &quot;think through&quot; each field wastes tokens and can introduce errors when the model talks itself out of correct extractions.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> CoT as overkill for production</p>
+<p>CoT is heavily used in production for exactly the cases where it helps (multi-step reasoning, policy application, complex decisions). &quot;Overkill&quot; is a non-criterion — match the technique to the task shape.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+  </objectbank>
+</questestinterop>

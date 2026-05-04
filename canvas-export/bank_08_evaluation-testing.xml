@@ -1,0 +1,858 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<questestinterop xmlns="http://www.imsglobal.org/xsd/ims_qtiasiv1p2">
+  <objectbank ident="ISOM260_evaluation-testing">
+    <qtimetadata>
+      <qtimetadatafield>
+        <fieldlabel>bank_title</fieldlabel>
+        <fieldentry>ISOM 260 — Evaluation, Testing & LLM-as-Judge (8 questions)</fieldentry>
+      </qtimetadatafield>
+    </qtimetadata>
+  <item ident="Q84" title="Q84">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>A team uses Claude as an LLM-as-Judge to score customer support agent responses on a 1–10 scale. The judge prompt is: <em>&quot;How good is this response? Score 1–10.&quot;</em> After a month, scores have drifted upward — the judge gives 8s and 9s where it used to give 6s and 7s. Nothing about the agent has changed.</p>
+<p>What&#39;s the most likely cause?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>The judge is being prompted with a vague rubric (&quot;how good is this response?&quot;). It needs explicit categorical criteria with concrete examples for each score level — what counts as a 5 vs 7 vs 9, with anchor examples — so its scoring is anchored to definitions, not to its drifting sense of quality.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>The judge has been corrupted by feedback loops — it&#39;s seeing its own past scores and conforming to them.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>The model has been quietly upgraded by the provider.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Random drift — rerun the entire evaluation every month and average across runs to smooth it out.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Vague rubrics produce vague (and drifting) scores.</strong> &quot;How good is this response?&quot; gives the judge no anchor — its sense of &quot;good&quot; floats based on what it has seen recently in context. Replacing the prompt with explicit anchor descriptions (&quot;a 9 has all of X, Y, Z; a 5 has at most X; a 3 fails on Z&quot;) and concrete examples (one sample response per score level) calibrates the judge to definitions rather than to its own internal sense of quality. <strong>Replace adjectives with categorical criteria</strong> — one of the most reliable moves in prompt engineering, applied here to evaluation.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Feedback contamination without evidence</p>
+<p>There&#39;s no described mechanism by which the judge sees its own past scores. Reaching for &quot;feedback loops&quot; when the simpler explanation (vague rubric) is sitting right there is a debugging anti-pattern.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> External explanation for an internal effect</p>
+<p>Provider model upgrades happen, but blaming an unannounced upgrade before checking your own rubric is misallocating diagnostic effort. The rubric is something you can inspect and fix.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Random drift without diagnosis</p>
+<p>Drift in a structured measurement system is rarely random — it&#39;s usually pointing to under-specified evaluation criteria. Averaging across runs smooths the symptom while leaving the cause in place.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q85" title="Q85">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>A team is about to deploy LLM-as-Judge scores into production KPI reporting — the VP will see the judge&#39;s monthly quality scores in a dashboard. The team has tested the judge in development and it &quot;seems to work.&quot;</p>
+<p>What should they do before deploying?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Calibrate the judge against a labeled dataset where humans have scored the same responses. Measure agreement rate (e.g., Cohen&#39;s kappa or correlation). Only deploy if agreement is acceptable for the decision the scores will inform; surface disagreement patterns for prompt refinement.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Trust the judge — Claude is well-aligned out of the box.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Run the judge in production for a quarter and see what scores it produces; adjust if anything looks off.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Run the judge twice on the same set of responses and measure inter-rater agreement <em>between the two runs</em> — if the judge agrees with itself across runs, it&#39;s consistent enough to trust as a measurement instrument.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>An LLM-as-Judge is a measurement instrument; a measurement instrument has to be calibrated.</strong> Comparing the judge&#39;s scores to human-labeled scores on a representative test set tells you whether the judge agrees with the humans whose role it&#39;s replacing. If agreement is high, deploy. If it&#39;s low or systematically biased (always higher on certain response types, always lower on others), refine the prompt and re-calibrate. Skipping calibration deploys a measurement system you can&#39;t defend.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Out-of-box trust for measurement instruments</p>
+<p>Claude is capable; that doesn&#39;t make it a calibrated judge for your specific quality criteria. &quot;Out-of-box&quot; thinking is exactly how vague-rubric drift goes undetected for months.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Production as calibration</p>
+<p>A quarter of production scores with no ground truth produces no calibration — you have data but nothing to compare it to. Calibrate before, not during.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Self-consistency mistaken for accuracy</p>
+<p>This is the genuinely tempting answer because it <em>is</em> a real measurement — the judge agreeing with itself across runs is <em>consistency</em>, which is necessary but not sufficient. The problem: a judge can be perfectly consistent and systematically wrong (always scoring helpfulness too high, always undervaluing accuracy). Self-agreement measures whether the same bias appears twice, not whether the bias is correct. Calibration requires comparison to an <em>external</em> ground truth — which is what human scoring on a labeled set provides.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q86" title="Q86">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>A team wants to know if their support agent works. They write 20 test cases (&quot;how do I reset my password?&quot;, &quot;where is my order?&quot;, etc.) and check whether Claude&#39;s response <em>&quot;looks right&quot;</em> for each one. All 20 pass. The team declares the agent ready for production.</p>
+<p>What&#39;s the problem with this test suite?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>The test cases cover only &quot;normal&quot; requests — the cases most likely to expose problems (edge cases, adversarial inputs, known-failure scenarios, multi-issue requests, requests in non-English, requests at the boundary of the agent&#39;s scope) aren&#39;t represented. A test suite that contains only easy cases tells you nothing about how the agent fails.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>The test suite needs more &quot;normal&quot; cases — 20 isn&#39;t enough volume to be statistically meaningful.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>The human checking should be replaced with LLM-as-Judge immediately, before deploying.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Claude should be writing the test cases, not the team.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>A test suite is only as valuable as its hardest cases.</strong> Twenty easy questions all passing tells you the agent handles the happy path, which was already obvious. The test suite needs to include the cases that <em>should</em> be hard: edge cases (rare-but-real scenarios), adversarial inputs (people trying to break the agent), known-failure cases (things the agent has gotten wrong before), multi-issue requests (testing decomposition), out-of-scope requests (testing graceful refusal). The point of the suite is to <em>find</em> problems before users do — easy cases don&#39;t do that.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> More cases over different cases</p>
+<p>Doubling the number of &quot;normal&quot; test cases just gives you more confidence on the happy path. Volume in a single direction doesn&#39;t replace coverage across directions.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Automation before validation</p>
+<p>Replacing human checking with an uncalibrated LLM judge means you&#39;re now uncertain about both the agent <em>and</em> the judge. An LLM-as-Judge has to be calibrated against human ground truth before it can be trusted as a measurement instrument. Until then, human checking is the more trustworthy signal.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Delegate test creation</p>
+<p>Asking the agent&#39;s underlying model to write its own test cases means the test suite shares the same blind spots as the agent. Tests should encode <em>human knowledge of failure modes</em> — exactly what the model doesn&#39;t have.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q87" title="Q87">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>A consulting team&#39;s research agent is asked the same question five times — <em>&quot;Should we recommend market entry into Vietnam for a mid-sized US fintech?&quot;</em> Each response is <em>slightly</em> different: same overall recommendation (Yes, with conditions), but different supporting points emphasized, different risks foregrounded, different framings of the regulatory landscape. The team is debating whether this is a problem.</p>
+<p>What&#39;s the right framing?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Measure consistency on a test set across N runs of the same query, separating <em>outcome-relevant</em> variance from <em>framing</em> variance. High variance on the recommendation itself or on the key risk factors is a problem; high variance on prose ordering or which examples are picked typically isn&#39;t. The decision-relevant dimensions are what matter.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Non-determinism is unavoidable — accept it and move on.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Set the model temperature to 0 to eliminate variance entirely.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Run the query three times and average the responses to produce a &quot;consensus&quot; recommendation.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Not all variance is equal — measure variance on the dimensions that affect decisions.</strong> If the recommendation is the same and the key risks identified are the same, prose variance is inert: the user makes the same decision either way. If the recommendation flips between &quot;Yes&quot; and &quot;No&quot; across runs, that&#39;s a serious consistency problem. The right consistency test is: same query × N runs × extract decision-relevant fields × measure variance on those fields. Variance on framing is normal; variance on outcomes is a bug.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Defeatism about non-determinism</p>
+<p>&quot;Unavoidable, accept it&quot; is what teams say when they haven&#39;t measured. You can&#39;t reason about whether the variance matters until you separate decision-relevant from framing-only variance. Measure first.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Temperature 0 eliminates variance</p>
+<p>Temperature 0 reduces but does not eliminate variance — multi-turn agentic systems still vary based on tool-result ordering, race conditions in retrieval, and other non-deterministic factors. And temperature 0 produces flatter, less useful outputs for many tasks. The fix is measuring the <em>right</em> kind of variance, not eliminating all variance.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Averaging produces consensus</p>
+<p>You can&#39;t meaningfully &quot;average&quot; three prose recommendations into a &quot;consensus&quot; recommendation. Averaging is for numerical estimates of the same quantity computed by the same method — and even then, averaging across methodologically different sources can be meaningless. Recommendations require picking one, with attribution and reasoning.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q97" title="Q97">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>An agentic system processes ~10,000 queries per day across four tools (<code>web_search</code>, <code>database_lookup</code>, <code>document_analyzer</code>, <code>report_generator</code>). Costs are surprising — sometimes a query costs $0.02, sometimes $2.50. Monthly bills swing wildly. The CFO wants to know what&#39;s driving the cost variance, but no one on the team has visibility.</p>
+<p>What&#39;s the right addition?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Track per-query token usage and cost broken down by <em>query type</em> (simple lookup vs. research synthesis), <em>tool invocation pattern</em> (which tools, how many calls), and <em>outcome</em> (resolved vs. escalated). Surface where cost concentrates so you can identify whether optimization is needed at the prompt level, the architecture level, or the tool level.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Track total monthly cost and divide by total query count to get average cost per query.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Set a hard cap of $0.50 per query and reject any work that would exceed it.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Switch to a smaller, cheaper model uniformly across all queries.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Cost visibility, like accuracy visibility, has to be stratified to be useful.</strong> A single average tells you nothing about <em>which</em> queries are expensive and why. Stratifying by query type, tool pattern, and outcome surfaces the actionable picture: &quot;research-synthesis queries with 8+ tool calls average $1.80 each and represent 12% of volume but 70% of cost&quot; tells you exactly where to focus. <strong>Stratification reveals concentration risk that aggregate metrics hide</strong> — the same lesson applied to cost spending instead of accuracy or errors.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Aggregate cost masks variance</p>
+<p>A single average flattens the variance the CFO is asking about. &quot;Average cost is $0.60&quot; tells you nothing useful when individual queries range from $0.02 to $2.50.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Hard caps without diagnosis</p>
+<p>A $0.50 cap that rejects expensive queries means the most complex (and often most valuable) queries silently fail — without you knowing what the system is being asked to do that would cost that much. Caps have a place, but not before diagnosis.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Uniform downgrade for cost</p>
+<p>Smaller models on simple lookups make sense; smaller models on research synthesis often produce worse results that <em>cost more in retries and rework</em>. Uniform downgrades can increase total cost while reducing quality.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q98" title="Q98">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>An invoice extractor outputs a confidence score per field — <code>{vendor: &quot;Acme Corp&quot; (0.89), date: &quot;2024-05-04&quot; (0.92), amount: 1287.42 (0.71), invoice_number: &quot;INV-9938&quot; (0.68)}</code>. The team currently routes any extraction with <em>any</em> field below 0.85 to human review. About half the time, those routed extractions turn out to be entirely correct. Meanwhile, several auto-approved extractions (all fields above 0.85) have turned out to be wrong.</p>
+<p>What&#39;s the right fix?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Calibrate confidence thresholds <em>per field type</em>, against a labeled validation set. Date confidence might be reliable at 0.7 (model is well-calibrated on date formats); vendor-name confidence might be unreliable even at 0.95 (model overconfident on vendor disambiguation). Use field-specific thresholds tuned to actual error rates, not a single global threshold.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Lower the threshold to 0.70 to reduce false-positive escalations.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Raise the threshold to 0.95 to catch the auto-approved errors.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Drop confidence scoring entirely — review everything, and skip the auto-approval path.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Confidence scores aren&#39;t equally calibrated across fields</strong> — models tend to be well-calibrated on some fields and overconfident on others. A global threshold treats all fields as if they had the same reliability, which produces both kinds of errors: high-confidence wrong answers slip through (overconfident fields) and high-confidence correct answers get over-escalated (well-calibrated fields where 0.85 is genuinely high). Calibrate per field against labeled data, then route by field-specific thresholds. This is one of the highest-leverage moves in extraction-system design.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Lower threshold uniformly to reduce escalations</p>
+<p>Lowering to 0.70 reduces escalations but lets through <em>more</em> of the overconfident-but-wrong cases that were already a problem. You&#39;re trading one error type for the worse error type.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Raise threshold uniformly to catch errors</p>
+<p>Raising to 0.95 catches more cases for review but also escalates many extractions that are correct. Reviewer capacity gets consumed on extractions that didn&#39;t need it. Per-field calibration uses reviewer time where it actually pays off.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Drop calibration when you can fix it</p>
+<p>Reviewing everything forfeits the entire benefit of confidence-based routing. The data is there to calibrate properly; throwing out the routing layer is over-correction.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q99" title="Q99">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>A VP asks: <em>&quot;Does your support agent work?&quot;</em> The team responds: <em>&quot;It feels like it&#39;s working really well.&quot;</em> The VP wants metrics. The team needs to put together a dashboard.</p>
+<p>What should the dashboard surface?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Multiple metrics serving multiple questions: accuracy on a labeled test set (does it answer correctly?), escalation rates broken down by appropriate vs inappropriate (when does it ask for help?), customer satisfaction (do users find it useful?), cost per resolution (is it economically viable?), time-to-resolution (is it fast enough?). Don&#39;t replace one number with another — different stakeholders ask different questions, and the dashboard should answer them.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>A single &quot;success rate&quot; number — the percentage of queries resolved without escalation.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Customer satisfaction score, since that&#39;s the only metric that matters in the end.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>A confidence score from the agent itself, averaged across all queries.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>&quot;Does it work?&quot; is multiple questions.</strong> A VP asking that wants to know: is it correct, does it know its limits, do customers find it useful, is it affordable, is it fast. Each is a different metric measuring a different dimension. A dashboard that answers them separately lets stakeholders zoom into the dimension they care about. A single bundled metric flattens all the questions into one number that no one fully trusts.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Single bundled metric</p>
+<p>A &quot;success rate&quot; metric bundles correctness, escalation behavior, and resolution speed into one number that responds to all three. When it changes, you can&#39;t tell why. Stakeholders end up not trusting it because it doesn&#39;t answer their specific question.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Customer satisfaction as the only metric that matters</p>
+<p>Customer satisfaction is important but lagging — it tells you about user perception weeks after the fact, not about correctness or operational health. By the time satisfaction drops, the underlying problems have already produced bad outcomes. Lead with correctness; satisfaction is one of several outcomes.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Self-reported confidence as quality signal</p>
+<p>The agent&#39;s self-reported confidence measures how the <em>agent</em> feels about its answers — not how <em>correct</em> they are. Self-reported confidence is poorly calibrated, especially on cases the agent gets wrong: by definition, the model doesn&#39;t know it&#39;s wrong, or it wouldn&#39;t be reporting that confidence. Reporting it as a quality metric is misleading because the metric correlates poorly with actual correctness.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q100" title="Q100">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>A team is two weeks from launching a customer-facing agent that handles billing inquiries, plan changes, and account updates. They&#39;ve built a rough version and tested it informally. Their VP says: <em>&quot;You&#39;ve listed six things you want to do before launch — a test suite, an eval rubric, approval gates on high-stakes actions, prompt-injection guardrails, cost tracking, and confidence-based fallback to humans. We don&#39;t have time to do all six. Pick the two we absolutely have to do.&quot;</em></p>
+<p>What&#39;s the most defensible pick?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p><strong>Approval gates on high-stakes actions</strong> and <strong>confidence-based fallback to humans</strong> — these two prevent the most catastrophic failure modes (agent autonomously executes a wrong irreversible action, agent confidently produces a wrong answer). The other four are quality and observability concerns that improve the system over time; these two are <em>safety</em> concerns that prevent the kind of incident that ends a project. Match priority to risk asymmetry: irreversible bad outcomes &gt; slow improvements.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p><strong>A test suite</strong> and <strong>an eval rubric</strong> — without these, you can&#39;t measure whether anything else is working.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p><strong>Prompt-injection guardrails</strong> and <strong>cost tracking</strong> — these are the two most-discussed risks in the current AI safety literature.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p><strong>A test suite</strong> and <strong>cost tracking</strong> — the most concrete, easiest-to-build options.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> **Pre-launch priority should be set by <em>risk asymmetry</em>, not by what&#39;s easiest or most-discussed.** The cost of approval gates and confidence-based fallback being absent is a customer-facing incident — wrong action taken, wrong information confidently delivered, brand damage that takes years to repair. The cost of test suites and eval rubrics being absent is <em>slower iteration</em>, which is recoverable. Cost tracking is recoverable. Prompt injection is real but typically less catastrophic for a billing/account agent than for an action-taking one (the gates pick up the worst of it). When forced to pick, pick the safety layers; the quality layers can be added in week 3.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Measurement before safety</p>
+<p>Test suites and eval rubrics are valuable, but they tell you whether the system is working — they don&#39;t prevent the system from doing damage when it isn&#39;t. A measured-and-broken system is still broken. Safety layers prevent the damage; measurement layers detect it after the fact.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Pop-saliency over risk asymmetry</p>
+<p>Prompt injection is a real risk, but for a billing-and-account agent the more concrete failure modes are unauthorized actions and confident wrong answers — which approval gates and confidence-based fallback address directly. Cost tracking is operational, not safety-critical. &quot;Most-discussed&quot; isn&#39;t the same as &quot;highest-risk for this product.&quot;</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Easy-to-build over highest-risk</p>
+<p>Picking based on convenience is exactly how teams ship the things that don&#39;t prevent the worst outcomes. The forcing question — &quot;we can only do two&quot; — should make you confront the risk-asymmetry question directly: which two prevent the most catastrophic outcomes?</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+  </objectbank>
+</questestinterop>

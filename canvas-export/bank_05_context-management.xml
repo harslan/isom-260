@@ -1,0 +1,1605 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<questestinterop xmlns="http://www.imsglobal.org/xsd/ims_qtiasiv1p2">
+  <objectbank ident="ISOM260_context-management">
+    <qtimetadata>
+      <qtimetadatafield>
+        <fieldlabel>bank_title</fieldlabel>
+        <fieldentry>ISOM 260 — Context Management & Reliability (15 questions)</fieldentry>
+      </qtimetadatafield>
+    </qtimetadata>
+  <item ident="Q21" title="Q21">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>Your customer support agent tracks complex cases over many turns. On turn 1, a customer states: <em>&quot;My order #44872 for $312 was supposed to arrive on March 14 but it&#39;s now March 22 and tracking hasn&#39;t updated since the 16th.&quot;</em></p>
+<p>By turn 12, after the agent has gathered details, looked up policies, drafted resolution options, and processed two tool calls, the agent&#39;s summary reads: <em>&quot;Customer is reporting a delayed shipment from earlier this month.&quot;</em></p>
+<p>The financial detail, dates, and order number have been compressed away.</p>
+<p>What&#39;s the best architectural fix?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Increase the <code>max_tokens</code> limit so the agent doesn&#39;t compress as aggressively.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Extract transactional facts (order number, amount, dates, status) into a persistent <strong>case facts</strong> block that&#39;s included in every prompt, separate from the summarized conversation history.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Instruct the agent in the system prompt to &quot;never compress numerical details, dates, or order numbers.&quot;</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Switch to a model with a larger context window so the original turn 1 message is always preserved verbatim.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> More tokens prevents compression</p>
+<p><code>max_tokens</code> controls <em>output</em> length, not how the agent summarizes context. And even if you somehow disabled all compression, eventually conversations exceed any context window — compression has to happen somewhere.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> Progressive summarization is one of the major reliability hazards in long-running agentic conversations. Models compress legitimately long histories but tend to lose precise facts (numbers, dates, identifiers) in the process. The architectural fix is to extract critical facts into a <strong>structured, persistent block</strong> that&#39;s included in every prompt — separate from the summarized conversation flow. The summary handles narrative; the case facts block handles precision. This separation gives you both compression and fidelity on what matters.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Instructions prevent compression behaviors</p>
+<p>Asking the model to &quot;never compress numerical details&quot; relies on probabilistic compliance for a property that compression dynamics will violate. The model is summarizing because it&#39;s optimizing the use of context — it can&#39;t both summarize and preserve every detail.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Longer context windows solve precision loss</p>
+<p>Larger context windows help, but they don&#39;t prevent the lost-in-the-middle effect, and they don&#39;t fix the underlying issue: facts that need to be referenced repeatedly across many turns should not be buried in conversation history at all. Architecture beats raw capacity.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q22" title="Q22">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>A subagent in your research system encounters a timeout while searching academic databases. You&#39;re designing what it returns to the coordinator agent.</p>
+<p>Which response is most useful?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p><code>{ &quot;status&quot;: &quot;error&quot;, &quot;message&quot;: &quot;Search failed&quot; }</code></p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>A structured error: <code>{ &quot;status&quot;: &quot;error&quot;, &quot;errorType&quot;: &quot;timeout&quot;, &quot;attemptedQuery&quot;: &quot;fast fashion supply chain emissions 2023&quot;, &quot;partialResults&quot;: [3 partial results that were retrieved before timeout], &quot;suggestedNextStep&quot;: &quot;retry with narrower query or alternative source&quot; }</code></p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Empty results returned as success: <code>{ &quot;status&quot;: &quot;success&quot;, &quot;results&quot;: [] }</code></p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Throwing an exception that propagates up and terminates the entire workflow.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Error messages just need to indicate failure</p>
+<p>&quot;Search failed&quot; is true but useless. The coordinator can&#39;t distinguish between a transient timeout and a permanent failure, doesn&#39;t know what was attempted, and has nothing to retry against. Generic error messages force generic recovery (or no recovery at all).</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Structured error context is what enables intelligent recovery in multi-agent systems.</strong> The coordinator can see what failed, what was tried, what partial results came back, and what alternative paths exist. With this information, the coordinator can decide: retry the original query, retry with a narrower query, route to a different source, proceed with partial results and annotate the gap, or escalate. Generic error messages strip away the information needed to make any of those choices.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Failures should be hidden as empty success</p>
+<p>Returning empty results as success is the worst option — it actively misleads the coordinator into thinking the search succeeded with no matches, which is semantically very different from &quot;the search failed.&quot; The coordinator might confidently report &quot;no information available on this topic&quot; when in reality information might exist but the search timed out.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Errors should propagate upward to terminate workflows</p>
+<p>A single subagent timeout shouldn&#39;t kill the entire research workflow when other subagents are succeeding and recovery strategies exist. Terminating on first failure is what you do when you&#39;ve given up on recovery, not what you do as a default.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q23" title="Q23">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>Your customer support agent is mid-conversation with a frustrated customer about a delayed shipment. The agent has just finished looking up the order and identified that a refund-and-replace is straightforward and approved by policy. The customer&#39;s next message arrives: <em>&quot;I&#39;m done with this. Get me a human.&quot;</em></p>
+<p>The agent has the resolution ready. It would take one tool call to execute.</p>
+<p>Should the agent surface the resolution first, or escalate immediately?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Surface the resolution first — the agent has a one-step fix the customer will likely accept, and escalating now wastes both the customer&#39;s time waiting in queue and a human agent&#39;s time on a solved case.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Escalate immediately — the customer has explicitly requested a human, and overriding that to surface a fix (even a good one) treats their stated preference as something to be managed rather than respected.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Reply with: &quot;I understand. I have a resolution ready that takes one click — would you like me to apply it, or transfer you to a human?&quot; — give the customer the choice.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Apply the resolution silently and then transfer to a human, so the customer gets both a solved problem and the human contact they asked for.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Efficiency outweighs respecting explicit requests</p>
+<p>This is the genuinely tempting answer because it sounds reasonable — the resolution exists, the customer wants the underlying problem solved, why add latency? The misconception is that the customer&#39;s stated preference (a human) and their underlying preference (a solved problem) can be cleanly separated. They can&#39;t. By the time a customer says &quot;get me a human,&quot; they&#39;ve often lost trust in the automated path entirely; even a correct resolution at this point may register as the agent dismissing their request.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> When a customer explicitly requests a human, that request takes precedence over the agent&#39;s resolution capability. Overriding it — even to deliver a good outcome — communicates that the customer&#39;s stated preference is conditional on the agent&#39;s judgment about what&#39;s best for them. That damages trust in a way no quick fix recovers. <strong>The principle: explicit customer requests are not heuristics to be optimized against; they&#39;re constraints to be honored.</strong> The cost of an &quot;unnecessary&quot; escalation is much smaller than the cost of teaching customers their requests will be overridden when the agent thinks it knows better.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Offering a choice is always the safe middle ground</p>
+<p>Offering a choice sounds neutral but functionally still asks the frustrated customer to do more work — read, decide, respond — when they&#39;ve just told you they&#39;re done with that. &quot;Give them the choice&quot; is reasonable in many contexts but not after an explicit demand for escalation.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Doing both satisfies both interpretations</p>
+<p>Applying the resolution silently while transferring sounds like the best of both worlds, but it ignores the customer&#39;s stated preference (they asked for a human, not a resolution + a human) and creates confusion when the human agent picks up a case that&#39;s already been acted on. Hidden actions during escalation are a reliability hazard.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q24" title="Q24">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>You&#39;re synthesizing a research report combining findings from multiple subagents. One source (a 2022 industry report) states the market grew <strong>12%</strong> last year. Another source (a 2024 academic paper) states the market grew <strong>8%</strong> last year.</p>
+<p>What should the synthesis subagent do?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Pick the more recent source (the 2024 paper) and use 8%, since recency is a reliable proxy for accuracy.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Average the two values and report 10%, since this is the most likely true value.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Preserve both values with source attribution and methodological context: &quot;Estimates of last year&#39;s market growth vary: a 2022 industry report cites 12%, while a 2024 academic study cites 8%. The discrepancy may reflect differences in market definition or measurement methodology.&quot;</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Drop both values from the report since they conflict and conflicting data can&#39;t be reliably reported.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Recency is the most important quality signal</p>
+<p>Recency is one signal but not a sufficient one. The 2022 report might use a broader market definition; the 2024 paper might use a narrower one. Picking based on a single dimension hides the underlying methodological question.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Averaging conflicting estimates produces a &quot;best&quot; estimate</p>
+<p>Averaging two estimates from different methodologies produces a number that doesn&#39;t correspond to either methodology&#39;s definition of the market. It looks like a compromise but is actually meaningless.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> When credible sources disagree, the synthesis output should <strong>preserve the disagreement, attribute each value to its source, and surface methodological context</strong> where possible. This respects the user&#39;s intelligence, makes the report defensible, and lets readers evaluate the sources themselves. Annotating conflicts is dramatically more honest than collapsing them, and it&#39;s the standard for any synthesis that aspires to credibility.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Conflicting data should be suppressed</p>
+<p>Dropping conflicting findings is intellectual cowardice and produces a report that&#39;s less informative than the underlying sources. Synthesis should compress; it shouldn&#39;t censor.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q25" title="Q25">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>Your customer support agent has been running for six months at 87% first-contact resolution. The board has been impressed by the metrics. Your VP of Operations is under pressure to free up reviewer capacity for a new initiative and proposes reducing human review on all &quot;high-confidence&quot; cases — those where the agent self-reports confidence above 0.9.</p>
+<p>Aggregate accuracy on high-confidence cases is <strong>97%</strong>. The proposal would cut review costs significantly. Your VP wants to roll this out next month.</p>
+<p>What&#39;s your most defensible position?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Approve the rollout — 97% aggregate accuracy is well above any reasonable autonomous threshold, and delaying further when the metrics are this strong is over-cautious.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Approve a phased rollout — cut review by 50% next month, monitor for two months, and cut the remaining 50% if metrics hold.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Hold the rollout until you&#39;ve <strong>stratified accuracy</strong> by case type, dollar amount, and customer segment. Aggregate metrics can mask poor performance on subsets where errors are most expensive — high-confidence cases averaging $30 may be 99% accurate while high-confidence cases averaging $3,000 may be 78% accurate.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Reject the proposal — automated review is never appropriate for customer-facing financial decisions regardless of the metrics.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Strong aggregate metrics justify autonomous action</p>
+<p>This is the genuinely tempting answer under organizational pressure — the metrics look great, the VP needs the capacity, delay looks like timidity. The misconception is treating aggregate accuracy as if it tells you about the <em>distribution</em> of errors. It doesn&#39;t. A system can have excellent aggregate accuracy while concentrating its failures on the highest-stakes cases. &quot;97% is good enough&quot; is a reasoning style that produces predictable, expensive incidents.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Phased rollouts handle measurement gaps</p>
+<p>Phasing the rollout is operationally responsible but doesn&#39;t address the actual question: do you know whether the 97% is uniform or concentrated? If errors are concentrated in high-stakes cases, phasing just spreads the problem across two months instead of one. Phasing is a deployment strategy; stratification is an analysis prerequisite. The phased rollout would be appropriate <em>after</em> stratification confirms the metrics are uniformly good.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Aggregate accuracy is one of the most dangerous metrics to act on without stratification.</strong> A system that&#39;s 97% overall might be 99% on simple cases that dominate the volume and 73% on complex cases where errors are most costly. Before reducing review, you need to understand the <em>distribution</em> of errors — by case type, dollar amount, customer segment. Often you&#39;ll find that aggregate metrics are masking concentrated risk in exactly the segments where you most need human review. The defensible position is: &quot;the 97% looks great, and before we act on it we need to verify the errors aren&#39;t concentrated where they hurt most.&quot;</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Categorical positions substitute for analysis</p>
+<p>Refusing on principle without doing the analysis is no more defensible than approving on principle. &quot;Never automate this&quot; forfeits real capacity gains where they&#39;re warranted, and it doesn&#39;t model the kind of analytical thinking the situation requires. The right answer is conditional on what stratification reveals.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q46" title="Q46">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>Your customer support agent uses an <code>order_lookup</code> MCP tool that returns 40+ fields per order: order ID, status, dates, line items, shipping carrier, tracking number, billing address, shipping address, payment method, gift wrap selection, marketing source, internal flags, and on. The agent typically only references 5 of these fields. After a 12-turn conversation, the context is dominated by tool outputs — earlier turns have been compressed and key facts are getting lost.</p>
+<p>What&#39;s the best fix?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Increase the context window by switching to a larger-context model.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>At the tool layer, return only the fields the agent will actually use; expose the rest as a separate detail-fetch tool the agent can invoke on demand when needed.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Have the agent summarize each tool output immediately after the call, replacing the raw output with the summary.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Truncate every tool output to the first 500 characters regardless of structure.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> More capacity beats better data shape</p>
+<p>A larger context window lets you waste more tokens before consequences hit — it doesn&#39;t fix the underlying inefficiency. And lost-in-the-middle effects worsen as context grows.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Context economy starts at the tool layer.</strong> Tools that return 40 fields when the agent uses 5 are wasting context budget the agent will need later for reasoning, recall, and case facts. The fix is to shape the tool&#39;s output to match what&#39;s usually needed, with a separate detail-fetch tool for the edge cases. This is a recurring pattern: don&#39;t make the model pay tokens to ignore data; don&#39;t serve it data it didn&#39;t ask for. Trim at the boundary, expose detail on demand.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Shift work to the model that should be done by the tool</p>
+<p>Asking the agent to summarize every tool output adds an LLM call per tool call (cost, latency, error surface) for work that&#39;s deterministic — you know which fields matter, so trim them at the source.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Blind truncation loses semantically important fields</p>
+<p>A 500-character cutoff could chop off the order ID or the status while preserving an internal flag the agent doesn&#39;t need. Structure-aware trimming keeps what matters and discards what doesn&#39;t; character-count truncation can&#39;t.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q47" title="Q47">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>A customer service agent receives the message: <em>&quot;Hi, I&#39;m John Smith, can you help me with my account?&quot;</em> The agent calls <code>lookup_customer(name: &quot;John Smith&quot;)</code>. The tool returns three customer records — three different John Smiths in three different cities, all with active accounts.</p>
+<p>The agent currently picks the most recently active record and proceeds.</p>
+<p>What&#39;s the right behavior?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Continue picking the most recently active record — recency is a reasonable heuristic and avoids friction.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Ask the customer for an additional identifier (email, ZIP code, last 4 of card on file) rather than guessing among multiple matches.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Run the conversation in parallel against all three records and reconcile at the end.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Pick a record at random and inform the customer their data may be inaccurate.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Heuristics that look reasonable</p>
+<p>Recency seems sensible until the most recent active record is the wrong John Smith. The heuristic produces a confident wrong answer instead of a quick right one. &quot;Reasonable-looking&quot; is not a substitute for &quot;correct.&quot;</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>When a lookup returns multiple matches, the right move is to ask for a disambiguating identifier</strong>, not to guess. Heuristics like &quot;most recently active&quot; feel reasonable but produce predictable, expensive failures — the case where the <em>wrong</em> John Smith&#39;s account gets modified is exactly the case the heuristic doesn&#39;t catch. A short clarifying question costs the customer two seconds; a wrong-account modification costs trust, time, and possibly money.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Parallelism over disambiguation</p>
+<p>Running three parallel conversations means three customers&#39; data is touched on a single ambiguous request — privacy, audit trail, and reconciliation problems compound. Ask the question; pick one record.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Randomness over questions</p>
+<p>A random pick with a disclaimer is somehow worse than a heuristic pick — you&#39;ve formalized that you don&#39;t know who you&#39;re talking to and proceeded anyway. The customer can answer a clarifying question; let them.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q48" title="Q48">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>A customer messages your support agent: <em>&quot;This is incredibly frustrating. Why can&#39;t you just refund my order?&quot;</em> The order is straightforwardly refund-eligible per policy. The agent has the resolution one tool call away. The customer has not asked for a human.</p>
+<p>What&#39;s the right behavior?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Escalate immediately — frustration alone is a sufficient signal that a human should take over.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Acknowledge the frustration, offer the resolution clearly, and proceed with the refund. Escalate only if the customer reiterates a preference for a human or rejects the resolution.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Apply the refund silently to demonstrate competence without burdening the customer with more conversation.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Send a templated empathy reply (&quot;we understand your frustration&quot;) and continue gathering more information before resolving.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Frustration triggers escalation regardless of capability</p>
+<p>Frustration is a signal about emotional state, not about whether the agent can solve the problem. If you escalate every frustrated customer, your support system becomes a queue management system for humans.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Frustration without an explicit request for a human is different from explicit escalation.</strong> When the agent has the resolution and the issue is within its capability, the right move is to acknowledge what the customer is feeling, surface the fix, and execute. Escalating on frustration alone trains a system that can&#39;t handle anyone who&#39;s upset — which is most of the people contacting support. Note the contrast with a customer who <em>explicitly</em> asks for a human: that request takes precedence and is honored immediately.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Silent action is faster service</p>
+<p>Silently issuing the refund without acknowledging what the customer said registers as the agent ignoring them — which compounds the frustration even when the underlying issue is resolved. Acknowledge, then act.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Template empathy without resolution</p>
+<p>A &quot;we understand your frustration&quot; reply that&#39;s followed by <em>more questions</em> rather than the available resolution is the worst of both worlds — it acknowledges the feeling without addressing the substance, which is what the customer is actually asking for.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q49" title="Q49">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>A research synthesis covers a topic with five subareas. Two had robust source data (~15 strong sources each). Three had limited sources (1–2 sources, of varying quality). The current synthesis presents all five subareas in identical prose with identical apparent confidence — a reader can&#39;t tell which findings are well-supported and which rest on a single weak source.</p>
+<p>What&#39;s the right pattern?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Drop the three under-supported subareas from the report so readers only see well-supported findings.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Annotate coverage explicitly — distinguish well-supported findings from those based on limited sources, and surface the gaps rather than hiding them. The reader sees what&#39;s known, what&#39;s tentative, and where the evidence is thin.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Search harder for additional sources on the under-supported subareas before reporting, no matter how long it takes.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Add a generic disclaimer at the end of the report (&quot;some sections may be less complete than others&quot;).</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Drop under-supported is honesty</p>
+<p>Dropping the under-supported areas hides their existence. The decision-maker doesn&#39;t know there are subareas where the evidence was thin — they assume the report is complete on what it covers. Suppression is worse than honest annotation.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Coverage annotation is what distinguishes a credible synthesis from a confident-sounding one.</strong> A reader of a research report deserves to know not just <em>what was found</em> but <em>how well-established it is</em>. Marking the well-supported and the thinly-supported areas explicitly — with the source counts, the methodological notes, the gaps where evidence was unavailable — is honest, defensible, and useful. It also prevents a downstream decision-maker from acting on a single-source finding as though it were robust.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> More search to avoid annotation</p>
+<p>Sometimes the sources genuinely don&#39;t exist, and you can search forever without filling the gap. The synthesis still has to ship; the right response is to surface the gap, not delay indefinitely.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Blanket disclaimers vs specific provenance</p>
+<p>A generic &quot;some sections may be less complete&quot; doesn&#39;t help the reader figure out <em>which</em> sections — they have to do the work the synthesis was supposed to do. Specific annotation is dramatically more useful than generic hedging.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q50" title="Q50">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>A market-research synthesis combines two sources: a 2024 industry report citing 12% YoY growth, and a 2025 academic study citing 8% YoY growth. The current synthesis says: <em>&quot;Growth is between 8% and 12%.&quot;</em></p>
+<p>What&#39;s missing?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Nothing — providing a range is the appropriate way to handle disagreement between credible sources.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Publication dates and methodological context — the two values likely describe different time periods or use different definitions of &quot;the market.&quot; The synthesis should preserve those distinctions rather than presenting a uniform range as if both values describe the same quantity.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>A confidence percentage on the 8%–12% range.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>A weighted average that gives more weight to the more recent source.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Range without provenance is enough</p>
+<p>A bare range collapses methodologically distinct values into a single statistic, which is exactly what good synthesis is supposed to <em>avoid</em>. The reader can&#39;t tell whether 8%–12% reflects true uncertainty about a single quantity or two different quantities being conflated.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>A range without provenance is no better than picking one value arbitrarily</strong> — it just hides which source said what. The 2024 report and the 2025 study likely describe different time periods (last year ≠ last year), used different market definitions, or applied different methodologies. A defensible synthesis preserves attribution: &quot;A 2024 industry report estimated 12% YoY growth for FY2023, while a 2025 academic study estimated 8% YoY growth for FY2024 using a narrower definition of &#39;the market.&#39; The values are not directly comparable.&quot; The reader can now evaluate the discrepancy themselves.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Numeric confidence vs source attribution</p>
+<p>A confidence percentage on a range you constructed by collapsing two methodologically different sources is a false precision. The honest move is to surface the sources and let the reader weigh them — not to invent a confidence number on a synthetic range.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Recency-weighting hides methodology</p>
+<p>Weighting the more recent source higher assumes recency is the dominant quality signal — but the 2025 study&#39;s methodology might be narrower or less reliable than the 2024 report&#39;s. Weighting based on recency alone hides the methodological question rather than answering it.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q71" title="Q71">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>A consultant has decided to delegate codebase discovery to a separate subagent — verbose <code>Read</code>, <code>Grep</code>, and <code>Glob</code> calls happen in the subagent&#39;s isolated context, and only a clean summary returns to the main session. The 400-file Python codebase is theirs to understand before tomorrow&#39;s stakeholder meeting. Now the question is <em>what to ask the subagent for</em>. They&#39;re weighing four candidate prompts.</p>
+<p>Which produces the most useful summary?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p><em>&quot;Summarize the codebase.&quot;</em></p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p><em>&quot;In 500 words or less, identify: (1) the entry points, (2) the main data flows, (3) any architectural decisions that look unusual or significant — for each, cite file paths and explain </em>why<em> it matters for a consultant joining this engagement.&quot;</em></p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p><em>&quot;Read every file and tell me what each one does.&quot;</em></p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p><em>&quot;What&#39;s wrong with this codebase? List all the problems and anti-patterns you find.&quot;</em></p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Generic prompts produce useful summaries</p>
+<p>&quot;Summarize the codebase&quot; is the kind of prompt that lets the subagent do anything — and it usually produces a summary that&#39;s true, technically responsive, and useless. Without an output contract, the subagent guesses what you&#39;d find useful, and the guess is rarely as specific as what you actually need.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>A specific output contract is what makes discovery output useful.</strong> Asking for <em>what</em>, <em>in what format</em>, <em>with what evidence</em>, and <em>for what purpose</em> gives the subagent enough constraint to produce something the main session can actually use. Vague prompts (&quot;summarize the codebase&quot;) produce vague summaries; full-coverage prompts (&quot;describe each file&quot;) produce indiscriminate dumps; critique prompts (&quot;what&#39;s wrong&quot;) produce premature judgment without context. Discovery output should be designed like any other tool&#39;s response shape.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Full coverage as discovery output</p>
+<p>Asking for a per-file description still produces verbose output — just produced by the subagent rather than by tool calls. The subagent&#39;s <em>context</em> fills with verbose reading, but it returns the same indiscriminate dump to the main session. You&#39;ve moved the verbosity, not eliminated it.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Critique without context</p>
+<p>Asking &quot;what&#39;s wrong&quot; before you understand the codebase produces premature judgment — anti-patterns flagged in code that turns out to be deliberate, criticism of conventions that have good reasons. Critique is an output of understanding, not a substitute for it.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q72" title="Q72">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>An agent is processing a 3,000-token customer support ticket history before drafting a response. The most decision-critical fact (this customer is on a Premium plan, with a previously-resolved similar issue last quarter) is buried in turn 4 of an 18-turn history. The agent&#39;s drafted response treats this as a routine first-time issue.</p>
+<p>What&#39;s the right structural fix?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Restructure the input — extract the key findings (membership tier, prior resolutions, current case facts) into a summary block at the <em>beginning</em> of the prompt, with the detailed history below. Models attend more reliably to the start of long inputs.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Pad the input with reminders about the membership tier interspersed every few turns.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Always increase the context window to keep the full history available.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Trust the model to find what matters — if it missed the membership tier, the ticket history must not have been clearly written.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Position matters: models attend most reliably to the start and end of long inputs, less reliably to the middle.</strong> Putting the key findings at the start of the prompt — explicitly extracted, with section headers — leverages this rather than fighting it. The detailed history is still there for reference, but the agent doesn&#39;t have to <em>find</em> the critical fact; the structure puts it where attention will land.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Repetition compensates for position</p>
+<p>Interspersing reminders burns tokens and distracts from the actual content. Position-based attention isn&#39;t fixed by frequency — it&#39;s fixed by structure.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Capacity beats positioning</p>
+<p>A larger context window means more middle for things to get buried in. Lost-in-the-middle effects scale with input length, not against it.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Trust the model to find what matters</p>
+<p>Already contradicted by the observation: the model missed the membership tier despite it being in context. Blaming the input writer for not making it more findable is misplacing the responsibility.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q73" title="Q73">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>A customer asks your support agent to match a competitor&#39;s lower price on a product the customer already owns. Your written policy specifies how price adjustments work for <em>your own</em> pricing changes, but is silent on competitor matching. The agent has been issuing competitor matches autonomously when they &quot;seem reasonable,&quot; resulting in margin disputes with management — sometimes the matched price was below cost.</p>
+<p>What&#39;s the right escalation pattern?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Escalate to a human when policy is genuinely silent or ambiguous on the customer&#39;s specific request — extending policy is a human decision, not an agent decision.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Issue the match if it seems reasonable; escalate only if the customer pushes back on a denial.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Always refuse competitor matching on principle, since policy doesn&#39;t cover it.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Have the agent build an internal decision tree based on amount thresholds (e.g., match up to 10%, escalate above) and apply it uniformly.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Policy silence is a signal that humans should decide, not that agents should improvise.</strong> When the written policy doesn&#39;t cover the request, extending it autonomously means the agent is <em>making policy</em> — which is a management decision, not a customer-service decision. Escalating &quot;policy is silent on this&quot; preserves margin discipline and ensures the human decision-maker can either grant the exception, deny it, or update the policy to cover the case.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Plausible-seeming defaults extend policy</p>
+<p>&quot;Seems reasonable&quot; is the agent&#39;s reasoning, not the company&#39;s policy. Issuing matches first and only escalating when challenged systematically gives money to customers who don&#39;t push back, in ways nobody approved.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Default deny when policy is silent</p>
+<p>Reflexive refusal damages customer relationships and prevents legitimate exceptions from being granted. The right move isn&#39;t &quot;refuse&quot; — it&#39;s &quot;escalate to someone authorized to decide.&quot;</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Encode policy gaps with internal decision trees</p>
+<p>A self-built threshold <em>is</em> a policy. The agent shouldn&#39;t be writing policy — it should be flagging that policy needs to be written. Encoding ambiguity as if it were a known rule turns one ambiguous case into thousands of consistent-but-unauthorized decisions.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q74" title="Q74">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>Your invoice-extraction system processes 50,000 invoices monthly. Roughly 90% come back with high confidence scores. The team wants to estimate the true error rate among high-confidence extractions before deciding whether to reduce human review on them. Reviewing all 45,000 manually would take months.</p>
+<p>What&#39;s the right measurement approach?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Use <strong>stratified random sampling</strong> — sample N high-confidence extractions across document types (PDFs, scans, photos), vendors (large suppliers vs. one-offs), and amount ranges (small vs. large invoices). Manually validate the sample. The error rate on each stratum surfaces concentration risk; the overall rate generalizes to the population.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Manually review all 45,000 high-confidence extractions for full coverage.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Trust the model&#39;s confidence score directly and skip manual review entirely.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Sample only the most recent 100 high-confidence cases for a quick estimate.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Stratified sampling reveals concentration risk that aggregate metrics hide.</strong> A simple random sample tells you <em>the</em> error rate; a stratified sample tells you whether errors are concentrated on photos vs. PDFs, on small vs. large invoices, on one-off vendors vs. recurring ones. Aggregate accuracy can mask catastrophic concentration in a specific subset (e.g., the largest-dollar invoices). Sampling lets you act on a small fraction of the data while still surfacing where review is most needed.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Full review beats sampling</p>
+<p>Reviewing all 45,000 defeats the entire point of confidence-based routing. The infrastructure exists precisely because exhaustive review doesn&#39;t scale.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Self-reported confidence as ground truth</p>
+<p>The whole reason to <em>measure</em> error rates is that confidence scores aren&#39;t reliably calibrated. Trusting them without measurement is exactly the failure mode this question is meant to prevent.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Recency bias in sampling</p>
+<p>The most recent 100 may not represent the population — vendor mix shifts, document types change, formats evolve. A non-random sample produces a non-representative estimate.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q75" title="Q75">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>A research synthesis combines findings from multiple sources without including publication or data-collection dates. A 2018 figure on <em>&quot;average commute time&quot;</em> gets presented alongside a 2024 figure on <em>&quot;remote work prevalence&quot;</em> — and the report&#39;s readers can&#39;t tell that the world changed dramatically between the two data points. Reviewers have started flagging the report as misleading.</p>
+<p>What&#39;s the architectural fix?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Require all subagents to include publication and data-collection dates in their structured outputs. The synthesis subagent preserves them in the final report so temporal context is visible to every reader.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Drop sources older than one year to ensure recency.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Trust the synthesis subagent to handle temporal context appropriately.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Add a generic disclaimer at the end of every report: &quot;data may be from different time periods.&quot;</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Temporal provenance has to be enforced at the structure level, not the prose level.</strong> When subagents return findings as <code>{claim, source, date}</code>, the synthesis can&#39;t accidentally lose the date. When subagents return prose summaries, the date drops out the moment it&#39;s summarized. The fix is upstream: require dates in the structured output schema, and require the synthesis to preserve them. This is the same lesson that applies to claim-source attribution generally — provenance has to live in the structured output, not in prose that gets compressed.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Recency cutoff replaces provenance</p>
+<p>Dropping older sources discards valid historical context — the 2018 commute data is <em>correct for 2018</em>, and contrasting it with 2024 data is exactly the kind of insight a report should surface, <em>with dates</em>. The fix is annotation, not exclusion.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Trust without structure</p>
+<p>Asking the synthesis to remember dates without including them in the structured input is the same probabilistic-compliance pattern that fails repeatedly elsewhere. Information not in the structured input is information that can quietly be lost.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Generic disclaimers vs specific provenance</p>
+<p>A blanket &quot;data may be from different periods&quot; doesn&#39;t tell the reader <em>which</em> periods, <em>which</em> sources, or <em>how to weigh them</em>. Specific dates next to specific findings are dramatically more useful than a footer caveat.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+  </objectbank>
+</questestinterop>

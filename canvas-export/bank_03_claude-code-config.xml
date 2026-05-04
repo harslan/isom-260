@@ -1,0 +1,648 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<questestinterop xmlns="http://www.imsglobal.org/xsd/ims_qtiasiv1p2">
+  <objectbank ident="ISOM260_claude-code-config">
+    <qtimetadata>
+      <qtimetadatafield>
+        <fieldlabel>bank_title</fieldlabel>
+        <fieldentry>ISOM 260 — Claude Code Configuration & Workflows (6 questions)</fieldentry>
+      </qtimetadatafield>
+    </qtimetadata>
+  <item ident="Q11" title="Q11">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>You&#39;re the lead developer on a Suffolk student team building a class project in Claude Code. You&#39;ve written excellent coding standards and want every teammate to follow them automatically when they pull the repo. You put them in <code>~/.claude/CLAUDE.md</code> on your laptop.</p>
+<p>A week later, three teammates report that Claude is ignoring the standards.</p>
+<p>What&#39;s going on?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Claude Code&#39;s memory cache needs to be cleared with <code>/memory clear</code> for new instructions to take effect.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p><code>~/.claude/CLAUDE.md</code> is user-scoped — it lives on your machine and isn&#39;t shared with teammates via version control. Project-wide standards belong in the repo&#39;s <code>.claude/CLAUDE.md</code> or root <code>CLAUDE.md</code>.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>The standards file needs to be named <code>STANDARDS.md</code> rather than <code>CLAUDE.md</code> for Claude Code to recognize it as project-scoped.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Your teammates need to manually run <code>claude --import ~/.claude/CLAUDE.md</code> to load your personal configuration.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Caching explains missing behavior</p>
+<p>There&#39;s no memory cache that needs clearing — teammates simply never received the file because it was never in the repo.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> The CLAUDE.md hierarchy has three levels: <strong>user-scoped</strong> (<code>~/.claude/CLAUDE.md</code>, personal to each developer, not shared), <strong>project-scoped</strong> (<code>.claude/CLAUDE.md</code> or <code>CLAUDE.md</code> in the repo, shared via version control), and <strong>directory-scoped</strong> (subdirectory <code>CLAUDE.md</code> files for area-specific conventions). Standards that should apply to the whole team must be committed to the project repo. Putting them in your home directory means they apply only to you.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> The filename determines recognition</p>
+<p>The file is correctly named <code>CLAUDE.md</code>. The issue is location, not name.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> There&#39;s a manual import command for personal configs</p>
+<p>No such command exists. User-scoped configs are intentionally per-user; sharing them requires moving them into the project repo.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q13" title="Q13">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>You&#39;re redesigning how customer escalations flow across your company&#39;s customer service, billing, and engineering teams. The redesign will touch about 40 standard operating procedure documents, change how three different ticketing tools integrate, and requires choosing between two competing approaches: a hub-and-spoke model where customer service routes everything, or a direct-handoff model where teams hand off to each other based on tags.</p>
+<p>You&#39;re working in Claude Code with the team&#39;s process documentation.</p>
+<p>Which approach should you take?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Direct execution with detailed instructions covering each document and integration upfront, working through them sequentially.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Direct execution starting with one team&#39;s procedures and letting the right approach emerge as you go.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Plan mode first — explore the current procedures, weigh the hub-and-spoke vs. direct-handoff tradeoffs, design the implementation sequence, then move to direct execution once the approach is settled.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Skip planning entirely; the documentation will reveal the right structure once you start editing.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Detailed upfront instructions substitute for exploration</p>
+<p>Detailed instructions presume you already know which approach is right — but the whole task involves choosing between two approaches, which requires exploration first.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Emergent design beats designed architecture at scale</p>
+<p>&quot;Letting the approach emerge&quot; produces inconsistent procedures and forces later documents to work around early decisions made without full information. For cross-cutting changes, this is especially dangerous.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Plan mode is built for exactly this kind of work</strong> — large scope, multiple valid architectural approaches, cross-cutting changes that affect many documents. Diving into direct execution without exploring the current state and committing to an approach almost guarantees you&#39;ll discover something halfway through that requires re-doing earlier work. Plan first; execute once the plan is solid.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Planning is overhead you can skip</p>
+<p>Skipping the design phase on a 40-document, multi-team change is how you end up redoing the work.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q39" title="Q39">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>An MBA student opens Claude Code and types: <em>&quot;Add a customer churn prediction script to our analytics repo.&quot;</em> Claude immediately writes ~300 lines of code that uses logistic regression, picks a 90-day churn window, and assumes a particular feature set. The student didn&#39;t specify any of those choices. Half the code is wrong for the team&#39;s actual definition of churn.</p>
+<p>What approach should the student have taken?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Tell Claude to use industry-standard defaults to minimize back-and-forth.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Use the <strong>interview pattern</strong>: ask Claude to surface design questions (&quot;which churn definition? which features are available? which window?&quot;) before implementing — answer those, then have Claude write the code.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Write a single very long prompt that pre-specifies every decision Claude might make.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Run the implementation, then ask Claude to review its own work and flag any assumptions it made.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Defaults are universal</p>
+<p>There is no industry-standard churn definition. Different teams use 30/60/90/180-day windows, different feature sets, different ML algorithms — these are decisions, not defaults. &quot;Use the standard&quot; assumes a standard exists; it usually doesn&#39;t.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>The interview pattern surfaces design considerations the developer hadn&#39;t yet articulated</strong> — which is most of the considerations, on most non-trivial tasks. Asking Claude to question you before implementing is a small upfront cost that prevents large downstream rework. It&#39;s also pedagogically right for students: it externalizes the reasoning that experienced developers do silently, making it visible and learnable. Use it any time the task has meaningful design choices the prompt doesn&#39;t pin down.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Prompt-stuffing replaces dialogue</p>
+<p>Pre-specifying every decision in a single prompt assumes the user already knows every decision they need to make. The whole point of the interview pattern is that they don&#39;t — and a dialogue surfaces the gaps faster than a monologue.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Self-review catches gaps it had</p>
+<p>Asking the same session that just made unstated assumptions to review its own assumptions is asking it to question decisions it just rationalized. Self-review tends to confirm rather than catch.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q40" title="Q40">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>A team uses Claude Code to generate a Python script for processing customer data. After it&#39;s generated, they ask the same Claude session: <em>&quot;Now review this script for issues.&quot;</em> Claude reports the script looks good. They later open a fresh Claude Code session, share only the script (without the generation history), and ask the same question. The fresh session catches three real bugs the original missed.</p>
+<p>Why does the fresh session do better?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>The fresh session has access to more recent training data than the original session.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>The original session retains its generation reasoning context, making it less likely to question its own decisions; an independent review instance reads the script without that prior framing and brings fresher judgment.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>The script was modified between the two reviews and the fresh session was reviewing a different version.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>The original session has <em>more</em> relevant context — the generation history explains why each design decision was made, so its review should actually be better. The fresh session must have flagged things the original deliberately accepted as tradeoffs.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Training-data freshness explains review quality</p>
+<p>Both sessions use the same model with the same training. The difference is context, not capability.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Self-review is structurally limited</strong> because the model retains the reasoning context from generation. It tends to validate rather than question its prior decisions — the same chain of thought that produced &quot;this is the right approach&quot; is still loaded. An independent review instance reads only the artifact, with no prior commitment to the design choices, and can therefore catch issues the original instance won&#39;t. For serious review, use a separate session.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> External explanation for an internal effect</p>
+<p>The question stipulates the script is the same. Reaching for &quot;maybe it changed&quot; when the structural explanation is right in front of you is a common debugging failure.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> More context produces better review</p>
+<p>This is the most genuinely tempting wrong answer, because intuitively <em>more information should help</em>. But generation context isn&#39;t review-relevant context — it&#39;s <em>commitment-relevant</em> context. The original session knows why it made each choice, which makes it more likely to defend each choice. The fresh session reads the artifact without prior commitment and judges it on what it is, not what was intended. &quot;The fresh session must have flagged tradeoffs&quot; assumes the original session was right about those tradeoffs — which is exactly what self-review can&#39;t reliably check.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q61" title="Q61">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>Your CI pipeline uses Claude Code to review pull requests. Reviews currently come back as Markdown text. The team wants to post specific findings as inline PR comments at exact file/line locations. Right now they parse the Markdown with regex to extract findings — and it&#39;s brittle, breaks on edge cases, and silently drops findings the regex doesn&#39;t recognize.</p>
+<p>What&#39;s the right fix?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Use <code>--output-format json</code> together with <code>--json-schema</code> to make Claude produce structured findings with <code>file</code>, <code>line</code>, <code>severity</code>, and <code>description</code> fields the CI can post directly as inline comments.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Improve the regex parser with more cases.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Have Claude produce <em>both</em> outputs — a Markdown review for humans and a separate JSON file for the CI system to parse — generated by the same review pass.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Add a second Claude API call that reads the first call&#39;s Markdown and extracts structured findings — letting an LLM parse what regex couldn&#39;t.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong><code>--output-format json</code> with <code>--json-schema</code> is the documented way to produce structured output from Claude Code.</strong> The schema constrains the response to exactly the fields the downstream consumer needs — no regex parsing, no silent drops, no maintenance burden as the format evolves. This is the pattern any CI integration should reach for first.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Parse natural language with better regex</p>
+<p>Better regex still parses prose — every new edge case adds a new rule to maintain. Structured output via schema eliminates the parsing problem entirely.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Produce both formats and accept the inconsistency</p>
+<p>Generating Markdown and JSON in the same pass means the model is producing two views of the same review — which can disagree. The human-facing comment says &quot;this is critical&quot;; the JSON says severity 3. Now the team has to reconcile two outputs, and the schema stops being authoritative. Pick one canonical structured output; render Markdown from it if needed.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> LLM post-processing of prose substitutes for schema enforcement</p>
+<p>A second LLM call to parse the first LLM&#39;s prose adds latency, cost, and a new probabilistic failure point — to fix a problem that had a deterministic solution. Schema-enforced structured output produces the structured fields directly; using an LLM to rebuild structure from prose is doing the same work twice, badly.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q65" title="Q65">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>A team is asking Claude Code to implement a complex date-range filtering function that handles daylight saving time transitions, leap years, ambiguous date inputs, and timezone-aware comparisons. Each iteration gets <em>closer</em> to right but breaks on a different edge case. Three rounds in, the team is frustrated.</p>
+<p>What&#39;s the better workflow?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Have Claude write the test suite <em>first</em> — covering DST, leap years, ambiguous inputs, timezone cases — and then iterate by sharing test failures rather than describing edge cases in prose.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Provide more detailed prose descriptions of each edge case in the prompt.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Implement multiple versions in parallel and pick the best one.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Switch to a programming language with better date-handling primitives.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Test-driven iteration converts ambiguous prose into concrete I/O specifications.</strong> A test that says <code>assert filter(start=&quot;2024-03-10&quot;, end=&quot;2024-03-11&quot;, tz=&quot;America/New_York&quot;)</code> returns the correct result <em>during</em> DST transition is a sharper specification than any paragraph could be. Then you iterate by sharing test failures — &quot;this test failed: expected X, got Y&quot; — which gives the model exactly what it needs to fix. This pattern is dramatically more effective than circling around edge cases in prose.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> More prose detail beats concrete examples</p>
+<p>Prose descriptions of edge cases are interpretively elastic — the model and the developer may map the same description to different behaviors. Tests collapse the ambiguity into binary pass/fail.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Ensemble-then-pick</p>
+<p>Three parallel implementations is expensive and still doesn&#39;t surface <em>which</em> implementation is right on the edge cases — you&#39;d need tests to evaluate them, which is exactly the option you&#39;re avoiding.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Language change as fix</p>
+<p>The problem isn&#39;t that Python (or whatever) lacks date primitives. The problem is that the specification is implicit. A language change leaves the same specification gap.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+  </objectbank>
+</questestinterop>

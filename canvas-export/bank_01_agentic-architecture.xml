@@ -1,0 +1,2565 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<questestinterop xmlns="http://www.imsglobal.org/xsd/ims_qtiasiv1p2">
+  <objectbank ident="ISOM260_agentic-architecture">
+    <qtimetadata>
+      <qtimetadatafield>
+        <fieldlabel>bank_title</fieldlabel>
+        <fieldentry>ISOM 260 — Agentic Architecture & Orchestration (24 questions)</fieldentry>
+      </qtimetadatafield>
+    </qtimetadata>
+  <item ident="Q01" title="Q01">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>You&#39;ve deployed a customer support resolution agent using the Claude Agent SDK. It has access to four tools: <code>get_customer</code>, <code>lookup_order</code>, <code>process_refund</code>, and <code>escalate_to_human</code>. Your system prompt clearly states that customer identity must be verified via <code>get_customer</code> before any refund is processed.</p>
+<p>After two weeks in production, you review the logs. In 92% of refund cases, the agent correctly calls <code>get_customer</code> first. In 8% of cases — specifically when the customer volunteers an order number in their opening message — the agent skips <code>get_customer</code> and goes directly to <code>lookup_order</code> followed by <code>process_refund</code>. Three of these cases resulted in refunds being issued to the wrong account. Your CFO is not amused.</p>
+<p>What is the most effective fix?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Strengthen the system prompt with emphatic language (&quot;You MUST call get_customer first in every case, without exception&quot;) and add three few-shot examples demonstrating the correct sequence, including one where the customer volunteers an order number.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Implement a PreToolUse hook that blocks <code>lookup_order</code> and <code>process_refund</code> from executing until <code>get_customer</code> has returned a verified customer ID in the current session.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Remove <code>lookup_order</code> from the agent&#39;s allowedTools until after <code>get_customer</code> has been called, dynamically updating the tool set based on session state.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Add a self-check step where the agent reviews its planned tool calls before execution and escalates to a human if identity verification is missing.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Clarity equals compliance</p>
+<p>This is the most tempting wrong answer because it works 92% of the time already, so &quot;making the prompt stronger&quot; feels like it should close the remaining gap. But clarity and compliance are different axes. A perfectly clear instruction can still be ignored by a probabilistic system, especially under the kind of distribution shift a volunteered order number creates. Few-shot examples help, but they also fail probabilistically. When three wrong refunds is already too many, &quot;probably better&quot; is not the right answer.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> A PreToolUse hook is <strong>programmatic enforcement</strong>, not prompt guidance. It runs deterministically, on every invocation, regardless of what the model &quot;decides.&quot; The 8% failure rate you observed is not a prompt-quality problem — it&#39;s a category problem. <strong>Prompts produce probabilistic compliance; hooks produce deterministic guarantees.</strong> For any rule with financial or safety consequences, you want the guarantee. The hook intercepts the tool call, checks session state, and blocks execution if the prerequisite hasn&#39;t been satisfied. The model&#39;s reasoning becomes irrelevant to the enforcement — which is exactly what you want for critical paths.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Tool availability is the right lever for workflow ordering</p>
+<p>Dynamically modifying <code>allowedTools</code> mid-session sounds architecturally clever but introduces a subtler bug: the agent now receives inconsistent tool availability across turns, which degrades its reasoning about what it can do. It also doesn&#39;t actually solve the problem — you&#39;d need logic to decide when to re-enable <code>lookup_order</code>, and that logic is itself a prerequisite check, which is what a hook is. You&#39;ve just reinvented the hook, worse.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> The model can reliably catch its own errors</p>
+<p>Self-check steps rely on the model to audit its own reasoning, and in the exact case where the model decided to skip verification, the self-check will often rationalize that decision (&quot;the customer provided the order number, so identity is effectively verified&quot;). Self-review is a useful technique in many contexts, but it&#39;s not a substitute for deterministic enforcement on critical paths.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q02" title="Q02">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>You&#39;re building an agent that helps a small business owner manage their Etsy shop. The agent can search recent orders, draft customer replies, update inventory, and adjust prices. The owner asks: <em>&quot;Reply to the angry customer from yesterday and figure out what happened with their order.&quot;</em> You expected the agent to use <code>search_orders</code> and <code>draft_reply</code>. Instead, it answers in plain text: <em>&quot;I&#39;d be happy to help. Could you tell me the customer&#39;s name?&quot;</em></p>
+<p>The system prompt is reasonable. The tools are well-described.</p>
+<p>Why is the agent refusing to use them?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>The agent is treating the request as conversational because the prompt phrasing (&quot;figure out&quot;) is too vague to trigger tool use; rewriting the user&#39;s prompt would fix it.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>The agent likely has its <code>tool_choice</code> set to <code>&quot;auto&quot;</code> and is choosing not to call tools when it judges them unnecessary — setting <code>tool_choice: &quot;any&quot;</code> would force it to use a tool.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>The agent is missing the previous conversation history, so it doesn&#39;t know which customer &quot;yesterday&quot; refers to and is asking for clarification rather than guessing.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>The agent&#39;s stop reason is set incorrectly, causing it to terminate the loop before reaching the tool-call stage.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Tool use is triggered by keyword phrasing</p>
+<p>The agent&#39;s reluctance has nothing to do with the verb &quot;figure out.&quot; Rewriting prompts to be more &quot;tool-call-friendly&quot; is a common dead end — if the agent doesn&#39;t have what it needs to act, prompt rephrasing won&#39;t fix it.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> tool_choice: &quot;any&quot; solves under-tool-use</p>
+<p>Forcing a tool call here would just make the agent guess at a customer name or call a search with empty parameters. Forcing tool use when the model lacks information produces worse outcomes, not better ones. <code>tool_choice: &quot;any&quot;</code> is a real lever, but it&#39;s the wrong one for this failure mode.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> This is a <strong>context management problem disguised as a tool-use problem</strong>. The agent is acting reasonably given what it knows — it can&#39;t search orders without an identifier, and &quot;the angry customer from yesterday&quot; is unresolvable without conversation history. The fix is making sure the agent has access to the relevant past context, either via session continuity or by explicitly passing recent customer interactions in the prompt.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Every unexpected behavior must be a control-flow bug</p>
+<p>Stop-reason logic governs when the loop continues or terminates after a turn — it doesn&#39;t prevent tool calls within a turn. This option sounds technical and plausible but isn&#39;t how the SDK works. Students who pick D are reaching for infrastructure explanations when the actual problem is informational.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q03" title="Q03">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>Your team is building a multi-agent research system for a finance class project. A coordinator agent dispatches to three subagents: a web searcher, an SEC filings analyzer, and a synthesis agent that writes the final report. After running it on the prompt <em>&quot;Analyze Tesla&#39;s competitive position in 2025,&quot;</em> the report is coherent but the synthesis agent has invented two statistics that don&#39;t appear in any of the source materials.</p>
+<p>Your teammate proposes adding a &quot;fact-checker&quot; subagent that reviews the synthesis output and flags unsupported claims.</p>
+<p>Is this the right fix?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Yes — adding a verification layer is the standard pattern for reducing hallucination in multi-agent systems and should be the first thing you try.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>No — the right fix is to require the synthesis subagent to receive structured claim-source mappings from the upstream agents and preserve them through synthesis, rather than receiving prose summaries.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Yes — but the fact-checker should be Claude Opus rather than a smaller model, since hallucination detection requires the strongest available reasoner.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>No — hallucinations in synthesis are unavoidable when combining multiple sources, and the right fix is to add a disclaimer in the final report rather than attempting to prevent them.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> More agents fix more problems</p>
+<p>Adding a fact-checker subagent is tempting because it sounds like defense-in-depth. But it adds latency, cost, and a new failure mode (the fact-checker can also be wrong), without addressing the upstream issue. You&#39;d be papering over a structural problem with another agent. Often the right fix in multi-agent systems is <strong>better information flow, not more agents</strong>.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> The hallucinations aren&#39;t happening because there&#39;s no fact-checker. They&#39;re happening because the synthesis agent is <strong>receiving compressed prose</strong> from upstream agents, has lost the link between claims and their sources, and is filling gaps in its understanding by generating plausible-sounding statistics. The structural fix is upstream: require the web searcher and filings analyzer to output <strong>structured claim-source mappings</strong> (claim, source URL or document, supporting excerpt, date), and require the synthesis agent to preserve those mappings. When the architecture preserves provenance, the model has nothing to hallucinate around.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> A stronger model fixes architectural problems</p>
+<p>Model selection rarely fixes architectural information loss. A stronger fact-checker still can&#39;t verify what the synthesis agent has invented if the source material it would check against is no longer in the system.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Hallucination is inherent and unfixable</p>
+<p>This is the defeatist answer. Hallucination in multi-source synthesis is largely an architectural problem, not a model limitation. Systems that preserve provenance and require source attribution dramatically reduce hallucination. Disclaimers don&#39;t help users trust the output more — fixing the architecture does.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q04" title="Q04">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>You&#39;re designing an agent that helps the marketing team at a mid-sized e-commerce company plan campaigns. The team uses it for tasks ranging from <em>&quot;write me a quick subject line for tomorrow&#39;s email&quot;</em> to <em>&quot;build a quarterly campaign strategy for our new product line.&quot;</em></p>
+<p>A junior teammate proposes implementing both kinds of requests through the same fixed pipeline: (1) gather context, (2) brainstorm options, (3) evaluate options, (4) draft output, (5) review draft. They argue this gives consistency.</p>
+<p>Why is this the wrong approach?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Fixed pipelines are always inferior to dynamic decomposition because they can&#39;t adapt to new request types, so the agent should generate a custom plan for every request.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>A fixed five-step pipeline forces simple requests through unnecessary stages, increasing latency and cost, while complex requests may need adaptive subtask generation that a fixed pipeline can&#39;t provide — different request complexities call for different decomposition strategies.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>The pipeline is missing a critical step — output formatting — which means the final deliverable will be inconsistent across request types regardless of what comes before.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Fixed pipelines work fine, but the steps should be parallelized rather than sequential to reduce latency.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Dynamic decomposition is always better</p>
+<p>Dynamic decomposition has real costs — unpredictability, harder debugging, higher latency, more failure modes. For predictable workflows, fixed pipelines are more reliable, not less. The right answer is matching strategy to task, not picking one strategy for all tasks.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Task decomposition strategy should match task complexity.</strong> Simple requests (&quot;write a subject line&quot;) need maybe one step — direct generation. Complex requests (&quot;quarterly strategy&quot;) may need adaptive decomposition where later subtasks depend on what&#39;s discovered earlier. Forcing both through the same five-step pipeline either over-engineers simple requests or under-serves complex ones. The right architecture is request-aware: the agent (or a routing layer) assesses complexity and chooses the appropriate decomposition pattern.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Missing steps explain failures</p>
+<p>Adding a formatting step doesn&#39;t fix the underlying mismatch between task complexity and pipeline rigidity. This option captures the instinct to &quot;fix the pipeline&quot; rather than question whether one pipeline should fit all cases.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Parallelization solves complexity mismatches</p>
+<p>Parallelizing brainstorm/evaluate/draft for a &quot;write me a subject line&quot; request is incoherent — those steps depend on each other. Parallelization is a real optimization, but it doesn&#39;t address the fact that simple requests don&#39;t need all the steps in the first place.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q05" title="Q05">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>Your agentic system maintains a long-running customer-support session. On turn 1, the customer mentions they&#39;ve been a Premium member since 2019 and are calling about a damaged shipment of three items totaling $247. On turn 8, after the agent has gathered order details, looked up policies, and drafted a resolution, the agent proposes a refund of $150 — and confidently states the customer is a <strong>Standard</strong> member.</p>
+<p>The conversation history is intact and the original membership detail is still in the context window.</p>
+<p>What&#39;s the most likely cause?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>The model has a training cutoff that doesn&#39;t include 2019 membership data, so it defaulted to &quot;Standard&quot; as a guess.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>The original mention has drifted into the middle of the now-long context window where models reliably process information at the beginning and end but may overlook content in the middle — the &quot;lost in the middle&quot; effect.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>The agent has been corrupted by tool outputs that overwrote the customer&#39;s stated membership status, and the fix is to restrict which tools can return membership data.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>The model has confused this customer with a different customer from a parallel session, indicating a session isolation bug in the SDK.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Model failures must be training-data problems</p>
+<p>This sounds technical but is incoherent. The customer told the agent their membership status in turn 1 — no training data is involved in retrieving that fact. Students who pick A are reaching for &quot;the model didn&#39;t know&quot; explanations when the actual problem is &quot;the model didn&#39;t attend.&quot;</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> This is the <strong>lost-in-the-middle effect</strong>, a well-documented failure mode where models reliably process the start and end of long inputs but may omit information from the middle. By turn 8, the original membership mention is buried under seven turns of intermediate tool calls and reasoning. The fix is structural: extract critical case facts (membership status, claim amount, key dates) into a persistent <strong>case facts</strong> block that&#39;s re-injected into each prompt at a salient position, rather than relying on the model to retrieve them from buried conversation history.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Incorrect outputs must come from corrupted inputs</p>
+<p>There&#39;s no indication tools returned wrong data. Restricting tools wouldn&#39;t fix attention-position effects. This option captures the instinct to blame the most recently changed component rather than the structural property of long contexts.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Cross-session contamination is a likely failure mode</p>
+<p>Claude doesn&#39;t share state across sessions. Within a single session, there&#39;s no &quot;other customer&quot; to confuse this one with. This is an attractive distractor for students who imagine LLMs as databases that can leak between queries.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q26" title="Q26">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>A teammate built an appointment-scheduling agent for a dental practice. The agentic loop terminates when the assistant&#39;s text contains the word <code>&quot;scheduled&quot;</code> or <code>&quot;done&quot;</code>. It works most of the time. But occasionally the agent says <em>&quot;I&#39;ll need to verify if this date is <strong>done</strong> being held by another patient&quot;</em> mid-process — and the loop exits before the appointment is actually booked.</p>
+<p>What is the correct fix?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Refine the regex to exclude false-positive contexts — match <code>&quot;scheduled&quot;</code> or <code>&quot;done&quot;</code> only when they appear in confirmation patterns like <code>&quot;appointment is scheduled&quot;</code> or <code>&quot;all done&quot;</code>, not mid-clause.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Use the API&#39;s <code>stop_reason</code> field — continue iterating while <code>stop_reason</code> is <code>&quot;tool_use&quot;</code>, terminate only when <code>stop_reason</code> is <code>&quot;end_turn&quot;</code>.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Set <code>max_iterations: 10</code> and rely on that as the primary stopping mechanism.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Have the model emit a special token like <code>&lt;&lt;DONE&gt;&gt;</code> when finished, and check for it in the assistant text.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Smarter parsing rescues a wrong layer</p>
+<p>This is the genuinely tempting answer because it engages with the actual failure — the regex <em>is</em> matching too eagerly, and a tighter pattern <em>would</em> fix this specific case. But it leaves the architecture wrong: you&#39;re still inferring loop control from natural language, just with more brittle rules. The next failure mode (&quot;the appointment was scheduled, but we still need to verify…&quot;) will require another regex round, and the round after that. Use the structured signal the platform provides instead of building an arms race against the model&#39;s prose.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> The agentic loop has a documented control signal: <code>stop_reason</code>. When the model still wants to act, it returns <code>&quot;tool_use&quot;</code>; when it considers the turn complete, it returns <code>&quot;end_turn&quot;</code>. <strong>Parsing the assistant&#39;s natural-language text to decide whether to continue the loop is one of the most common anti-patterns</strong> in agentic systems — language is ambiguous, and the model isn&#39;t talking to your loop controller, it&#39;s talking to the user. Use the structured signal that exists for this purpose.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Iteration cap is the loop control mechanism</p>
+<p>A <code>max_iterations</code> cap is a <em>safety net</em> against runaway loops, not a primary stopping mechanism. Using it as the main control means every successful run hits the cap or terminates somewhere arbitrary. The <code>stop_reason</code> field exists precisely so you don&#39;t have to guess.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Custom termination protocols beat documented ones</p>
+<p>Reinventing a control signal that already exists adds fragility (the model has to remember to emit your special token; what if it forgets?) without adding any reliability over <code>stop_reason</code>. Use the documented mechanism.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q27" title="Q27">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>You&#39;re running a multi-agent research system to study <em>&quot;the impact of remote work on small businesses.&quot;</em> The coordinator decomposes the topic into three subtasks: <em>&quot;remote work and tech startups,&quot;</em> <em>&quot;remote work and SaaS companies,&quot;</em> and <em>&quot;remote work and software firms.&quot;</em> Each subagent executes flawlessly. The synthesis is well-written.</p>
+<p>The final report covers software companies thoroughly — and completely omits retail, hospitality, professional services, manufacturing, and healthcare.</p>
+<p>What&#39;s the root cause?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>The synthesis agent failed to identify coverage gaps in the findings it received.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>The web search subagent used overly restrictive search queries — broadening them would surface non-tech sources.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>The coordinator decomposed the topic too narrowly. Subagents executed correctly within their assigned scope; the gap is in what was assigned, not how it was executed.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>The document analysis agent filtered out non-tech sources due to overly restrictive relevance criteria.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Blame the most downstream agent</p>
+<p>When a multi-agent system produces incomplete output, the synthesis agent is the most visible component and the easiest to blame. But the synthesis agent can only synthesize what it receives. If retail and healthcare were never investigated, no synthesis-level gap-detection can recover them.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Keyword-level fixes resolve structural decomposition errors</p>
+<p>The web search agent searched for what it was asked to search for. Broadening its queries within &quot;tech startups&quot; still won&#39;t surface retail businesses. The decomposition determined the search space — query phrasing operates inside that space.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Coordinator decomposition is upstream of every subagent&#39;s work.</strong> When the coordinator carves &quot;small businesses&quot; into three flavors of &quot;tech,&quot; every subagent does its job correctly — but the final report can only cover what was assigned. This is one of the most common failure modes in multi-agent research systems and one of the hardest to debug, because every agent&#39;s logs look healthy. The fix is at the coordinator: write decomposition prompts that explicitly require coverage across distinct industry sectors, customer types, or whatever dimension matters for the topic.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Plausible-sounding component must be the bug</p>
+<p>Document analysis filters can absolutely cause coverage gaps, but the logs would show non-tech sources being retrieved and discarded. In this case, non-tech sources were never looked for in the first place. Don&#39;t assume a bug at the layer you can guess at; look at the assignments.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q28" title="Q28">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>Your marketing coordinator agent is talking with a brand manager who, early in the conversation, says: <em>&quot;Remember our brand voice — never use the word &#39;revolutionary&#39; and never use exclamation points.&quot;</em> Five turns later, the coordinator delegates to a <code>campaign_drafter</code> subagent to write three email subject lines. The drafter produces:</p>
+<p>1. <em>&quot;A revolutionary new way to save!&quot;</em> 2. <em>&quot;Don&#39;t miss our biggest event yet!&quot;</em> 3. <em>&quot;Transform your weekend!&quot;</em></p>
+<p>What&#39;s the most likely cause?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>The subagent inherited corrupted context from the coordinator.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Subagents do not automatically inherit the parent&#39;s conversation context — the coordinator must explicitly include the brand voice rules in the subagent&#39;s prompt.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>The drafter&#39;s system prompt contained instructions that overrode the brand voice.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>This is a model capability limit; smaller models can&#39;t follow brand-voice constraints reliably.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Inheritance is automatic</p>
+<p>Many engineers assume subagents share memory with their parent the way a function shares variables with its caller. They don&#39;t — each subagent is its own conversation. There&#39;s no &quot;corruption&quot; to fix because no inheritance happened in the first place.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Subagents start with isolated context.</strong> They do not see the parent agent&#39;s conversation history unless the coordinator explicitly passes it. The brand manager&#39;s rules existed in the coordinator&#39;s context — but the drafter never received them. The fix is at the coordinator: when delegating, package the relevant constraints (brand voice rules, customer-stated preferences, prior decisions) into the subagent&#39;s prompt directly. Treat each subagent invocation as a fresh conversation that needs to be briefed.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> System prompt collision is the default explanation</p>
+<p>A conflicting system prompt is <em>possible</em> but unlikely without other symptoms. The simpler explanation is that the brand voice rules were never delivered to the drafter at all.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Capability when the issue is information</p>
+<p>Even the most capable model can&#39;t follow rules it doesn&#39;t know. This is an information-flow problem disguised as a capability problem — a recurring trap in agent debugging.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q29" title="Q29">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>A customer emails support: <em>&quot;Three issues — my last invoice is wrong, my shipment from Tuesday hasn&#39;t arrived, and the product I received is defective.&quot;</em> Your coordinator agent currently spawns three subagents (<code>billing_researcher</code>, <code>shipment_tracer</code>, <code>defect_handler</code>) — but it spawns them across three separate turns, one per response. Total time: ~90 seconds.</p>
+<p>How should the coordinator emit the calls so the three subagents run in parallel?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Continue spawning sequentially — agentic workflows should be sequential by default, since each subagent&#39;s output may inform the next.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Emit all three <code>Task</code> tool calls in a single coordinator response. The SDK executes multiple tool calls from one response in parallel.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Set a <code>parallel: true</code> configuration flag on the coordinator&#39;s agent definition.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Send each subagent to a different model API endpoint to achieve parallelism through provider concurrency.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Pipeline thinking for independent tasks</p>
+<p>This is the genuinely tempting wrong answer because sequential ordering <em>is</em> right for some workflows — the synthesis subagent can&#39;t run before the searcher returns, the categorizer needs the metadata first. But the three concerns in this email (billing, shipping, defect) are <em>independent</em> — none depends on the others&#39; output. Treating independent subtasks sequentially is a category error: the right rule is &quot;sequence when there are dependencies; parallelize when there aren&#39;t.&quot; Defaulting to sequential is the safe-feeling but wrong choice.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>The coordinator achieves parallelism by emitting multiple <code>Task</code> tool calls in a single response.</strong> The SDK executes them concurrently. Spawning across separate turns serializes the work — each turn waits for the previous subagent to return before the next is spawned. For <em>independent</em> subtasks (different concerns in the same email), this is pure latency loss with no compensating benefit.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Hidden config flag explanations</p>
+<p>There&#39;s no <code>parallel: true</code> flag because parallelism isn&#39;t a property of the coordinator — it&#39;s a property of how tool calls are emitted. Reaching for fabricated configuration options is a common pattern when the actual mechanism is misunderstood.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Provider-level workarounds substitute for SDK features</p>
+<p>Routing subagents to different endpoints adds operational complexity (rate limits, observability, billing) without solving the actual problem. The SDK handles concurrency natively when you emit multiple Task calls together.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q30" title="Q30">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>Your operations agent integrates with three different shipment-tracking MCP servers (one per carrier). Each returns dates in a different format: one uses Unix timestamps (<code>1714003200</code>), one uses ISO 8601 (<code>&quot;2025-04-25T00:00:00Z&quot;</code>), and one uses U.S. short format (<code>&quot;4/25/2025&quot;</code>).</p>
+<p>The agent gets confused — sometimes treating timestamps as serial numbers, sometimes mis-parsing dates, sometimes silently producing wrong delivery estimates.</p>
+<p>What&#39;s the cleanest fix?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Add a system prompt instruction listing all three formats and asking the agent to convert as needed.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Implement a <code>PostToolUse</code> hook that intercepts each carrier tool&#39;s response and normalizes all date fields to ISO 8601 before the agent sees them.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Pick one carrier and ignore the other two until you can negotiate a format change with the others.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Have the agent run each date through a <code>parse_date</code> tool every time it encounters one.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Prompt instructions handle data normalization</p>
+<p>Asking the model to parse three different date formats by reading its prompt is fragile (one new format breaks it) and burns tokens on every call. Date parsing is deterministic; treat it deterministically.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong><code>PostToolUse</code> hooks intercept tool results before the model processes them</strong>, which makes them the right layer for data normalization. Format heterogeneity from different MCP servers is exactly the kind of cross-cutting concern that shouldn&#39;t live in the agent&#39;s reasoning — every prompt token spent figuring out which date format applies is a token not spent on the customer&#39;s actual problem. Normalize at the boundary; let the agent see one consistent shape.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Coverage reduction is the fix for heterogeneity</p>
+<p>Dropping two carriers because their data is awkward to consume is a business decision in disguise — and a bad one. The information is available; it just needs to be normalized before it reaches the model.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Per-call tool invocation beats one-time hook</p>
+<p>Running every date through a separate <code>parse_date</code> tool call adds latency, cost, and a new failure mode — and the agent has to <em>remember</em> to do it every time. A <code>PostToolUse</code> hook does this automatically and invisibly.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q51" title="Q51">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>A consulting team has spent the morning with Claude Code building a careful diagnosis of a client&#39;s situation — 60 turns of conversation, 12 tool calls, detailed analysis of market position, financial structure, and competitive landscape. They now want to explore <em>two</em> recommendation paths in parallel: an aggressive <em>&quot;expand into a new vertical&quot;</em> approach and a defensive <em>&quot;consolidate and improve margins&quot;</em> approach. They want to compare both fully without one&#39;s reasoning bleeding into the other.</p>
+<p>What&#39;s the right pattern?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Continue in the same session — explore approach A first, then approach B, then compare.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Open two completely fresh Claude Code sessions and re-establish the client&#39;s situation in each.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Use <code>fork_session</code> to create two independent branches from the shared analysis baseline. Each branch explores one recommendation path; both can be compared without contaminating each other.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Save the analysis to a file, then start two new sessions and have each read the file before starting.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Sequential exploration in a shared session preserves comparability</p>
+<p>Once approach A&#39;s reasoning is in context, approach B can&#39;t be explored cleanly — the agent will keep referencing A, defending A, or contrasting against A rather than evaluating B on its own merits. Comparison requires that each path be developed independently, which is exactly what session forks provide.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Manual context re-establishment scales</p>
+<p>Reproducing 60 turns of analysis manually is impractical, and what you&#39;d actually be reproducing is a <em>summary</em> of the analysis — losing the reasoning architecture the original session built up. The new sessions start from imperfect summaries, not from the analysis itself.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong><code>fork_session</code> is designed for exactly this case</strong> — divergent exploration from a shared baseline. Both branches inherit the full analysis context (every reasoning chain, every tool result, every conclusion you&#39;ve reached together) and then proceed independently. You compare them without either having seen the other&#39;s reasoning. This is dramatically better than re-establishing context manually or letting two paths interleave in one session.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> File-based handoff preserves reasoning</p>
+<p>A file summary preserves <em>facts</em> but loses the reasoning architecture — the new session has to re-derive what the original session already understood. It also requires you to know what to write down before you know which reasoning will turn out to matter.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q52" title="Q52">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>A management consultant runs three concurrent client engagements. Each morning, they want to continue <em>exactly</em> where they left off the previous evening on each of the three matters — same context, same tool results, same partial conclusions. Right now they&#39;re re-pasting long context summaries at the start of each session, and the consultant is convinced something has been getting lost in translation each day.</p>
+<p>What&#39;s the right pattern?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Use <code>--resume &lt;session-name&gt;</code> with named sessions per matter — each morning, resume the named session for that matter and continue exactly where it stopped.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Save context summaries to <code>.md</code> files at the end of each evening and re-paste them every morning.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Use a single generic Claude Code session for all three matters and rely on prompt prefixes (<code>&quot;CLIENT: Acme — &quot;</code>, <code>&quot;CLIENT: Beta — &quot;</code>) to keep the threads separate within the same context.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Start fresh each morning — context from previous days is unreliable and re-establishment forces useful re-grounding.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Named session resumption (<code>--resume &lt;session-name&gt;</code>) is the documented pattern for continuing prior work.</strong> Each matter gets its own named session; resuming brings back the entire conversation, all tool results, all reasoning. The &quot;lost in translation&quot; complaint is the consultant noticing what manual summaries always lose — the <em>architecture</em> of prior reasoning, not just its facts.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Manual context handoff is the standard pattern</p>
+<p>File-based summaries preserve facts but discard reasoning. Each morning the new session has to re-derive what yesterday&#39;s session already understood, and small details (which option was tentatively rejected, why a particular framing was chosen) silently disappear.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Tagging substitutes for session separation</p>
+<p>Prompt prefixes don&#39;t isolate context — the agent&#39;s reasoning about Acme accumulates in the same conversation as its reasoning about Beta and Gamma, and they cross-contaminate. By turn 50, Beta&#39;s competitive analysis is influenced by tool results from Acme&#39;s, lost-in-the-middle effects make older context unreliable, and &quot;client switching&quot; by prefix is paying probabilistic-compliance costs to fake what session separation gives you for free.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Defeatism about session persistence</p>
+<p>&quot;Re-establishment forces re-grounding&quot; sounds disciplined but is actually a rationalization for not knowing the platform. Session resumption is reliable; the concern is the absence of forced re-grounding, which is solvable by deliberately re-reading the prior conclusions, not by throwing them away.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q53" title="Q53">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>Your agent is analyzing a complex 200-page commercial contract. By turn 30, it&#39;s giving inconsistent answers — saying <em>&quot;the indemnity clause is in section 4.2&quot;</em> in one turn, and <em>&quot;section 5.1&quot;</em> three turns later. The actual section locations haven&#39;t moved. Other facts (effective date, termination notice period) are also drifting between turns.</p>
+<p>What&#39;s the architectural fix?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Reduce the model temperature to make outputs more deterministic.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Have the agent maintain a scratchpad file recording key findings (clause locations, defined terms, dates) as they&#39;re discovered, and reference it for subsequent questions rather than recalling from buried context.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Switch to a model with a larger context window so the original references stay accessible.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Re-inject a reminder of all previously found clause locations in every prompt.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Inconsistency means hallucination</p>
+<p>Lowering temperature reduces output variance but doesn&#39;t fix attention degradation in long contexts. The clauses haven&#39;t moved; the model is forgetting where it found them, which is a different mechanism from making things up.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Scratchpad files are the structural fix for context degradation in extended exploration.</strong> Once findings are written to disk, they&#39;re no longer dependent on conversation-history attention — the agent reads them fresh each time it needs them. This is a recurring pattern in long-running analytical work: don&#39;t rely on the model to <em>recall</em> facts from buried turns; have it <em>record</em> findings as they&#39;re made and <em>consult</em> them as needed.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Bigger context windows solve recall</p>
+<p>Larger context windows let more information <em>fit</em>, but they don&#39;t solve the lost-in-the-middle effect — facts buried in the middle of a long input are still under-attended. Capacity isn&#39;t the bottleneck; structured persistence is.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Re-injecting facts in every prompt</p>
+<p>Re-injection requires <em>you</em> to know which facts will turn out to matter, and burns tokens on every call. A scratchpad is the agent&#39;s structured memory; it scales with what&#39;s been discovered, not with what the user remembers to remind it of.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q54" title="Q54">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>A research coordinator dispatches subagents with prompts like: <em>&quot;Step 1: search Google Scholar. Step 2: read the top 5 papers. Step 3: summarize each. Step 4: identify common themes.&quot;</em> When Google Scholar returns sparse results that don&#39;t justify reading 5 papers, the subagent rigidly reads 5 anyway — including weak sources — because that&#39;s what the prompt said.</p>
+<p>What&#39;s the better dispatch pattern?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Give subagents <em>goals and quality criteria</em> (&quot;find the strongest 3–5 sources on X, evaluated on these dimensions&quot;), letting them adapt their approach to what the search actually returns.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Provide more detailed procedural instructions covering edge cases like sparse results.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Add an instruction to the subagent&#39;s system prompt: &quot;use your judgment when results are unusual.&quot;</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Keep the rigid procedural prompts — predictable subagent behavior is what makes the system reliable.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> **Coordinator prompts should specify <em>what</em> to achieve, not <em>how</em> to achieve it.** Procedural step lists fail the moment reality doesn&#39;t match the steps — sparse results, paywalled sources, irrelevant top hits, all of which the rigid procedure can&#39;t adapt to. A goal-and-criteria prompt (&quot;find the strongest 3–5 sources, evaluated on relevance, recency, methodological rigor&quot;) lets the subagent exercise judgment about <em>how</em> while staying accountable for <em>what</em>. Predictability comes from criteria, not from procedure.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Detailed procedures handle edge cases</p>
+<p>There&#39;s a combinatorial explosion of edge cases (sparse results, irrelevant top hits, paywalled sources, language barriers). A procedural prompt that handles all of them becomes brittle and unreadable. Goal-and-criteria handles the long tail by ceding the procedure to the subagent.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> &quot;Use judgment&quot; as a system prompt instruction</p>
+<p>&quot;Use your judgment&quot; is a non-criterion — it tells the subagent nothing about <em>which</em> judgment to apply. Quality criteria <em>are</em> the judgment guidance.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Rigid execution is reliability</p>
+<p>Predictability and effectiveness aren&#39;t the same thing. A rigidly procedural subagent reliably produces output that doesn&#39;t match the situation. The goal is reliable <em>outcomes</em>, which sometimes requires adaptive <em>procedures</em>.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q55" title="Q55">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>Your research-synthesis system has three subagents (web-searcher, document-analyzer, fact-verifier) that currently communicate directly with each other — the web-searcher passes results straight to the analyzer, which passes findings to the verifier. The system has been hard to debug: failures happen &quot;somewhere in the chain&quot; without consistent error handling or a single point of observability.</p>
+<p>What&#39;s the better architectural pattern?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Keep direct subagent-to-subagent communication — round-trips through a coordinator add latency.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Route all subagent communication through the coordinator (hub-and-spoke). The coordinator collects findings, handles errors, and dispatches to the next subagent. Adds one round-trip but creates a single point of observability and consistent error handling.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Add detailed logging to each subagent so individual failures can be traced.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Have each subagent send copies of all messages to a separate logging service.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Latency optimization at the cost of observability</p>
+<p>The latency saved by direct routing is dwarfed by the time spent debugging when something goes wrong — and something always goes wrong. Multi-agent systems live or die on observability.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Hub-and-spoke architecture trades a small latency cost for a large observability and reliability gain.</strong> When every inter-subagent message passes through the coordinator, you get a single point where errors are handled consistently, where logs are coherent, and where the workflow can be inspected end-to-end. Direct subagent-to-subagent communication produces a tangled debugging surface where failures live in interstitial space no one owns.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Logging adds visibility without architectural change</p>
+<p>Logs help, but they don&#39;t unify error handling or give you a single coordination point. You&#39;ll still have to correlate logs across subagents to figure out where a chain failed. The architectural pattern matters more than the instrumentation.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Side-channel logging substitutes for routing</p>
+<p>Sending duplicates to a logging service doubles the work and produces a separate, lossy view of the system. Coordinator-routed messages <em>are</em> the system; logs are derived from that, not in place of it.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q88" title="Q88">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>A research agent is built with a fixed pipeline: <em>Step 1, search. Step 2, read top 5 results. Step 3, summarize.</em> A teammate proposes converting it to a <strong>ReAct</strong> pattern — the agent reasons about what to search for, observes what came back, and decides what to do next based on what it found.</p>
+<p>The team is debating: when does ReAct beat the fixed pipeline?</p>
+<p>What&#39;s the right framing?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>When the right next action depends on what previous actions found. Searches return 2 strong sources sometimes, 8 weak ones other times, 0 occasionally. A fixed pipeline reads 5 regardless; ReAct adapts. Pipelines are right for predictable transformations; ReAct is right when the workflow has to respond to what&#39;s discovered.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Always — ReAct is more flexible than fixed pipelines.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Never — fixed pipelines are more predictable and reliable for production systems.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Never — a sufficiently detailed pipeline prompt that anticipates the edge cases (sparse results, irrelevant top hits, paywalled sources) handles adaptation without needing ReAct&#39;s looser structure.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>ReAct fits when the workflow needs to adapt to discovered information; fixed pipelines fit when transformations are predictable.</strong> A finance pipeline (categorize → validate → submit) doesn&#39;t need ReAct — every step&#39;s input is known. A research workflow (search → assess → search again with different terms if needed → assess → synthesize) absolutely does — what to do at step N depends on what step N-1 returned. The decision rule isn&#39;t &quot;ReAct or pipeline&quot;; it&#39;s &quot;is this workflow predictable or adaptive?&quot;</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> ReAct as universal</p>
+<p>Dynamic decomposition has costs: unpredictability, harder debugging, higher latency, more failure modes. For predictable workflows where the steps are known, fixed pipelines are more reliable, not less. &quot;Always more flexible&quot; sounds like a virtue but is actually a non-criterion.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Predictability over adaptability</p>
+<p>&quot;Predictable equals reliable&quot; is true for predictable workflows and false for adaptive ones. A research pipeline that rigidly reads 5 papers when only 2 exist is <em>predictably</em> doing the wrong thing — predictability without fitness for purpose is brittleness.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Better prompts substitute for ReAct</p>
+<p>This is the genuinely tempting wrong answer because it sounds disciplined — &quot;if our prompt anticipates the cases, we don&#39;t need adaptive control flow.&quot; The problem is combinatorial: every edge case you anticipate adds prompt length and complexity, and the cases you didn&#39;t anticipate still surprise you. ReAct is the architectural answer to <em>open-ended</em> situations where listing every case isn&#39;t tractable. &quot;Better prompt&quot; is appropriate when the cases are bounded; ReAct is appropriate when they aren&#39;t. Treating them as substitutes is a category error.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q89" title="Q89">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>Your team is reviewing four candidate tasks for AI agent deployment. For each, you need to decide: <strong>fully automate</strong> (agent acts), <strong>augment human</strong> (agent recommends, human acts), or <strong>stay human</strong> (no agent involvement).</p>
+<p>(1) Drafting personalized customer thank-you notes after purchases (low stakes, reversible, high volume) (2) Approving credit applications above $50K (high stakes, reversible, low volume) (3) Routing customer support tickets to the right team (low stakes, easily corrected, very high volume) (4) Deciding when to terminate an employee (high stakes, hard to reverse, requires accountability)</p>
+<p>What&#39;s the most defensible split?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Fully automate (1) and (3) — low stakes, reversible, high volume. Augment (2) — high stakes but reversible; agent assesses, human approves. Stay human on (4) — high stakes, hard to reverse, requires accountability that LLMs can&#39;t provide. <strong>Match automation level to stakes × reversibility × accountability.</strong></p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Fully automate all four — agents are valuable when they handle complex decisions, not just simple ones.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Stay human on all four — humans should always own customer-facing and HR decisions.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Decide based on which tasks the team has training data for — automation should follow data availability.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>The Automation Matrix: stakes × reversibility × accountability.</strong> Low-stakes high-volume tasks (thank-you notes, ticket routing) are where agents add the most value with the least risk — automate. High-stakes but reversible decisions (credit approvals) benefit from agent analysis but need human judgment for accountability — augment. High-stakes hard-to-reverse decisions with required human accountability (employment termination) shouldn&#39;t be agent-driven at all — even with high accuracy, the accountability surface is wrong. Match the automation level to the <em>combined</em> axes, not to any single one.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Automate-everything posture</p>
+<p>&quot;Agents are valuable when they handle complex decisions&quot; treats automation as the goal. But automating an irreversible high-stakes decision with no human in the loop transfers accountability to a system that can&#39;t carry it. Capability isn&#39;t the only consideration.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Automate-nothing posture</p>
+<p>&quot;Always humans&quot; forfeits the agent&#39;s value on the high-volume safe tasks (thank-you notes, ticket routing) where it adds the most leverage with no real risk. Blanket refusal is as un-nuanced as blanket automation.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Data availability drives stakes decisions</p>
+<p>Training data tells you whether an agent <em>can</em> do a task. The Automation Matrix tells you whether it <em>should</em>. These are different questions. You might have great data on employment termination decisions and still shouldn&#39;t automate them — accountability isn&#39;t a data problem.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q90" title="Q90">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>A team is choosing a multi-agent pattern for a strategic-recommendation system that produces market-entry advice. They&#39;re weighing three patterns: <strong>Pipeline</strong> (Researcher → Analyst → Editor, sequential), <strong>Debate</strong> (two analysts argue from opposing premises, a judge synthesizes), and <strong>Orchestrator</strong> (a coordinator dynamically dispatches to specialized subagents based on the question).</p>
+<p>When does Debate beat Pipeline or Orchestrator?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>When the recommendation involves judgment calls where considering opposing views improves quality. Two analysts arguing from &quot;expand&quot; vs &quot;consolidate&quot; premises surface assumptions and weak arguments that a single analyst would miss. Pipeline is right for sequential transformations; Orchestrator is right for adaptive task decomposition; Debate is right for high-stakes recommendations where adversarial scrutiny adds value.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Always — debate produces better answers than single-perspective analysis.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>When the recommendation needs to surface multiple stakeholder perspectives — Debate puts different stakeholder voices (CFO view, Product view, Risk view) in conversation with each other.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Never — debate is wasteful when one well-prompted analyst can produce the same answer.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Debate is the right multi-agent pattern when adversarial scrutiny improves judgment quality.</strong> A market-entry recommendation involves contested premises — the case for expansion and the case for caution rest on different assumptions. Pipeline can produce a coherent recommendation but tends to lock in early framing. Orchestrator can decompose dynamically but doesn&#39;t systematically surface opposing views. Debate is built for the adversarial case: each side argues their best case, the judge synthesizes. Use it for <em>recommendations with contested premises</em>, not for everything.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Debate as universal</p>
+<p>Debate adds latency, cost, and complexity. For tasks without contested premises (categorize this expense, route this ticket), debate is wasteful overhead. Match the pattern to the task.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Debate as multi-stakeholder roleplay</p>
+<p>This is the genuinely tempting wrong answer because both Debate and multi-perspective generation produce multiple voices in conversation — and they look similar from outside. But they&#39;re doing different work. Multi-stakeholder roleplay enumerates <em>complementary</em> perspectives (each stakeholder&#39;s legitimate concerns); Debate enacts <em>adversarial</em> scrutiny on a single recommendation (the strongest case for, the strongest case against). Conflating them produces a Debate setup that surfaces stakeholder concerns without ever pressure-testing the recommendation — which is what you needed Debate for in the first place.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Defeatism about debate</p>
+<p>&quot;One well-prompted analyst can produce the same answer&quot; is true for many tasks and false for the contested-premise ones. Debate isn&#39;t about producing the same answer twice — it&#39;s about producing an answer that has <em>survived</em> the strongest counter-argument.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q91" title="Q91">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>A pipeline of three agents (Researcher → Analyst → Editor) is producing final outputs that subtly disagree with the original sources. The Researcher cites <em>&quot;X grew 12.3% YoY in Q3 2024.&quot;</em> The Analyst writes <em>&quot;X showed strong growth recently.&quot;</em> The Editor writes <em>&quot;X has experienced impressive expansion in the past year.&quot;</em> By the time the user reads it, the precise statistic has been replaced with vague prose three times over.</p>
+<p>What&#39;s happening, and how do you fix it?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Information distortion at each handoff — every agent compresses or paraphrases, losing precision. The fix: require structured handoff formats (<code>{claim, source, exact_value, date}</code>) that preserve the original statistics literally through the pipeline, and evaluate the Editor against the <em>Researcher&#39;s</em> output, not just against the Analyst&#39;s summary.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>The Editor is hallucinating — replace it with a stricter prompt.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>This is normal output variation across agents — it doesn&#39;t indicate a problem.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>The Analyst should be removed from the pipeline so the Editor sees the Researcher&#39;s output directly.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>The &quot;telephone game&quot; problem: each handoff compresses, and compressions stack.</strong> Each agent is doing its job — paraphrase, summarize, polish — but the cumulative effect is precision loss. The fix isn&#39;t at the agent level; it&#39;s at the <em>handoff</em> level. Structured handoff formats preserve the literal claims and statistics through the pipeline. The Editor receives both the Analyst&#39;s synthesis <em>and</em> the original Researcher&#39;s claim-source mappings, and is evaluated on whether the final output preserves the precise facts. <strong>Provenance has to be preserved through structure</strong>, not trusted to free prose.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Hallucination explanation for compression</p>
+<p>The Editor isn&#39;t inventing facts — it&#39;s receiving &quot;strong growth recently&quot; from the Analyst and producing prose consistent with that. The data wasn&#39;t there for it to preserve. Pinning it on hallucination misses where the precision actually got lost.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Acceptance of compounding distortion</p>
+<p>Treating systematic precision loss as &quot;normal variation&quot; is how reports end up subtly wrong in ways that erode trust. Compounding distortion is a structural property of unconstrained handoffs; it&#39;s exactly the kind of problem multi-agent design should solve, not accept.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Remove agents instead of structuring handoffs</p>
+<p>Removing the Analyst skips the synthesis step entirely — now the Editor has to do both jobs (analyze + edit) which produces its own quality issues. The pipeline isn&#39;t broken; the <em>handoff format</em> is. Fix the handoff, not the headcount.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q92" title="Q92">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>A team is designing a multi-agent customer-success system. They&#39;re debating: should they build <em>one</em> generalist agent that handles billing questions, technical support, and feature requests — or <em>three</em> specialist agents (Billing, Tech Support, Features) coordinated by a router?</p>
+<p>The generalist can be implemented in a single prompt; the specialists require coordination overhead but each has tighter scope.</p>
+<p>What&#39;s the org-chart-shaped framing?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Specialists win when the domains require <em>different tools</em>, <em>different escalation paths</em>, or <em>different judgment criteria</em> — that&#39;s when division of labor pays off. Generalists win when the domains share most of the same tools, escalation paths, and judgment criteria — there&#39;s no real specialization, just topical variety. Map the organizational analogy: a small startup has one person doing everything; a mature company has specialized teams <em>because</em> the domains are genuinely different.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Always use specialists — narrow agents always outperform generalists.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Always use generalists — coordination cost makes specialists not worth it.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Build one agent per existing human team&#39;s specialization. The company&#39;s org chart already encodes which domains are distinct enough to warrant separate teams — mirror that structure since it&#39;s the result of the company&#39;s own optimization.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Division of labor in agent design follows the same logic as in organizations.</strong> When the domains genuinely require different expertise (different tools, different escalation contacts, different judgment standards), specialists pay off — the routing overhead is worth the tighter scope. When the domains share most of the substrate (same tools, same escalation, same judgment), specialization adds coordination cost without compensating benefit. The org-chart analogy isn&#39;t metaphor; it&#39;s the same optimization in a different medium.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Specialists are universally better</p>
+<p>Narrow agents do outperform generalists <em>when the narrowness corresponds to genuine domain differences</em>. When the domains overlap substantially, three &quot;specialists&quot; are really three near-copies of the same agent with different labels — paying coordination cost for no real specialization.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Generalists win on coordination cost alone</p>
+<p>Coordination cost is a real consideration, but it&#39;s not the only one. A generalist agent with too broad a scope ends up vague, inconsistent, and over-routed-to-humans. The right comparison is total system effectiveness, not just operational simplicity.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Mirror the human org chart</p>
+<p>This is the genuinely tempting wrong answer because it appeals to the company&#39;s existing optimization — the org chart isn&#39;t arbitrary; it reflects real choices about which domains needed separate ownership. But human org structure reflects <em>human</em> constraints: cognitive limits, accountability scope, career paths, span-of-control limits on managers. Agents don&#39;t share those constraints. The right specialization boundary for agents is determined by the architectural axes (different tools, different escalation paths, different judgment criteria), not by the staffing pattern that human limits produced.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q93" title="Q93">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>A team scaled their customer success system from one generalist agent to <em>eleven</em> specialists (Billing, Tech Support, Features, Onboarding, Renewals, Churn, Account Health, Compliance, Localization, Enterprise, SMB). Coordination logic now consumes more development time than the agents themselves. Routing errors are common. End-to-end latency has tripled. Quality on individual queries is <em>better</em> than the generalist days, but throughput is worse.</p>
+<p>What&#39;s the right diagnosis?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>They&#39;ve crossed the <strong>coordination-cost threshold</strong> — beyond a certain number of specialists, the overhead of routing, handoffs, and inter-agent coordination starts dominating the benefits of specialization. The fix is consolidation: identify which specialists genuinely require distinct judgment (typically 3–5) and merge the rest, accepting some loss in narrow expertise for substantial gain in throughput.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>The specialists need better individual prompts — quality issues should be fixed at the agent level.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>They need a more sophisticated orchestrator to handle the eleven-way routing more efficiently.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>The latency tripled because of model load — switch to a smaller model.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Coordination cost scales worse than linearly with agent count.</strong> Eleven specialists means a routing layer that has to disambiguate between eleven possibilities, handoff logic for each pair that needs handoffs, and an observability surface that spans eleven components. At some point the overhead outweighs the marginal benefit of further specialization. The org-chart analogy holds: <em>most</em> companies don&#39;t have eleven separate customer-success departments because the coordination cost would crush the specialization benefit. Consolidate to the level where specialization is actually load-bearing.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Quality issues at the agent level when the system level is the problem</p>
+<p>Individual agent quality is fine — that&#39;s what the scenario says. The problem is <em>system-level</em>: coordination, routing, latency. Optimizing individual agents doesn&#39;t address system-level cost.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> More sophisticated orchestrator solves combinatorial coordination</p>
+<p>A better orchestrator helps at the margin, but eleven-way routing is inherently more expensive than three-way routing — at some point the orchestrator itself becomes the bottleneck. The fix is reducing the count, not optimizing the routing.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> External performance explanation</p>
+<p>Model load doesn&#39;t triple latency — three additional handoffs each adding seconds of round-trip latency does. The latency growth tracks the agent count, not the model.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q108" title="Q108">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>A startup team is brainstorming an AI product. Their idea so far: <em>&quot;An AI assistant that can help with writing.&quot;</em> They want to apply the <strong>AI Product Canvas</strong> they learned (<em>Problem First, 10x Better, One Core Flow, Ship &amp; Learn</em>) to evaluate and tighten the idea before they start building.</p>
+<p>What&#39;s the most actionable next step?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Apply the Canvas in order: define the <strong>specific problem</strong> (e.g., <em>&quot;Sales reps spend 90 minutes a day writing follow-up emails after meetings&quot;</em>), specify the <strong>10x advantage</strong> (e.g., <em>&quot;AI drafts personalized follow-ups in 30 seconds using meeting transcripts&quot;</em>), narrow to <strong>one core flow</strong> (paste transcript → get draft → edit → send), then <strong>ship and learn</strong> with one or two real users. Vague ideas need Canvas application <em>before</em> tooling decisions.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Just start building in Lovable to see what emerges from the prototyping process.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Add more features to the idea — calendar integration, CRM sync, voice transcription — before scoping further.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Pick a target market based on size and run paid ads to test demand for the vague concept.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>The Canvas exists to convert vague ideas into testable ones.</strong> <em>&quot;AI for writing&quot;</em> is too broad to build, evaluate, or pitch. Walking through Problem First → 10x Better → One Core Flow → Ship &amp; Learn forces specificity at each step: a real problem (not a vague theme), a real differentiator (not &quot;with AI&quot;), a real workflow (not a feature list), and a real user (not a hypothetical market). Skip the Canvas and you spend weeks building something general that solves nothing in particular.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Build first, scope later</p>
+<p>Starting to build a vague idea in Lovable produces a vague prototype. &quot;What emerges&quot; is usually the prototype&#39;s first frame, which is rarely the right product. The Canvas saves rework by making the scope decision before the build.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> More features mean more value</p>
+<p>Adding calendar, CRM, and voice to &quot;AI for writing&quot; makes the surface area larger and the focus weaker. The Canvas pushes toward <em>one</em> flow that works dramatically better — adding features is what you do <em>after</em> one flow works, not before.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Run ads to validate undefined products</p>
+<p>Paid ads on a concept this vague would test the <em>ad copy</em>, not the product. Ad-based validation is a Canvas step (Ship &amp; Learn with real users), not a substitute for defining the problem first.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q109" title="Q109">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>A product team is building a customer support tool and has been using <em>&quot;chatbot&quot;</em> and <em>&quot;AI agent&quot;</em> interchangeably. The lead engineer pushes back: <em>&quot;These are different things — and we need to decide which we&#39;re building before we pick architecture.&quot;</em></p>
+<p>What&#39;s the operational distinction?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>A <strong>chatbot</strong> answers questions using its training and conversation context — text in, text out. An <strong>agent</strong> has tools (<code>search_orders</code>, <code>process_refund</code>, etc.) and a reasoning loop — it can take actions in the world, not just answer. The choice depends on the task: customers asking <em>&quot;what&#39;s your return policy?&quot;</em> works fine with a chatbot; customers asking <em>&quot;process my refund&quot;</em> requires an agent.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Chatbots are for text interfaces, agents are for voice interfaces.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Agents are just bigger, more capable chatbots — the distinction is one of degree.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Agents have multiple LLM calls in a reasoning loop; chatbots have a single LLM call per response. The number of model calls is what distinguishes them.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> **The chatbot/agent distinction is about <em>action</em>, not size or interface.** A chatbot generates text. An agent has tools, makes decisions about which to call, observes the results, and takes further action — <code>LLM + Tools + Reasoning Loop + Memory</code>. This isn&#39;t pedantry; it determines architecture, cost, latency, error handling, and risk surface. Agents need approval gates, tool descriptions, error recovery, audit logging — concerns that don&#39;t apply to chatbots. Picking the wrong category at design time produces the wrong system.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Interface determines category</p>
+<p>Voice and text are both interfaces; both can be backed by either a chatbot or an agent. The interface is a presentation choice; the architecture distinction is whether the system can take actions.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Agents are just bigger chatbots</p>
+<p>Size isn&#39;t the distinction — capability surface is. A small agent with three tools is still architecturally different from a large chatbot. The relevant axis is whether the system can affect the world beyond producing text.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Loop count distinguishes chatbot from agent</p>
+<p>This is the genuinely tempting wrong answer because agents <em>do</em> often have reasoning loops while chatbots often have single-turn responses. But loop count is a <em>consequence</em> of the architectural difference, not the difference itself. A chatbot can have a multi-turn conversation with several model calls and still be a chatbot — it isn&#39;t taking action in the world. An agent with one tool call is still an agent — it can affect the world beyond producing text. The distinguishing axis is action capability, not iteration count.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q110" title="Q110">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>A team has shipped an AI product that generates marketing copy. Users frequently get unexpected output (wrong tone, off-brand claims, occasional hallucinations) and report frustration. They&#39;re considering UX changes to improve trust without changing the underlying model.</p>
+<p>Which UX patterns most directly address user trust in AI products?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Three patterns specifically for AI products: <strong>Set Expectations</strong> (tell users what the AI can and can&#39;t do upfront — drafts, not finals; sometimes hallucinates), <strong>Easy Recovery</strong> (one-click regenerate, clear undo, simple way to start over), and <strong>User Control</strong> (let users tweak parameters before generation, edit results after, and stop generation if it&#39;s going wrong). These three address the most common AI-product trust failures: surprise outputs that users can&#39;t easily fix or modify.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Add a chat interface so users can ask the AI questions about its output.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Hide the fact that the output is AI-generated so users don&#39;t scrutinize it as carefully.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Add more AI features — autocomplete, suggestions, refinement — to make the product feel more capable.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>AI products break user trust differently from non-AI products</strong> — outputs are non-deterministic, occasionally wrong, and users can&#39;t inspect <em>why</em> the output is what it is. The Set Expectations / Easy Recovery / User Control triad addresses each of these: expectations prevent surprise; recovery makes failures cheap; control gives users agency over a process they don&#39;t fully understand. Skipping these three produces products that feel magical when they work and infuriating when they don&#39;t — which is exactly the trust-erosion path the team is on.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Chat as universal UX</p>
+<p>Adding a chat layer doesn&#39;t fix bad output — it just adds another surface where users encounter it. Chat is a useful pattern for some AI products but not a fix for trust failures in others.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Hide the AI nature</p>
+<p>Hiding AI generation is both ethically problematic (users have a right to know) and counterproductive (when something feels off, users discover the AI nature and trust drops further). Transparency is a trust mechanism, not an obstacle.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> More AI features = more value</p>
+<p>Adding AI features to a product whose AI features are eroding trust compounds the problem. The fix is making the existing AI features trustworthy, not adding more.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+  </objectbank>
+</questestinterop>

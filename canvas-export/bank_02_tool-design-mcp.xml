@@ -1,0 +1,1608 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<questestinterop xmlns="http://www.imsglobal.org/xsd/ims_qtiasiv1p2">
+  <objectbank ident="ISOM260_tool-design-mcp">
+    <qtimetadata>
+      <qtimetadatafield>
+        <fieldlabel>bank_title</fieldlabel>
+        <fieldentry>ISOM 260 — Tool Design & MCP Integration (15 questions)</fieldentry>
+      </qtimetadatafield>
+    </qtimetadata>
+  <item ident="Q06" title="Q06">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>You&#39;re building a customer service agent for an online bookstore. Two of your tools have these descriptions:</p>
+<ul><li><code>search_books</code>: &quot;Searches the book catalog.&quot;</li><li><code>lookup_book</code>: &quot;Looks up a book.&quot;</li></ul>
+<p>In production, the agent calls them seemingly at random — sometimes <code>search_books</code> for ISBN lookups, sometimes <code>lookup_book</code> for title searches, and occasionally calling both for the same query. Tool selection accuracy is around 60%.</p>
+<p>What&#39;s the highest-leverage first fix?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Consolidate both tools into a single <code>book_tool</code> that handles all book-related queries, removing the choice problem entirely.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Add 8–10 few-shot examples to the system prompt showing the correct tool for each query type.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Rewrite both tool descriptions to clearly differentiate purpose, expected inputs, example queries, and <strong>when to use each one versus the other</strong>.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Add a routing layer that pre-classifies user queries by type before they reach the agent.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Consolidation simplifies decisions</p>
+<p>Consolidating tools removes the choice problem at the cost of moving the routing logic inside the tool — you still need to decide whether to do an ISBN lookup or a title search. Now that decision is hidden from the agent and from your observability. Sometimes consolidation is right, but it&#39;s a structural change you make after exhausting cheaper fixes, not before.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Few-shot examples beat clear descriptions</p>
+<p>Few-shot examples can help, but they add token overhead on every call and don&#39;t address the root cause: descriptions that don&#39;t differentiate the tools. If descriptions clearly explain when to use each tool, you may not need few-shot examples at all. Reaching for examples first is treating a symptom.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Tool descriptions are the primary mechanism a model uses to choose between tools.</strong> When two descriptions are nearly identical and minimal, the model has nothing to differentiate them — and 60% accuracy is what random selection looks like for two near-identical options. The fix is the lowest-effort, highest-leverage change in the entire system: write descriptions that say what the tool does, what inputs it accepts, examples of the queries it handles, and crucially, <strong>when to use it instead of the similar tool</strong>. This is almost always the correct first move when tool selection is unreliable.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> External routing is more reliable than tool descriptions</p>
+<p>Adding a routing layer is over-engineering when the actual problem is two-line descriptions. You&#39;re proposing infrastructure to solve what is fundamentally a writing problem. Save routing layers for when descriptions have been fully invested in and the system still struggles.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q07" title="Q07">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>Your agent integrates with a payment processing MCP server. When the payment API is down, the tool currently returns:</p>
+<pre data-lang="json"><code>{ &quot;error&quot;: &quot;Operation failed&quot; }</code></pre>
+<p>You notice the agent handles this poorly — it sometimes retries indefinitely, sometimes apologizes to the customer and gives up, and sometimes invents alternative explanations like &quot;the customer&#39;s card may have been declined.&quot;</p>
+<p>What&#39;s the right fix?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Configure the MCP tool to retry internally up to five times before returning any error, so transient failures never reach the agent.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Return structured error metadata including <code>errorCategory</code> (transient/validation/business/permission), <code>isRetryable</code> boolean, and a human-readable description so the agent can make appropriate recovery decisions.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Strip the error message entirely and have the tool return <code>null</code> on failure, since the agent handles missing data more gracefully than error messages.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Add a system prompt instruction telling the agent that &quot;Operation failed&quot; means the payment system is down and to inform the customer accordingly.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Hiding errors from the agent is safer than exposing them</p>
+<p>Internal retries are sometimes appropriate, but doing five blind retries on every failure burns time and money on validation errors that will never succeed. And when retries are exhausted, you&#39;re back to the same uninformative error. Hiding error structure from the agent removes its ability to reason about recovery.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> The agent&#39;s erratic behavior is a direct consequence of a uniform error response. <em>&quot;Operation failed&quot;</em> gives the agent no information about why the operation failed, so it can&#39;t choose between retry, escalation, and graceful degradation appropriately. <strong>Structured error metadata</strong> — category (transient vs. validation vs. business rule vs. permission), retryability, and a human-readable description — lets the agent make principled recovery decisions. Transient errors get retried; business rule violations get explained to the customer; permission errors get escalated. The agent&#39;s &quot;intelligence&quot; about errors comes from the information you give it.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Missing data is preferable to error data</p>
+<p>Returning <code>null</code> on failure conflates two completely different states — &quot;the operation failed&quot; and &quot;the operation succeeded with no result.&quot; The agent now can&#39;t distinguish between &quot;payment system down&quot; and &quot;no transactions found for this customer.&quot; Information loss is rarely the right move.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Prompt instructions can substitute for structured data</p>
+<p>You&#39;re trying to interpret an opaque error message via a system prompt instruction, which is fragile and doesn&#39;t generalize. When the error becomes &quot;Operation failed: timeout after 30s,&quot; your prompt is now misleading. Build the structure into the data, not workarounds in the prompt.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q08" title="Q08">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>You&#39;re designing a research agent for a marketing analytics team. You&#39;re tempted to give it a powerful tool: <code>web_action</code>, which can browse any URL, extract any content, and submit any form. One tool, maximum flexibility.</p>
+<p>Your colleague pushes back, suggesting three narrower tools instead: <code>fetch_article</code> (validates that the URL points to an article and returns clean text), <code>fetch_pricing_page</code> (extracts structured pricing data from a vendor page), and <code>submit_lead_form</code> (only submits forms on whitelisted domains).</p>
+<p>Which approach is better, and why?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>The single <code>web_action</code> tool, because flexibility lets the agent handle novel scenarios without requiring you to anticipate every use case in advance.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>The three narrower tools, because constrained tools have clearer success criteria, fewer failure modes, better error messages, and don&#39;t require the agent to figure out how to use a general capability for a specific purpose.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>The single <code>web_action</code> tool, because three narrower tools fragment the agent&#39;s attention and require it to pick from too many options.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Either is fine — tool design is a stylistic choice and doesn&#39;t meaningfully affect agent reliability.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Maximum flexibility maximizes capability</p>
+<p>Flexibility sounds like a virtue and sometimes is, but for production agents it usually trades reliability for surface area. The agent now has to figure out, for every request, how to use <code>web_action</code> correctly — which URL formats work, how to extract structured data from arbitrary HTML, when submitting forms is allowed. Each of these is a place to fail.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Narrow, purpose-specific tools dramatically outperform general-purpose tools in agent systems.</strong> They have clearer descriptions (&quot;when do I use this?&quot; is obvious), validated inputs (the agent can&#39;t accidentally submit a form on a random domain), structured outputs (pricing data comes back as fields, not raw HTML), and better error messages (failures are scoped). The agent doesn&#39;t have to reason about how to use a general capability for a specific purpose — the tool encodes that knowledge. This is a recurring lesson: <strong>constrain your tools to known good paths</strong> rather than handing the agent a Swiss Army knife.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> More tools always means worse selection</p>
+<p>It&#39;s true that 18 tools is worse than 4–5 for selection accuracy. But three well-differentiated tools is not &quot;too many&quot; — it&#39;s the right resolution for a research agent. The selection-degradation effect happens when tools are numerous and overlapping. Three distinct tools are easier to select among than one ambiguous one.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Tool design is cosmetic</p>
+<p>Tool design is one of the highest-leverage decisions in agent architecture. It determines reliability, observability, error handling, and the agent&#39;s effective capability. &quot;Either is fine&quot; is the answer of someone who hasn&#39;t shipped agents to production.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q09" title="Q09">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>You&#39;re building an internal tool for your company&#39;s HR department using Claude Code with MCP integrations. Your team needs three integrations:</p>
+<ul><li>a shared <strong>Jira</strong> server (everyone uses this)</li><li>a personal <strong>Notion</strong> workspace (each person has their own)</li><li>an experimental <strong>scratch</strong> server you&#39;re prototyping</li></ul>
+<p>Where should each be configured?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>All three in the project&#39;s <code>.mcp.json</code>, so the configuration is version-controlled and consistent across the team.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>All three in each user&#39;s <code>~/.claude.json</code>, so individual users can customize without affecting the project repo.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Jira in <code>.mcp.json</code> (project-scoped, shared via version control); Notion and the experimental server in <code>~/.claude.json</code> (user-scoped, personal).</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Create a separate Git branch for each MCP configuration to isolate them.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Consistency means putting everything in one place</p>
+<p>Putting personal Notion workspaces in the project repo would mean every team member sees and potentially attempts to authenticate against everyone else&#39;s personal workspace. And the experimental scratch server probably shouldn&#39;t exist for teammates yet. &quot;Version-controlled and consistent&quot; applies to shared infrastructure, not personal tools.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> User-scoped configuration is always more flexible</p>
+<p>Putting Jira in user-scoped config means every team member has to set up Jira independently, with no shared standard, and a new hire has nothing to pull from. Shared infrastructure belongs in shared configuration.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Project-scoped configuration</strong> (<code>.mcp.json</code>) is for shared team infrastructure that everyone needs and that should be version-controlled. <strong>User-scoped configuration</strong> (<code>~/.claude.json</code>) is for personal or experimental setups that shouldn&#39;t be imposed on teammates. Jira fits the first category — it&#39;s shared team tooling. Personal Notion workspaces and experimental scratch servers fit the second — they&#39;re individual, and committing them to the project would either expose private workspaces or pollute the team&#39;s environment with half-finished experiments. Use environment variable expansion (e.g., <code>${JIRA_TOKEN}</code>) for credentials so the project file can be committed safely.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Branches are an organizational tool for configuration</p>
+<p>Git branches isolate code changes, not runtime configurations. Multiple users can&#39;t be on different branches simultaneously to get different MCP servers — that&#39;s not how branches work.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q10" title="Q10">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>A teammate added an MCP server providing a powerful <code>analyze_codebase</code> tool that can scan an entire repo and return structured architectural insights. But in practice, when the agent needs to find function callers or understand code structure, it almost always reaches for the built-in <code>Grep</code> tool instead — even when <code>analyze_codebase</code> would give better results.</p>
+<p>The MCP tool description currently reads: <em>&quot;Analyzes the codebase.&quot;</em></p>
+<p>What&#39;s the most likely cause and fix?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>The model has a built-in preference for native tools over MCP tools and the only fix is forcing tool choice via <code>tool_choice: {&quot;type&quot;: &quot;tool&quot;, &quot;name&quot;: &quot;analyze_codebase&quot;}</code>.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>The minimal description gives the model no reason to prefer <code>analyze_codebase</code> over the well-known <code>Grep</code>. Expanding the description to explain capabilities, expected outputs, and the kinds of queries it handles best would dramatically improve adoption.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>MCP tools have higher latency than built-in tools, so the model is correctly choosing the faster option even at the cost of result quality.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>The agent should be explicitly told in the system prompt to &quot;always prefer MCP tools over built-in tools when available.&quot;</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Model preferences are fixed and require override</p>
+<p>There&#39;s no built-in bias against MCP tools. The model picks tools based on description quality and apparent fit. Forcing tool choice solves the symptom but doesn&#39;t help the model learn when this tool is appropriate — and you can&#39;t force tool choice on every relevant query manually.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Tool selection is driven by descriptions.</strong> <em>&quot;Analyzes the codebase&quot;</em> tells the model almost nothing — it doesn&#39;t explain what kind of analysis, what inputs the tool expects, what outputs it returns, or when it&#39;s the right choice over alternatives. Meanwhile, <code>Grep</code> has clear semantics the model already understands deeply. The fix is to invest in the MCP tool description: explain that it returns structured architectural insights including dependency graphs, exports, and call hierarchies; give example queries it handles best; explicitly contrast it with line-level search tools like <code>Grep</code>. Good descriptions don&#39;t just describe the tool — they help the model decide <strong>when</strong> to choose this one.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Latency drives tool selection</p>
+<p>The model isn&#39;t aware of tool latency and doesn&#39;t optimize for speed. This is anthropomorphizing the model&#39;s behavior. The actual issue is information, not performance.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Prompt-level overrides fix tool selection</p>
+<p>&quot;Always prefer MCP tools&quot; is a blunt instruction that will cause the model to use MCP tools even when they&#39;re not the right fit. The model needs to understand <strong>when</strong> each tool applies, which is what descriptions are for. A blanket prompt rule replaces nuanced selection with crude preference.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q31" title="Q31">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>A finance ops agent has 22 tools: <code>lookup_customer</code>, <code>lookup_account</code>, <code>lookup_invoice</code>, <code>lookup_payment</code>, <code>lookup_subscription</code>, <code>lookup_tax_record</code>, <code>lookup_credit_memo</code>, and 15 others. Tool descriptions are well-written. Tool selection accuracy is still 64%.</p>
+<p>What&#39;s the most effective fix?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Make each of the 22 descriptions more detailed and add cross-references between similar tools.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Reduce the agent&#39;s direct tool surface to ~5 high-frequency tools and route niche cases through a coordinator-subagent pattern, where specialized subagents have the narrower tools.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Set <code>tool_choice: &quot;auto&quot;</code> to give the model more flexibility in selecting tools.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Switch to a model with more capacity to handle the larger tool set.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> More description content fixes selection problems regardless of count</p>
+<p>Description quality matters, but it has diminishing returns. Once descriptions are clear, additional detail just adds tokens. The primary lever above 12 tools isn&#39;t description detail — it&#39;s decomposition.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Tool selection accuracy degrades as tool count grows</strong> — typically around 12+ tools, even with excellent descriptions. The fix is structural: give the primary agent 4–7 high-frequency tools and route niche work to specialized subagents with narrower, role-appropriate tool sets. The primary agent&#39;s decision space stays small; specialized work happens where the tool set is purpose-fit.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> tool_choice solves cardinality problems</p>
+<p><code>tool_choice: &quot;auto&quot;</code> is already the default and doesn&#39;t change the fundamental problem of selecting among 22 similar tools. This is reaching for a configuration knob without diagnosing the actual cause.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Capability over architecture</p>
+<p>Stronger models do better on tool selection at the margin, but they don&#39;t close the structural gap. A 22-tool agent will still underperform a 5-tool agent with 5-tool subagents — and you&#39;ve also paid more per call.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q32" title="Q32">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>Your customer service agent&#39;s <code>find_orders</code> tool sometimes returns an empty array because the customer genuinely has no orders. Other times it returns an empty array because the upstream order-management service was unreachable. The agent treats both identically and confidently tells the customer <em>&quot;I don&#39;t see any orders on your account&quot;</em> — even when the service was actually down.</p>
+<p>What&#39;s the right fix at the tool layer?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Have the agent retry every empty-array response three times — if all three return empty, treat as truthful.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Return a structured response that distinguishes the two states: <code>{status: &quot;ok&quot;, results: []}</code> for genuine empty, and <code>{status: &quot;service_unavailable&quot;, results: null, isRetryable: true}</code> for upstream failures.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Instruct the agent to always hedge &quot;no results&quot; responses with &quot;as far as I can see right now.&quot;</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Disable the tool whenever the upstream service is suspected to be down, surfacing a generic &quot;I can&#39;t help with that right now.&quot;</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Retry as a substitute for distinguishing states</p>
+<p>Three retries don&#39;t tell you which kind of &quot;empty&quot; you got — you might just be hitting an outage three times in a row. Retry is a tactic for transient errors; you still have to know an error happened to retry it usefully.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>An empty array is one of the most semantically overloaded values in software</strong> — it can mean &quot;we successfully looked and found nothing&quot; or &quot;we never got to look.&quot; Conflating those at the tool layer means the agent loses the ability to distinguish them, no matter how careful its reasoning is. Return a structured shape that <em>makes the distinction explicit</em>. The agent can then say &quot;I don&#39;t see any orders&quot; only when it knows the search succeeded, and escalate or retry when it knows the system was unreachable.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Hedging language fixes structural data loss</p>
+<p>Asking the agent to always hedge &quot;no results&quot; responses produces awkward customer experience even when the system is fully working — and it doesn&#39;t help when the agent confidently says &quot;no orders&quot; because the response shape gave it no reason to doubt.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Shutdown beats reporting</p>
+<p>Disabling the tool entirely on suspected outages is a sledgehammer. The right pattern is to <em>report</em> the outage clearly so the agent can make appropriate recovery decisions (retry, escalate, inform the customer that the system is down).</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q33" title="Q33">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>In your research agent system, the <code>web_search</code> subagent currently propagates every error — including transient timeouts on first attempts — straight up to the coordinator. The coordinator then routes to alternative sources, retries with modified queries, or escalates. Latency is high because round-trips through the coordinator are expensive, and most of the failures the coordinator sees are transient timeouts that would have resolved on a simple retry.</p>
+<p>What&#39;s the better pattern?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Have the subagent silently swallow all errors so the coordinator only ever sees successful or empty results.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Have the subagent retry transient failures locally (e.g., one retry on timeout); only propagate errors it cannot resolve, including what was attempted and any partial results gathered.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Move all retry logic to the coordinator for centralized control, regardless of whether the failure is transient or permanent.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Have the subagent retry failures identically without any change in strategy — the coordinator should not need to be involved.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Hiding failures is reliability</p>
+<p>Silent error swallowing means the coordinator never learns that anything went wrong, and partial outputs get presented as complete. This is one of the worst patterns in distributed systems and equally bad in multi-agent ones.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Local recovery for transient failures, propagation for unresolvable ones.</strong> Subagents are closer to the failure and can act faster on simple cases (a single retry on a timeout). Errors that require strategy change (different source, different query, escalation) belong at the coordinator level, where the broader context lives. When propagating, include what was attempted and any partial results — this is what enables the coordinator to make intelligent recovery decisions instead of just retrying blindly.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Centralization at all costs</p>
+<p>Routing every transient timeout through the coordinator is exactly the latency problem the question describes. Centralization is appropriate for decisions that require broad context; transient retries don&#39;t.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Retry without strategy change is recovery</p>
+<p>Retrying identically can resolve transient failures (the network blip case), but if the failure recurs, identical retries just delay the propagation. The right pattern bounds local retries (e.g., one attempt) and propagates with context after.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q34" title="Q34">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>A consulting firm wants their internal agent to &quot;know about&quot; its 200-record client list and a library of ~50 frequently-referenced engagement playbooks. Currently, every conversation begins with the agent calling <code>list_clients</code> and <code>list_playbooks</code> just to load the available reference data — even when the conversation has nothing to do with either.</p>
+<p>What&#39;s the cleanest pattern?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Cache the lists in a local file the agent reads at the start of each session.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Expose the client list and playbooks as <strong>MCP resources</strong>, which surface available content to the agent without requiring exploratory tool calls — the agent sees what&#39;s available and can fetch detail on demand.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Embed the entire client list and playbooks directly in the system prompt.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Build a single <code>get_anything</code> tool that handles all reference data lookups.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Local caching beats the protocol-level mechanism</p>
+<p>A local cache is an ad-hoc solution to a problem MCP already solves. The agent now has to know about the cache, refresh logic has to be built, and you&#39;ve added infrastructure to replicate functionality that exists in the protocol.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>MCP resources are designed for exactly this case</strong> — content catalogs that should be discoverable without forcing the agent to execute tool calls just to find out what&#39;s available. Resources surface to the agent as a known inventory; the agent fetches detail on the specific items relevant to the current conversation. This is fundamentally different from tools, which represent actions. The distinction matters: it eliminates the &quot;exploratory tool call&quot; pattern that wastes tokens and round-trips on every session.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Stuffing the system prompt scales</p>
+<p>200 client records plus 50 playbooks consumes thousands of tokens on every single call, including calls that have nothing to do with either. System prompts are for instructions and context that <em>every</em> turn needs — reference catalogs are not that.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Generality solves discovery problems</p>
+<p><code>get_anything</code> collapses meaningful structural distinctions (client vs. playbook) into one ambiguous tool the agent will misuse. And it still doesn&#39;t solve the discovery problem — the agent doesn&#39;t know what to ask for unless it can see what&#39;s available.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q35" title="Q35">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>Your invoice-processing system has six tools: <code>extract_metadata</code>, <code>categorize_expense</code>, <code>match_to_PO</code>, <code>validate_totals</code>, <code>flag_for_review</code>, and <code>submit_for_payment</code>. Business rules require that <code>extract_metadata</code> (which pulls the date, vendor, and invoice number) runs <em>before</em> any of the other tools — those downstream tools depend on metadata.</p>
+<p>The agent skips <code>extract_metadata</code> about 4% of the time when the invoice is short or when the user explicitly mentions a vendor name. Downstream tools then fail with cryptic errors.</p>
+<p>What&#39;s the most reliable fix?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Add a system prompt instruction: &quot;ALWAYS call <code>extract_metadata</code> first, no matter what.&quot;</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Use <code>tool_choice: {&quot;type&quot;: &quot;tool&quot;, &quot;name&quot;: &quot;extract_metadata&quot;}</code> on the first turn to force the metadata extraction call before the agent gains discretion over the rest of the workflow.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Remove all the downstream tools (<code>categorize_expense</code>, <code>match_to_PO</code>, etc.) from the agent&#39;s tool set entirely.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Wait for the agent to skip the metadata call, then catch the cryptic downstream errors and prompt the agent to retry.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Prompts enforce ordering</p>
+<p>You&#39;ve already seen this fail 4% of the time. Capitalizing &quot;ALWAYS&quot; doesn&#39;t make probabilistic compliance deterministic — it just makes the failures slightly less frequent. When ordering matters, use a mechanism that enforces it.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Forced tool selection on the first turn guarantees the prerequisite step runs</strong>, and then the agent regains normal tool discretion for subsequent turns. This is one of the highest-leverage uses of <code>tool_choice: {&quot;type&quot;: &quot;tool&quot;, &quot;name&quot;: &quot;...&quot;}</code> — locking in a deterministic prerequisite without locking down the rest of the workflow. Prompt instructions for ordering produce probabilistic compliance; forced first-call tool selection produces deterministic ordering.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Remove tools to enforce ordering</p>
+<p>Removing downstream tools means the agent can&#39;t complete any invoice processing — only the prerequisite step. You&#39;d have to re-add them somehow, and now you&#39;re back to the original problem.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Repair beats prevention</p>
+<p>Catching downstream errors and retrying doubles the latency on every failure case and exposes the agent to confusing intermediate states. Prevent the skip; don&#39;t recover from it.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q56" title="Q56">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>A developer&#39;s agent is editing a configuration file that has multiple identical lines (e.g., three different sections each containing <code>enabled: true</code>). The agent calls <code>Edit</code> to change the second occurrence and gets an error: the anchor text isn&#39;t unique. The agent tries adding context to the anchor, fails again, then gives up and reports it can&#39;t edit the file.</p>
+<p>What&#39;s the documented fallback?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Use <code>Read</code> to load the full file, then <code>Write</code> to overwrite it with the modified content. This is the standard fallback when <code>Edit</code> cannot find unique anchor text.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Add a <code>backup_first</code> parameter to <code>Edit</code> to allow non-unique matches.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Use <code>Bash</code> with <code>sed</code> to make the edit at the byte level.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Modify the call pattern to pass a line number — <code>Edit(file, line: 47, new_text: &quot;...&quot;)</code> — to disambiguate among identical anchor strings by position.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong><code>Read</code> + <code>Write</code> is the documented fallback for non-unique anchor cases.</strong> <code>Edit</code> requires unique text to know which occurrence to modify; when uniqueness can&#39;t be established, load the whole file, modify the right occurrence in memory, and write it back. This is reliable, safe, and exactly what the tooling is designed to support.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Hidden Edit parameters</p>
+<p>There&#39;s no <code>backup_first</code> parameter that allows non-unique matches. Fabricating a plausible-sounding parameter is a common pattern when the agent (or developer) doesn&#39;t know about the documented fallback path.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Shell tools as universal fallback</p>
+<p><code>sed</code> has its own escaping and quoting issues that can corrupt files in surprising ways, especially with regex metacharacters in the content. Read + Write is structurally safer for arbitrary text.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Line numbers are stable identifiers</p>
+<p>This is the genuinely tempting answer because line-number indexing is how every text editor on earth works — but it&#39;s a trap in agentic editing. Line numbers shift the moment any earlier line is added, deleted, or moved. The agent&#39;s <code>Read</code> showed line 47 a few turns ago; by the time <code>Edit</code> runs, an upstream insertion has made line 47 something else. Text-anchored editing is robust to those shifts; line-anchored editing isn&#39;t. Read+Write fallback is the documented path because text anchors keep working when line numbers don&#39;t.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q57" title="Q57">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>An agent is asked to find all the test files in a 5,000-file codebase to update an import statement. The agent currently runs <code>Bash(&quot;find . -name &#39;*.test.tsx&#39;&quot;)</code>. The result includes some directories that should have been ignored (like <code>node_modules</code>), and the agent now has to filter them out.</p>
+<p>What&#39;s the cleaner approach?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Use the <code>Glob</code> tool with pattern <code>**/*.test.tsx</code> — the dedicated tool respects gitignore patterns by default and is purpose-built for path matching.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Continue with <code>Bash find</code> but add <code>-not -path &quot;./node_modules/*&quot;</code> to filter out unwanted directories.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Switch to <code>Bash(&quot;git ls-files &#39;*.test.tsx&#39;&quot;)</code> — using <code>git</code> from the shell to leverage gitignore handling without needing a different tool.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Read the project&#39;s <code>.gitignore</code> first, parse the patterns, then build a <code>Bash find</code> command that excludes them all.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong><code>Glob</code> is the dedicated tool for path-pattern matching</strong> — it respects ignore rules, is faster than shell <code>find</code>, and doesn&#39;t require you to remember <code>find</code>&#39;s flag syntax. The general principle: <code>Glob</code> for paths, <code>Grep</code> for content, <code>Read</code>/<code>Write</code>/<code>Edit</code> for file contents, <code>Bash</code> only when no dedicated tool fits. Reaching for <code>Bash</code> first is a common anti-pattern that costs reliability.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Bash flexibility over dedicated tools</p>
+<p>You can do path matching with <code>find</code>, just as you can write web pages in assembly — but the dedicated tool exists because it&#39;s better at this specific job. Defaulting to <code>Bash</code> for problems with cleaner solutions adds friction every time.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Layering shell tools to fix the wrong tool</p>
+<p>This is the cleverest of the wrong answers — <code>git ls-files</code> <em>does</em> respect gitignore, and switching to it solves the immediate problem. But you&#39;ve still picked Bash for path discovery, just with a more sophisticated shell command. The dedicated tool that handles this case directly is sitting unused. Don&#39;t reach for cleverness in the wrong layer.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Replicate behavior the dedicated tool already has</p>
+<p>Parsing <code>.gitignore</code> to build exclusion logic for <code>find</code> is rebuilding, in your agent code, the exact behavior <code>Glob</code> provides for free. This is the most expensive way to get to the right answer — and the <em>next</em> developer to read your code will rightly ask why you didn&#39;t just use <code>Glob</code>.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q58" title="Q58">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>An MCP tool returns its error states in a custom shape: <code>{ &quot;success&quot;: false, &quot;details&quot;: &quot;service unavailable&quot; }</code>. The agent occasionally treats these as successful responses (because the response <em>parsed</em> as JSON) and proceeds with bad data — then a few turns later tells the user something incorrect.</p>
+<p>What&#39;s the right fix at the MCP layer?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Use the MCP <code>isError</code> flag in the tool response. The protocol defines <code>isError: true</code> as the way to communicate failures back to the agent, and the agent reliably treats those responses as errors.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Add a system prompt instruction: &quot;If a tool returns <code>success: false</code>, treat the response as an error.&quot;</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Wrap every tool call in error-checking middleware that inspects each response.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Always validate every tool response with a separate Claude API call.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong><code>isError: true</code> is the protocol-level signal MCP defines for failures.</strong> When the flag is set, the agent reliably distinguishes the response from a successful one. Custom shapes like <code>{success: false, ...}</code> work <em>probabilistically</em> — the agent often gets it right, but not reliably enough to depend on. Use the flag the protocol provides.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Custom protocol via prompt instructions</p>
+<p>Asking the agent to interpret <code>success: false</code> via prompt is fragile — the moment the response shape changes (new field, different key, different value type), the prompt is misaligned. The protocol-defined flag stays correct regardless of payload shape.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Middleware reinventing the protocol</p>
+<p>You&#39;d be building infrastructure to do what <code>isError</code> already does — inspect responses, classify them as errors. That&#39;s reinventing the protocol, badly.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> LLM validation of tool output</p>
+<p>Adding an LLM call to verify whether each tool response succeeded multiplies cost and latency, and introduces another probabilistic failure point on a problem that has a deterministic answer.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q59" title="Q59">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>A research system&#39;s coordinator has access to ten tools: <code>Task</code>, <code>Read</code>, <code>Write</code>, <code>Edit</code>, <code>Bash</code>, <code>web_search</code>, <code>web_fetch</code>, <code>lookup_database</code>, <code>send_email</code>, and <code>schedule_meeting</code>. The synthesis subagent inherits all ten tools by default. Recently the synthesis subagent decided to <em>email the synthesis output to the user</em> — which was both surprising and inappropriate.</p>
+<p>What&#39;s the right fix?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Restrict the synthesis subagent&#39;s tool set in its <code>AgentDefinition</code> to only the tools relevant to its role (e.g., <code>Read</code>, <code>web_fetch</code> for verification). Removing <code>send_email</code> from its surface eliminates the option entirely.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Add an instruction to the synthesis subagent&#39;s system prompt: &quot;Never call <code>send_email</code> under any circumstances.&quot;</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Implement a <code>PreToolUse</code> hook that blocks <code>send_email</code> calls from the synthesis subagent specifically.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Rename <code>send_email</code> to <code>send_email_DO_NOT_CALL_FROM_SUBAGENT</code> to discourage use.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Restrict subagent tool sets to their role.</strong> A synthesis subagent doesn&#39;t need the ability to send email; giving it access invites the misuse you just observed. The <code>AgentDefinition</code> is where role-appropriate tool surfaces are defined — use it. The principle: subagents should have <em>exactly</em> the tools their role requires, and nothing more. This is access control, applied to agents.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Prompt instructions enforce tool restrictions</p>
+<p>Telling the agent never to call a tool is probabilistic compliance on a deterministic concern. The agent is more likely to follow the rule than not, but &quot;more likely&quot; isn&#39;t a guarantee — and you&#39;ve already seen the violation.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Hooks for tool exclusion when scope works</p>
+<p>A <code>PreToolUse</code> hook can block specific calls, but you&#39;d be adding runtime infrastructure to enforce something that the simpler <code>AgentDefinition</code> mechanism already enforces structurally. Hooks are right for cross-cutting policy enforcement; tool-set scoping is right for role-based access.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Naming as access control</p>
+<p>A scary tool name is security through obscurity. The agent will still see it as a callable tool. Real access control means the tool <em>isn&#39;t there to call</em>.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+
+  <item ident="Q60" title="Q60">
+    <itemmetadata>
+      <qtimetadata>
+        <qtimetadatafield>
+          <fieldlabel>question_type</fieldlabel>
+          <fieldentry>multiple_choice_question</fieldentry>
+        </qtimetadatafield>
+        <qtimetadatafield>
+          <fieldlabel>points_possible</fieldlabel>
+          <fieldentry>1</fieldentry>
+        </qtimetadatafield>
+      </qtimetadata>
+    </itemmetadata>
+    <presentation>
+      <material>
+        <mattext texttype="text/html"><![CDATA[<p>Your team needs Jira integration for an agentic workflow. There&#39;s a well-maintained community MCP server for Jira that supports the standard operations the team needs (create issue, update status, query by JQL, add comment). A teammate proposes building a custom in-house MCP server &quot;for full control.&quot;</p>
+<p>What&#39;s the right call?</p>]]></mattext>
+      </material>
+      <response_lid ident="response1" rcardinality="Single">
+        <render_choice>
+        <response_label ident="A">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Use the community MCP server for the standard operations, and reserve custom MCP development for team-specific workflows that aren&#39;t covered. Don&#39;t reinvent maintained software for a feeling of control.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="B">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Always build custom MCP servers to maintain full control over security and behavior.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="C">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Use the community server but immediately fork it and modify it heavily before any production use.</p>]]></mattext>
+          </material>
+        </response_label>
+        <response_label ident="D">
+          <material>
+            <mattext texttype="text/html"><![CDATA[<p>Skip MCP entirely and call the Jira REST API directly from <code>Bash</code> tools.</p>]]></mattext>
+          </material>
+        </response_label>
+        </render_choice>
+      </response_lid>
+    </presentation>
+    <resprocessing>
+      <outcomes>
+        <decvar maxvalue="100" minvalue="0" varname="SCORE" vartype="Decimal"/>
+      </outcomes>
+        <respcondition continue="No">
+          <conditionvar>
+            <varequal respident="response1">A</varequal>
+          </conditionvar>
+          <setvar action="Set" varname="SCORE">100</setvar>
+          <displayfeedback feedbacktype="Response" linkrefid="A_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">B</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="B_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">C</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="C_fb"/>
+        </respcondition>
+        <respcondition continue="Yes">
+          <conditionvar>
+            <varequal respident="response1">D</varequal>
+          </conditionvar>
+          <displayfeedback feedbacktype="Response" linkrefid="D_fb"/>
+        </respcondition>
+    </resprocessing>
+    <itemfeedback ident="A_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Correct answer.</strong> <strong>Default to community MCP servers for standard integrations.</strong> They&#39;re maintained, tested, and benefit from the community&#39;s collective debugging. Custom development is justified for team-specific workflows that the community version doesn&#39;t cover — not for the standard create/update/query operations every team needs. The &quot;full control&quot; argument usually masks unfamiliarity with the existing tool.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="B_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Always custom for control</p>
+<p>&quot;Full control&quot; sounds like a virtue, but it comes with full maintenance burden — every update, every Jira API change, every security patch is on you. For standard operations that the community version handles well, this is paying high cost for no real gain.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="C_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Fork-and-modify as default</p>
+<p>An immediate fork creates an unmaintained branch that diverges from upstream. You inherit the codebase plus the obligation to track upstream changes, with none of the benefit of community maintenance. Forks are appropriate when the upstream is genuinely insufficient — not as a default posture.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+    <itemfeedback ident="D_fb">
+      <flow_mat>
+        <material>
+          <mattext texttype="text/html"><![CDATA[<p><strong>Misconception:</strong> Reject the protocol layer</p>
+<p>Dropping MCP for direct REST calls forfeits the protocol&#39;s actual value — structured tool descriptions, the <code>isError</code> flag, resource catalogs, scoped configurations. You&#39;re trading a designed integration layer for ad-hoc shell calls.</p>]]></mattext>
+        </material>
+      </flow_mat>
+    </itemfeedback>
+  </item>
+  </objectbank>
+</questestinterop>
