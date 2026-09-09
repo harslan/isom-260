@@ -3,7 +3,7 @@
   "slug": "session-01",
   "title": "Welcome to the AI Revolution",
   "subtitle": "Course overview, expectations, and the landscape of AI in business today",
-  "duration": "150 Minutes",
+  "duration": "75 Minutes",
   "icon": "rocket",
   "tags": [
     "Introduction",
@@ -36,81 +36,65 @@
   },
   "agenda": [
     {
-      "time": "12:30 PM - 12:45 PM",
-      "title": "Welcome & Introductions",
-      "duration": "15 minutes",
-      "description": "Who's in the room, why this course exists, and what you'll be able to build by December.",
+      "time": "12:30 PM - 12:40 PM",
+      "title": "Welcome & The Week You Walked In",
+      "duration": "10 minutes",
+      "description": "Who I am, why this course exists, and the eight days of AI history you just lived through.",
       "bulletPoints": [
-        "Course promise: you will ship a working AI agent this semester",
-        "Quick intros: name, major, one thing you want AI to do for you"
+        "GPT-6 Astra, Claude Fable 5.1, and Gemini 3.8 all shipped in the last eight days",
+        "Course promise: you will ship a working AI agent this semester"
       ],
       "isBreak": false
     },
     {
-      "time": "12:45 PM - 1:15 PM",
-      "title": "The AI Landscape, September 2026",
-      "duration": "30 minutes",
-      "description": "You picked the wildest possible week to start studying AI — GPT-6 Astra, Claude Fable 5.1, and Gemini 3.8 all shipped in the last eight days.",
+      "time": "12:40 PM - 12:50 PM",
+      "title": "Introductions",
+      "duration": "10 minutes",
+      "description": "Name, major, and one thing you wish AI would do for you — we'll check back in December.",
+      "bulletPoints": [],
+      "isBreak": false
+    },
+    {
+      "time": "12:50 PM - 1:05 PM",
+      "title": "The State of AI in Business",
+      "duration": "15 minutes",
+      "description": "The numbers behind the hype — and the adoption-to-scaling gap where careers are made.",
       "bulletPoints": [
-        "Last week's frontier release wave and what it means",
-        "The numbers: 91% of businesses use AI, 79% adopting agents — but only 23% scaling them",
-        "The adoption-to-scaling gap is where careers are made"
+        "91% of businesses use AI; 79% are adopting agents — but only 23% are scaling them",
+        "That gap is the syllabus of this course"
       ],
       "isBreak": false
     },
     {
-      "time": "1:15 PM - 1:30 PM",
-      "title": "Live Demo: A Frontier Model Today",
+      "time": "1:05 PM - 1:20 PM",
+      "title": "Live Demo: A Frontier Model at Work",
       "duration": "15 minutes",
-      "description": "What state-of-the-art actually looks like when you point it at a real business problem.",
+      "description": "No slides. We give a frontier model a real business problem and watch what happens.",
       "bulletPoints": [
-        "From question → research → analysis → deliverable in one conversation",
+        "Question → research → analysis → deliverable in one conversation",
         "Where it shines, where it stumbles — and why you need to know the difference"
       ],
       "isBreak": false
     },
     {
-      "time": "1:30 PM - 1:40 PM",
-      "title": "Break",
-      "duration": "10 minutes",
-      "description": "Stretch. When we come back, you train a language model.",
-      "bulletPoints": [],
-      "isBreak": true
-    },
-    {
-      "time": "1:40 PM - 2:25 PM",
-      "title": "Hands-On: Train Your Own Tiny LLM",
-      "duration": "45 minutes",
-      "description": "Karpathy-style, from scratch, in free Colab — no experience needed. Build a name-inventing model by counting, then train a real 100K-parameter transformer and watch the quality jump.",
-      "bulletPoints": [
-        "Act 1: a language model made of pure counting (the bigram model)",
-        "Play with temperature — the same creativity dial in the real APIs",
-        "Act 2: train a miniature GPT live and compare the outputs",
-        "Act 3: the scale story — your model vs. GPT-6 is the same objective, 10 million times bigger"
-      ],
-      "isBreak": false
-    },
-    {
-      "time": "2:25 PM - 2:40 PM",
-      "title": "Toolkit Setup",
+      "time": "1:20 PM - 1:35 PM",
+      "title": "Hands-On: Build a Language Model by Counting",
       "duration": "15 minutes",
-      "description": "Get every account working now so nothing blocks you later.",
+      "description": "Open Colab and run Act 1 of the Tiny LLM notebook together — a model made of pure counting that invents new names.",
       "bulletPoints": [
-        "Google account + Colab verified (you just used it)",
-        "Bookmark Google AI Studio — your API key arrives in Session 3",
-        "Course site + Canvas notifications"
+        "A working language model with zero math beyond tallying",
+        "Turn the temperature dial — the same creativity knob in the real APIs"
       ],
       "isBreak": false
     },
     {
-      "time": "2:40 PM - 3:00 PM",
-      "title": "Course Roadmap, Grading & Final Project Preview",
-      "duration": "20 minutes",
-      "description": "The 13-session arc from talking to AI to shipping your own agent, and how you'll be graded.",
+      "time": "1:35 PM - 1:45 PM",
+      "title": "Roadmap, Homework #1 & Q&A",
+      "duration": "10 minutes",
+      "description": "The semester arc, how you're graded, and your first homework: train a real transformer tonight.",
       "bulletPoints": [
-        "The arc: prompts → APIs → agents → RAG → multi-agent → final project",
-        "Final Project: build an agent that solves a real problem — due Wed Dec 9 at 11:59 PM",
-        "Q&A"
+        "Homework #1: finish the notebook at home (Acts 2-3) and post your favorite generated name on Canvas before Monday",
+        "Final Project: build an agent that solves a real problem — due Wed Dec 9 at 11:59 PM"
       ],
       "isBreak": false
     }
@@ -128,7 +112,7 @@
     {
       "title": "Train Your Own Tiny LLM — Colab Notebook",
       "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-01/ISOM260_Session1_Train_Your_Tiny_LLM.ipynb",
-      "description": "The Session 1 hands-on: build a language model by counting, then train a real 100,000-parameter transformer that invents names. Runs free in your browser, no API keys, ~45 minutes.",
+      "description": "The Session 1 hands-on and Homework #1: build a language model by counting (Act 1, in class), then train a real 100,000-parameter transformer at home (Acts 2-3, due before Monday). Runs free in your browser, no API keys.",
       "icon": "code",
       "badge": "Hands-On",
       "badgeType": "interactive",
