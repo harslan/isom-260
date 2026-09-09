@@ -5,7 +5,11 @@
   "subtitle": "Course overview, expectations, and the landscape of AI in business today",
   "duration": "150 Minutes",
   "icon": "rocket",
-  "tags": ["Introduction", "AI Landscape", "Course Overview"],
+  "tags": [
+    "Introduction",
+    "AI Landscape",
+    "Course Overview"
+  ],
   "objectives": [
     {
       "title": "Understand Course Structure",
@@ -23,7 +27,130 @@
   "nextSession": {
     "title": "Session 2: How AI Actually Works",
     "description": "Dive deep into neural networks and large language models. Build your first AI model.",
-    "tags": ["Neural Networks", "LLMs", "Hands-On"],
+    "tags": [
+      "Neural Networks",
+      "LLMs",
+      "Hands-On"
+    ],
     "slug": "session-02"
-  }
+  },
+  "agenda": [
+    {
+      "time": "12:30 PM - 12:45 PM",
+      "title": "Welcome & Introductions",
+      "duration": "15 minutes",
+      "description": "Who's in the room, why this course exists, and what you'll be able to build by December.",
+      "bulletPoints": [
+        "Course promise: you will ship a working AI agent this semester",
+        "Quick intros: name, major, one thing you want AI to do for you"
+      ],
+      "isBreak": false
+    },
+    {
+      "time": "12:45 PM - 1:15 PM",
+      "title": "The AI Landscape, September 2026",
+      "duration": "30 minutes",
+      "description": "You picked the wildest possible week to start studying AI — GPT-6 Astra, Claude Fable 5.1, and Gemini 3.8 all shipped in the last eight days.",
+      "bulletPoints": [
+        "Last week's frontier release wave and what it means",
+        "The numbers: 91% of businesses use AI, 79% adopting agents — but only 23% scaling them",
+        "The adoption-to-scaling gap is where careers are made"
+      ],
+      "isBreak": false
+    },
+    {
+      "time": "1:15 PM - 1:30 PM",
+      "title": "Live Demo: A Frontier Model Today",
+      "duration": "15 minutes",
+      "description": "What state-of-the-art actually looks like when you point it at a real business problem.",
+      "bulletPoints": [
+        "From question → research → analysis → deliverable in one conversation",
+        "Where it shines, where it stumbles — and why you need to know the difference"
+      ],
+      "isBreak": false
+    },
+    {
+      "time": "1:30 PM - 1:40 PM",
+      "title": "Break",
+      "duration": "10 minutes",
+      "description": "Stretch. When we come back, you train a language model.",
+      "bulletPoints": [],
+      "isBreak": true
+    },
+    {
+      "time": "1:40 PM - 2:25 PM",
+      "title": "Hands-On: Train Your Own Tiny LLM",
+      "duration": "45 minutes",
+      "description": "Karpathy-style, from scratch, in free Colab — no experience needed. Build a name-inventing model by counting, then train a real 100K-parameter transformer and watch the quality jump.",
+      "bulletPoints": [
+        "Act 1: a language model made of pure counting (the bigram model)",
+        "Play with temperature — the same creativity dial in the real APIs",
+        "Act 2: train a miniature GPT live and compare the outputs",
+        "Act 3: the scale story — your model vs. GPT-6 is the same objective, 10 million times bigger"
+      ],
+      "isBreak": false
+    },
+    {
+      "time": "2:25 PM - 2:40 PM",
+      "title": "Toolkit Setup",
+      "duration": "15 minutes",
+      "description": "Get every account working now so nothing blocks you later.",
+      "bulletPoints": [
+        "Google account + Colab verified (you just used it)",
+        "Bookmark Google AI Studio — your API key arrives in Session 3",
+        "Course site + Canvas notifications"
+      ],
+      "isBreak": false
+    },
+    {
+      "time": "2:40 PM - 3:00 PM",
+      "title": "Course Roadmap, Grading & Final Project Preview",
+      "duration": "20 minutes",
+      "description": "The 13-session arc from talking to AI to shipping your own agent, and how you'll be graded.",
+      "bulletPoints": [
+        "The arc: prompts → APIs → agents → RAG → multi-agent → final project",
+        "Final Project: build an agent that solves a real problem — due Wed Dec 9 at 11:59 PM",
+        "Q&A"
+      ],
+      "isBreak": false
+    }
+  ],
+  "resources": [
+    {
+      "title": "Session 1 Lecture Guide",
+      "url": "/session-01/lecture-guide.html",
+      "description": "The full interactive lecture guide: last week's release wave, the state of AI in business (September 2026), today's agenda, and your setup checklist.",
+      "icon": "presentation",
+      "badge": "Lecture",
+      "badgeType": "interactive",
+      "linkText": "Open lecture guide"
+    },
+    {
+      "title": "Train Your Own Tiny LLM — Colab Notebook",
+      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-01/ISOM260_Session1_Train_Your_Tiny_LLM.ipynb",
+      "description": "The Session 1 hands-on: build a language model by counting, then train a real 100,000-parameter transformer that invents names. Runs free in your browser, no API keys, ~45 minutes.",
+      "icon": "code",
+      "badge": "Hands-On",
+      "badgeType": "interactive",
+      "linkText": "Open in Colab"
+    },
+    {
+      "title": "AI: From Neurons to LLMs (PDF)",
+      "url": "/docs/AI_From_Neurons_To_LLMs.pdf",
+      "description": "Background reading that bridges today's tiny model to Session 2: how neural networks scale up into the large language models running the modern AI economy.",
+      "icon": "book-open",
+      "badge": "Reading",
+      "badgeType": "reference",
+      "linkText": "Download PDF"
+    },
+    {
+      "title": "Karpathy's makemore & nanochat",
+      "url": "https://github.com/karpathy/nanochat",
+      "description": "The projects that inspired today's exercise. nanochat is a full ChatGPT-style pipeline you can train for about $100 — the best deep dive on how LLMs really get built.",
+      "icon": "github",
+      "badge": "Go Deeper",
+      "badgeType": "code",
+      "linkText": "Explore on GitHub"
+    }
+  ]
 }
