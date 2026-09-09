@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speaker Notes: Session 1 — Welcome to the AI Revolution | ISOM 260</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-primary: #0a0e1a; --bg-card: #141929; --bg-elevated: #1a2035; --bg-code: #0d1117;
+            --cyan: #00e5ff; --magenta: #ff006e; --yellow: #ffd600; --green: #00e676;
+            --orange: #ff9100; --purple: #b388ff;
+            --text-primary: #e8ecf4; --text-secondary: #8892a8; --text-dim: #5a6478;
+            --border: rgba(0, 229, 255, 0.1); --border-strong: rgba(0, 229, 255, 0.25);
+        }
+        body {
+            background: var(--bg-primary); color: var(--text-primary);
+            font-family: 'DM Sans', sans-serif; line-height: 1.65;
+        }
+        .wrap { max-width: 860px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
+        h1 { font-family: 'Sora', sans-serif; font-size: 2rem; margin-bottom: 0.4rem; }
+        h1 .grad { background: linear-gradient(90deg, var(--cyan), var(--magenta)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .meta { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-dim); letter-spacing: 0.08em; margin-bottom: 2.5rem; }
+        h2 { font-family: 'Sora', sans-serif; font-size: 1.25rem; margin: 3rem 0 1rem; color: var(--cyan); }
+        .slide-block { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem 1.75rem; margin-bottom: 1.25rem; }
+        .slide-head { display: flex; align-items: baseline; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 0.9rem; }
+        .slide-num { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 0.8rem; color: var(--bg-primary); background: var(--cyan); border-radius: 6px; padding: 0.15rem 0.55rem; }
+        .slide-name { font-family: 'Sora', sans-serif; font-weight: 700; font-size: 1.05rem; }
+        .clock { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--yellow); margin-left: auto; white-space: nowrap; }
+        .lbl { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; display: block; margin: 0.9rem 0 0.3rem; }
+        .lbl.say { color: var(--green); } .lbl.do { color: var(--cyan); } .lbl.watch { color: var(--magenta); } .lbl.ask { color: var(--purple); }
+        .say-text { border-left: 3px solid var(--green); padding-left: 0.9rem; color: var(--text-primary); font-size: 0.98rem; }
+        .say-text em { color: var(--text-secondary); }
+        p, li { color: var(--text-secondary); font-size: 0.95rem; }
+        strong { color: var(--text-primary); }
+        ul { margin: 0.3rem 0 0.3rem 1.2rem; }
+        code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; background: var(--bg-code); border: 1px solid var(--border); border-radius: 4px; padding: 0.1em 0.4em; color: var(--cyan); }
+        .out { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; background: var(--bg-code); border: 1px solid var(--border); border-radius: 8px; padding: 0.8rem 1rem; margin: 0.5rem 0; color: var(--text-secondary); white-space: pre-wrap; }
+        .out b { color: var(--green); font-weight: 500; }
+        .qa { margin: 0.4rem 0; }
+        .qa .q { color: var(--purple); font-weight: 600; }
+        table { width: 100%; border-collapse: collapse; margin: 0.75rem 0; font-size: 0.9rem; }
+        th, td { text-align: left; padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border); color: var(--text-secondary); }
+        th { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim); }
+        td:first-child { color: var(--yellow); font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; white-space: nowrap; }
+        .check { list-style: none; margin-left: 0; }
+        .check li { padding-left: 1.6rem; position: relative; margin-bottom: 0.45rem; }
+        .check li::before { content: "☐"; position: absolute; left: 0; color: var(--cyan); }
+        .callout { background: rgba(255, 214, 0, 0.06); border: 1px solid rgba(255, 214, 0, 0.25); border-radius: 10px; padding: 1rem 1.25rem; margin: 1rem 0; }
+        .callout.pink { background: rgba(255, 0, 110, 0.06); border-color: rgba(255, 0, 110, 0.3); }
+        @media print {
+            body { background: #fff; color: #111; }
+            :root { --bg-card: #fff; --bg-code: #f5f5f5; --text-primary: #111; --text-secondary: #333; --text-dim: #666; --border: #ddd; --cyan: #0066aa; --green: #007744; --magenta: #aa0044; --yellow: #886600; --purple: #550088; }
+            .slide-block { border: 1px solid #ccc; break-inside: avoid; }
+            h1 .grad { color: #111; }
+        }
+    </style>
+</head>
+<body>
+<div class="wrap">
+
+    <h1>Speaker Notes · <span class="grad">Session 1 — Welcome to the AI Revolution</span></h1>
+    <div class="meta">ISOM 260 · WED SEP 9, 2026 · 12:30–1:45 PM · 73 TREMONT 5065 · 20 SLIDES · HARD STOP 1:45</div>
+
+    <div class="callout">
+        <strong>The one-sentence goal of today:</strong> every student leaves <em>wanting to come back Monday</em> — because they trained a language model, not because you read them the syllabus. Everything below serves that.
+    </div>
+
+    <h2>⏱ Pre-class checklist (arrive 12:10, done by 12:25)</h2>
+    <div class="slide-block">
+        <ul class="check">
+            <li><strong>Canvas:</strong> create discussion thread <code>Session 1 — Favorite Name 🏆</code> (Homework #1 points students there — it must exist before 1:31).</li>
+            <li><strong>Tab 1 — slides:</strong> <code>isom-260.vercel.app/session-01/slides.html</code> → press <code>F</code> for fullscreen. Arrow keys advance. <code>Home</code>/<code>End</code> jump.</li>
+            <li><strong>Tab 2 — Colab:</strong> open the Tiny LLM notebook signed into your own Google account; pre-run the first data cell once so you know wifi works. Then <em>Runtime → Restart</em> so you run it fresh with the class.</li>
+            <li><strong>Tab 3 — demo:</strong> a frontier chat (Claude / ChatGPT / Gemini) logged in, empty conversation, demo prompt copied to clipboard (see Slide 9 box below).</li>
+            <li><strong>QR test:</strong> put slide 12 up, scan the QR from the back row with your phone. It should open Colab.</li>
+            <li><strong>Projector sanity:</strong> if text looks cramped, use browser zoom-out once (<code>Cmd/Ctrl −</code>) — the deck has a compact mode that kicks in automatically.</li>
+            <li><strong>Backup:</strong> if the room machine fights you, everything runs from any browser — slides, guide, and notebook are all on the course site.</li>
+        </ul>
+    </div>
+
+    <h2>🎬 Block 1 · Welcome &amp; hook (12:30–12:40, slides 1–5)</h2>
+
+    <div class="slide-block">
+        <div class="slide-head"><span class="slide-num">1</span><span class="slide-name">Title</span><span class="clock">12:30 · settle + 1 min</span></div>
+        <span class="lbl do">Do</span>
+        <p>Have this up as students walk in. Start on time even if stragglers are arriving — it sets the norm for the semester.</p>
+        <span class="lbl say">Say</span>
+        <p class="say-text">"Welcome to ISOM 260. Quick logistics check: this is AI for Business, Monday-Wednesday 12:30, and if you're here for a different class, this is the most interesting wrong room you'll ever be in. <em>(beat)</em> Read the subtitle. I'm not exaggerating — and I can prove it with dates."</p>
+        <span class="lbl watch">Watch out</span>
+        <p>Don't introduce yourself yet — the deck does it next. Momentum first.</p>
+    </div>
+
+    <div class="slide-block">
+        <div class="slide-head"><span class="slide-num">2</span><span class="slide-name">Hi, I'm Prof. Arslan</span><span class="clock">12:31 · 2 min</span></div>
+        <span class="lbl say">Say</span>
+        <p class="say-text">"Thirty seconds on me, because it explains how this course will run. My actual day job is Chief AI Officer for the business school — meaning when a dean or a department wants to use AI for something real, that lands on my desk. So everything in this course is what I'd tell a company that's paying for the answer. PhD from MIT, but the important line is the last one: we <em>build</em> in this class. Every week. Starting in about 45 minutes."</p>
+        <span class="lbl watch">Watch out</span>
+        <p>Two minutes max. Credibility is established by the hands-on later, not by this slide.</p>
+    </div>
+
+    <div class="slide-block">
+        <div class="slide-head"><span class="slide-num">3</span><span class="slide-name">The Last Eight Days</span><span class="clock">12:33 · 3 min</span></div>
+        <span class="lbl say">Say</span>
+        <p class="say-text">"Here's what happened while you were buying textbooks. Monday the 1st: Anthropic ships Claude Fable 5.1 and cuts a key price 75% — remember that number, cheap intelligence is a business story, not a tech story. Tuesday: Google ships Gemini 3.8, and Meta ships a model that costs about a dime per million tokens. A dime. Wednesday: OpenAI ships GPT-6 and calls it a generational leap. <em>(point at punchline)</em> That's the densest 72 hours of AI releases in history — and it ended six days ago. You did not pick a normal semester to take this class."</p>
+        <span class="lbl do">Do</span>
+        <p>Let the punchline sit for two seconds before advancing. Don't explain benchmark names if asked in passing — "we'll learn how to read those claims in Session 2."</p>
+        <div class="qa"><span class="q">If asked: "What's a token?"</span> — "A chunk of text, roughly three-quarters of a word. In an hour you'll build a model where a token is a single letter — same idea, smaller pieces."</div>
+    </div>
+
+    <div class="slide-block">
+        <div class="slide-head"><span class="slide-num">4</span><span class="slide-name">"What YOU do with all this"</span><span class="clock">12:36 · 30 sec</span></div>
+        <span class="lbl say">Say</span>
+        <p class="say-text">"Here's the thing though — none of that matters to your career by itself. Models ship every week. This course is about what <em>you</em> do with them."</p>
+        <span class="lbl watch">Watch out</span>
+        <p>This is a beat, not a lecture. One line, advance.</p>
+    </div>
+
+    <div class="slide-block">
+        <div class="slide-head"><span class="slide-num">5</span><span class="slide-name">The Promise</span><span class="clock">12:36 · 2.5 min</span></div>
+        <span class="lbl say">Say</span>
+        <p class="say-text">"By December — concretely — you'll have built working AI agents: real code calling real APIs, not screenshots of ChatGPT. You'll ship a final project that solves a problem you actually have. And you'll be the person in the room who knows how this works — at your internship, in your group projects, at Thanksgiving when your uncle asks if the robots are coming. <em>(bottom line)</em> This is a business course. If you've never written code, you are exactly who this course is designed for. The tools do the heavy lifting now — that's kind of the whole point of 2026."</p>
+        <div class="qa"><span class="q">If asked: "How much coding?"</span> — "You'll run and modify code from day one — today, actually — but you'll never be graded on writing code from a blank page. You're graded on what you build and whether you understand it."</div>
+    </div>
+
+    <h2>🙋 Block 2 · Introductions (12:39–12:50, slide 6)</h2>
+    <div class="slide-block">
+        <div class="slide-head"><span class="slide-num">6</span><span class="slide-name">Who's in the Room</span><span class="clock">12:39 · 11 min</span></div>
+        <span class="lbl do">Do</span>
+        <p>Go around the room: name, major, one thing they wish AI would do for them. <strong>Write down 3–4 of the best wishes</strong> (phone notes is fine) — you will reference them in Session 12 and when pitching final project ideas. If &gt;25 students, do rows/pairs then five volunteers.</p>
+        <span class="lbl say">Say</span>
+        <p class="say-text">"Name, major, and finish this sentence: 'I wish AI would ___ for me.' Be honest — 'do my laundry' is a valid answer, and honestly a robotics segment I can't help with. But keep your answer somewhere. In December I'm going to ask some of you whether you built it."</p>
+        <span class="lbl watch">Watch out</span>
+        <p>This is your #1 overrun risk. At <strong>12:49 hard-cut</strong>: "I'm cutting us off because I promised you'd train an AI today, and I keep promises."</p>
+    </div>
+
+    <h2>📊 Block 3 · The landscape (12:50–1:05, slides 7–8)</h2>
+    <div class="slide-block">
+        <div class="slide-head"><span class="slide-num">7</span><span class="slide-name">State of AI in Business</span><span class="clock">12:50 · 6 min</span></div>
+        <span class="lbl say">Say</span>
+        <p class="say-text">"Numbers, not hype. 91% of businesses use AI somewhere — using AI is no longer a differentiator, it's the floor. 79% are adopting <em>agents</em> — software that doesn't just answer questions but takes actions; that word 'agent' is the spine of this whole course. But look at the pink one: only 23% are actually scaling agents. And 80% of new enterprise software ships with an agent inside — in 2024 that was 33%. Two years, feature to default. Last one: when agents work, median payback is about five months. Not weeks. Making AI pay off is <em>work</em> — that's why there's a course."</p>
+        <span class="lbl do">Do</span>
+        <p>Point physically at 79 → 23 to set up the next slide. Optional engagement: "Anyone's workplace already use an AI agent? Chatbot at your job? Scheduling tool?" — one or two answers, move on.</p>
+        <div class="qa"><span class="q">If asked: "Where do these numbers come from?"</span> — "Industry adoption surveys from this year — links are in the lecture guide on the course site. And a good instinct: in Session 2 we'll talk about how to read AI statistics skeptically, including these."</div>
+    </div>
+
+    <div class="slide-block">
+        <div class="slide-head"><span class="slide-num">8</span><span class="slide-name">The Gap</span><span class="clock">12:56 · 3 min</span></div>
+        <span class="lbl say">Say</span>
+        <p class="say-text">"79 minus 23. That's more than half of corporate America stuck between 'we bought the AI thing' and 'the AI thing works.' Every company in that gap needs someone who understands the business problem <em>and</em> knows what the technology actually does. That intersection is nearly empty right now. That's the job market you're graduating into, and this course is aimed directly at it."</p>
+        <span class="lbl watch">Watch out</span>
+        <p>Resist the temptation to elaborate — the demo makes the argument better than more talking. Advance by 12:59.</p>
+    </div>
+
+    <h2>🎭 Block 4 · Live demo (12:59–1:13, slide 9)</h2>
+    <div class="slide-block">
+        <div class="slide-head"><span class="slide-num">9</span><span class="slide-name">Live Demo cue slide</span><span class="clock">12:59 · 14 min</span></div>
+        <span class="lbl do">Do</span>
+        <p>Leave the cue slide up 15 seconds, then switch to the chat tab. Paste the prepared prompt (adjust to taste):</p>
+        <div class="out">I run a 12-table Italian restaurant near Downtown Crossing in Boston.
+Foot traffic drops about 30% every January–February. I have ~$3,000 to
+spend on this problem. Analyze the likely causes, propose five
+interventions ranked by expected ROI, tell me what data I should
+be collecting that I probably am not, and draft the Instagram post
+for your #1 recommendation.</div>
+        <span class="lbl say">Say</span>
+        <p class="say-text">"Watch what it does with a messy, real, small-business problem — not a toy question." <em>(while it streams)</em> "Notice it's structuring the problem before answering... ranking by ROI like we asked... and now it's writing marketing copy in a completely different voice. One conversation: analyst, consultant, copywriter."</p>
+        <p class="say-text"><strong>Then — the crucial move:</strong> "Now catch it being wrong. It just claimed [pick one: a specific foot-traffic statistic / a Boston winter event / a cost estimate]. Where did that number come from? <em>(pause)</em> It made it up. Confidently. Remember that feeling — in about 30 minutes you'll understand exactly <em>why</em> it makes things up, because you'll have built the machinery yourself."</p>
+        <span class="lbl watch">Watch out</span>
+        <ul>
+            <li>If the output happens to be flawless, ask it a follow-up: <em>"What's the January weather usually like near my restaurant, and cite your source"</em> — the sourcing wobble makes the point.</li>
+            <li>Hard stop 1:12. The demo expands to fill any container. Two beats and out: <em>capability</em> + <em>fallibility</em>.</li>
+        </ul>
+        <div class="qa"><span class="q">If asked: "Which AI is the best one?"</span> — "It changes monthly, and for most business tasks the top three are interchangeable. The durable skill is knowing how to direct and verify any of them — which is the course."</div>
+    </div>
+
+    <h2>🧠 Block 5 · The idea + hands-on (1:13–1:32, slides 10–13)</h2>
+    <div class="slide-block">
+        <div class="slide-head"><span class="slide-num">10</span><span class="slide-name">"Predict the next token"</span><span class="clock">1:13 · 90 sec</span></div>
+        <span class="lbl say">Say</span>
+        <p class="say-text">"Everything you just watched — the analysis, the rankings, the Instagram post — comes from a machine doing one thing: predicting the next token. That's it. That's the trillion-dollar trick. Complete this sentence: 'The capital of France is ___.' <em>(they say Paris)</em> You just did it. You didn't look it up — you predicted it, from patterns. Do that well enough, over enough text, and you get what you saw in the demo."</p>
+    </div>
+
+    <div class="slide-block">
+        <div class="slide-head"><span class="slide-num">11</span><span class="slide-name">The 60-Second Version</span><span class="clock">1:14 · 90 sec</span></div>
+        <span class="lbl say">Say</span>
+        <p class="say-text">"How, in three steps. One: count patterns in text — which letter follows which. You will literally do that in five minutes. Two: replace counting with a neural network that <em>learns</em> which patterns matter — that mechanism is called attention, it's the T in GPT, and you'll train one tonight. I'm not kidding. Three: scale it a trillion-fold, train on most of the internet — that's GPT-6. Monday we open the hood properly. Today, you build."</p>
+        <span class="lbl watch">Watch out</span>
+        <p>Do not get pulled into explaining neural networks here — "that's Monday's entire class" is a complete answer. Laptops out NOW while advancing to the QR slide.</p>
+    </div>
+
+    <div class="slide-block">
+        <div class="slide-head"><span class="slide-num">12</span><span class="slide-name">Hands-on launch (QR)</span><span class="clock">1:15 · 3 min to get everyone in</span></div>
+        <span class="lbl do">Do</span>
+        <p>Leave this slide up during the whole scramble. Walk the room. The three failure modes and fixes:</p>
+        <ul>
+            <li><strong>"It wants me to sign in"</strong> → any personal Google account works. Suffolk email is not a Google account — use a personal Gmail. No Gmail? Pair up today, create one tonight.</li>
+            <li><strong>No laptop</strong> → pair up. The QR works on phones and Colab is usable-ish there, but pairing beats squinting.</li>
+            <li><strong>"Save a copy" confusion</strong> → they can skip it and run anyway; the copy just preserves their edits. Circle back at homework time.</li>
+        </ul>
+        <span class="lbl say">Say</span>
+        <p class="say-text">"Scan or type. First thing: File → Save a copy in Drive — now it's your model, not mine. We run the first act together, top to bottom, Shift-Enter. Nobody gets left behind; if a cell errors, raise a hand, it's a 10-second fix."</p>
+    </div>
+
+    <div class="slide-block">
+        <div class="slide-head"><span class="slide-num">—</span><span class="slide-name">Notebook Act 1 walkthrough (stay off slides)</span><span class="clock">1:18 · 12 min</span></div>
+        <p><strong>These are the exact outputs everyone will see</strong> — the notebook is seeded (<code>random.seed(260)</code>), so the whole room gets identical "random" results. Use that as a beat.</p>
+
+        <span class="lbl do">Cell: load the data (~30 sec)</span>
+        <div class="out">Loaded 32,033 names.
+First 10: ['emma', 'olivia', 'ava', 'isabella', 'sophia', ...]</div>
+        <p class="say-text">"32,033 real names. This is our 'internet' — the entire world our model will ever know. Hold that thought for later."</p>
+
+        <span class="lbl do">Cell: count letter pairs (~2 min)</span>
+        <div class="out">After 'q', the next letter is usually: <b>'u' (76%)</b>, '.' (10%), 'a' (5%) ...
+Names most often START with: <b>'a' (14%)</b>, 'k' (9%), 'm' (8%) ...</div>
+        <p class="say-text">"Nobody told it Q goes with U. Nobody programmed a rule. It <em>counted</em>. This is the core move of all machine learning: patterns in, behavior out. The difference between this and GPT-6 is scale, not philosophy."</p>
+        <p>Ask the room: "Shout a letter — let's interrogate the model." Change <code>top_next('x')</code> to their letter, re-run. 30 seconds of delight, builds the 'I can poke it' instinct.</p>
+
+        <span class="lbl do">Cell: generate names (~3 min) — the payoff</span>
+        <div class="out">✨ 15 names invented by the counting model:
+   Za · Khini · Ahusenyaiy · Molvian · Tanana · Jaza · Nerreth ...</div>
+        <p class="say-text">"Look at these. 'Tanana' — almost a name! 'Ahusenyaiy' — a keyboard falling down stairs. Why the range? <em>(fish for it)</em> The model has ONE letter of memory. Picking letter six, it only remembers letter five. It can't know it already used four vowels. Remember the restaurant demo inventing statistics? Same disease: generating plausible-next-thing with no grounding. You're looking at the embryo of a hallucination."</p>
+        <p><strong>The seed beat:</strong> "Compare with your neighbor. ... Identical, right? 'Random' in computing is often seeded and reproducible — we set seed 260, for the course number. That reproducibility instinct will matter when you're testing agents later."</p>
+
+        <span class="lbl do">Cell: temperature (~3 min)</span>
+        <div class="out">😴 T=0.5 (cautious) → An, Ma, Ja, Anay, Bri
+🤪 T=2.0 (chaotic)  → Kyeaiann, Kmek, Faydovinerresnylenmysa</div>
+        <p class="say-text">"One knob: temperature. Low — safe, boring, repetitive. High — creative and unhinged. 'Faydovinerresnylenmysa' is what an LLM sounds like with the safety off. This exact knob, same name, is in the real APIs you'll use in Session 3. Quick business instinct check: contract summarization — high or low? Brainstorming campaign names? You now have a tuning intuition most working professionals don't."</p>
+
+        <span class="lbl watch">Hard stop 1:30</span>
+        <p>Stop <em>before</em> Act 2 even if ahead — the cliffhanger is the design. "Everything past this cell is tonight's homework, and it's the good part."</p>
+    </div>
+
+    <div class="slide-block">
+        <div class="slide-head"><span class="slide-num">13</span><span class="slide-name">What Just Happened (recap)</span><span class="clock">1:30 · 90 sec</span></div>
+        <span class="lbl say">Say</span>
+        <p class="say-text">"Back to the big screen. What you just did: built a language model, interrogated it, generated with it, tuned it. Its weakness — one letter of memory. The fix is a mechanism that pays attention to <em>everything</em> written so far. That mechanism changed the world in 2017, and it's sitting in the next section of your notebook."</p>
+    </div>
+
+    <h2>📋 Block 6 · Homework + syllabus + close (1:32–1:45, slides 14–20)</h2>
+
+    <div class="slide-block">
+        <div class="slide-head"><span class="slide-num">14</span><span class="slide-name">Homework #1</span><span class="clock">1:32 · 2 min</span></div>
+        <span class="lbl say">Say</span>
+        <p class="say-text">"Homework one. Tonight: open your saved copy, keep pressing Shift-Enter through Acts 2 and 3. You'll train a real transformer — 100,000 parameters, same architecture family as GPT-6 — it takes about two minutes and you'll watch the loss fall as it learns, live. Then post your single favorite name it invents to the Canvas thread. That's the entire deliverable: one name. Total time, ten minutes. <em>(beat)</em> Monday you walk in having trained a GPT. Most people on Earth never will."</p>
+        <span class="lbl do">Do</span>
+        <p>Preview what they'll see tonight (say it, don't show it): loss falls <strong>3.5 → 1.75</strong>, and output jumps from 'Lelllichecoli' to names like <strong>Allyra, Graylen, Simemson</strong>. There's a cell where they seed it with their own letters — "try your initials." (Seeded with <code>suf</code> it produces <em>Sufina</em> and <em>Sufard</em>, which I refuse to believe is a coincidence.)</p>
+        <div class="qa"><span class="q">If asked: "Is it graded?"</span> — "Completion-graded, part of the 25% homework bucket. Post a name, you're done. No name by Monday 12:30, you're not."</div>
+    </div>
+
+    <div class="slide-block">
+        <div class="slide-head"><span class="slide-num">15</span><span class="slide-name">Semester at a Glance</span><span class="clock">1:34 · 90 sec</span></div>
+        <span class="lbl say">Say</span>
+        <p class="say-text">"The arc: talk to AI, call AI from code, then most of the semester — agents. Tools, real-world integration, retrieval, multi-agent systems. Ends with your final project: one agent, one real problem, due December 9th. Midterm project mid-semester. Every session builds on the last, which is one reason attendance is a policy and not a suggestion — next slide."</p>
+        <span class="lbl watch">Watch out</span>
+        <p><strong>Running late? Cut this slide to one sentence</strong> ("the roadmap's on the site — short version: it's agents") and spend the time on 16–17 instead. This is the first slide to sacrifice.</p>
+    </div>
+
+    <div class="slide-block">
+        <div class="slide-head"><span class="slide-num">16</span><span class="slide-name">How You're Graded</span><span class="clock">1:36 · 2 min</span></div>
+        <span class="lbl say">Say</span>
+        <p class="say-text">"Grades: 30 final project, 25 weekly homework — which started four minutes ago — 20 midterm project, 15 participation, 10 peer evaluation. And note the zero: no multiple-choice exams. You're graded on what you build and whether you can explain it. If you show up and do the work, this course is very hard to fail. If you outsource the work, it's very hard to hide — because you'll present what you built."</p>
+    </div>
+
+    <div class="slide-block">
+        <div class="slide-head"><span class="slide-num">17</span><span class="slide-name">Yes, you can use AI</span><span class="clock">1:38 · 2 min</span></div>
+        <span class="lbl say">Say</span>
+        <p class="say-text">"The question every one of you is silently asking: can I use ChatGPT in the AI class? Yes. Encouraged. It would be malpractice for me to teach you AI for business and ban AI. Two conditions, non-negotiable: disclose what you used, and be able to explain what you submit. If you can't explain it, you didn't learn it — and the explaining part is where your grade lives. The boring-but-real ones: attendance matters after two unexcused, late work bleeds 10% a day for three days, and your work is yours or attributed. Full syllabus is on the course site — reading it is tonight's other five-minute homework."</p>
+        <div class="qa"><span class="q">If asked: "So I can have AI do the homework?"</span> — "You can have AI help with the homework. Tonight's homework is literally 'run an AI.' The test is always: can you explain it? In interviews, 'I can explain it' is the whole game anyway."</div>
+    </div>
+
+    <div class="slide-block">
+        <div class="slide-head"><span class="slide-num">18</span><span class="slide-name">Setup Checklist</span><span class="clock">1:40 · 1 min</span></div>
+        <span class="lbl say">Say</span>
+        <p class="say-text">"Before Monday, four boxes: Colab working — most of you just checked that one. Bookmark AI Studio — your API key comes in Session 3, that's when your code starts talking to frontier models. Bookmark the course site — everything lives there. Canvas notifications on. And the standing rule: everything in this course runs on free tiers. If anything ever asks for your credit card, stop and ask me first."</p>
+    </div>
+
+    <div class="slide-block">
+        <div class="slide-head"><span class="slide-num">19</span><span class="slide-name">AI in Your Morning (FLEX — default skip)</span><span class="clock">only if ahead of schedule</span></div>
+        <p>Buffer slide. If you're at slide 18 before 1:40, run it as a 3-minute pairs exercise ("count every AI touchpoint since you woke up — feed ranking, maps, spam filter, face unlock; longest list wins"). Otherwise skip — it's also in the lecture guide, and it makes a great Monday warm-up. <strong>Skipping is the plan, not a failure.</strong></p>
+    </div>
+
+    <div class="slide-block">
+        <div class="slide-head"><span class="slide-num">20</span><span class="slide-name">See You Monday</span><span class="clock">1:42 · 1 min + Q&amp;A buffer</span></div>
+        <span class="lbl say">Say</span>
+        <p class="say-text">"Monday: how AI actually works — neurons, attention, and how the letter-predictor you just built becomes a machine that writes and reasons. Bring your trained transformer. <em>(last line, unhurried)</em> Today you built a language model from scratch. Day one. Think about what you'll be building in December. See you Monday."</p>
+        <span class="lbl do">Do</span>
+        <p>Leave the slide up during pack-up Q&amp;A. Stay 5 minutes for the students who hover — day-one hoverers are your future TAs and best final projects.</p>
+    </div>
+
+    <h2>🚨 Contingency table</h2>
+    <div class="slide-block">
+        <table>
+            <tr><th>Scenario</th><th>Move</th></tr>
+            <tr><td>Running 5+ min late at 1:15</td><td>Protect the hands-on. Cut slide 15 to one sentence, compress 16+17 to 90 sec total ("grades and AI policy are on the site — headline: no MC exams, AI encouraged with disclosure"), skip 19.</td></tr>
+            <tr><td>Wifi/Colab down room-wide</td><td>Run Act 1 solo on your machine (hotspot) projected, make it a narrated demo with student letter-callouts; entire notebook becomes homework. The seed guarantees they'll reproduce exactly what they watched.</td></tr>
+            <tr><td>Half the room has no Google account</td><td>Pair up on the spot; account creation moves into Homework #1 ("step zero"). Do not burn class time on account signups.</td></tr>
+            <tr><td>Demo model outputs something embarrassing</td><td>Gift, not crisis: "And THAT is why 40% of agent projects get cancelled — this is the course." Screenshot it for Session 2.</td></tr>
+            <tr><td>Projector dies</td><td>Slides + notebook run on every student device via the course site. Read the room the QR URL, teach from the middle of the room. Honestly a flex.</td></tr>
+            <tr><td>Way ahead at 1:35 (unlikely)</td><td>Run slide 19 exercise, then let students drive the demo tab: "give it YOUR business problem."</td></tr>
+        </table>
+    </div>
+
+    <h2>🎯 After class (5 min, before you forget)</h2>
+    <div class="slide-block">
+        <ul class="check">
+            <li>Post the Canvas announcement: notebook link + "Homework #1 due Monday 12:30 — post one name."</li>
+            <li>Save your notes on the student "I wish AI would ___" answers.</li>
+            <li>Note what ran long/short — Session 2 (Monday!) gets the same 75-minute treatment and the timing data helps.</li>
+            <li>Screenshot any great demo moment (good or bad) for reuse Monday.</li>
+        </ul>
+    </div>
+
+    <div class="callout pink">
+        <strong>If you remember one thing mid-lecture:</strong> the intros (slide 6) and the demo (slide 9) are where time dies. Hard-cut both. Nothing before 1:15 matters as much as every student successfully running the counting model with fifteen unhurried minutes.
+    </div>
+
+</div>
+</body>
+</html>
