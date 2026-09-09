@@ -669,6 +669,21 @@
             .split { grid-template-columns: 1fr; }
             .setup-grid { grid-template-columns: 1fr; }
         }
+
+        /* Compact mode for short viewports (720p projectors, small laptops) */
+        @media (max-height: 820px) {
+            .slide-title { font-size: clamp(1.9rem, 4.2vw, 3rem); margin-bottom: 1.2rem; }
+            .check-list { gap: 0.7rem; }
+            .check-item { padding: 0.85rem 1.4rem; }
+            .check-text { font-size: 1.25rem; }
+            .check-text span { font-size: 0.95rem; }
+            .stat-card { padding: 1.2rem 1rem; }
+            .stat-num { font-size: 2.6rem; }
+            .step-item { padding: 0.85rem 1.3rem; }
+            .step-text { font-size: 1.2rem; }
+            .footer-note { margin-top: 1.2rem; font-size: 1rem; }
+            .slide-label { margin-bottom: 0.8rem; }
+        }
     </style>
 </head>
 <body>
@@ -678,7 +693,7 @@
     <div class="glow-orb glow-orb-3"></div>
 
     <div class="deck-progress"><div class="deck-progress-fill" id="progressFill"></div></div>
-    <div class="slide-counter" id="slideCounter">1 / 16</div>
+    <div class="slide-counter" id="slideCounter">1 / 20</div>
     <div class="nav-hint" id="navHint">→ to advance · F for fullscreen</div>
 
     <!-- ═══════════════ SLIDE 1 · TITLE ═══════════════ -->
@@ -695,6 +710,29 @@
                 <span class="chip magenta"><i data-lucide="calendar"></i> Mon &amp; Wed 12:30–1:45</span>
                 <span class="chip yellow"><i data-lucide="map-pin"></i> 73 Tremont 5065</span>
             </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SLIDE 1B · YOUR PROFESSOR ═══════════════ -->
+    <section class="slide">
+        <div class="slide-inner">
+            <div class="slide-label cyan">Your professor</div>
+            <h2 class="slide-title">Hi, I'm Prof. Arslan.</h2>
+            <div class="check-list">
+                <div class="check-item">
+                    <div class="check-icon"><i data-lucide="briefcase"></i></div>
+                    <div class="check-text">Chief AI Officer, Sawyer Business School <span>my day job is making AI work across this school</span></div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon"><i data-lucide="graduation-cap"></i></div>
+                    <div class="check-text">Associate Professor &amp; Assistant Chair, ISOM · PhD, MIT</div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon"><i data-lucide="award"></i></div>
+                    <div class="check-text">Creator of the SAGE Framework · 2025 Eduventures Innovation Award</div>
+                </div>
+            </div>
+            <p class="footer-note"><code>harslan@suffolk.edu</code> — this class is where I get to build AI <em>with</em> you, not just talk about it.</p>
         </div>
     </section>
 
@@ -825,6 +863,29 @@
         </div>
     </section>
 
+    <!-- ═══════════════ SLIDE 9B · HOW? 60-SECOND VERSION ═══════════════ -->
+    <section class="slide">
+        <div class="slide-inner">
+            <div class="slide-label cyan">The seed — Monday goes deep</div>
+            <h2 class="slide-title">How does it predict? <span class="gradient-text">The 60-second version.</span></h2>
+            <div class="step-list" style="max-width: 900px; margin: 0 auto;">
+                <div class="step-item">
+                    <div class="step-num">1</div>
+                    <div class="step-text"><strong>Count patterns in text.</strong> Which letter follows which? <span style="color: var(--cyan);">You'll literally do this in ten minutes.</span></div>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">2</div>
+                    <div class="step-text"><strong>Swap counting for a neural network</strong> that <em>learns</em> which patterns matter — that's <strong>attention</strong>, the T in GPT. <span style="color: var(--magenta);">You'll train one tonight.</span></div>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">3</div>
+                    <div class="step-text"><strong>Scale it a trillion-fold</strong> and train it on most of the internet. <span style="color: var(--yellow);">That's GPT-6.</span></div>
+                </div>
+            </div>
+            <p class="footer-note">Monday we open the hood for real: neurons, attention, and why scale changes everything.</p>
+        </div>
+    </section>
+
     <!-- ═══════════════ SLIDE 10 · HANDS-ON LAUNCH ═══════════════ -->
     <section class="slide">
         <div class="slide-inner">
@@ -915,6 +976,68 @@
             <p class="slide-sub" style="font-size: 1.35rem;">
                 Final Project: one agent, one real problem — due <strong style="color: var(--magenta);">Wed Dec 9, 11:59 PM</strong> · Final exam slot: Tue Dec 15
             </p>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SLIDE 13B · GRADING ═══════════════ -->
+    <section class="slide">
+        <div class="slide-inner">
+            <div class="slide-label magenta">The syllabus, part 1</div>
+            <h2 class="slide-title">How you're graded</h2>
+            <div class="stat-grid">
+                <div class="stat-card">
+                    <div class="stat-num green">30%</div>
+                    <div class="stat-desc">Final Project &amp; Presentation</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-num cyan">25%</div>
+                    <div class="stat-desc">Weekly Homework</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-num yellow">20%</div>
+                    <div class="stat-desc">Midterm Project</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-num purple">15%</div>
+                    <div class="stat-desc">Participation &amp; In-Class Activities</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-num orange">10%</div>
+                    <div class="stat-desc">Peer Evaluation</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-num magenta">0</div>
+                    <div class="stat-desc">exams that are multiple-choice — you're graded on what you build</div>
+                </div>
+            </div>
+            <p class="footer-note">That 25% starts <strong>tonight</strong> — Homework #1 is already live.</p>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SLIDE 13C · THE RULES / AI POLICY ═══════════════ -->
+    <section class="slide">
+        <div class="slide-inner">
+            <div class="slide-label yellow">The syllabus, part 2</div>
+            <h2 class="slide-title">Yes — you <span class="gradient-text">can</span> use AI in this class.</h2>
+            <div class="check-list">
+                <div class="check-item">
+                    <div class="check-icon"><i data-lucide="sparkles"></i></div>
+                    <div class="check-text">AI tools are <strong>encouraged</strong> <span>ChatGPT, Claude, Gemini, Copilot — disclose what you used, and be able to explain the output</span></div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon"><i data-lucide="user-check"></i></div>
+                    <div class="check-text">Attendance is mandatory <span>more than two unexcused absences costs you a grade reduction</span></div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon"><i data-lucide="clock"></i></div>
+                    <div class="check-text">Late work: −10% per day, three days max <span>due at the start of class</span></div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon"><i data-lucide="shield-check"></i></div>
+                    <div class="check-text">Submitted work is yours, or attributed <span>collaborate on activities; own your assignments</span></div>
+                </div>
+            </div>
+            <p class="footer-note">Full details: course site → <strong>Syllabus</strong>. Reading it is tonight's other five-minute homework.</p>
         </div>
     </section>
 
