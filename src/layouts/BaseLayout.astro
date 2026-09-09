@@ -16,13 +16,14 @@ interface Props {
 
 const { title, description, navBrand } = Astro.props;
 
-const siteLinks = [
+const siteLinks: { label: string; href: string; accent?: 'graduate' }[] = [
   { label: 'Home', href: '/' },
   { label: 'Sessions', href: '/sessions' },
   { label: 'Syllabus', href: '/syllabus' },
   { label: 'Resources', href: '/resources' },
   { label: 'Project', href: '/project' },
   { label: 'Practice', href: '/practice' },
+  { label: 'ISOM 900', href: '/isom-900', accent: 'graduate' },
 ];
 
 // Build search index
@@ -76,7 +77,7 @@ searchIndex.push({
 searchIndex.push({
   type: 'project',
   title: 'Build Your Agent — Final Project',
-  subtitle: 'Pick a real problem. Build one agent. Submit by May 6.',
+  subtitle: 'Pick a real problem. Build one agent. Submit by Dec 9.',
   url: '/project',
 });
 ---

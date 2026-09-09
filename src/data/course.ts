@@ -3,7 +3,7 @@ export const course = {
   title: 'AI for Business',
   university: 'Suffolk University',
   school: 'Sawyer Business School',
-  semester: 'Spring 2026',
+  semester: 'Fall 2026',
   instructor: {
     name: 'Prof. Hasan Arslan, PhD',
     title: 'Chief AI Officer, Sawyer Business School · Associate Professor & Assistant Chair, ISOM',

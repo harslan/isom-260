@@ -16,6 +16,28 @@ const sorted = sessions.sort((a, b) => a.data.number - b.data.number);
 <BaseLayout title="ISOM 260 | AI for Business — Suffolk University">
   <Hero />
 
+  <!-- Graduate track callout -->
+  <section class="px-8 max-w-[1200px] mx-auto -mt-8 mb-4">
+    <a href="/isom-900" class="group block bg-gradient-to-br from-grad-violet/[0.08] to-bg-card border border-grad-violet/30 rounded-2xl px-7 py-6 no-underline transition-all duration-300 hover:border-grad-violet/60 hover:-translate-y-0.5 hover:shadow-[0_10px_40px_rgba(196,181,253,0.12)]">
+      <div class="flex flex-wrap items-center justify-between gap-5">
+        <div class="min-w-0">
+          <div class="font-mono text-[0.7rem] tracking-[2px] uppercase text-grad-violet mb-2">
+            Graduate Students · ISOM 900
+          </div>
+          <div class="text-xl font-bold text-text-primary mb-2">
+            Taking the cross-listed graduate version?
+          </div>
+          <p class="text-text-secondary text-sm leading-relaxed max-w-[720px]">
+            ISOM 900 shares this classroom with higher expectations — a production-grade capstone, a formal evaluation suite, and a graduate decision memo.
+          </p>
+        </div>
+        <span class="font-mono text-[0.8rem] tracking-wide text-grad-violet whitespace-nowrap transition-transform duration-300 group-hover:translate-x-1">
+          View the ISOM 900 track →
+        </span>
+      </div>
+    </a>
+  </section>
+
   <CourseHighlights />
 
   <section class="py-24 px-8 max-w-[1200px] mx-auto">

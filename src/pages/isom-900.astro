@@ -1,0 +1,344 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import GradientText from '../components/GradientText.astro';
+
+const hero = {
+  badge: 'Graduate Track · Cross-Listed with ISOM 260',
+  eyebrow: 'Suffolk University · Sawyer Business School · Fall 2026',
+  subtitle: 'The graduate track — same frontier, higher altitude.',
+  ctas: [
+    { label: 'Graduate Requirements', href: '#grad-work', primary: true },
+    { label: 'Shared Core Syllabus', href: 'https://isom-260.vercel.app/syllabus', primary: false },
+  ],
+  meta: [
+    { k: 'Credits', v: '3 · Graduate' },
+    { k: 'Cross-Listed', v: 'ISOM 260 (UG)' },
+    { k: 'Sessions', v: '13 · Shared' },
+    { k: 'Grad Cohort', v: '8–10 Students' },
+  ],
+};
+
+const lanes = [
+  {
+    track: 'ISOM 260 · Undergraduate',
+    name: 'The Foundation Track',
+    who: '≈ 30 students',
+    accent: 'primary' as const,
+    points: [
+      'Build one agent: one tool, one flow, one guardrail',
+      '"Yourself counts" as a valid user',
+      'Three test cases covering core behavior',
+      '1-page reflective brief',
+      'Goal: ship one small working agent, understood end-to-end',
+    ],
+  },
+  {
+    track: 'ISOM 900 · Graduate',
+    name: 'The Applied Track',
+    who: '≈ 8–10 students',
+    accent: 'graduate' as const,
+    points: [
+      'Build a multi-tool / multi-agent system for a real organization',
+      'A real external stakeholder — not yourself',
+      'A formal evaluation suite with failure-mode analysis',
+      'A graduate decision memo (build-vs-buy, ROI, governance)',
+      'Goal: a defensible system that holds up to organizational scrutiny',
+    ],
+  },
+];
+
+const gradCards = [
+  {
+    tag: 'G1 // CAPSTONE SCOPE',
+    title: 'Production-Grade Agentic System',
+    body: 'Where the undergraduate project caps at one tool and one flow, graduate work requires a multi-tool or multi-agent architecture solving a realistic business problem — with intentional design tradeoffs you can defend.',
+    weight: 'Folded into Final Project',
+  },
+  {
+    tag: 'G2 // EXCLUSIVE DELIVERABLE',
+    title: 'Graduate Decision Memo',
+    body: 'A 6–8 page applied analysis connecting your build to a business decision: ROI and cost-to-serve, build-vs-buy reasoning, deployment risk, and an AI-governance stance. Undergraduates do not write this.',
+    weight: '15% · Grad-only',
+  },
+  {
+    tag: 'G3 // EVALUATION RIGOR',
+    title: 'Formal Evaluation Suite',
+    body: 'Not three happy-path checks — a structured test harness (LLM-as-judge or rubric-scored) with documented failure modes, edge cases, and a measured reliability story tied to Session 11.',
+    weight: 'Embedded in capstone rubric',
+  },
+  {
+    tag: 'G4 // DEPTH ON SHARED WORK',
+    title: 'Extended Graduate Rubric',
+    body: 'Shared weekly assignments are graded against an additional depth layer: justification of design choices, engagement with primary/technical sources, and critical framing rather than execution alone.',
+    weight: 'Applied to Homework',
+  },
+];
+
+const capstoneRows = [
+  ['Architecture', 'One tool, one linear flow', 'Multiple tools or coordinated multi-agent pipeline'],
+  ['User', 'Yourself counts', 'A real external stakeholder, interviewed and cited'],
+  ['Evaluation', '3 test cases', 'Evaluation suite + documented failure-mode analysis'],
+  ['Written artifact', '1-page brief', '1-page brief plus 6–8 page decision memo'],
+  ['Demo Day', 'Live demo + peer vote', 'Live demo + 5-min defense of tradeoffs & risks'],
+];
+
+const gradeRows = [
+  { component: 'Participation & In-Class Activities', ug: '15%', grad: '10%', gradOnly: false },
+  { component: 'Weekly Homework', note: '(extended grad rubric)', ug: '25%', grad: '20%', gradOnly: false },
+  { component: 'Midterm Project', ug: '20%', grad: '15%', gradOnly: false },
+  { component: 'Final Capstone & Defense', ug: '30%', grad: '35%', gradOnly: false },
+  { component: 'Graduate Decision Memo', ug: '—', grad: '15%', gradOnly: true },
+  { component: 'Peer Evaluation', ug: '10%', grad: '5%', gradOnly: false },
+];
+
+const rubricItems = [
+  { title: 'Design Justification', body: 'Are architectural choices argued, not just made? Could you defend why this tool, this flow, this guardrail?' },
+  { title: 'Source Engagement', body: 'Does the work engage technical documentation, papers, or primary sources rather than surface tutorials?' },
+  { title: 'Critical Framing', body: 'Does it surface limitations, risks, and tradeoffs honestly instead of presenting a polished happy path?' },
+  { title: 'Organizational Lens', body: 'Is the work situated in a real decision context — cost, governance, stakeholders, deployment reality?' },
+];
+
+const milestones = [
+  { when: 'SESSIONS 01–03 · WEEKS 1–3', title: 'Foundations + Stakeholder Identification', grad: true,  body: 'Attend shared foundations. Graduate students identify and secure a real external stakeholder for the capstone.' },
+  { when: 'SESSION 06 · MIDTERM',         title: 'Midterm Project + Architecture Proposal', grad: true,  body: 'Graduate midterm includes a one-page architecture proposal: chosen tools, flow, and the tradeoffs under consideration.' },
+  { when: 'SESSIONS 07–11 · BUILD',       title: 'Build, Ground, Evaluate',                  grad: false, body: 'RAG, multi-agent patterns, guardrails, and testing — graduate students apply each directly to the capstone system.' },
+  { when: 'SESSION 11 · EVALUATION GATE', title: 'Evaluation Suite Due',                     grad: true,  body: 'Submit the formal test harness and failure-mode analysis before final build lock — the graduate evaluation requirement (G3).' },
+  { when: 'BEFORE DEMO DAY',              title: 'Decision Memo Due',                        grad: true,  body: 'The 6–8 page graduate decision memo (G2) — ROI, build-vs-buy, governance, and deployment risk.' },
+  { when: 'SESSION 13 · DEMO DAY',        title: 'Capstone Demo + Graduate Defense',         grad: false, body: 'Live demo for all. Graduate students additionally defend their tradeoffs and risk posture in a 5-minute Q&A.' },
+];
+
+const policies = [
+  { title: 'Attendance',         body: 'Mandatory. More than two unexcused absences results in a grade reduction. Notify the instructor in advance of any planned absence.' },
+  { title: 'AI Tool Usage',      body: 'AI tools are encouraged. You must disclose which tools you used and demonstrate genuine understanding of the output — graduate work is judged on the reasoning, not the generation.' },
+  { title: 'Academic Integrity', body: 'All submitted work must be your own or properly attributed. Collaboration is welcome on activities; individual assignments reflect individual effort.' },
+  { title: 'Late Submissions',   body: 'Due by the start of class. 10% penalty per day up to three days; zero credit thereafter. Memo and evaluation-gate deadlines are firm.' },
+];
+---
+
+<BaseLayout title="ISOM 900 | Graduate Track — AI for Business">
+  <!-- Hero -->
+  <section id="overview" class="py-24 px-8 max-w-[1200px] mx-auto">
+    <div class="inline-flex items-center gap-2.5 font-mono text-[0.7rem] text-grad-violet tracking-[2px] uppercase border border-grad-violet/30 bg-grad-violet/[0.07] px-3.5 py-1.5 rounded-full mb-6">
+      <span class="w-1.5 h-1.5 rounded-full bg-grad-violet shadow-[0_0_10px_var(--color-grad-violet)]"></span>
+      {hero.badge}
+    </div>
+    <div class="font-mono text-[0.75rem] text-text-muted tracking-[3px] uppercase mb-5">
+      {hero.eyebrow}
+    </div>
+    <h1 class="text-[clamp(2.5rem,6vw,4.25rem)] font-extrabold leading-[1.05] tracking-tight mb-6">
+      ISOM 900: <GradientText>AI for Business</GradientText>
+      <span class="block text-[clamp(1.05rem,2.4vw,1.5rem)] font-medium text-accent-cyan tracking-normal mt-3">
+        {hero.subtitle}
+      </span>
+    </h1>
+    <p class="text-text-secondary text-lg max-w-[720px] mb-9 leading-relaxed">
+      ISOM 900 shares its classroom, lectures, and 13-session arc with the undergraduate ISOM 260. What sets the graduate track apart is the <strong class="text-text-primary">depth of what you build, the rigor with which you evaluate it, and the business judgment you bring to bear.</strong> You will ship a production-grade agentic system, evaluate it like an engineer, and defend it like a consultant.
+    </p>
+    <div class="flex gap-3 flex-wrap mb-14">
+      {hero.ctas.map((cta) => (
+        cta.primary ? (
+          <a href={cta.href} class="px-6 py-3.5 bg-grad-violet rounded-lg text-bg-primary font-mono font-bold text-[0.85rem] tracking-wide no-underline transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_28px_rgba(196,181,253,0.3)]">
+            → {cta.label}
+          </a>
+        ) : (
+          <a href={cta.href} target={cta.href.startsWith('http') ? '_blank' : undefined} rel={cta.href.startsWith('http') ? 'noopener' : undefined} class="px-6 py-3.5 border border-border-subtle rounded-lg text-text-primary font-mono text-[0.85rem] tracking-wide no-underline transition-all duration-300 hover:border-grad-violet hover:text-grad-violet">
+            {cta.label} {cta.href.startsWith('http') && '↗'}
+          </a>
+        )
+      ))}
+    </div>
+
+    <!-- Meta strip -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-px bg-border-subtle border border-border-subtle rounded-xl overflow-hidden">
+      {hero.meta.map((m) => (
+        <div class="bg-bg-card p-6">
+          <div class="font-mono text-[0.7rem] tracking-[2px] uppercase text-text-muted mb-2">{m.k}</div>
+          <div class="text-base font-semibold text-text-primary">{m.v}</div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- 01 STRUCTURE -->
+  <section id="core" class="py-12 px-8 max-w-[1200px] mx-auto">
+    <SectionHeader number="01" label="Structure" title="One Classroom, Two Tracks" description="Graduate and undergraduate students attend the same sessions and learn the same material. Differentiation is additive and vertical — graduate students go deeper and are held to a higher standard, not merely given more of the same." />
+
+    <div class="grid md:grid-cols-2 gap-5 fade-in">
+      {lanes.map((lane) => {
+        const isGrad = lane.accent === 'graduate';
+        return (
+          <div class:list={[
+            'rounded-2xl p-7 border',
+            isGrad
+              ? 'border-grad-violet/30 bg-gradient-to-b from-grad-violet/[0.05] to-bg-card'
+              : 'border-border-subtle bg-bg-card',
+          ]}>
+            <div class:list={[
+              'font-mono text-[0.7rem] tracking-[1.5px] uppercase mb-2.5',
+              isGrad ? 'text-grad-violet' : 'text-text-muted',
+            ]}>
+              {lane.track}
+            </div>
+            <h3 class="text-xl font-bold mb-1.5">{lane.name}</h3>
+            <div class="font-mono text-[0.8rem] text-text-secondary mb-5">{lane.who}</div>
+            <ul class="space-y-3">
+              {lane.points.map((p) => (
+                <li class="relative pl-5 text-[0.95rem] text-text-secondary leading-relaxed">
+                  <span class:list={[
+                    'absolute left-0 top-0 font-bold',
+                    isGrad ? 'text-grad-violet' : 'text-accent-cyan',
+                  ]}>›</span>
+                  {p}
+                </li>
+              ))}
+            </ul>
+          </div>
+        );
+      })}
+    </div>
+
+    <div class="mt-5 border border-dashed border-border-subtle rounded-xl bg-bg-secondary px-6 py-5 flex gap-4 items-start fade-in">
+      <span class="font-mono text-[0.8rem] font-bold text-accent-cyan flex-shrink-0 mt-0.5">SHARED //</span>
+      <p class="text-[0.95rem] text-text-secondary leading-relaxed">
+        <strong class="text-text-primary">Identical for both tracks:</strong> all 13 sessions, lectures, in-class activities, weekly homework topics, the AI-tool-usage and academic-integrity policies, and instructor access. Graduate differentiation is concentrated entirely in the capstone, an exclusive graduate deliverable, and the depth criteria applied to shared work.
+      </p>
+    </div>
+  </section>
+
+  <!-- 02 GRADUATE-ONLY WORK -->
+  <section id="grad-work" class="py-12 px-8 max-w-[1200px] mx-auto">
+    <SectionHeader number="02" label="Graduate-Only Work" title="What Earns Graduate Credit" description={'Four additive requirements distinguish ISOM 900. Each raises the cognitive demand from "make it work" to "justify it for an organization."'} />
+
+    <div class="grid md:grid-cols-2 gap-4 fade-in">
+      {gradCards.map((c) => (
+        <div class="bg-bg-card border border-border-subtle rounded-2xl p-7 transition-all duration-300 hover:-translate-y-0.5 hover:border-grad-violet/40">
+          <div class="font-mono text-[0.7rem] tracking-[1.5px] text-grad-violet mb-3.5">{c.tag}</div>
+          <h4 class="text-lg font-bold mb-2.5">{c.title}</h4>
+          <p class="text-[0.95rem] text-text-secondary leading-relaxed mb-4">{c.body}</p>
+          <span class="inline-flex items-center font-mono text-[0.7rem] tracking-wide text-grad-violet border border-grad-violet/30 px-3 py-1 rounded-full">
+            {c.weight}
+          </span>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- 03 CAPSTONE -->
+  <section id="project" class="py-12 px-8 max-w-[1200px] mx-auto">
+    <SectionHeader number="03" label="Capstone" title="The Graduate Capstone, Side by Side" description="Both tracks ship an agent for Demo Day. The graduate bar is set on four dimensions." />
+
+    <div class="border border-border-subtle rounded-2xl overflow-hidden fade-in">
+      <div class="grid grid-cols-1 md:grid-cols-[200px_1fr_1fr] bg-bg-secondary">
+        <div class="px-5 py-4 font-mono text-[0.7rem] tracking-[1px] uppercase text-text-muted">Dimension</div>
+        <div class="px-5 py-4 font-mono text-[0.7rem] tracking-[1px] uppercase text-text-muted">ISOM 260 · Undergraduate</div>
+        <div class="px-5 py-4 font-mono text-[0.7rem] tracking-[1px] uppercase text-grad-violet">ISOM 900 · Graduate</div>
+      </div>
+      {capstoneRows.map(([dim, ug, grad]) => (
+        <div class="grid grid-cols-1 md:grid-cols-[200px_1fr_1fr] border-t border-border-subtle">
+          <div class="px-5 py-4 font-mono text-[0.75rem] tracking-wide text-text-muted bg-bg-tertiary/60">{dim}</div>
+          <div class="px-5 py-4 text-[0.9rem] text-text-secondary">{ug}</div>
+          <div class="px-5 py-4 text-[0.9rem] text-text-primary bg-grad-violet/[0.04]">{grad}</div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- 04 GRADING -->
+  <section id="grading" class="py-12 px-8 max-w-[1200px] mx-auto">
+    <SectionHeader number="04" label="Grading" title="Grade Breakdown" description="The graduate weighting reallocates toward the capstone and adds the exclusive decision memo. Participation and integrity policies remain shared with ISOM 260." />
+
+    <div class="border border-border-subtle rounded-2xl overflow-hidden fade-in">
+      <div class="grid grid-cols-[1fr_90px_90px] bg-bg-secondary">
+        <div class="px-5 py-4 font-mono text-[0.7rem] tracking-[1px] uppercase text-text-muted">Component</div>
+        <div class="px-5 py-4 font-mono text-[0.7rem] tracking-[1px] uppercase text-text-muted text-right">UG</div>
+        <div class="px-5 py-4 font-mono text-[0.7rem] tracking-[1px] uppercase text-grad-violet text-right">Grad</div>
+      </div>
+      {gradeRows.map((row) => (
+        <div class="grid grid-cols-[1fr_90px_90px] border-t border-border-subtle items-center transition-colors hover:bg-bg-tertiary/30">
+          <div class="px-5 py-4 text-[0.95rem]">
+            {row.component}
+            {row.note && <span class="text-text-muted text-xs ml-1">{row.note}</span>}
+            {row.gradOnly && <span class="ml-2 font-mono text-[0.65rem] tracking-wide text-grad-violet">GRAD-ONLY</span>}
+          </div>
+          <div class="px-5 py-4 font-mono text-right text-text-primary">{row.ug}</div>
+          <div class:list={['px-5 py-4 font-mono text-right text-grad-violet', row.gradOnly && 'font-semibold']}>{row.grad}</div>
+        </div>
+      ))}
+      <div class="grid grid-cols-[1fr_90px_90px] border-t border-border-subtle bg-bg-secondary">
+        <div class="px-5 py-4 font-mono font-bold">Total</div>
+        <div class="px-5 py-4 font-mono font-bold text-right text-text-primary">100%</div>
+        <div class="px-5 py-4 font-mono font-bold text-right text-grad-violet">100%</div>
+      </div>
+    </div>
+
+    <!-- 04b RUBRIC LAYER -->
+    <div class="mt-16">
+      <div class="mb-10 fade-in">
+        <div class="font-mono text-[0.8rem] text-accent-cyan tracking-[3px] mb-4">04b // RUBRIC LAYER</div>
+        <h2 class="text-2xl font-bold mb-3">The Graduate Depth Criteria</h2>
+        <p class="text-text-secondary leading-relaxed max-w-[720px]">
+          Applied on top of shared assignments. Graduate work is assessed not only on whether it functions, but on the quality of the reasoning behind it.
+        </p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-4 fade-in">
+        {rubricItems.map((r) => (
+          <div class="bg-bg-card border border-border-subtle border-l-2 border-l-grad-violet rounded-xl p-6">
+            <h5 class="text-base font-bold mb-1.5">{r.title}</h5>
+            <p class="text-[0.9rem] text-text-secondary leading-relaxed">{r.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 SCHEDULE -->
+  <section id="schedule" class="py-12 px-8 max-w-[1200px] mx-auto">
+    <SectionHeader number="05" label="Schedule" title="Graduate Milestones" description="The 13-session schedule is shared with ISOM 260. Below are the additional checkpoints that structure the graduate track across the semester." />
+
+    <div class="relative pl-7 fade-in">
+      <div class="absolute left-[5px] top-2 bottom-2 w-px bg-border-subtle"></div>
+      {milestones.map((m) => (
+        <div class="relative mb-7">
+          <span class:list={[
+            'absolute -left-[26px] top-1.5 w-3 h-3 rounded-full border-2',
+            m.grad ? 'bg-grad-violet border-grad-violet' : 'bg-bg-primary border-accent-cyan',
+          ]}></span>
+          <div class="font-mono text-[0.7rem] tracking-[1px] text-text-muted mb-1">{m.when}</div>
+          <h5 class="text-base font-semibold mb-1 inline-flex items-center gap-2">
+            <span>{m.title}</span>
+            {m.grad && <span class="font-mono text-[0.6rem] tracking-wider text-grad-violet border border-grad-violet/30 px-1.5 py-0.5 rounded-full">GRAD</span>}
+          </h5>
+          <p class="text-[0.9rem] text-text-secondary leading-relaxed">{m.body}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- 06 POLICIES -->
+  <section id="policies" class="py-12 px-8 max-w-[1200px] mx-auto">
+    <SectionHeader number="06" label="Policies" title="Course Policies" description="Shared with ISOM 260. Graduate expectations on academic rigor and AI disclosure are applied with correspondingly higher standards." />
+
+    <div class="grid md:grid-cols-2 gap-4 fade-in">
+      {policies.map((p) => (
+        <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+          <h5 class="font-mono text-[0.75rem] tracking-wide uppercase text-accent-cyan mb-2.5">{p.title}</h5>
+          <p class="text-[0.9rem] text-text-secondary leading-relaxed">{p.body}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Bottom CTA back to shared syllabus -->
+  <section class="py-16 px-8 max-w-[1200px] mx-auto">
+    <div class="bg-bg-card border border-border-subtle rounded-2xl p-8 flex flex-wrap items-center justify-between gap-6 fade-in">
+      <div>
+        <div class="font-mono text-[0.7rem] tracking-[2px] uppercase text-grad-violet mb-2">Cross-Listed With ISOM 260</div>
+        <div class="font-semibold text-text-primary">All 13 sessions, lectures, and shared policies live on the ISOM 260 site.</div>
+      </div>
+      <a href="/syllabus" class="px-5 py-3 border border-border-subtle rounded-lg text-text-primary font-mono text-[0.8rem] tracking-wide no-underline transition-all duration-300 hover:border-accent-cyan hover:text-accent-cyan">
+        Shared Core Syllabus →
+      </a>
+    </div>
+  </section>
+</BaseLayout>

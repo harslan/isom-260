@@ -2,7 +2,7 @@
 import Icon from './Icon.astro';
 
 interface Props {
-  links?: { label: string; href: string }[];
+  links?: { label: string; href: string; accent?: 'graduate' }[];
 }
 
 const { links = [] } = Astro.props;
@@ -13,7 +13,15 @@ const { links = [] } = Astro.props;
     <Icon name="x" class="w-8 h-8" />
   </button>
   {links.map((link) => (
-    <a href={link.href} class="text-text-primary no-underline text-2xl font-semibold transition-colors duration-300 hover:text-accent-cyan">
+    <a
+      href={link.href}
+      class:list={[
+        'no-underline text-2xl font-semibold transition-colors duration-300',
+        link.accent === 'graduate'
+          ? 'text-grad-violet hover:text-grad-violet/80'
+          : 'text-text-primary hover:text-accent-cyan',
+      ]}
+    >
       {link.label}
     </a>
   ))}
