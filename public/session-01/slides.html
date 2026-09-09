@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session 1 Slides — Welcome to the AI Revolution | ISOM 260</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #0f1424;
+            --bg-card: #141929;
+            --bg-elevated: #1a2035;
+
+            --cyan: #00e5ff;
+            --cyan-dim: #00b8d4;
+            --cyan-glow: rgba(0, 229, 255, 0.15);
+            --cyan-glow-strong: rgba(0, 229, 255, 0.3);
+
+            --magenta: #ff006e;
+            --magenta-glow: rgba(255, 0, 110, 0.15);
+
+            --yellow: #ffd600;
+            --yellow-glow: rgba(255, 214, 0, 0.15);
+
+            --green: #00e676;
+            --green-glow: rgba(0, 230, 118, 0.15);
+
+            --orange: #ff9100;
+            --purple: #b388ff;
+            --purple-glow: rgba(179, 136, 255, 0.15);
+
+            --text-primary: #e8ecf4;
+            --text-secondary: #8892a8;
+            --text-dim: #5a6478;
+
+            --border: rgba(0, 229, 255, 0.1);
+            --border-strong: rgba(0, 229, 255, 0.25);
+            --grid-line: rgba(0, 229, 255, 0.04);
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'DM Sans', sans-serif;
+            line-height: 1.6;
+            background-image:
+                linear-gradient(var(--grid-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+            background-size: 40px 40px;
+            cursor: default;
+        }
+
+        /* Glow orbs */
+        .glow-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.4;
+        }
+        .glow-orb-1 { width: 500px; height: 500px; background: rgba(0, 229, 255, 0.08); top: -100px; left: -100px; }
+        .glow-orb-2 { width: 400px; height: 400px; background: rgba(255, 0, 110, 0.06); top: 40%; right: -100px; }
+        .glow-orb-3 { width: 350px; height: 350px; background: rgba(0, 230, 118, 0.05); bottom: -50px; left: 30%; }
+
+        /* Deck progress bar */
+        .deck-progress {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: rgba(0, 229, 255, 0.08);
+            z-index: 1000;
+        }
+        .deck-progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--cyan), var(--magenta));
+            transition: width 0.3s ease-out;
+        }
+
+        /* Slide counter */
+        .slide-counter {
+            position: fixed;
+            bottom: 1.2rem;
+            right: 1.6rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            z-index: 1000;
+            letter-spacing: 0.08em;
+            user-select: none;
+        }
+
+        /* Slides */
+        .slide {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 4vh 6vw;
+            text-align: center;
+            z-index: 1;
+            opacity: 0;
+        }
+        .slide.active {
+            display: flex;
+            animation: slide-fade 250ms ease-out forwards;
+        }
+        @keyframes slide-fade {
+            from { opacity: 0; transform: translateY(8px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-inner {
+            max-width: 1400px;
+            width: 100%;
+        }
+
+        /* Type scale */
+        .slide-title {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(2.4rem, 4.5vw, 3.8rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.12;
+            margin-bottom: 1.5rem;
+        }
+        .slide-sub {
+            font-size: clamp(1.4rem, 2vw, 1.7rem);
+            color: var(--text-secondary);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, var(--cyan), var(--magenta));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .gradient-text-warm {
+            background: linear-gradient(135deg, var(--yellow), var(--magenta));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Label (kicker) */
+        .slide-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.85rem;
+            margin-bottom: 1.75rem;
+        }
+        .slide-label::before, .slide-label::after {
+            content: '';
+            width: 36px;
+            height: 2px;
+            background: currentColor;
+            opacity: 0.7;
+        }
+        .slide-label.cyan { color: var(--cyan); }
+        .slide-label.magenta { color: var(--magenta); }
+        .slide-label.green { color: var(--green); }
+        .slide-label.yellow { color: var(--yellow); }
+        .slide-label.purple { color: var(--purple); }
+
+        /* Badge */
+        .session-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.7rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-strong);
+            padding: 0.65rem 1.5rem;
+            border-radius: 100px;
+            margin-bottom: 2.5rem;
+            background: var(--bg-card);
+        }
+        .session-badge .dot {
+            width: 9px; height: 9px;
+            border-radius: 50%;
+            background: var(--cyan);
+            animation: pulse-dot 2s infinite;
+        }
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 var(--cyan-glow-strong); }
+            50% { opacity: 0.7; box-shadow: 0 0 0 7px transparent; }
+        }
+
+        /* Chips */
+        .chip-row {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 2.5rem;
+        }
+        .chip {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            letter-spacing: 0.05em;
+            padding: 0.6rem 1.4rem;
+            border-radius: 100px;
+            border: 1px solid;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .chip.cyan { color: var(--cyan); border-color: rgba(0,229,255,0.3); background: var(--cyan-glow); }
+        .chip.magenta { color: var(--magenta); border-color: rgba(255,0,110,0.3); background: var(--magenta-glow); }
+        .chip.yellow { color: var(--yellow); border-color: rgba(255,214,0,0.3); background: var(--yellow-glow); }
+        .chip.green { color: var(--green); border-color: rgba(0,230,118,0.3); background: var(--green-glow); }
+
+        /* Nav hint */
+        .nav-hint {
+            position: fixed;
+            bottom: 1.2rem;
+            left: 1.6rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            z-index: 1000;
+            letter-spacing: 0.05em;
+            user-select: none;
+        }
+
+        /* Timeline (slide 2) */
+        .deck-timeline {
+            position: relative;
+            text-align: left;
+            max-width: 950px;
+            margin: 0 auto;
+            padding-left: 2.6rem;
+        }
+        .deck-timeline::before {
+            content: '';
+            position: absolute;
+            left: 9px;
+            top: 12px;
+            bottom: 12px;
+            width: 3px;
+            background: linear-gradient(180deg, var(--cyan), var(--magenta), var(--yellow));
+            opacity: 0.5;
+            border-radius: 2px;
+        }
+        .tl-item {
+            position: relative;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1.4rem 1.8rem;
+            margin-bottom: 1.3rem;
+        }
+        .tl-item::before {
+            content: '';
+            position: absolute;
+            left: -2.6rem;
+            top: 1.7rem;
+            width: 15px; height: 15px;
+            border-radius: 50%;
+            background: var(--bg-primary);
+            border: 3px solid var(--cyan);
+            transform: translateX(2px);
+        }
+        .tl-item.magenta::before { border-color: var(--magenta); }
+        .tl-item.yellow::before { border-color: var(--yellow); }
+        .tl-date {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 0.35rem;
+            font-weight: 600;
+        }
+        .tl-date.cyan { color: var(--cyan); }
+        .tl-date.magenta { color: var(--magenta); }
+        .tl-date.yellow { color: var(--yellow); }
+        .tl-text {
+            font-size: 1.45rem;
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+        .tl-text strong { font-weight: 700; }
+        .punch-line {
+            margin-top: 2rem;
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(1.5rem, 2.2vw, 1.9rem);
+            font-weight: 700;
+            color: var(--magenta);
+            text-shadow: 0 0 30px var(--magenta-glow);
+        }
+
+        /* Big statement slides */
+        .big-statement {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(3rem, 6.5vw, 5.5rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.15;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .big-statement .hl { color: var(--cyan); text-shadow: 0 0 40px var(--cyan-glow-strong); }
+
+        /* Check list (slide 4) */
+        .check-list {
+            text-align: left;
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.4rem;
+        }
+        .check-item {
+            display: flex;
+            align-items: center;
+            gap: 1.4rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1.5rem 2rem;
+        }
+        .check-item .check-icon {
+            width: 56px; height: 56px;
+            min-width: 56px;
+            border-radius: 12px;
+            background: var(--green-glow);
+            color: var(--green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .check-item .check-icon svg { width: 30px; height: 30px; }
+        .check-item .check-text {
+            font-size: 1.55rem;
+            font-weight: 500;
+        }
+        .check-item .check-text span { color: var(--text-secondary); font-size: 1.2rem; display: block; margin-top: 0.15rem; }
+
+        .footer-note {
+            margin-top: 2.5rem;
+            font-size: 1.35rem;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        /* Stat grid (slide 6) */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.4rem;
+            max-width: 1250px;
+            margin: 0 auto;
+        }
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem 1.5rem;
+        }
+        .stat-num {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(2.8rem, 4.5vw, 4rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1;
+            margin-bottom: 0.6rem;
+        }
+        .stat-num.cyan { color: var(--cyan); text-shadow: 0 0 30px var(--cyan-glow-strong); }
+        .stat-num.magenta { color: var(--magenta); text-shadow: 0 0 30px var(--magenta-glow); }
+        .stat-num.yellow { color: var(--yellow); text-shadow: 0 0 30px var(--yellow-glow); }
+        .stat-num.green { color: var(--green); text-shadow: 0 0 30px var(--green-glow); }
+        .stat-num.purple { color: var(--purple); text-shadow: 0 0 30px var(--purple-glow); }
+        .stat-num.orange { color: var(--orange); text-shadow: 0 0 30px rgba(255,145,0,0.3); }
+        .stat-desc {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        /* Gap slide (slide 7) */
+        .gap-math {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(3rem, 6vw, 5rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 2.5rem;
+        }
+        .gap-math .a { color: var(--cyan); }
+        .gap-math .b { color: var(--magenta); }
+        .gap-math .op { color: var(--text-dim); font-weight: 400; }
+
+        /* Hands-on split (slide 10) */
+        .split {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 3rem;
+            align-items: center;
+            max-width: 1250px;
+            margin: 0 auto;
+            text-align: left;
+        }
+        .step-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.3rem;
+        }
+        .step-item {
+            display: flex;
+            gap: 1.3rem;
+            align-items: flex-start;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1.4rem 1.7rem;
+        }
+        .step-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--green);
+            background: var(--green-glow);
+            width: 48px; height: 48px;
+            min-width: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .step-text { font-size: 1.45rem; line-height: 1.45; }
+        .step-text code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.15rem;
+            color: var(--cyan);
+            background: rgba(0,229,255,0.08);
+            padding: 0.1rem 0.5rem;
+            border-radius: 6px;
+        }
+        .qr-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.2rem;
+        }
+        .qr-frame {
+            background: var(--bg-card);
+            border: 1px solid var(--border-strong);
+            border-radius: 18px;
+            padding: 1.5rem;
+            box-shadow: 0 0 50px var(--cyan-glow);
+        }
+        .qr-frame img { display: block; border-radius: 8px; }
+        .qr-caption {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            text-align: center;
+            line-height: 1.6;
+        }
+        .qr-caption .path { color: var(--cyan); }
+
+        /* Recap slide (11) */
+        .recap-lines {
+            max-width: 950px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            font-size: 1.6rem;
+            line-height: 1.55;
+        }
+        .recap-lines .em { color: var(--cyan); font-weight: 600; }
+        .recap-divider {
+            width: 120px;
+            height: 2px;
+            margin: 0.6rem auto;
+            background: linear-gradient(90deg, var(--cyan), var(--magenta));
+            border-radius: 2px;
+        }
+
+        /* Semester flow (slide 13) */
+        .arc-flow {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 0.9rem;
+            max-width: 1250px;
+            margin: 0 auto 2.5rem;
+        }
+        .arc-node {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 600;
+            padding: 1rem 1.6rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-strong);
+            border-radius: 12px;
+            white-space: nowrap;
+        }
+        .arc-node.final {
+            background: linear-gradient(135deg, rgba(0,229,255,0.12), rgba(255,0,110,0.12));
+            border-color: var(--magenta);
+            color: var(--text-primary);
+            box-shadow: 0 0 30px var(--magenta-glow);
+        }
+        .arc-arrow {
+            color: var(--cyan);
+            display: flex;
+            align-items: center;
+        }
+        .arc-arrow svg { width: 26px; height: 26px; }
+
+        /* Checklist slide (14) */
+        .setup-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.4rem;
+            max-width: 1050px;
+            margin: 0 auto 2.2rem;
+            text-align: left;
+        }
+        .setup-item {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1.4rem 1.6rem;
+        }
+        .setup-item .setup-icon {
+            width: 52px; height: 52px;
+            min-width: 52px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .setup-item .setup-icon.cyan { background: var(--cyan-glow); color: var(--cyan); }
+        .setup-item .setup-icon.green { background: var(--green-glow); color: var(--green); }
+        .setup-item .setup-icon.yellow { background: var(--yellow-glow); color: var(--yellow); }
+        .setup-item .setup-icon.magenta { background: var(--magenta-glow); color: var(--magenta); }
+        .setup-item .setup-icon svg { width: 27px; height: 27px; }
+        .setup-text { font-size: 1.4rem; line-height: 1.4; }
+        .setup-text span { display: block; font-size: 1.1rem; color: var(--text-secondary); margin-top: 0.15rem; }
+        .callout {
+            max-width: 1050px;
+            margin: 0 auto;
+            background: rgba(255, 214, 0, 0.07);
+            border: 1px solid rgba(255, 214, 0, 0.35);
+            border-radius: 14px;
+            padding: 1.3rem 1.8rem;
+            font-size: 1.4rem;
+            color: var(--yellow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.9rem;
+        }
+        .callout svg { width: 28px; height: 28px; min-width: 28px; }
+
+        /* Homework slide (12) */
+        .hw-list {
+            text-align: left;
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.3rem;
+        }
+        .hw-item {
+            display: flex;
+            align-items: center;
+            gap: 1.3rem;
+            background: var(--bg-card);
+            border: 1px solid rgba(255,0,110,0.25);
+            border-radius: 14px;
+            padding: 1.4rem 1.8rem;
+            font-size: 1.5rem;
+        }
+        .hw-item .hw-icon {
+            color: var(--magenta);
+            background: var(--magenta-glow);
+            width: 52px; height: 52px;
+            min-width: 52px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .hw-item .hw-icon svg { width: 27px; height: 27px; }
+        .hw-item code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.15rem;
+            color: var(--magenta);
+            background: rgba(255,0,110,0.08);
+            padding: 0.1rem 0.5rem;
+            border-radius: 6px;
+        }
+        .hw-punch {
+            margin-top: 2.2rem;
+            font-family: 'Sora', sans-serif;
+            font-size: 1.7rem;
+            font-weight: 700;
+        }
+        .hw-punch .g { color: var(--green); }
+
+        /* Ambient list (slide 15) */
+        .ambient-tags {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            max-width: 950px;
+            margin: 0 auto 2.5rem;
+        }
+        .ambient-tag {
+            font-size: 1.35rem;
+            padding: 0.7rem 1.5rem;
+            border-radius: 100px;
+            border: 1px solid rgba(179,136,255,0.35);
+            background: var(--purple-glow);
+            color: var(--purple);
+        }
+
+        /* Closer (16) */
+        .closer-title {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(3.5rem, 7vw, 6rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 1.8rem;
+        }
+        .closer-brand {
+            margin-top: 3rem;
+            font-family: 'Sora', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: 0.25em;
+        }
+
+        /* Fullscreen tweaks */
+        :fullscreen body { background: var(--bg-primary); }
+
+        @media (max-width: 1000px) {
+            .stat-grid { grid-template-columns: repeat(2, 1fr); }
+            .split { grid-template-columns: 1fr; }
+            .setup-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="glow-orb glow-orb-1"></div>
+    <div class="glow-orb glow-orb-2"></div>
+    <div class="glow-orb glow-orb-3"></div>
+
+    <div class="deck-progress"><div class="deck-progress-fill" id="progressFill"></div></div>
+    <div class="slide-counter" id="slideCounter">1 / 16</div>
+    <div class="nav-hint" id="navHint">→ to advance · F for fullscreen</div>
+
+    <!-- ═══════════════ SLIDE 1 · TITLE ═══════════════ -->
+    <section class="slide active">
+        <div class="slide-inner">
+            <div class="session-badge"><span class="dot"></span> ISOM 260 · AI for Business · Suffolk University · Fall 2026</div>
+            <h1 class="slide-title" style="font-size: clamp(3rem, 6vw, 5.2rem);">
+                Session 1<br>
+                <span class="gradient-text">Welcome to the AI Revolution</span>
+            </h1>
+            <p class="slide-sub">You picked the wildest possible week to start studying AI.</p>
+            <div class="chip-row">
+                <span class="chip cyan"><i data-lucide="user"></i> Prof. Hasan Arslan</span>
+                <span class="chip magenta"><i data-lucide="calendar"></i> Mon &amp; Wed 12:30–1:45</span>
+                <span class="chip yellow"><i data-lucide="map-pin"></i> 73 Tremont 5065</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SLIDE 2 · THE LAST EIGHT DAYS ═══════════════ -->
+    <section class="slide">
+        <div class="slide-inner">
+            <div class="slide-label cyan">This actually happened</div>
+            <h2 class="slide-title">The Last Eight Days</h2>
+            <div class="deck-timeline">
+                <div class="tl-item">
+                    <div class="tl-date cyan">Mon Sep 1</div>
+                    <div class="tl-text"><strong>Anthropic</strong> ships Claude Fable 5.1 (+ Mythos 5.1) and cuts cache pricing <strong>75%</strong></div>
+                </div>
+                <div class="tl-item magenta">
+                    <div class="tl-date magenta">Tue Sep 2</div>
+                    <div class="tl-text"><strong>Google</strong> ships Gemini 3.8 Flash; <strong>Meta</strong> ships Muse Spark 1.3 at ~<strong>$0.10/M tokens</strong></div>
+                </div>
+                <div class="tl-item yellow">
+                    <div class="tl-date yellow">Wed Sep 3</div>
+                    <div class="tl-text"><strong>OpenAI</strong> ships GPT-6 Astra: <em>"a generational leap"</em></div>
+                </div>
+            </div>
+            <div class="punch-line">The densest 72 hours of AI releases in history — six days ago.</div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SLIDE 3 · BIG STATEMENT ═══════════════ -->
+    <section class="slide">
+        <div class="slide-inner">
+            <div class="big-statement">This course is about what <span class="hl">YOU</span> do with all this.</div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SLIDE 4 · THE PROMISE ═══════════════ -->
+    <section class="slide">
+        <div class="slide-inner">
+            <div class="slide-label green">The promise</div>
+            <h2 class="slide-title">By December, you will have:</h2>
+            <div class="check-list">
+                <div class="check-item">
+                    <div class="check-icon"><i data-lucide="check-circle-2"></i></div>
+                    <div class="check-text">Built working AI agents <span>real code, real APIs</span></div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon"><i data-lucide="check-circle-2"></i></div>
+                    <div class="check-text">Shipped a final project that solves a real problem</div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon"><i data-lucide="check-circle-2"></i></div>
+                    <div class="check-text">Become the person in the room who knows how this actually works</div>
+                </div>
+            </div>
+            <p class="footer-note">Business course. No CS background needed. You'll build real things anyway.</p>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SLIDE 5 · WHO'S IN THE ROOM ═══════════════ -->
+    <section class="slide">
+        <div class="slide-inner">
+            <div class="slide-label purple">Who's in the room · 10 min</div>
+            <h2 class="slide-title">Your name · Your major ·<br><span class="gradient-text">One thing you wish AI would do for you.</span></h2>
+            <p class="slide-sub">Keep your answer — we're checking back in December.</p>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SLIDE 6 · STATE OF AI IN BUSINESS ═══════════════ -->
+    <section class="slide">
+        <div class="slide-inner">
+            <div class="slide-label cyan">The numbers</div>
+            <h2 class="slide-title">The State of AI in Business</h2>
+            <div class="stat-grid">
+                <div class="stat-card">
+                    <div class="stat-num cyan">91%</div>
+                    <div class="stat-desc">of businesses are using AI</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-num green">79%</div>
+                    <div class="stat-desc">are adopting agents</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-num magenta">23%</div>
+                    <div class="stat-desc">are actually scaling them</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-num yellow">80%</div>
+                    <div class="stat-desc">of new enterprise apps embed an agent</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-num purple">31%</div>
+                    <div class="stat-desc">have one in production</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-num orange">5.1mo</div>
+                    <div class="stat-desc">median time-to-value</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SLIDE 7 · THE GAP ═══════════════ -->
+    <section class="slide">
+        <div class="slide-inner">
+            <div class="slide-label magenta">The gap</div>
+            <div class="gap-math"><span class="a">79% adopting</span> <span class="op">−</span> <span class="b">23% scaling</span></div>
+            <p class="slide-sub" style="font-size: clamp(1.6rem, 2.4vw, 2rem); color: var(--text-primary); font-weight: 500;">
+                That gap is where careers are made.<br>
+                Companies don't need AI hype — they need people who make AI <em style="color: var(--cyan); font-style: normal;">work</em>.<br>
+                That's this course.
+            </p>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SLIDE 8 · LIVE DEMO ═══════════════ -->
+    <section class="slide">
+        <div class="slide-inner">
+            <div class="slide-label yellow">Live demo · 15 min</div>
+            <h2 class="slide-title">Let's give a frontier model<br>a <span class="gradient-text-warm">real business problem.</span></h2>
+            <p class="slide-sub">No slides for this part. Watch what it gets right — and catch what it gets wrong.</p>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SLIDE 9 · BIG STATEMENT · NEXT TOKEN ═══════════════ -->
+    <section class="slide">
+        <div class="slide-inner">
+            <p class="slide-sub" style="margin-bottom: 2rem;">Every language model — from a toy to GPT-6 — does exactly ONE thing:</p>
+            <div class="big-statement gradient-text" style="margin-bottom: 2rem;">predict the next token</div>
+            <p class="slide-sub">Everything else is scale.</p>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SLIDE 10 · HANDS-ON LAUNCH ═══════════════ -->
+    <section class="slide">
+        <div class="slide-inner">
+            <div class="slide-label green">Hands-on · 15 min</div>
+            <h2 class="slide-title">Train your own tiny LLM. <span class="gradient-text">Right now.</span></h2>
+            <div class="split">
+                <div class="step-list">
+                    <div class="step-item">
+                        <div class="step-num">1</div>
+                        <div class="step-text">Open the notebook — link below or QR</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-num">2</div>
+                        <div class="step-text"><code>File → Save a copy in Drive</code></div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-num">3</div>
+                        <div class="step-text">Run cells top-to-bottom with me — <strong>Act 1 only</strong></div>
+                    </div>
+                </div>
+                <div class="qr-box">
+                    <div class="qr-frame">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=360x360&qzone=2&bgcolor=fdfdfd&color=0a0e1a&data=https%3A%2F%2Fcolab.research.google.com%2Fgithub%2Fharslan%2Fisom-260%2Fblob%2Fmaster%2Fpublic%2Fsession-01%2FISOM260_Session1_Train_Your_Tiny_LLM.ipynb" width="280" alt="QR code — open the Session 1 Colab notebook">
+                    </div>
+                    <div class="qr-caption">or: <span class="path">course site → Sessions → Session 1 → Open in Colab</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SLIDE 11 · WHAT JUST HAPPENED ═══════════════ -->
+    <section class="slide">
+        <div class="slide-inner">
+            <div class="slide-label cyan">What just happened</div>
+            <h2 class="slide-title">You built a language model<br>by counting letter pairs.</h2>
+            <div class="recap-lines">
+                <p>It invents names that <span class="em">almost</span> work.</p>
+                <p>It has <span class="em">one letter of memory</span> — that's why they're <em>almost</em>.</p>
+                <div class="recap-divider"></div>
+                <p><span class="em">Temperature = the creativity dial.</span><br>Same knob you'll use in the real APIs in Session 3.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SLIDE 12 · HOMEWORK #1 ═══════════════ -->
+    <section class="slide">
+        <div class="slide-inner">
+            <div class="slide-label magenta">Homework #1 · Due Monday</div>
+            <h2 class="slide-title">Tonight: train the <span class="gradient-text">real thing.</span></h2>
+            <div class="hw-list">
+                <div class="hw-item">
+                    <div class="hw-icon"><i data-lucide="notebook-pen"></i></div>
+                    <div>Finish the notebook at home — Acts 2–3, ~10 min</div>
+                </div>
+                <div class="hw-item">
+                    <div class="hw-icon"><i data-lucide="cpu"></i></div>
+                    <div>Your <strong>100,000-parameter transformer</strong> trains in ~2 minutes</div>
+                </div>
+                <div class="hw-item">
+                    <div class="hw-icon"><i data-lucide="message-square"></i></div>
+                    <div>Post your favorite generated name → Canvas <code>Session 1</code> thread</div>
+                </div>
+            </div>
+            <p class="hw-punch">Monday you walk in <span class="g">having trained a GPT</span>. Most people never will.</p>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SLIDE 13 · SEMESTER AT A GLANCE ═══════════════ -->
+    <section class="slide">
+        <div class="slide-inner">
+            <div class="slide-label yellow">The arc</div>
+            <h2 class="slide-title">The Semester at a Glance</h2>
+            <div class="arc-flow">
+                <div class="arc-node">Talk to AI</div>
+                <div class="arc-arrow"><i data-lucide="arrow-right"></i></div>
+                <div class="arc-node">Call AI from code</div>
+                <div class="arc-arrow"><i data-lucide="arrow-right"></i></div>
+                <div class="arc-node">Build agents with tools</div>
+                <div class="arc-arrow"><i data-lucide="arrow-right"></i></div>
+                <div class="arc-node">Agents in the real world</div>
+                <div class="arc-arrow"><i data-lucide="arrow-right"></i></div>
+                <div class="arc-node">RAG &amp; knowledge</div>
+                <div class="arc-arrow"><i data-lucide="arrow-right"></i></div>
+                <div class="arc-node">Multi-agent systems</div>
+                <div class="arc-arrow"><i data-lucide="arrow-right"></i></div>
+                <div class="arc-node final">YOUR final project</div>
+            </div>
+            <p class="slide-sub" style="font-size: 1.35rem;">
+                Final Project: one agent, one real problem — due <strong style="color: var(--magenta);">Wed Dec 9, 11:59 PM</strong> · Final exam slot: Tue Dec 15
+            </p>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SLIDE 14 · SETUP CHECKLIST ═══════════════ -->
+    <section class="slide">
+        <div class="slide-inner">
+            <div class="slide-label green">Before Monday</div>
+            <h2 class="slide-title">Setup Checklist</h2>
+            <div class="setup-grid">
+                <div class="setup-item">
+                    <div class="setup-icon cyan"><i data-lucide="check-square"></i></div>
+                    <div class="setup-text">Google account + Colab works <span>you just used it</span></div>
+                </div>
+                <div class="setup-item">
+                    <div class="setup-icon green"><i data-lucide="key-round"></i></div>
+                    <div class="setup-text">Bookmark aistudio.google.com <span>API key in Session 3</span></div>
+                </div>
+                <div class="setup-item">
+                    <div class="setup-icon yellow"><i data-lucide="bookmark"></i></div>
+                    <div class="setup-text">Bookmark the course site</div>
+                </div>
+                <div class="setup-item">
+                    <div class="setup-icon magenta"><i data-lucide="bell-ring"></i></div>
+                    <div class="setup-text">Canvas notifications ON</div>
+                </div>
+            </div>
+            <div class="callout">
+                <i data-lucide="alert-triangle"></i>
+                Everything runs on free tiers. If anything asks for a credit card — stop and ask me.
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SLIDE 15 · AI TOUCHED YOUR MORNING (IF TIME) ═══════════════ -->
+    <section class="slide">
+        <div class="slide-inner">
+            <div class="slide-label purple">If time · Pairs · 5 min</div>
+            <h2 class="slide-title">Where did AI touch<br>your morning?</h2>
+            <p class="slide-sub" style="margin-bottom: 2.5rem;">List every AI touchpoint since you woke up.</p>
+            <div class="ambient-tags">
+                <span class="ambient-tag">feed ranking</span>
+                <span class="ambient-tag">maps</span>
+                <span class="ambient-tag">spam filter</span>
+                <span class="ambient-tag">autocomplete</span>
+                <span class="ambient-tag">face unlock</span>
+                <span class="ambient-tag">Spotify</span>
+            </div>
+            <p class="slide-sub" style="color: var(--text-primary); font-weight: 500;">AI isn't coming. It's ambient.<br>The question is <span class="gradient-text" style="font-weight: 700;">who directs it.</span></p>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SLIDE 16 · CLOSER ═══════════════ -->
+    <section class="slide">
+        <div class="slide-inner">
+            <div class="closer-title">See you <span class="gradient-text">Monday.</span></div>
+            <p class="slide-sub">Session 2: How AI Actually Works — how next-token prediction becomes machines that write, reason, and code.</p>
+            <div class="chip-row">
+                <span class="chip cyan"><i data-lucide="calendar"></i> Mon Sep 14 · 12:30 PM</span>
+                <span class="chip yellow"><i data-lucide="map-pin"></i> 73 Tremont 5065</span>
+                <span class="chip green"><i data-lucide="cpu"></i> bring your trained transformer</span>
+            </div>
+            <div class="closer-brand gradient-text">ISOM 260</div>
+        </div>
+    </section>
+
+    <script>
+        (function () {
+            const slides = Array.from(document.querySelectorAll('.slide'));
+            const total = slides.length;
+            const counter = document.getElementById('slideCounter');
+            const progressFill = document.getElementById('progressFill');
+            let current = 0;
+
+            function show(index) {
+                if (index < 0) index = 0;
+                if (index > total - 1) index = total - 1;
+                if (index === current && slides[index].classList.contains('active')) {
+                    // still update UI (first load)
+                } else {
+                    slides[current].classList.remove('active');
+                }
+                current = index;
+                slides[current].classList.add('active');
+                counter.textContent = (current + 1) + ' / ' + total;
+                progressFill.style.width = (total > 1 ? (current / (total - 1)) * 100 : 100) + '%';
+            }
+
+            function next() { show(current + 1); }
+            function prev() { show(current - 1); }
+
+            document.addEventListener('keydown', function (e) {
+                if (e.metaKey || e.ctrlKey || e.altKey) return;
+                switch (e.key) {
+                    case 'ArrowRight':
+                    case 'ArrowDown':
+                    case ' ':
+                    case 'PageDown':
+                        e.preventDefault();
+                        next();
+                        break;
+                    case 'ArrowLeft':
+                    case 'ArrowUp':
+                    case 'PageUp':
+                        e.preventDefault();
+                        prev();
+                        break;
+                    case 'Home':
+                        e.preventDefault();
+                        show(0);
+                        break;
+                    case 'End':
+                        e.preventDefault();
+                        show(total - 1);
+                        break;
+                    case 'f':
+                    case 'F':
+                        e.preventDefault();
+                        if (document.fullscreenElement) {
+                            document.exitFullscreen();
+                        } else if (document.documentElement.requestFullscreen) {
+                            document.documentElement.requestFullscreen();
+                        }
+                        break;
+                }
+            });
+
+            document.addEventListener('click', function (e) {
+                // Ignore clicks on links/images that might be interactive
+                if (e.target.closest('a')) return;
+                next();
+            });
+
+            // Initialize
+            show(0);
+            if (window.lucide) lucide.createIcons();
+        })();
+    </script>
+</body>
+</html>

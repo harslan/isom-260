@@ -101,6 +101,15 @@
   ],
   "resources": [
     {
+      "title": "Session 1 Slide Deck",
+      "url": "/session-01/slides.html",
+      "description": "The 16-slide presentation deck for class: the release-wave timeline, business stats, hands-on launch with QR code, Homework #1, and the semester roadmap. Arrow keys to navigate, F for fullscreen.",
+      "icon": "presentation",
+      "badge": "Slides",
+      "badgeType": "interactive",
+      "linkText": "Open slides"
+    },
+    {
       "title": "Session 1 Lecture Guide",
       "url": "/session-01/lecture-guide.html",
       "description": "The full interactive lecture guide: last week's release wave, the state of AI in business (September 2026), today's agenda, and your setup checklist.",
