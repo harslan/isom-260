@@ -47,9 +47,33 @@ const sorted = sessions.sort((a, b) => a.data.number - b.data.number);
     </div>
   </section>
 
+  <!-- Key Dates -->
+  <section class="py-12 px-8 max-w-[1200px] mx-auto">
+    <SectionHeader number="02" label="Key Dates" title="Mark Your Calendar" />
+    <div class="grid gap-4 md:grid-cols-2 fade-in">
+      {[
+        { date: 'Wed Oct 21', what: 'Midterm Project assigned', note: 'In Session 6 — build your first complete agent (20% of grade)' },
+        { date: 'Mon Nov 2', what: 'Midterm Project due', note: 'Submit on Canvas before class, 12:30 PM' },
+        { date: 'Mon Nov 30 & Wed Dec 2', what: 'Final Project Workshop', note: 'Teams form, scope locks, skeletons built — Session 12' },
+        { date: 'Mon Dec 7 & Wed Dec 9', what: 'Demo Days', note: 'Live 5-minute demos + Q&A with peer voting — Session 13' },
+        { date: 'Wed Dec 9 · 11:59 PM', what: 'Final Project due', note: 'Notebook + 1-page brief on Canvas' },
+        { date: 'Tue Dec 15', what: 'Final exam slot', note: 'Reserved per the university schedule' },
+      ].map((item) => (
+        <div class="flex items-start gap-4 px-6 py-5 bg-bg-card border border-border-subtle rounded-xl">
+          <Icon name="calendar" class="w-5 h-5 text-accent-cyan shrink-0 mt-1" />
+          <div class="min-w-0">
+            <div class="font-mono text-sm text-accent-cyan mb-1">{item.date}</div>
+            <div class="font-semibold">{item.what}</div>
+            <div class="text-text-secondary text-sm">{item.note}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
   <!-- Grading -->
   <section class="py-12 px-8 max-w-[1200px] mx-auto">
-    <SectionHeader number="02" label="Grading" title="Grade Breakdown" />
+    <SectionHeader number="03" label="Grading" title="Grade Breakdown" />
     <div class="grid gap-4 fade-in">
       {grading.map((item) => (
         <div class="flex items-center justify-between px-6 py-5 bg-bg-card border border-border-subtle rounded-xl">
@@ -62,7 +86,7 @@ const sorted = sessions.sort((a, b) => a.data.number - b.data.number);
 
   <!-- Policies -->
   <section class="py-12 px-8 max-w-[1200px] mx-auto">
-    <SectionHeader number="03" label="Policies" title="Course Policies" />
+    <SectionHeader number="04" label="Policies" title="Course Policies" />
     <div class="grid gap-6 md:grid-cols-2 fade-in">
       {policies.map((policy) => (
         <div class="bg-bg-card border border-border-subtle rounded-2xl p-8">
