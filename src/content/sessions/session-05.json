@@ -4,9 +4,19 @@
   "title": "Agents Meet the Real World",
   "subtitle": "Real APIs, error handling, memory — take your agents from simulated toys to production-ready tools",
   "heroTitle": "Agents Meet the <span class=\"bg-gradient-to-br from-accent-cyan to-accent-purple bg-clip-text text-transparent\">Real World</span>",
-  "duration": "150 Minutes",
+  "duration": "2 meetings · 75 min",
+  "meetings": [
+    "Wed Oct 7",
+    "Wed Oct 14"
+  ],
   "icon": "globe",
-  "tags": ["Real APIs", "Error Handling", "Agent Memory", "Wikipedia API", "Web Fetching"],
+  "tags": [
+    "Real APIs",
+    "Error Handling",
+    "Agent Memory",
+    "Wikipedia API",
+    "Web Fetching"
+  ],
   "objectives": [
     {
       "title": "Connect Agents to Real APIs",
@@ -299,7 +309,12 @@
   "nextSession": {
     "title": "Session 6: Agent Patterns & Production Intelligence",
     "description": "ReAct reasoning, multi-agent architectures, and the patterns that separate demos from production systems.",
-    "tags": ["ReAct Pattern", "Multi-Agent Systems", "MCP", "Business Automation"],
+    "tags": [
+      "ReAct Pattern",
+      "Multi-Agent Systems",
+      "MCP",
+      "Business Automation"
+    ],
     "slug": "session-06"
   }
 }

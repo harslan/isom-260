@@ -4,9 +4,19 @@
   "title": "Building AI Products + Intro to AI Agents",
   "subtitle": "Ship a real product in 50 minutes, build your first AI agent, then read production code",
   "heroTitle": "Building AI <span class=\"bg-gradient-to-br from-accent-cyan to-accent-purple bg-clip-text text-transparent\">Products & Agents</span>",
-  "duration": "150 Minutes",
+  "duration": "2 meetings · 75 min",
+  "meetings": [
+    "Wed Sep 30",
+    "Mon Oct 5"
+  ],
   "icon": "rocket",
-  "tags": ["Product Building", "AI Agents", "NanoClaw", "Tool Use", "Ship Fast"],
+  "tags": [
+    "Product Building",
+    "AI Agents",
+    "NanoClaw",
+    "Tool Use",
+    "Ship Fast"
+  ],
   "objectives": [
     {
       "title": "Ship a Real AI Product",
@@ -350,7 +360,12 @@
   "nextSession": {
     "title": "Session 5: Agents Meet the Real World",
     "description": "Real APIs, error handling, and memory — take your agents from simulated toys to production-ready tools.",
-    "tags": ["Real APIs", "Error Handling", "Agent Memory", "Wikipedia API"],
+    "tags": [
+      "Real APIs",
+      "Error Handling",
+      "Agent Memory",
+      "Wikipedia API"
+    ],
     "slug": "session-05"
   }
 }

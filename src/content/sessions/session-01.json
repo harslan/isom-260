@@ -3,7 +3,11 @@
   "slug": "session-01",
   "title": "Welcome to the AI Revolution",
   "subtitle": "Course overview, expectations, and the landscape of AI in business today",
-  "duration": "75 Minutes",
+  "duration": "2 meetings · 75 min",
+  "meetings": [
+    "Wed Sep 9",
+    "Mon Sep 14"
+  ],
   "icon": "rocket",
   "tags": [
     "Introduction",

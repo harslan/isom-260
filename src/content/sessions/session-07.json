@@ -1,12 +1,22 @@
 {
   "number": 7,
   "slug": "session-07",
-  "title": "Knowledge Agents \u2014 RAG",
-  "subtitle": "Your agent is smart but doesn't know YOUR business \u2014 add company knowledge with Retrieval-Augmented Generation",
-  "heroTitle": "Knowledge Agents \u2014 <span class=\"bg-gradient-to-br from-accent-cyan to-accent-purple bg-clip-text text-transparent\">RAG</span>",
-  "duration": "150 Minutes",
+  "title": "Knowledge Agents — RAG",
+  "subtitle": "Your agent is smart but doesn't know YOUR business — add company knowledge with Retrieval-Augmented Generation",
+  "heroTitle": "Knowledge Agents — <span class=\"bg-gradient-to-br from-accent-cyan to-accent-purple bg-clip-text text-transparent\">RAG</span>",
+  "duration": "2 meetings · 75 min",
+  "meetings": [
+    "Mon Oct 26",
+    "Wed Oct 28"
+  ],
   "icon": "database",
-  "tags": ["RAG", "Knowledge Agents", "Document Search", "Long Context", "Business Data"],
+  "tags": [
+    "RAG",
+    "Knowledge Agents",
+    "Document Search",
+    "Long Context",
+    "Business Data"
+  ],
   "objectives": [
     {
       "title": "Understand the Knowledge Gap",
@@ -30,11 +40,11 @@
       "time": "5:00 PM - 5:15 PM",
       "title": "Part 1: The Knowledge Problem",
       "duration": "15 minutes",
-      "description": "Claude knows the internet. It doesn't know your company's SOPs, product catalog, or HR policies. That's a problem \u2014 and RAG is the solution.",
+      "description": "Claude knows the internet. It doesn't know your company's SOPs, product catalog, or HR policies. That's a problem — and RAG is the solution.",
       "bulletPoints": [
         "Demo: Ask Claude about your company's refund policy. It hallucinates confidently. This is the problem RAG solves.",
         "RAG = Retrieval-Augmented Generation: search your documents first, then generate an answer grounded in real data",
-        "The pattern: User question \u2192 Search documents \u2192 Insert relevant passages into prompt \u2192 Claude answers from YOUR data",
+        "The pattern: User question → Search documents → Insert relevant passages into prompt → Claude answers from YOUR data",
         "Why this matters: Every enterprise AI deployment needs RAG. This is the #1 pattern in production AI."
       ]
     },
@@ -42,23 +52,23 @@
       "time": "5:15 PM - 5:40 PM",
       "title": "Part 2: RAG Architecture Deep Dive",
       "duration": "25 minutes",
-      "description": "How RAG works under the hood \u2014 from document loading to retrieval to generation.",
+      "description": "How RAG works under the hood — from document loading to retrieval to generation.",
       "bulletPoints": [
         "Three approaches: Simple keyword search, Claude's long context window (200K tokens), and vector embeddings",
-        "Our approach today: Long context + smart chunking. No vector DB needed \u2014 Claude can read 200K tokens at once.",
+        "Our approach today: Long context + smart chunking. No vector DB needed — Claude can read 200K tokens at once.",
         "Document processing: Loading, chunking, and creating a searchable index. Why chunk size matters.",
         "The retrieval tool: A search function your agent calls to find relevant document passages before answering."
       ]
     },
     {
       "time": "5:40 PM - 6:25 PM",
-      "title": "Part 3: Hands-On \u2014 Build a Knowledge Agent",
+      "title": "Part 3: Hands-On — Build a Knowledge Agent",
       "duration": "45 minutes",
       "description": "Build an agent that answers questions about a company using its own documents.",
       "bulletPoints": [
         "Phase 1 (15 min): Load sample company documents (policies, FAQs, product info). Build a search_documents tool.",
-        "Phase 2 (15 min): Wire the search tool into your agent loop. Ask company-specific questions \u2014 watch it retrieve and answer.",
-        "Phase 3 (15 min): Test edge cases \u2014 contradicting documents, outdated info, questions with no answer. Does your agent handle them gracefully?"
+        "Phase 2 (15 min): Wire the search tool into your agent loop. Ask company-specific questions — watch it retrieve and answer.",
+        "Phase 3 (15 min): Test edge cases — contradicting documents, outdated info, questions with no answer. Does your agent handle them gracefully?"
       ]
     },
     {
@@ -74,10 +84,10 @@
       "duration": "30 minutes",
       "description": "Your agent is only as trustworthy as its data. What happens when documents are wrong, outdated, or contradictory?",
       "bulletPoints": [
-        "Ethics moment: The Air Canada chatbot case \u2014 held legally liable for answers based on outdated policy documents",
+        "Ethics moment: The Air Canada chatbot case — held legally liable for answers based on outdated policy documents",
         "Failure mode 1: Outdated data. Your agent confidently quotes last year's pricing.",
         "Failure mode 2: Contradicting documents. Two SOPs say different things. What does your agent do?",
-        "Failure mode 3: No relevant data. The agent should say 'I don't have information on that' \u2014 not hallucinate.",
+        "Failure mode 3: No relevant data. The agent should say 'I don't have information on that' — not hallucinate.",
         "Building trust: Citation, confidence scores, and 'I don't know' as a feature, not a bug."
       ]
     },
@@ -85,7 +95,7 @@
       "time": "7:05 PM - 7:20 PM",
       "title": "Part 6: RAG in the Real World",
       "duration": "15 minutes",
-      "description": "How companies actually deploy RAG \u2014 from customer support to internal knowledge bases to compliance.",
+      "description": "How companies actually deploy RAG — from customer support to internal knowledge bases to compliance.",
       "bulletPoints": [
         "Case studies: Customer support bots, internal wikis, legal document search, medical information retrieval",
         "The build-vs-buy decision: When to build your own RAG vs. use platforms like Glean, Notion AI, or Perplexity Enterprise",
@@ -98,8 +108,8 @@
       "duration": "10 minutes",
       "description": "Your agents now have memory (Session 5), reasoning (Session 6), and knowledge (today). Next: make them work in teams.",
       "bulletPoints": [
-        "The stack so far: Tools (S4) \u2192 Real APIs + Memory (S5) \u2192 ReAct Patterns (S6) \u2192 Knowledge/RAG (TODAY)",
-        "Next session: Multi-Agent Systems in Practice \u2014 build a team of agents that collaborate",
+        "The stack so far: Tools (S4) → Real APIs + Memory (S5) → ReAct Patterns (S6) → Knowledge/RAG (TODAY)",
+        "Next session: Multi-Agent Systems in Practice — build a team of agents that collaborate",
         "Homework preview: Build a RAG agent for a domain you care about, test with edge cases, evaluate retrieval quality"
       ]
     }
@@ -126,7 +136,7 @@
     {
       "title": "Knowledge Agent Workshop Notebook",
       "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-07/ISOM260_Session7_Knowledge_Agents_RAG.ipynb",
-      "description": "Build a company knowledge agent with document loading, search, and RAG. Uses Claude's long context window \u2014 no vector DB needed.",
+      "description": "Build a company knowledge agent with document loading, search, and RAG. Uses Claude's long context window — no vector DB needed.",
       "icon": "code",
       "badge": "Hands-On",
       "badgeType": "interactive",
@@ -153,14 +163,14 @@
     {
       "title": "Building Effective Agents (Anthropic)",
       "url": "https://www.anthropic.com/engineering/building-effective-agents",
-      "description": "Anthropic's guide to agent patterns \u2014 including RAG as a core capability for grounding agents in real data.",
+      "description": "Anthropic's guide to agent patterns — including RAG as a core capability for grounding agents in real data.",
       "icon": "bot",
       "badge": "Guide",
       "badgeType": "interactive",
       "linkText": "Read guide"
     },
     {
-      "title": "Speaker Notes \u2014 Professor's Command Center",
+      "title": "Speaker Notes — Professor's Command Center",
       "url": "/session-07/speaker-notes.html",
       "description": "Private dashboard with talking points, demo cues, discussion prompts, and live timers for each lecture section. Open on your laptop while projecting the lecture guide.",
       "icon": "mic",
@@ -180,14 +190,14 @@
     {
       "title": "RAG Failure Modes Demo",
       "url": "/session-07/failure-modes-demo.html",
-      "description": "Interactive demo of three RAG failure scenarios \u2014 outdated documents, contradictions, and unanswerable questions. Toggle between broken and fixed agent behaviors.",
+      "description": "Interactive demo of three RAG failure scenarios — outdated documents, contradictions, and unanswerable questions. Toggle between broken and fixed agent behaviors.",
       "icon": "shield-alert",
       "badge": "Demo",
       "badgeType": "interactive",
       "linkText": "Explore failures"
     },
     {
-      "title": "Homework Guide \u2014 Build Your Knowledge Agent",
+      "title": "Homework Guide — Build Your Knowledge Agent",
       "url": "/session-07/homework-guide.html",
       "description": "Step-by-step walkthrough for the Session 7 homework: build a RAG agent, stress-test it, evaluate accuracy, and design a real-world proposal. Includes starter code and rubrics.",
       "icon": "book-check",
@@ -196,9 +206,9 @@
       "linkText": "Start homework"
     },
     {
-      "title": "Homework Notebook \u2014 Build Your Own Knowledge Agent",
+      "title": "Homework Notebook — Build Your Own Knowledge Agent",
       "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-07/ISOM260_S7_Homework.ipynb",
-      "description": "Colab notebook for the Session 7 homework. All RAG infrastructure is pre-built \u2014 pick your domain, load your documents, test your agent, break it, and evaluate it.",
+      "description": "Colab notebook for the Session 7 homework. All RAG infrastructure is pre-built — pick your domain, load your documents, test your agent, break it, and evaluate it.",
       "icon": "notebook",
       "badge": "Homework",
       "badgeType": "interactive",
@@ -214,7 +224,7 @@
       "steps": [
         {
           "title": "Load Documents (10 min)",
-          "description": "Load sample company documents \u2014 policies, FAQs, product catalogs. Process them into searchable chunks."
+          "description": "Load sample company documents — policies, FAQs, product catalogs. Process them into searchable chunks."
         },
         {
           "title": "Build the Search Tool (10 min)",
@@ -276,7 +286,7 @@
   "homework": [
     {
       "label": "Build:",
-      "text": "Create a RAG agent for a domain you care about \u2014 load 5+ documents (articles, policies, product pages) and build a search tool. Test with 10 questions."
+      "text": "Create a RAG agent for a domain you care about — load 5+ documents (articles, policies, product pages) and build a search tool. Test with 10 questions."
     },
     {
       "label": "Break:",
@@ -293,8 +303,13 @@
   ],
   "nextSession": {
     "title": "Session 8: Multi-Agent Systems in Practice",
-    "description": "One agent is useful. A team of agents is powerful. Build a researcher\u2192analyst pipeline and learn coordination patterns.",
-    "tags": ["Multi-Agent", "Pipelines", "Coordination", "Specialization"],
+    "description": "One agent is useful. A team of agents is powerful. Build a researcher→analyst pipeline and learn coordination patterns.",
+    "tags": [
+      "Multi-Agent",
+      "Pipelines",
+      "Coordination",
+      "Specialization"
+    ],
     "slug": "session-08"
   }
 }

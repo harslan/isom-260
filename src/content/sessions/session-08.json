@@ -4,9 +4,19 @@
   "title": "Multi-Agent Systems in Practice",
   "subtitle": "One agent is useful. A team of agents is powerful. Build pipelines, coordinate handoffs, and manage agent teams.",
   "heroTitle": "Multi-Agent Systems <span class=\"bg-gradient-to-br from-accent-cyan to-accent-purple bg-clip-text text-transparent\">in Practice</span>",
-  "duration": "150 Minutes",
+  "duration": "2 meetings · 75 min",
+  "meetings": [
+    "Mon Nov 2",
+    "Wed Nov 4"
+  ],
   "icon": "users",
-  "tags": ["Multi-Agent", "Pipelines", "Agent Coordination", "Handoffs", "Specialization"],
+  "tags": [
+    "Multi-Agent",
+    "Pipelines",
+    "Agent Coordination",
+    "Handoffs",
+    "Specialization"
+  ],
   "objectives": [
     {
       "title": "Build a Multi-Agent Pipeline",
@@ -32,8 +42,8 @@
       "duration": "15 minutes",
       "description": "In Session 6 you designed multi-agent systems on paper. Today you build one.",
       "bulletPoints": [
-        "Recap: Three architectures from Session 6 \u2014 Pipeline, Debate, Orchestrator",
-        "Today's build: A 2-agent pipeline (Researcher \u2192 Analyst), then extend to 3 agents (+ Editor)",
+        "Recap: Three architectures from Session 6 — Pipeline, Debate, Orchestrator",
+        "Today's build: A 2-agent pipeline (Researcher → Analyst), then extend to 3 agents (+ Editor)",
         "The org chart analogy: Why companies have departments. Why agent systems need specialization.",
         "Key question: When does adding another agent help vs. adding complexity?"
       ]
@@ -42,23 +52,23 @@
       "time": "5:15 PM - 5:40 PM",
       "title": "Part 2: Agent Communication Patterns",
       "duration": "25 minutes",
-      "description": "How agents talk to each other \u2014 message passing, shared context, and orchestration.",
+      "description": "How agents talk to each other — message passing, shared context, and orchestration.",
       "bulletPoints": [
         "Message passing: Agent A's output becomes Agent B's input. The simplest coordination pattern.",
         "Shared context: All agents read from and write to a shared workspace. More flexible but harder to debug.",
         "Orchestration: A manager agent decides who works on what. The pattern behind Claude Code's team feature.",
-        "Live demo: See how a simple pipeline actually works in code \u2014 it's just function calls with structured outputs."
+        "Live demo: See how a simple pipeline actually works in code — it's just function calls with structured outputs."
       ]
     },
     {
       "time": "5:40 PM - 6:25 PM",
-      "title": "Part 3: Hands-On \u2014 Build a 2-Agent Pipeline",
+      "title": "Part 3: Hands-On — Build a 2-Agent Pipeline",
       "duration": "45 minutes",
-      "description": "Build a Researcher \u2192 Analyst pipeline, then extend it with an Editor agent.",
+      "description": "Build a Researcher → Analyst pipeline, then extend it with an Editor agent.",
       "bulletPoints": [
-        "Phase 1 (15 min): Build the Researcher agent \u2014 searches for information, returns structured findings",
-        "Phase 2 (15 min): Build the Analyst agent \u2014 receives research, identifies patterns, generates insights and recommendations",
-        "Phase 3 (15 min): Add the Editor agent \u2014 fact-checks, improves clarity, scores quality. Run the full pipeline end-to-end."
+        "Phase 1 (15 min): Build the Researcher agent — searches for information, returns structured findings",
+        "Phase 2 (15 min): Build the Analyst agent — receives research, identifies patterns, generates insights and recommendations",
+        "Phase 3 (15 min): Add the Editor agent — fact-checks, improves clarity, scores quality. Run the full pipeline end-to-end."
       ]
     },
     {
@@ -70,15 +80,15 @@
     },
     {
       "time": "6:35 PM - 7:05 PM",
-      "title": "Part 5: The Telephone Game \u2014 Information Distortion",
+      "title": "Part 5: The Telephone Game — Information Distortion",
       "duration": "30 minutes",
       "description": "The ethics of multi-agent systems: who's accountable when information degrades across agents?",
       "bulletPoints": [
-        "Ethics moment: The 'telephone game' \u2014 each agent subtly changes information. After 3 agents, is the output still accurate?",
+        "Ethics moment: The 'telephone game' — each agent subtly changes information. After 3 agents, is the output still accurate?",
         "Live experiment: Run the same question through your pipeline 3 times. Do you get the same answer? Why not?",
         "Accountability: If Agent C gives a wrong answer based on Agent A's research, who's responsible?",
         "Safeguards: Citation chains, confidence propagation, and human review gates at critical handoffs.",
-        "Business value: Division of labor works in companies AND in agent systems \u2014 but coordination has a cost."
+        "Business value: Division of labor works in companies AND in agent systems — but coordination has a cost."
       ]
     },
     {
@@ -99,8 +109,8 @@
       "duration": "10 minutes",
       "description": "You've built single agents, knowledge agents, and now agent teams. Next: apply them to YOUR industry.",
       "bulletPoints": [
-        "The stack: Tools (S4) \u2192 Real APIs (S5) \u2192 ReAct (S6) \u2192 RAG (S7) \u2192 Multi-Agent (TODAY)",
-        "Next session: Agents for Your Industry \u2014 pick your department, build your agent",
+        "The stack: Tools (S4) → Real APIs (S5) → ReAct (S6) → RAG (S7) → Multi-Agent (TODAY)",
+        "Next session: Agents for Your Industry — pick your department, build your agent",
         "Homework preview: Extend your pipeline, analyze information distortion, design a domain-specific multi-agent system"
       ]
     }
@@ -109,7 +119,7 @@
     {
       "title": "Multi-Agent Workshop Notebook",
       "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-08/ISOM260_Session8_Multi_Agent_Systems.ipynb",
-      "description": "Build a Researcher \u2192 Analyst \u2192 Editor pipeline. Learn agent communication, handoffs, and quality control in a multi-agent system.",
+      "description": "Build a Researcher → Analyst → Editor pipeline. Learn agent communication, handoffs, and quality control in a multi-agent system.",
       "icon": "code",
       "badge": "Hands-On",
       "badgeType": "interactive",
@@ -236,7 +246,7 @@
     },
     {
       "icon": "trending-up",
-      "text": "<strong>The pipeline pattern is your workhorse.</strong> Research \u2192 Analysis \u2192 Review is the most common multi-agent pattern. Master it and you can adapt it to any domain."
+      "text": "<strong>The pipeline pattern is your workhorse.</strong> Research → Analysis → Review is the most common multi-agent pattern. Master it and you can adapt it to any domain."
     }
   ],
   "homework": [
@@ -259,8 +269,13 @@
   ],
   "nextSession": {
     "title": "Session 9: Agents for Your Industry",
-    "description": "Pick your department. Build your agent. Marketing, finance, HR, or operations \u2014 apply everything you've learned to YOUR career.",
-    "tags": ["Industry Agents", "Domain-Specific", "Career Application", "Vertical AI"],
+    "description": "Pick your department. Build your agent. Marketing, finance, HR, or operations — apply everything you've learned to YOUR career.",
+    "tags": [
+      "Industry Agents",
+      "Domain-Specific",
+      "Career Application",
+      "Vertical AI"
+    ],
     "slug": "session-09"
   }
 }

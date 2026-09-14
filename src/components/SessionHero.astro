@@ -9,9 +9,10 @@ interface Props {
   subtitle: string;
   duration: string;
   icon?: string;
+  meetings?: string[];
 }
 
-const { number, title, subtitle, duration, icon } = Astro.props;
+const { number, title, subtitle, duration, icon, meetings = [] } = Astro.props;
 ---
 
 <section class="min-h-screen flex flex-col justify-center items-center text-center px-8 pt-24 pb-16 relative">
@@ -31,6 +32,12 @@ const { number, title, subtitle, duration, icon } = Astro.props;
       <Icon name="clock" class="text-accent-purple w-5 h-5" />
       <span>{duration}</span>
     </div>
+    {meetings.length > 0 && (
+      <div class="flex items-center gap-3 text-[0.9rem]">
+        <Icon name="calendar" class="text-accent-cyan w-5 h-5" />
+        <span class="font-mono text-[0.85rem] text-accent-cyan">{meetings.join(' & ')}</span>
+      </div>
+    )}
     <div class="flex items-center gap-3 text-text-muted text-[0.9rem]">
       <Icon name="users" class="text-accent-purple w-5 h-5" />
       <span>40 Students</span>

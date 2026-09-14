@@ -2,15 +2,25 @@
   "number": 13,
   "slug": "session-13",
   "title": "Demo Day",
-  "subtitle": "Ship it \u2014 live demos, peer voting, and the culmination of your agentic AI journey",
+  "subtitle": "Ship it — live demos, peer voting, and the culmination of your agentic AI journey",
   "heroTitle": "<span class=\"bg-gradient-to-br from-accent-cyan to-accent-purple bg-clip-text text-transparent\">Demo Day</span>",
-  "duration": "150 Minutes",
+  "duration": "2 meetings · 75 min",
+  "meetings": [
+    "Mon Dec 7",
+    "Wed Dec 9"
+  ],
   "icon": "award",
-  "tags": ["Demo Day", "Presentations", "Peer Voting", "Live Demos", "Celebration"],
+  "tags": [
+    "Demo Day",
+    "Presentations",
+    "Peer Voting",
+    "Live Demos",
+    "Celebration"
+  ],
   "objectives": [
     {
       "title": "Deliver a Live Demo",
-      "description": "Present your agent to the class with a live demo \u2014 not slides, not screenshots. Run it in real-time and show it reasoning, using tools, and producing results."
+      "description": "Present your agent to the class with a live demo — not slides, not screenshots. Run it in real-time and show it reasoning, using tools, and producing results."
     },
     {
       "title": "Defend Your Decisions",
@@ -42,10 +52,10 @@
       "time": "5:10 PM - 6:50 PM",
       "title": "Part 2: Live Demonstrations",
       "duration": "100 minutes",
-      "description": "Team presentations \u2014 live agent demos with Q&A.",
+      "description": "Team presentations — live agent demos with Q&A.",
       "bulletPoints": [
         "Each team: 5 min demo + 3 min Q&A (8 min total)",
-        "Demo must be LIVE \u2014 run the agent in Colab/notebook, show reasoning, show tools being called",
+        "Demo must be LIVE — run the agent in Colab/notebook, show reasoning, show tools being called",
         "Show test results: accuracy score, consistency, notable failures and how you handled them",
         "Business case: Who needs this? What's the ROI? What are the risks? Would you deploy it?",
         "Peer voting after each demo via shared form"
@@ -76,11 +86,11 @@
       "duration": "20 minutes",
       "description": "From 'what is AI?' to 'I built an agent product.' What this means for your career.",
       "bulletPoints": [
-        "The journey: Session 1 (What is AI?) \u2192 Session 6 (Agent Patterns) \u2192 Session 11 (Evaluation) \u2192 TODAY (You shipped a product)",
+        "The journey: Session 1 (What is AI?) → Session 6 (Agent Patterns) → Session 11 (Evaluation) → TODAY (You shipped a product)",
         "What you can now do: Build AI agents, connect real APIs, implement RAG, design multi-agent systems, add guardrails, write test suites, pitch business value",
         "Career implications: How to talk about agent-building skills in interviews. Portfolio pieces from this course.",
-        "The field is moving fast: Agent frameworks, MCP adoption, enterprise deployments \u2014 you're entering at the right time",
-        "Final thought: The code was always simple. The thinking \u2014 choosing the right pattern, the right guardrails, the right level of autonomy \u2014 that's what matters."
+        "The field is moving fast: Agent frameworks, MCP adoption, enterprise deployments — you're entering at the right time",
+        "Final thought: The code was always simple. The thinking — choosing the right pattern, the right guardrails, the right level of autonomy — that's what matters."
       ]
     }
   ],
@@ -97,7 +107,7 @@
     {
       "title": "All Course Materials",
       "url": "/",
-      "description": "Every session's materials, notebooks, and resources \u2014 your complete reference for building AI agents.",
+      "description": "Every session's materials, notebooks, and resources — your complete reference for building AI agents.",
       "icon": "book-open",
       "badge": "Archive",
       "badgeType": "code",
@@ -170,7 +180,7 @@
     },
     {
       "icon": "brain",
-      "text": "<strong>The code was always simple.</strong> The agent loop is ~50 lines. ReAct is a system prompt. RAG is search + context. The hard part was always the THINKING \u2014 choosing the right pattern for the right problem."
+      "text": "<strong>The code was always simple.</strong> The agent loop is ~50 lines. ReAct is a system prompt. RAG is search + context. The hard part was always the THINKING — choosing the right pattern for the right problem."
     },
     {
       "icon": "trending-up",
@@ -178,7 +188,7 @@
     },
     {
       "icon": "users",
-      "text": "<strong>Keep building.</strong> The frameworks will change. The models will improve. But the patterns \u2014 ReAct, RAG, multi-agent, guardrails, evaluation \u2014 those are durable. You now speak the language."
+      "text": "<strong>Keep building.</strong> The frameworks will change. The models will improve. But the patterns — ReAct, RAG, multi-agent, guardrails, evaluation — those are durable. You now speak the language."
     }
   ],
   "homework": [

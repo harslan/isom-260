@@ -8,6 +8,7 @@ const sessionsCollection = defineCollection({
     title: z.string(),
     subtitle: z.string(),
     duration: z.string(),
+    meetings: z.array(z.string()).default([]),
     icon: z.string(),
     tags: z.array(z.string()).default([]),
     heroTitle: z.string().optional(),

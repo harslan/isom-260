@@ -4,9 +4,18 @@
   "title": "The Art of Prompt Engineering",
   "subtitle": "Master the craft of communicating with AI — from techniques to API calls",
   "heroTitle": "The Art of <span class=\"bg-gradient-to-br from-accent-cyan to-accent-purple bg-clip-text text-transparent\">Prompt Engineering</span>",
-  "duration": "150 Minutes",
+  "duration": "2 meetings · 75 min",
+  "meetings": [
+    "Wed Sep 23",
+    "Mon Sep 28"
+  ],
   "icon": "pen-tool",
-  "tags": ["Prompt Design", "CRAFT Framework", "API Integration", "Build Your First App"],
+  "tags": [
+    "Prompt Design",
+    "CRAFT Framework",
+    "API Integration",
+    "Build Your First App"
+  ],
   "objectives": [
     {
       "title": "Master Prompt Engineering Fundamentals",
@@ -294,7 +303,12 @@
   "nextSession": {
     "title": "Session 4: Building AI Agents & Workflows",
     "description": "Take your skills further: chain prompts together, give Claude access to tools, and build AI systems that take action in the real world.",
-    "tags": ["Multi-step Agents", "Tool Use", "RAG Introduction", "Real-World Projects"],
+    "tags": [
+      "Multi-step Agents",
+      "Tool Use",
+      "RAG Introduction",
+      "Real-World Projects"
+    ],
     "slug": "session-04"
   }
 }

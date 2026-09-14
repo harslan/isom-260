@@ -4,9 +4,19 @@
   "title": "Agent Patterns & Production Intelligence",
   "subtitle": "ReAct reasoning, multi-agent architectures, and the patterns that separate demos from production systems",
   "heroTitle": "Agent Patterns & <span class=\"bg-gradient-to-br from-accent-cyan to-accent-purple bg-clip-text text-transparent\">Production Intelligence</span>",
-  "duration": "150 Minutes",
+  "duration": "2 meetings · 75 min",
+  "meetings": [
+    "Mon Oct 19",
+    "Wed Oct 21"
+  ],
   "icon": "bot",
-  "tags": ["ReAct Pattern", "Multi-Agent Systems", "MCP", "Business Automation", "Agent Architecture"],
+  "tags": [
+    "ReAct Pattern",
+    "Multi-Agent Systems",
+    "MCP",
+    "Business Automation",
+    "Agent Architecture"
+  ],
   "objectives": [
     {
       "title": "Master the ReAct Pattern",
@@ -320,7 +330,12 @@
   "nextSession": {
     "title": "Session 7: Knowledge Agents — RAG",
     "description": "Your agent is smart, but it doesn't know YOUR business. Add company knowledge with Retrieval-Augmented Generation.",
-    "tags": ["RAG", "Knowledge Agents", "Document Search", "Long Context"],
+    "tags": [
+      "RAG",
+      "Knowledge Agents",
+      "Document Search",
+      "Long Context"
+    ],
     "slug": "session-07"
   }
 }

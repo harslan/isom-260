@@ -4,9 +4,17 @@
   "title": "How AI Actually Works",
   "subtitle": "From neurons to LLMs — demystifying the technology powering the AI revolution",
   "heroTitle": "How AI <span class=\"bg-gradient-to-br from-accent-cyan to-accent-purple bg-clip-text text-transparent\">Actually Works</span>",
-  "duration": "150 Minutes",
+  "duration": "2 meetings · 75 min",
+  "meetings": [
+    "Wed Sep 16",
+    "Mon Sep 21"
+  ],
   "icon": "brain",
-  "tags": ["Neural Networks", "LLMs", "Hands-On"],
+  "tags": [
+    "Neural Networks",
+    "LLMs",
+    "Hands-On"
+  ],
   "objectives": [
     {
       "title": "Understand Neural Networks",
@@ -258,7 +266,11 @@
   "nextSession": {
     "title": "Session 3: Prompt Engineering & API Calls",
     "description": "Learn the art and science of getting AI to do exactly what you want. We'll write our first API calls and build a simple AI-powered application.",
-    "tags": ["Prompt Design", "API Integration", "Build Your First App"],
+    "tags": [
+      "Prompt Design",
+      "API Integration",
+      "Build Your First App"
+    ],
     "slug": "session-03"
   }
 }

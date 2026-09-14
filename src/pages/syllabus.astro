@@ -25,7 +25,7 @@ const sorted = sessions.sort((a, b) => a.data.number - b.data.number);
 
   <!-- Schedule -->
   <section class="py-12 px-8 max-w-[1200px] mx-auto">
-    <SectionHeader number="01" label="Schedule" title="Session Schedule" description="13 sessions covering the full spectrum of AI in business." />
+    <SectionHeader number="01" label="Schedule" title="Session Schedule" description="13 sessions across Mon & Wed meetings, 12:30–1:45 PM, 73 Tremont 5065. No class: Mon Oct 12 (October Break), Wed Nov 11 (Veterans Day), Wed Nov 25 (Thanksgiving)." />
     <div class="grid gap-4">
       {sorted.map((session) => (
         <a href={`/sessions/${session.data.slug}`} class="flex items-center gap-6 px-6 py-5 bg-bg-card border border-border-subtle rounded-xl transition-all duration-300 no-underline text-inherit hover:border-accent-cyan/30 hover:translate-x-2 fade-in">
@@ -36,6 +36,11 @@ const sorted = sessions.sort((a, b) => a.data.number - b.data.number);
             <div class="font-semibold">{session.data.title}</div>
             <div class="text-text-secondary text-sm truncate">{session.data.subtitle}</div>
           </div>
+          {session.data.meetings?.length > 0 && (
+            <div class="font-mono text-xs text-accent-cyan/80 shrink-0 hidden md:block text-right leading-relaxed">
+              {session.data.meetings.map((m: string) => <div>{m}</div>)}
+            </div>
+          )}
           <Icon name="chevron-right" class="w-5 h-5 text-text-muted shrink-0" />
         </a>
       ))}

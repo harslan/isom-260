@@ -2,11 +2,20 @@
   "number": 11,
   "slug": "session-11",
   "title": "Testing & Evaluating Agents",
-  "subtitle": "If you can't measure it, you can't trust it \u2014 build test suites, run evaluations, and prove your agent works",
+  "subtitle": "If you can't measure it, you can't trust it — build test suites, run evaluations, and prove your agent works",
   "heroTitle": "Testing & <span class=\"bg-gradient-to-br from-accent-cyan to-accent-purple bg-clip-text text-transparent\">Evaluating Agents</span>",
-  "duration": "150 Minutes",
+  "duration": "1 meeting · 75 min",
+  "meetings": [
+    "Mon Nov 23"
+  ],
   "icon": "check-circle",
-  "tags": ["Testing", "Evaluation", "LLM-as-Judge", "Quality Assurance", "Systematic Evaluation"],
+  "tags": [
+    "Testing",
+    "Evaluation",
+    "LLM-as-Judge",
+    "Quality Assurance",
+    "Systematic Evaluation"
+  ],
   "objectives": [
     {
       "title": "Build a Test Suite",
@@ -30,11 +39,11 @@
       "time": "5:00 PM - 5:15 PM",
       "title": "Part 1: Vibes vs. Data",
       "duration": "15 minutes",
-      "description": "You've been evaluating your agent by trying a few queries and seeing if the output 'looks right.' That's not evaluation \u2014 that's vibes.",
+      "description": "You've been evaluating your agent by trying a few queries and seeing if the output 'looks right.' That's not evaluation — that's vibes.",
       "bulletPoints": [
         "The vibes problem: 'It seems to work' is not a deployment-ready answer. A VP will ask for numbers.",
         "What systematic evaluation looks like: test suites, automated scoring, consistency checks, failure analysis",
-        "The eval stack: Test cases \u2192 Automated runner \u2192 LLM-as-judge \u2192 Metrics dashboard",
+        "The eval stack: Test cases → Automated runner → LLM-as-judge → Metrics dashboard",
         "Why this matters for your final project: your deliverable includes a test suite (20% of grade)"
       ]
     },
@@ -42,9 +51,9 @@
       "time": "5:15 PM - 5:40 PM",
       "title": "Part 2: Building Test Suites",
       "duration": "25 minutes",
-      "description": "How to write test cases for AI agents \u2014 it's not like testing normal software.",
+      "description": "How to write test cases for AI agents — it's not like testing normal software.",
       "bulletPoints": [
-        "The challenge: Agent outputs aren't deterministic. Same input \u2192 different (but hopefully equivalent) outputs.",
+        "The challenge: Agent outputs aren't deterministic. Same input → different (but hopefully equivalent) outputs.",
         "Test case anatomy: Input, expected behavior (not exact output), evaluation criteria, edge case flag",
         "Categories: Happy path (10 cases), edge cases (5), adversarial inputs (3), domain-specific risks (2)",
         "Demo: Building a 20-case test suite for the research agent from Session 6"
@@ -52,13 +61,13 @@
     },
     {
       "time": "5:40 PM - 6:25 PM",
-      "title": "Part 3: Hands-On \u2014 Build Your Evaluation Pipeline",
+      "title": "Part 3: Hands-On — Build Your Evaluation Pipeline",
       "duration": "45 minutes",
-      "description": "Build a complete evaluation pipeline for your agent \u2014 test suite, automated runner, and LLM-as-judge.",
+      "description": "Build a complete evaluation pipeline for your agent — test suite, automated runner, and LLM-as-judge.",
       "bulletPoints": [
-        "Phase 1 (15 min): Write 20 test cases for your agent \u2014 inputs, expected behaviors, and evaluation criteria",
+        "Phase 1 (15 min): Write 20 test cases for your agent — inputs, expected behaviors, and evaluation criteria",
         "Phase 2 (15 min): Build an automated test runner that runs all 20 cases and an LLM-as-judge that scores each output",
-        "Phase 3 (15 min): Run the consistency test \u2014 same 5 queries, 3 times each. Calculate variance and identify unstable outputs."
+        "Phase 3 (15 min): Run the consistency test — same 5 queries, 3 times each. Calculate variance and identify unstable outputs."
       ]
     },
     {
@@ -76,7 +85,7 @@
       "bulletPoints": [
         "Run the full eval: Execute all 20 test cases + consistency tests. See your agent's real performance numbers.",
         "Failure analysis: Where does your agent fail? Wrong tool selection? Bad reasoning? Hallucination? Guardrail bypass?",
-        "Ethics moment: Test for bias \u2014 does your agent perform differently for different demographics, names, or scenarios?",
+        "Ethics moment: Test for bias — does your agent perform differently for different demographics, names, or scenarios?",
         "Improvement loop: Fix the worst failure, re-run eval, compare scores. Systematic improvement, not guesswork.",
         "The metrics that matter: Accuracy, relevance, safety score, consistency, cost per query"
       ]
@@ -100,8 +109,8 @@
       "description": "You can now build agents AND prove they work. Next: put it all together for your final project.",
       "bulletPoints": [
         "Today: You moved from vibes to data. Your agent now has a test suite, automated scoring, and real metrics.",
-        "The full stack is complete: Build (S4-8) \u2192 Apply (S9) \u2192 Safeguard (S10) \u2192 Evaluate (TODAY)",
-        "Next session: Final Project Workshop \u2014 teams form, scope locks, building begins",
+        "The full stack is complete: Build (S4-8) → Apply (S9) → Safeguard (S10) → Evaluate (TODAY)",
+        "Next session: Final Project Workshop — teams form, scope locks, building begins",
         "Homework: Refine your test suite, analyze failures, prepare your final project proposal"
       ]
     }
@@ -216,7 +225,12 @@
   "nextSession": {
     "title": "Session 12: Final Project Workshop",
     "description": "From notebook to product. From prototype to pitch. Teams form, scope locks, and building begins.",
-    "tags": ["Workshop", "Final Project", "Team Formation", "Building"],
+    "tags": [
+      "Workshop",
+      "Final Project",
+      "Team Formation",
+      "Building"
+    ],
     "slug": "session-12"
   }
 }

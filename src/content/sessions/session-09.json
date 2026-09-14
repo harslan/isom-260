@@ -4,13 +4,23 @@
   "title": "Agents for Your Industry",
   "subtitle": "Pick your department. Build your agent. Apply everything you've learned to YOUR career.",
   "heroTitle": "Agents for <span class=\"bg-gradient-to-br from-accent-cyan to-accent-purple bg-clip-text text-transparent\">Your Industry</span>",
-  "duration": "150 Minutes",
+  "duration": "1 meeting · 75 min",
+  "meetings": [
+    "Mon Nov 9"
+  ],
   "icon": "briefcase",
-  "tags": ["Industry Agents", "Domain-Specific", "Marketing", "Finance", "HR", "Operations"],
+  "tags": [
+    "Industry Agents",
+    "Domain-Specific",
+    "Marketing",
+    "Finance",
+    "HR",
+    "Operations"
+  ],
   "objectives": [
     {
       "title": "Build a Domain-Specific Agent",
-      "description": "Choose your track \u2014 Marketing, Finance, HR, or Operations \u2014 and build an agent tailored to real workflows in that domain."
+      "description": "Choose your track — Marketing, Finance, HR, or Operations — and build an agent tailored to real workflows in that domain."
     },
     {
       "title": "Apply the Full Agent Stack",
@@ -18,7 +28,7 @@
     },
     {
       "title": "Identify Domain-Specific Risks",
-      "description": "Every industry has unique AI risks \u2014 HR bias, financial liability, marketing deception, operations safety. Recognize and plan for yours."
+      "description": "Every industry has unique AI risks — HR bias, financial liability, marketing deception, operations safety. Recognize and plan for yours."
     },
     {
       "title": "Prototype Your Final Project Idea",
@@ -30,19 +40,19 @@
       "time": "5:00 PM - 5:15 PM",
       "title": "Part 1: The Industry Pivot",
       "duration": "15 minutes",
-      "description": "From 'learning to build agents' to 'building agents for YOUR career.' The skills are ready \u2014 now apply them.",
+      "description": "From 'learning to build agents' to 'building agents for YOUR career.' The skills are ready — now apply them.",
       "bulletPoints": [
         "Recap: You can now build agents with tools (S4), real APIs (S5), ReAct reasoning (S6), knowledge/RAG (S7), and multi-agent pipelines (S8)",
         "Today's shift: Stop building generic agents. Start building agents for YOUR industry, YOUR department, YOUR career.",
         "Four tracks: Marketing Agent, Financial Analyst Agent, HR Onboarding Agent, Operations Agent",
-        "All tracks use the SAME agent loop and tools \u2014 the difference is the domain knowledge and system prompt."
+        "All tracks use the SAME agent loop and tools — the difference is the domain knowledge and system prompt."
       ]
     },
     {
       "time": "5:15 PM - 5:35 PM",
       "title": "Part 2: Domain Briefings",
       "duration": "20 minutes",
-      "description": "Quick overview of each track \u2014 the problems, the tools, and the risks.",
+      "description": "Quick overview of each track — the problems, the tools, and the risks.",
       "bulletPoints": [
         "Marketing: Campaign analysis, competitor monitoring, content generation, audience insights. Risk: Deceptive content, brand damage.",
         "Finance: Financial analysis, report generation, market research, risk assessment. Risk: Liability, incorrect recommendations.",
@@ -57,9 +67,9 @@
       "duration": "50 minutes",
       "description": "Dedicated build time. Use your chosen track's starter template or build from scratch.",
       "bulletPoints": [
-        "Phase 1 (15 min): Define your agent \u2014 system prompt, 3-4 domain-specific tools, sample data or documents (RAG optional)",
+        "Phase 1 (15 min): Define your agent — system prompt, 3-4 domain-specific tools, sample data or documents (RAG optional)",
         "Phase 2 (20 min): Build and test your agent. Wire the tools, test with realistic scenarios from your industry.",
-        "Phase 3 (15 min): Push to failure \u2014 adversarial inputs, edge cases, ethical dilemmas specific to your domain."
+        "Phase 3 (15 min): Push to failure — adversarial inputs, edge cases, ethical dilemmas specific to your domain."
       ]
     },
     {
@@ -73,7 +83,7 @@
       "time": "6:35 PM - 7:05 PM",
       "title": "Part 5: Domain-Specific Risks & Ethics",
       "duration": "30 minutes",
-      "description": "Every domain has its own AI risks. What are yours \u2014 and how do you mitigate them?",
+      "description": "Every domain has its own AI risks. What are yours — and how do you mitigate them?",
       "bulletPoints": [
         "Ethics moment: Each track presents its biggest risk scenario. Marketing: AI-generated deceptive ads. Finance: Wrong investment recommendation. HR: Biased resume screening. Ops: Safety incident from bad recommendation.",
         "Cross-track discussion: What risks does your neighbor's domain have that yours doesn't? What's shared?",
@@ -90,7 +100,7 @@
         "Final project preview: Working agent (50%) + test suite (20%) + business case pitch (30%)",
         "Ideation: What problem would you solve? For whom? What data/tools would your agent need?",
         "Scope check: Can you build it in 2 sessions? Can you demo it live? Does the problem matter?",
-        "Share: 60-second pitch to a neighbor \u2014 problem, agent, value proposition."
+        "Share: 60-second pitch to a neighbor — problem, agent, value proposition."
       ]
     },
     {
@@ -100,7 +110,7 @@
       "description": "From generic agents to industry specialists. Next: making them production-safe.",
       "bulletPoints": [
         "Today: You applied the full agent stack to a real industry problem",
-        "Next session: Human-in-the-Loop & Agent Guardrails \u2014 the engineering that makes agents trustworthy",
+        "Next session: Human-in-the-Loop & Agent Guardrails — the engineering that makes agents trustworthy",
         "Homework: Refine your industry agent, document domain risks, start your final project ideation"
       ]
     }
@@ -127,7 +137,7 @@
     {
       "title": "Building Effective Agents (Anthropic)",
       "url": "https://www.anthropic.com/engineering/building-effective-agents",
-      "description": "Review the agent patterns guide \u2014 especially the section on when NOT to use agents. Does your use case warrant an agent?",
+      "description": "Review the agent patterns guide — especially the section on when NOT to use agents. Does your use case warrant an agent?",
       "icon": "bot",
       "badge": "Review",
       "badgeType": "interactive",
@@ -170,7 +180,7 @@
           "description": "What are the 3 worst things your agent could do wrong in your domain? Think: wrong answers, bias, privacy violations, legal liability."
         },
         {
-          "title": "Severity \u00d7 Likelihood",
+          "title": "Severity × Likelihood",
           "description": "Rate each risk: How bad would it be (1-10)? How likely is it (1-10)? Multiply for priority score."
         },
         {
@@ -201,7 +211,7 @@
   "homework": [
     {
       "label": "Refine:",
-      "text": "Improve your industry agent \u2014 add at least 2 more tools, refine the system prompt, and test with 5 realistic scenarios from your domain."
+      "text": "Improve your industry agent — add at least 2 more tools, refine the system prompt, and test with 5 realistic scenarios from your domain."
     },
     {
       "label": "Document Risks:",
@@ -219,7 +229,12 @@
   "nextSession": {
     "title": "Session 10: Human-in-the-Loop & Agent Guardrails",
     "description": "The best agents know when to ask for help. Add approval gates, confidence thresholds, and guardrails that make agents trustworthy.",
-    "tags": ["Guardrails", "Human-in-the-Loop", "Trust", "Production Safety"],
+    "tags": [
+      "Guardrails",
+      "Human-in-the-Loop",
+      "Trust",
+      "Production Safety"
+    ],
     "slug": "session-10"
   }
 }

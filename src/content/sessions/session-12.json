@@ -2,15 +2,25 @@
   "number": 12,
   "slug": "session-12",
   "title": "Final Project Workshop",
-  "subtitle": "From notebook to product, from prototype to pitch \u2014 teams form, scope locks, and building begins",
+  "subtitle": "From notebook to product, from prototype to pitch — teams form, scope locks, and building begins",
   "heroTitle": "Final Project <span class=\"bg-gradient-to-br from-accent-cyan to-accent-purple bg-clip-text text-transparent\">Workshop</span>",
-  "duration": "150 Minutes",
+  "duration": "2 meetings · 75 min",
+  "meetings": [
+    "Mon Nov 30",
+    "Wed Dec 2"
+  ],
   "icon": "wrench",
-  "tags": ["Workshop", "Final Project", "Team Formation", "Prototyping", "Architecture"],
+  "tags": [
+    "Workshop",
+    "Final Project",
+    "Team Formation",
+    "Prototyping",
+    "Architecture"
+  ],
   "objectives": [
     {
       "title": "Form Teams & Lock Scope",
-      "description": "Teams of 2-3 (or solo) form around a shared problem. Scope is locked by end of class \u2014 no more pivoting after today."
+      "description": "Teams of 2-3 (or solo) form around a shared problem. Scope is locked by end of class — no more pivoting after today."
     },
     {
       "title": "Design Agent Architecture",
@@ -46,7 +56,7 @@
       "description": "Form teams, choose problems, and write a crisp problem statement.",
       "bulletPoints": [
         "Team formation: 2-3 people or solo. Find teammates with complementary skills or shared interests.",
-        "Problem statement exercise: In 2 sentences \u2014 what problem does your agent solve? For whom?",
+        "Problem statement exercise: In 2 sentences — what problem does your agent solve? For whom?",
         "Feasibility check: Can you build it in one session? Can you demo it live? Is the problem real?",
         "Quick pitches: Each team shares their problem statement (30 seconds). Peer feedback on scope and feasibility."
       ]
@@ -57,9 +67,9 @@
       "duration": "45 minutes",
       "description": "Design your system on paper, then start building the skeleton in Colab.",
       "bulletPoints": [
-        "Architecture sketch (15 min): Draw your system \u2014 agent(s), tools, data sources, guardrails, human gates. Get instructor feedback.",
+        "Architecture sketch (15 min): Draw your system — agent(s), tools, data sources, guardrails, human gates. Get instructor feedback.",
         "Skeleton build (30 min): Open Colab. Get the agent loop running with at least 1 tool. Connect sample data. Start your test file.",
-        "Professor/TA circulate for scope and feasibility feedback \u2014 this is your chance to get expert guidance."
+        "Professor/TA circulate for scope and feasibility feedback — this is your chance to get expert guidance."
       ]
     },
     {
@@ -76,7 +86,7 @@
       "description": "Dedicated build time with instructor support. Focus on getting the core agent working.",
       "bulletPoints": [
         "Priority: Get the core agent loop working with real tools. Don't worry about polish.",
-        "Second priority: Start your test suite \u2014 at least 10 test cases written (can automate later).",
+        "Second priority: Start your test suite — at least 10 test cases written (can automate later).",
         "Ask for help: Professor and TA are here specifically to unblock you. Don't struggle alone.",
         "Checkpoint: By 7:15, every team should have a running agent and a test plan."
       ]
@@ -88,7 +98,7 @@
       "description": "Plan your 5-minute demo and understand what happens next session.",
       "bulletPoints": [
         "Demo format: 5 minutes live demo + 3 minutes Q&A. Must run the agent live (not slides).",
-        "Demo checklist: Problem statement \u2192 Live agent demo \u2192 Test results \u2192 Business case \u2192 Q&A",
+        "Demo checklist: Problem statement → Live agent demo → Test results → Business case → Q&A",
         "Peer voting categories: Does it work? Is the problem real? Would you trust it? Compelling demo?",
         "Between now and next session: Finish building, run full test suite, prepare your pitch.",
         "Remember: A simple agent that works perfectly beats a complex agent that crashes during demo."
@@ -108,7 +118,7 @@
     {
       "title": "All Session Resources",
       "url": "/",
-      "description": "Review any session's materials \u2014 agent patterns (S6), RAG (S7), multi-agent (S8), industry agents (S9), guardrails (S10), evaluation (S11).",
+      "description": "Review any session's materials — agent patterns (S6), RAG (S7), multi-agent (S8), industry agents (S9), guardrails (S10), evaluation (S11).",
       "icon": "book-open",
       "badge": "Review",
       "badgeType": "code",
@@ -149,7 +159,7 @@
         },
         {
           "title": "Plan Your Demo (15 min)",
-          "description": "Outline the 5-min demo: problem \u2192 live demo \u2192 test results \u2192 business case \u2192 Q&A. A working demo beats perfect slides."
+          "description": "Outline the 5-min demo: problem → live demo → test results → business case → Q&A. A working demo beats perfect slides."
         }
       ]
     }
@@ -187,13 +197,18 @@
     },
     {
       "label": "Polish:",
-      "text": "Clean up your notebook \u2014 clear explanations, organized cells, visible reasoning. Someone should be able to read your notebook and understand what you built."
+      "text": "Clean up your notebook — clear explanations, organized cells, visible reasoning. Someone should be able to read your notebook and understand what you built."
     }
   ],
   "nextSession": {
     "title": "Session 13: Demo Day",
     "description": "Ship it. Live demos, peer voting, and course celebration. Show the world what you built.",
-    "tags": ["Demo Day", "Presentations", "Peer Voting", "Celebration"],
+    "tags": [
+      "Demo Day",
+      "Presentations",
+      "Peer Voting",
+      "Celebration"
+    ],
     "slug": "session-13"
   }
 }
