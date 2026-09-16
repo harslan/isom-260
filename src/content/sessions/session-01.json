@@ -125,7 +125,7 @@
     {
       "title": "Train Your Own Tiny LLM — Colab Notebook",
       "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-01/ISOM260_Session1_Train_Your_Tiny_LLM.ipynb",
-      "description": "The Session 1 hands-on and Homework #1: build a language model by counting (Act 1, in class), then train a real 100,000-parameter transformer at home (Acts 2-3, due before Monday). Runs free in your browser, no API keys.",
+      "description": "The Session 1 hands-on and Homework #1: build a language model by counting (Act 1, in class), then train a real 100,000-parameter transformer at home (Acts 2-3, due Thu Sep 17, 11:59 PM). Runs free in your browser, no API keys.",
       "icon": "code",
       "badge": "Hands-On",
       "badgeType": "interactive",
