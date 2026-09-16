@@ -582,7 +582,7 @@
     <div class="glow-orb glow-orb-3"></div>
 
     <div class="deck-progress"><div class="deck-progress-fill" id="progressFill"></div></div>
-    <div class="slide-counter" id="slideCounter">1 / 15</div>
+    <div class="slide-counter" id="slideCounter">1 / 16</div>
     <div class="nav-hint" id="navHint">→ to advance · F for fullscreen</div>
 
     <!-- ═══════════════ SLIDE 1 · TITLE ═══════════════ -->
@@ -622,6 +622,26 @@
                 </div>
             </div>
             <p class="footer-note">Most people on Earth will never train a model. You're 1-for-1 this semester.</p>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SLIDE 2B · GAME: BEAT YOUR OWN AI ═══════════════ -->
+    <section class="slide">
+        <div class="slide-inner">
+            <div class="slide-label green">Game · 10 min · humans vs. YOUR model</div>
+            <h2 class="slide-title">🎮 Beat your own AI.</h2>
+            <p class="slide-sub" style="margin-bottom: 1.5rem;">I reveal a real name one letter at a time. <strong style="color: var(--text-primary);">You shout the next letter.</strong> Then we see what your transformer predicted — with its confidence, and its <em>surprise</em> when it's wrong.</p>
+            <div class="check-list">
+                <div class="check-item">
+                    <div class="check-icon"><i data-lucide="users"></i></div>
+                    <div class="check-text">Room majority right = point for humans <span>· model's top pick right = point for TinyGPT</span></div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon"><i data-lucide="gauge"></i></div>
+                    <div class="check-text">Watch the surprise meter <span>every miss costs the model "surprise" — keep an eye on the running average…</span></div>
+                </div>
+            </div>
+            <p class="footer-note">(These are your seeded model's real probabilities — not a simulation.)</p>
         </div>
     </section>
 

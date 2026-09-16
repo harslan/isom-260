@@ -46,9 +46,20 @@
       "isBreak": false
     },
     {
-      "time": "Wed Sep 16 · 12:35 PM",
+      "time": "Wed Sep 16 · 12:33 PM",
+      "title": "Game: Beat Your Own AI",
+      "duration": "12 minutes",
+      "description": "The room vs. the transformer you trained: guess the next letter, then see the model's real probabilities and its surprise when it misses.",
+      "bulletPoints": [
+        "Humans vs. TinyGPT scoreboard, live surprise meter",
+        "The reveal: the running surprise average IS the training loss you watched fall"
+      ],
+      "isBreak": false
+    },
+    {
+      "time": "Wed Sep 16 · 12:45 PM",
       "title": "It's Just Numbers: The 104,475-Parameter Census",
-      "duration": "10 minutes",
+      "duration": "8 minutes",
       "description": "Where does a model's 'knowledge' physically live? A complete accounting of your model's brain.",
       "bulletPoints": [
         "Embeddings, attention, MLPs, head — every number counted",
@@ -57,9 +68,9 @@
       "isBreak": false
     },
     {
-      "time": "Wed Sep 16 · 12:45 PM",
+      "time": "Wed Sep 16 · 12:54 PM",
       "title": "Interactive: Be the Neuron (Loan Officer)",
-      "duration": "15 minutes",
+      "duration": "12 minutes",
       "description": "One artificial neuron = a weighted vote. You set the loan-approval weights by hand — then gradient descent beats you.",
       "bulletPoints": [
         "Three sliders: income weight, credit weight, bias",
@@ -69,9 +80,9 @@
       "isBreak": false
     },
     {
-      "time": "Wed Sep 16 · 1:05 PM",
+      "time": "Wed Sep 16 · 1:07 PM",
       "title": "Hands-On: Open the Hood of Your Model",
-      "duration": "27 minutes",
+      "duration": "25 minutes",
       "description": "Colab notebook: retrain your Session 1 model, then X-ray it four ways.",
       "bulletPoints": [
         "The map of meaning: your model discovered vowels on its own",
@@ -130,6 +141,15 @@
       "badge": "Hands-On",
       "badgeType": "interactive",
       "linkText": "Open in Colab"
+    },
+    {
+      "title": "Beat Your Own AI — The Next-Letter Game",
+      "url": "/session-02/beat-your-ai.html",
+      "description": "The classroom game: a real name is revealed letter by letter, the room guesses, then we see what YOUR trained model predicted — with its real probabilities and a live surprise meter that converges to the training loss.",
+      "icon": "play-circle",
+      "badge": "Game",
+      "badgeType": "interactive",
+      "linkText": "Play in class"
     },
     {
       "title": "The Loan Officer — Neuron Playground",
