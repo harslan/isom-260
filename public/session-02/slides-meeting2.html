@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session 2 Slides — The Machine Becomes ChatGPT | ISOM 260</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #0f1424;
+            --bg-card: #141929;
+            --bg-elevated: #1a2035;
+
+            --cyan: #00e5ff;
+            --cyan-dim: #00b8d4;
+            --cyan-glow: rgba(0, 229, 255, 0.15);
+            --cyan-glow-strong: rgba(0, 229, 255, 0.3);
+
+            --magenta: #ff006e;
+            --magenta-glow: rgba(255, 0, 110, 0.15);
+
+            --yellow: #ffd600;
+            --yellow-glow: rgba(255, 214, 0, 0.15);
+
+            --green: #00e676;
+            --green-glow: rgba(0, 230, 118, 0.15);
+
+            --orange: #ff9100;
+            --purple: #b388ff;
+            --purple-glow: rgba(179, 136, 255, 0.15);
+
+            --text-primary: #e8ecf4;
+            --text-secondary: #8892a8;
+            --text-dim: #5a6478;
+
+            --border: rgba(0, 229, 255, 0.1);
+            --border-strong: rgba(0, 229, 255, 0.25);
+            --grid-line: rgba(0, 229, 255, 0.04);
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'DM Sans', sans-serif;
+            line-height: 1.6;
+            background-image:
+                linear-gradient(var(--grid-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+            background-size: 40px 40px;
+            cursor: default;
+        }
+
+        /* Glow orbs */
+        .glow-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.4;
+        }
+        .glow-orb-1 { width: 500px; height: 500px; background: rgba(0, 229, 255, 0.08); top: -100px; left: -100px; }
+        .glow-orb-2 { width: 400px; height: 400px; background: rgba(255, 0, 110, 0.06); top: 40%; right: -100px; }
+        .glow-orb-3 { width: 350px; height: 350px; background: rgba(0, 230, 118, 0.05); bottom: -50px; left: 30%; }
+
+        /* Deck progress bar */
+        .deck-progress {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: rgba(0, 229, 255, 0.08);
+            z-index: 1000;
+        }
+        .deck-progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--cyan), var(--magenta));
+            transition: width 0.3s ease-out;
+        }
+
+        /* Slide counter */
+        .slide-counter {
+            position: fixed;
+            bottom: 1.2rem;
+            right: 1.6rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            z-index: 1000;
+            letter-spacing: 0.08em;
+            user-select: none;
+        }
+
+        /* Slides */
+        .slide {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 4vh 6vw;
+            text-align: center;
+            z-index: 1;
+            opacity: 0;
+        }
+        .slide.active {
+            display: flex;
+            animation: slide-fade 250ms ease-out forwards;
+        }
+        @keyframes slide-fade {
+            from { opacity: 0; transform: translateY(8px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-inner {
+            max-width: 1400px;
+            width: 100%;
+        }
+
+        /* Type scale */
+        .slide-title {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(2.4rem, 4.5vw, 3.8rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.12;
+            margin-bottom: 1.5rem;
+        }
+        .slide-sub {
+            font-size: clamp(1.4rem, 2vw, 1.7rem);
+            color: var(--text-secondary);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, var(--cyan), var(--magenta));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .gradient-text-warm {
+            background: linear-gradient(135deg, var(--yellow), var(--magenta));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Label (kicker) */
+        .slide-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.85rem;
+            margin-bottom: 1.75rem;
+        }
+        .slide-label::before, .slide-label::after {
+            content: '';
+            width: 36px;
+            height: 2px;
+            background: currentColor;
+            opacity: 0.7;
+        }
+        .slide-label.cyan { color: var(--cyan); }
+        .slide-label.magenta { color: var(--magenta); }
+        .slide-label.green { color: var(--green); }
+        .slide-label.yellow { color: var(--yellow); }
+        .slide-label.purple { color: var(--purple); }
+
+        /* Badge */
+        .session-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.7rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-strong);
+            padding: 0.65rem 1.5rem;
+            border-radius: 100px;
+            margin-bottom: 2.5rem;
+            background: var(--bg-card);
+        }
+        .session-badge .dot {
+            width: 9px; height: 9px;
+            border-radius: 50%;
+            background: var(--cyan);
+            animation: pulse-dot 2s infinite;
+        }
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 var(--cyan-glow-strong); }
+            50% { opacity: 0.7; box-shadow: 0 0 0 7px transparent; }
+        }
+
+        /* Chips */
+        .chip-row {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 2.5rem;
+        }
+        .chip {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            letter-spacing: 0.05em;
+            padding: 0.6rem 1.4rem;
+            border-radius: 100px;
+            border: 1px solid;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .chip.cyan { color: var(--cyan); border-color: rgba(0,229,255,0.3); background: var(--cyan-glow); }
+        .chip.magenta { color: var(--magenta); border-color: rgba(255,0,110,0.3); background: var(--magenta-glow); }
+        .chip.yellow { color: var(--yellow); border-color: rgba(255,214,0,0.3); background: var(--yellow-glow); }
+        .chip.green { color: var(--green); border-color: rgba(0,230,118,0.3); background: var(--green-glow); }
+
+        /* Nav hint */
+        .nav-hint {
+            position: fixed;
+            bottom: 1.2rem;
+            left: 1.6rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            z-index: 1000;
+            letter-spacing: 0.05em;
+            user-select: none;
+        }
+
+        /* Big statement slides */
+        .big-statement {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(3rem, 6.5vw, 5.5rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.15;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .big-statement .hl { color: var(--cyan); text-shadow: 0 0 40px var(--cyan-glow-strong); }
+
+        /* Check list */
+        .check-list {
+            text-align: left;
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.4rem;
+        }
+        .check-item {
+            display: flex;
+            align-items: center;
+            gap: 1.4rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1.5rem 2rem;
+        }
+        .check-item .check-icon {
+            width: 56px; height: 56px;
+            min-width: 56px;
+            border-radius: 12px;
+            background: var(--green-glow);
+            color: var(--green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .check-item .check-icon svg { width: 30px; height: 30px; }
+        .check-item .check-text {
+            font-size: 1.55rem;
+            font-weight: 500;
+        }
+        .check-item .check-text span { color: var(--text-secondary); font-size: 1.2rem; display: block; margin-top: 0.15rem; }
+
+        .footer-note {
+            margin-top: 2.5rem;
+            font-size: 1.35rem;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        /* Stat grid */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.4rem;
+            max-width: 1250px;
+            margin: 0 auto;
+        }
+        .stat-grid.two { grid-template-columns: repeat(2, 1fr); max-width: 1150px; }
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem 1.5rem;
+        }
+        .stat-num {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(2.8rem, 4.5vw, 4rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1;
+            margin-bottom: 0.6rem;
+        }
+        .stat-num.cyan { color: var(--cyan); text-shadow: 0 0 30px var(--cyan-glow-strong); }
+        .stat-num.magenta { color: var(--magenta); text-shadow: 0 0 30px var(--magenta-glow); }
+        .stat-num.yellow { color: var(--yellow); text-shadow: 0 0 30px var(--yellow-glow); }
+        .stat-num.green { color: var(--green); text-shadow: 0 0 30px var(--green-glow); }
+        .stat-num.purple { color: var(--purple); text-shadow: 0 0 30px var(--purple-glow); }
+        .stat-num.orange { color: var(--orange); text-shadow: 0 0 30px rgba(255,145,0,0.3); }
+        .stat-desc {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+        .stat-card .stat-title {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.9rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+        }
+        .stat-card .stat-body {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+            line-height: 1.55;
+            text-align: left;
+        }
+        .stat-card .stat-body strong { color: var(--text-primary); }
+
+        /* Hands-on split */
+        .split {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 3rem;
+            align-items: center;
+            max-width: 1250px;
+            margin: 0 auto;
+            text-align: left;
+        }
+        .step-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.3rem;
+        }
+        .step-item {
+            display: flex;
+            gap: 1.3rem;
+            align-items: flex-start;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1.4rem 1.7rem;
+        }
+        .step-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--green);
+            background: var(--green-glow);
+            width: 48px; height: 48px;
+            min-width: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .step-text { font-size: 1.45rem; line-height: 1.45; }
+        .step-text code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.15rem;
+            color: var(--cyan);
+            background: rgba(0,229,255,0.08);
+            padding: 0.1rem 0.5rem;
+            border-radius: 6px;
+        }
+        .qr-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.2rem;
+        }
+        .qr-frame {
+            background: var(--bg-card);
+            border: 1px solid var(--border-strong);
+            border-radius: 18px;
+            padding: 1.5rem;
+            box-shadow: 0 0 50px var(--cyan-glow);
+        }
+        .qr-frame img { display: block; border-radius: 8px; }
+        .qr-caption {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            text-align: center;
+            line-height: 1.6;
+        }
+        .qr-caption .path { color: var(--cyan); }
+
+        /* Homework slide */
+        .hw-list {
+            text-align: left;
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.3rem;
+        }
+        .hw-item {
+            display: flex;
+            align-items: center;
+            gap: 1.3rem;
+            background: var(--bg-card);
+            border: 1px solid rgba(255,0,110,0.25);
+            border-radius: 14px;
+            padding: 1.4rem 1.8rem;
+            font-size: 1.5rem;
+        }
+        .hw-item .hw-icon {
+            color: var(--magenta);
+            background: var(--magenta-glow);
+            width: 52px; height: 52px;
+            min-width: 52px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .hw-item .hw-icon svg { width: 27px; height: 27px; }
+        .hw-item code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.15rem;
+            color: var(--magenta);
+            background: rgba(255,0,110,0.08);
+            padding: 0.1rem 0.5rem;
+            border-radius: 6px;
+        }
+        .hw-punch {
+            margin-top: 2.2rem;
+            font-family: 'Sora', sans-serif;
+            font-size: 1.7rem;
+            font-weight: 700;
+        }
+        .hw-punch .g { color: var(--green); }
+
+        /* Closer */
+        .closer-title {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(3.5rem, 7vw, 6rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 1.8rem;
+        }
+        .closer-brand {
+            margin-top: 3rem;
+            font-family: 'Sora', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: 0.25em;
+        }
+
+        /* Fullscreen tweaks */
+        :fullscreen body { background: var(--bg-primary); }
+
+        @media (max-width: 1000px) {
+            .stat-grid { grid-template-columns: repeat(2, 1fr); }
+            .stat-grid.two { grid-template-columns: 1fr; }
+            .split { grid-template-columns: 1fr; }
+        }
+
+        /* Compact mode for short viewports (720p projectors, small laptops) */
+        @media (max-height: 820px) {
+            .slide-title { font-size: clamp(1.9rem, 4.2vw, 3rem); margin-bottom: 1.2rem; }
+            .check-list { gap: 0.7rem; }
+            .check-item { padding: 0.85rem 1.4rem; }
+            .check-text { font-size: 1.25rem; }
+            .check-text span { font-size: 0.95rem; }
+            .stat-card { padding: 1.2rem 1rem; }
+            .stat-num { font-size: 2.6rem; }
+            .stat-card .stat-title { font-size: 1.5rem; }
+            .stat-card .stat-body { font-size: 1.15rem; }
+            .step-item { padding: 0.85rem 1.3rem; }
+            .step-text { font-size: 1.2rem; }
+            .footer-note { margin-top: 1.2rem; font-size: 1rem; }
+            .slide-label { margin-bottom: 0.8rem; }
+            .hw-item { padding: 0.9rem 1.4rem; font-size: 1.2rem; }
+            .hw-punch { margin-top: 1.3rem; font-size: 1.35rem; }
+            .qr-frame img { width: 210px; height: auto; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="glow-orb glow-orb-1"></div>
+    <div class="glow-orb glow-orb-2"></div>
+    <div class="glow-orb glow-orb-3"></div>
+
+    <div class="deck-progress"><div class="deck-progress-fill" id="progressFill"></div></div>
+    <div class="slide-counter" id="slideCounter">1 / 16</div>
+    <div class="nav-hint" id="navHint">→ to advance · F for fullscreen</div>
+
+    <!-- ═══════════════ SLIDE 1 · TITLE ═══════════════ -->
+    <section class="slide active">
+        <div class="slide-inner">
+            <div class="session-badge"><span class="dot"></span> ISOM 260 · Session 2 · Meeting 2 of 2</div>
+            <h1 class="slide-title" style="font-size: clamp(3rem, 6vw, 5.2rem);">
+                The Machine<br>
+                <span class="gradient-text">Becomes ChatGPT</span>
+            </h1>
+            <p class="slide-sub">Wednesday you opened the skull. Today: how the predictor learned manners — and how to read the frontier without getting fooled.</p>
+            <div class="chip-row">
+                <span class="chip cyan"><i data-lucide="calendar"></i> Mon Sep 21</span>
+                <span class="chip magenta"><i data-lucide="file-check-2"></i> HW #2 due today</span>
+                <span class="chip yellow"><i data-lucide="map-pin"></i> 73 Tremont 5065</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SLIDE 2 · HW2 DEBRIEF ═══════════════ -->
+    <section class="slide">
+        <div class="slide-inner">
+            <div class="slide-label green">Homework #2 · your paragraphs</div>
+            <h2 class="slide-title">What surprised you.</h2>
+            <div class="check-list">
+                <div class="check-item">
+                    <div class="check-icon"><i data-lucide="bar-chart-3"></i></div>
+                    <div class="check-text">Most-picked X-ray: let's see the tally 👀 <span>(switch to Canvas)</span></div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon"><i data-lucide="quote"></i></div>
+                    <div class="check-text">Best line from the thread <span>read 2–3 aloud</span></div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon"><i data-lucide="bookmark"></i></div>
+                    <div class="check-text">Keep these <span>they're your first written AI judgments, and judgment is the course</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SLIDE 3 · BIG STATEMENT ═══════════════ -->
+    <section class="slide">
+        <div class="slide-inner">
+            <p class="slide-sub" style="margin-bottom: 2rem; font-size: clamp(1.8rem, 3vw, 2.4rem); color: var(--text-primary);">The model you trained can finish "sophi_".</p>
+            <div class="big-statement gradient-text" style="margin-bottom: 2rem;">Why can't it hold a conversation?</div>
+            <p class="slide-sub">A predictor isn't an assistant. Three more steps make the difference.</p>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SLIDE 4 · THE PIPELINE ═══════════════ -->
+    <section class="slide">
+        <div class="slide-inner">
+            <div class="slide-label cyan">From predictor to assistant</div>
+            <h2 class="slide-title">Three steps from your TinyGPT to <span class="gradient-text">ChatGPT.</span></h2>
+            <div class="step-list" style="max-width: 1000px; margin: 0 auto;">
+                <div class="step-item">
+                    <div class="step-num">1</div>
+                    <div class="step-text"><strong>PRETRAINING</strong> — predict the next token on ~the internet. <strong>Capability lives here.</strong> (What your TinyGPT did, at 10-million× scale.)</div>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">2</div>
+                    <div class="step-text"><strong>INSTRUCTION TUNING</strong> — show it thousands of examples of following directions. <strong>Format.</strong></div>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">3</div>
+                    <div class="step-text"><strong>RLHF</strong> — humans pick the better of two answers, again and again. <strong>Manners.</strong></div>
+                </div>
+            </div>
+            <p class="footer-note">Step 3 is where it gets interesting — because the humans are about to be YOU.</p>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SLIDE 5 · GAME LAUNCH ═══════════════ -->
+    <section class="slide">
+        <div class="slide-inner">
+            <div class="slide-label green">Interactive · 18 min</div>
+            <h2 class="slide-title">You are <span class="gradient-text">the rater.</span></h2>
+            <div class="split">
+                <div class="step-list">
+                    <div class="step-item">
+                        <div class="step-num">1</div>
+                        <div class="step-text">A prompt + <strong>two AI answers</strong> appear</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-num">2</div>
+                        <div class="step-text">Vote by hand — <strong>A or B</strong>. Majority rules.</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-num">3</div>
+                        <div class="step-text">Then we see what <strong>production raters</strong> rewarded — and what that did to the models.</div>
+                    </div>
+                </div>
+                <div class="qr-box">
+                    <div class="qr-frame">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=360x360&qzone=2&bgcolor=fdfdfd&color=0a0e1a&data=https%3A%2F%2Fisom-260.vercel.app%2Fsession-02%2Fyou-are-the-rater.html" width="280" alt="QR — You Are the Rater">
+                    </div>
+                    <div class="qr-caption"><span class="path">presenter drives — students just vote (and argue)</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SLIDE 6 · RLHF AFTERMATH ═══════════════ -->
+    <section class="slide">
+        <div class="slide-inner">
+            <div class="slide-label yellow">What the raters did to the models</div>
+            <h2 class="slide-title">Every quirk of the raters became <span class="gradient-text-warm">a quirk of the machine.</span></h2>
+            <div class="check-list">
+                <div class="check-item">
+                    <div class="check-icon" style="background: var(--yellow-glow); color: var(--yellow);"><i data-lucide="heart-handshake"></i></div>
+                    <div class="check-text">Sycophancy <span>raters rewarded agreement → models became flatterers (labs now train against it)</span></div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon" style="background: var(--yellow-glow); color: var(--yellow);"><i data-lucide="align-left"></i></div>
+                    <div class="check-text">Length bias <span>raters rewarded longer answers → chatbots pad, and you pay per token</span></div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon" style="background: var(--yellow-glow); color: var(--yellow);"><i data-lucide="shield-x"></i></div>
+                    <div class="check-text">Over-refusal <span>raters over-rewarded caution → models refused legitimate work; now recalibrated</span></div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon" style="background: var(--yellow-glow); color: var(--yellow);"><i data-lucide="lightbulb"></i></div>
+                    <div class="check-text">The lesson <span>alignment is a values problem wearing a math costume</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SLIDE 7 · BIG STATEMENT · SCALE ═══════════════ -->
+    <section class="slide">
+        <div class="slide-inner">
+            <div class="big-statement gradient-text" style="margin-bottom: 2rem;">Scale is a strategy, not a detail.</div>
+            <p class="slide-sub">Why the labs keep making them bigger — and what it costs.</p>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SLIDE 8 · THE ECONOMICS ═══════════════ -->
+    <section class="slide">
+        <div class="slide-inner">
+            <div class="slide-label cyan">The business of intelligence · Sep 2026</div>
+            <h2 class="slide-title">What intelligence <span class="gradient-text">costs.</span></h2>
+            <div class="stat-grid">
+                <div class="stat-card">
+                    <div class="stat-num cyan">$10/$50</div>
+                    <div class="stat-desc">Claude Fable 5.1 per 1M tokens — the frontier premium</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-num green">$2/$10</div>
+                    <div class="stat-desc">Claude Sonnet 5 — the workhorse tier</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-num yellow">$0.75/$3.75</div>
+                    <div class="stat-desc">Gemini 3.8 Flash… promo pricing that DOUBLES Jan 1</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-num purple">−75%</div>
+                    <div class="stat-desc">Fable cache-read cut — agentic workloads up to 45% cheaper</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-num orange">~$1.25/$4.25</div>
+                    <div class="stat-desc">Meta Muse Spark 1.3 — near-frontier at commodity price</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-num magenta">50×</div>
+                    <div class="stat-desc">observed cost variation for similar accuracy. The savings are in the picking.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SLIDE 8B · THE SECOND DIAL: REASONING ═══════════════ -->
+    <section class="slide">
+        <div class="slide-inner">
+            <div class="slide-label purple">2026's big shift · test-time compute</div>
+            <h2 class="slide-title">The second dial: <span class="gradient-text">thinking longer.</span></h2>
+            <div class="check-list">
+                <div class="check-item">
+                    <div class="check-icon"><i data-lucide="brain"></i></div>
+                    <div class="check-text">Scaling used to mean one thing: a bigger model <span>more parameters, more data, more months of training</span></div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon"><i data-lucide="clock"></i></div>
+                    <div class="check-text">Reasoning models added a second dial: more thinking per question <span>the model drafts, checks, and revises before answering — "test-time compute"</span></div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon"><i data-lucide="target"></i></div>
+                    <div class="check-text">You control that dial — and pay for it <span>low effort: fast &amp; cheap for routine work · max effort: slow, expensive, and how GPT-6 hit its benchmark numbers</span></div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon"><i data-lucide="zap"></i></div>
+                    <div class="check-text">Why transformers made all this possible <span>attention runs in parallel on GPUs — the architecture that scales is the architecture that wins</span></div>
+                </div>
+            </div>
+            <p class="footer-note">Business rule of thumb: match thinking time to decision stakes. An invoice-classifier shouldn't ponder; a contract-risk review should.</p>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SLIDE 9 · THE FRONTIER MAP ═══════════════ -->
+    <section class="slide">
+        <div class="slide-inner">
+            <div class="slide-label purple">State of the art · this month</div>
+            <h2 class="slide-title">The frontier, <span class="gradient-text">September 2026.</span></h2>
+            <div class="check-list">
+                <div class="check-item">
+                    <div class="check-icon" style="background: var(--purple-glow); color: var(--purple);"><i data-lucide="rocket"></i></div>
+                    <div class="check-text">OpenAI GPT-6 Astra <span>"generational leap", staged access, restricted cyber tier</span></div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon" style="background: var(--purple-glow); color: var(--purple);"><i data-lucide="infinity"></i></div>
+                    <div class="check-text">Anthropic Fable 5.1 <span>long-running agents, 1M context, the enterprise workhorse family</span></div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon" style="background: var(--purple-glow); color: var(--purple);"><i data-lucide="zap"></i></div>
+                    <div class="check-text">Google Gemini 3.8 Flash <span>speed &amp; price play (defenders-only Cyber variant)</span></div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon" style="background: var(--purple-glow); color: var(--purple);"><i data-lucide="unlock"></i></div>
+                    <div class="check-text">Meta Muse Spark 1.3 + open-weights tier <span>(GLM-5.3, Qwen3.8, DeepSeek V4) one step behind — the true frontier is now API-only</span></div>
+                </div>
+            </div>
+            <p class="footer-note">Handout: <strong>State of the Frontier cheatsheet</strong> — on the course site, printable, yours to keep.</p>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SLIDE 10 · CASE STUDY ═══════════════ -->
+    <section class="slide">
+        <div class="slide-inner">
+            <div class="slide-label magenta">Read the fine print · GPT-6 Astra</div>
+            <h2 class="slide-title">"98% on FrontierMath." <span class="gradient-text">Now read the footnote.</span></h2>
+            <div class="check-list">
+                <div class="check-item">
+                    <div class="check-icon" style="background: var(--magenta-glow); color: var(--magenta);"><i data-lucide="settings-2"></i></div>
+                    <div class="check-text">Scores achieved with max reasoning effort, specialist tools, multiple attempts <span>conditions define the number</span></div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon" style="background: var(--magenta-glow); color: var(--magenta);"><i data-lucide="copy"></i></div>
+                    <div class="check-text">Frontier models have reproduced benchmark answers verbatim <span>SWE-bench contamination audit</span></div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon" style="background: var(--magenta-glow); color: var(--magenta);"><i data-lucide="equal"></i></div>
+                    <div class="check-text">Above ~88–90%, score gaps are statistically meaningless <span>saturation</span></div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon" style="background: var(--magenta-glow); color: var(--magenta);"><i data-lucide="trending-down"></i></div>
+                    <div class="check-text">Enterprises measure a ~37% average gap <span>between lab scores and production performance</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SLIDE 11 · THE CHECKLIST ═══════════════ -->
+    <section class="slide">
+        <div class="slide-inner">
+            <div class="slide-label yellow">Your benchmark BS-detector</div>
+            <h2 class="slide-title">Five questions for <span class="gradient-text-warm">any AI claim.</span></h2>
+            <div class="step-list" style="max-width: 950px; margin: 0 auto;">
+                <div class="step-item">
+                    <div class="step-num">1</div>
+                    <div class="step-text"><strong>Saturated?</strong> — everyone above 90% = coin flip</div>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">2</div>
+                    <div class="step-text"><strong>Contaminated?</strong> — was the test in the training data?</div>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">3</div>
+                    <div class="step-text"><strong>What harness?</strong> — tools, retries, settings behind the number</div>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">4</div>
+                    <div class="step-text"><strong>Relevant?</strong> — math-olympiad ≠ your invoices</div>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">5</div>
+                    <div class="step-text"><strong>Fresh?</strong> — prefer live benchmarks — and best: your own eval on your own task (Session 11)</div>
+                </div>
+            </div>
+            <p class="footer-note">This slide is worth more than most consulting engagements. Screenshot it.</p>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SLIDE 12 · BOARDROOM TRANSLATION ═══════════════ -->
+    <section class="slide">
+        <div class="slide-inner">
+            <div class="slide-label yellow">AI for BUSINESS</div>
+            <h2 class="slide-title">What you can now say <span class="gradient-text">in a meeting.</span></h2>
+            <div class="check-list">
+                <div class="check-item">
+                    <div class="check-icon"><i data-lucide="help-circle"></i></div>
+                    <div class="check-text">"Which model should we use?" <span>wrong first question. Ask: what tier does the task need, what context, what latency, what happens when it's wrong</span></div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon"><i data-lucide="badge-percent"></i></div>
+                    <div class="check-text">"The vendor scored 95%!" <span>on what, contaminated how, harnessed how, and does it saturate?</span></div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon"><i data-lucide="message-circle"></i></div>
+                    <div class="check-text">"Why is the chatbot so agreeable/wordy?" <span>because humans rewarded that. RLHF made it; policy can unmake it</span></div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon"><i data-lucide="wallet"></i></div>
+                    <div class="check-text">"Budget for AI next year?" <span>mind promo pricing (Gemini doubles Jan 1) and cache economics</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SLIDE 13 · HOMEWORK #3 ═══════════════ -->
+    <section class="slide">
+        <div class="slide-inner">
+            <div class="slide-label magenta">Homework #3 · due Wednesday</div>
+            <h2 class="slide-title">The <span class="gradient-text">model-picker memo.</span></h2>
+            <div class="hw-list">
+                <div class="hw-item">
+                    <div class="hw-icon"><i data-lucide="lightbulb"></i></div>
+                    <div>Take YOUR <strong>"I wish AI would…"</strong> idea from week 1 (or any real task)</div>
+                </div>
+                <div class="hw-item">
+                    <div class="hw-icon"><i data-lucide="git-compare"></i></div>
+                    <div>Pick the model tier you'd build it on — using the <strong>4 questions</strong> and the <strong>cheatsheet</strong></div>
+                </div>
+                <div class="hw-item">
+                    <div class="hw-icon"><i data-lucide="alarm-clock"></i></div>
+                    <div>5 sentences on Canvas justifying the pick incl. one benchmark red flag you checked · due <strong>Wed Sep 23, 12:30</strong></div>
+                </div>
+            </div>
+            <p class="hw-punch">This is the memo companies pay consultants for. <span class="g">You'll write it in ten minutes.</span></p>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SLIDE 14 · TEASER ═══════════════ -->
+    <section class="slide">
+        <div class="slide-inner">
+            <div class="slide-label cyan">Wednesday · Session 3</div>
+            <h2 class="slide-title">Wednesday: your first <span class="gradient-text">API key.</span></h2>
+            <div class="check-list">
+                <div class="check-item">
+                    <div class="check-icon" style="background: var(--cyan-glow); color: var(--cyan);"><i data-lucide="wand-2"></i></div>
+                    <div class="check-text">Prompt engineering that actually works <span>CRAFT</span></div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon" style="background: var(--cyan-glow); color: var(--cyan);"><i data-lucide="terminal"></i></div>
+                    <div class="check-text">Your code talks to a frontier model <span>for the first time</span></div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon" style="background: var(--cyan-glow); color: var(--cyan);"><i data-lucide="hammer"></i></div>
+                    <div class="check-text">From user to builder <span>the rest of the course begins</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SLIDE 15 · CLOSER ═══════════════ -->
+    <section class="slide">
+        <div class="slide-inner">
+            <div class="closer-title">See you <span class="gradient-text">Wednesday.</span></div>
+            <p class="slide-sub">Session 3 · Wed Sep 23 · 12:30 PM · 73 Tremont 5065</p>
+            <div class="chip-row">
+                <span class="chip magenta"><i data-lucide="pen-line"></i> HW #3: model-picker memo</span>
+                <span class="chip cyan"><i data-lucide="laptop"></i> bring a laptop</span>
+            </div>
+            <div class="closer-brand gradient-text">ISOM 260</div>
+        </div>
+    </section>
+
+    <script>
+        (function () {
+            const slides = Array.from(document.querySelectorAll('.slide'));
+            const total = slides.length;
+            const counter = document.getElementById('slideCounter');
+            const progressFill = document.getElementById('progressFill');
+            let current = 0;
+
+            function show(index) {
+                if (index < 0) index = 0;
+                if (index > total - 1) index = total - 1;
+                if (index === current && slides[index].classList.contains('active')) {
+                    // still update UI (first load)
+                } else {
+                    slides[current].classList.remove('active');
+                }
+                current = index;
+                slides[current].classList.add('active');
+                counter.textContent = (current + 1) + ' / ' + total;
+                progressFill.style.width = (total > 1 ? (current / (total - 1)) * 100 : 100) + '%';
+            }
+
+            function next() { show(current + 1); }
+            function prev() { show(current - 1); }
+
+            document.addEventListener('keydown', function (e) {
+                if (e.metaKey || e.ctrlKey || e.altKey) return;
+                switch (e.key) {
+                    case 'ArrowRight':
+                    case 'ArrowDown':
+                    case ' ':
+                    case 'PageDown':
+                        e.preventDefault();
+                        next();
+                        break;
+                    case 'ArrowLeft':
+                    case 'ArrowUp':
+                    case 'PageUp':
+                        e.preventDefault();
+                        prev();
+                        break;
+                    case 'Home':
+                        e.preventDefault();
+                        show(0);
+                        break;
+                    case 'End':
+                        e.preventDefault();
+                        show(total - 1);
+                        break;
+                    case 'f':
+                    case 'F':
+                        e.preventDefault();
+                        if (document.fullscreenElement) {
+                            document.exitFullscreen();
+                        } else if (document.documentElement.requestFullscreen) {
+                            document.documentElement.requestFullscreen();
+                        }
+                        break;
+                }
+            });
+
+            document.addEventListener('click', function (e) {
+                // Ignore clicks on links/images that might be interactive
+                if (e.target.closest('a')) return;
+                next();
+            });
+
+            // Initialize
+            show(0);
+            if (window.lucide) lucide.createIcons();
+        })();
+    </script>
+</body>
+</html>

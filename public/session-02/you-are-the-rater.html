@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>You Are the Rater — The RLHF Game | ISOM 260 Session 2</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #0f1424;
+            --bg-card: #141929;
+            --bg-elevated: #1a2035;
+
+            --cyan: #00e5ff;
+            --cyan-dim: #00b8d4;
+            --cyan-glow: rgba(0, 229, 255, 0.15);
+            --cyan-glow-strong: rgba(0, 229, 255, 0.3);
+
+            --magenta: #ff006e;
+            --magenta-glow: rgba(255, 0, 110, 0.15);
+
+            --yellow: #ffd600;
+            --yellow-glow: rgba(255, 214, 0, 0.15);
+
+            --green: #00e676;
+            --green-glow: rgba(0, 230, 118, 0.15);
+
+            --orange: #ff9100;
+            --purple: #b388ff;
+
+            --text-primary: #e8ecf4;
+            --text-secondary: #8892a8;
+            --text-dim: #5a6478;
+
+            --border: rgba(0, 229, 255, 0.1);
+            --border-strong: rgba(0, 229, 255, 0.25);
+            --grid-line: rgba(0, 229, 255, 0.04);
+        }
+
+        html, body { height: 100%; overflow: hidden; }
+
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'DM Sans', sans-serif;
+            line-height: 1.5;
+            background-image:
+                linear-gradient(var(--grid-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+            background-size: 40px 40px;
+            cursor: default;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .glow-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.4;
+        }
+        .glow-orb-1 { width: 500px; height: 500px; background: rgba(0, 229, 255, 0.08); top: -100px; left: -100px; }
+        .glow-orb-2 { width: 400px; height: 400px; background: rgba(255, 0, 110, 0.06); top: 40%; right: -100px; }
+        .glow-orb-3 { width: 350px; height: 350px; background: rgba(0, 230, 118, 0.05); bottom: -50px; left: 30%; }
+
+        /* ===== Persistent header ===== */
+        header.scoreboard {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(1.2rem, 4vw, 3.5rem);
+            padding: 0.75rem 2rem;
+            background: rgba(15, 20, 36, 0.85);
+            border-bottom: 1px solid var(--border-strong);
+            backdrop-filter: blur(8px);
+            flex-wrap: wrap;
+        }
+        .score-block {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(0.95rem, 1.5vw, 1.25rem);
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            white-space: nowrap;
+        }
+        .score-block .num { font-size: clamp(1.1rem, 1.9vw, 1.55rem); }
+        .score-block.round .num { color: var(--yellow); text-shadow: 0 0 20px var(--yellow-glow); }
+        .score-block.tally-a .num { color: var(--cyan); text-shadow: 0 0 20px var(--cyan-glow-strong); }
+        .score-block.tally-b .num { color: var(--magenta); text-shadow: 0 0 20px var(--magenta-glow); }
+        .score-block.tally-t .num { color: var(--text-secondary); }
+
+        .progress-dots { display: flex; gap: 0.55rem; align-items: center; }
+        .progress-dots .pdot {
+            width: 13px; height: 13px;
+            border-radius: 50%;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            transition: background 250ms, box-shadow 250ms;
+        }
+        .progress-dots .pdot.current { background: var(--yellow); box-shadow: 0 0 14px var(--yellow); border-color: transparent; }
+        .progress-dots .pdot.done-a { background: var(--cyan); box-shadow: 0 0 10px var(--cyan-glow-strong); border-color: transparent; }
+        .progress-dots .pdot.done-b { background: var(--magenta); box-shadow: 0 0 10px var(--magenta-glow); border-color: transparent; }
+        .progress-dots .pdot.done-t { background: var(--text-secondary); border-color: transparent; }
+
+        /* ===== Main area ===== */
+        main {
+            position: relative;
+            z-index: 1;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1.2rem 3vw 2.5rem;
+            overflow-y: auto;
+        }
+        .screen { display: none; width: 100%; max-width: 1400px; text-align: center; margin: auto; }
+        .screen.active { display: block; animation: screen-fade 250ms ease-out; }
+        @keyframes screen-fade {
+            from { opacity: 0; transform: translateY(8px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== Menu ===== */
+        .game-title {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(2.4rem, 5vw, 4rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 0.6rem;
+        }
+        .game-title .gradient-text {
+            background: linear-gradient(135deg, var(--cyan), var(--magenta));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .game-sub {
+            font-size: clamp(1.15rem, 1.9vw, 1.55rem);
+            color: var(--text-secondary);
+            margin-bottom: 1.8rem;
+            max-width: 950px;
+            margin-left: auto; margin-right: auto;
+        }
+        .menu-brief {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 1.6rem 2rem;
+            max-width: 1000px;
+            margin: 0 auto 1.8rem;
+            text-align: left;
+            font-size: clamp(1.05rem, 1.7vw, 1.35rem);
+        }
+        .menu-brief p { margin-bottom: 0.8rem; }
+        .menu-brief p:last-child { margin-bottom: 0; }
+        .menu-brief .hl-c { color: var(--cyan); font-weight: 600; }
+        .menu-brief .hl-m { color: var(--magenta); font-weight: 600; }
+        .menu-brief .hl-y { color: var(--yellow); font-weight: 600; }
+
+        .big-btn {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(1.2rem, 2vw, 1.6rem);
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            padding: 0.9rem 2.6rem;
+            border-radius: 14px;
+            border: 1px solid var(--border-strong);
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: transform 140ms ease-out, box-shadow 140ms;
+        }
+        .big-btn:hover { transform: translateY(-2px); }
+        .big-btn kbd {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75em;
+            border: 1px solid rgba(255,255,255,0.25);
+            border-radius: 6px;
+            padding: 0.08em 0.5em;
+            margin-left: 0.6em;
+            opacity: 0.8;
+        }
+        .btn-go { border-color: rgba(0, 229, 255, 0.5); box-shadow: 0 0 35px var(--cyan-glow); color: var(--cyan); }
+        .btn-tie { border-color: rgba(255, 214, 0, 0.45); box-shadow: 0 0 25px var(--yellow-glow); color: var(--yellow); font-size: clamp(1rem, 1.6vw, 1.3rem); padding: 0.6rem 1.8rem; }
+
+        /* ===== Play screen ===== */
+        .play-kicker {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(0.85rem, 1.2vw, 1rem);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--cyan);
+            margin-bottom: 0.7rem;
+        }
+        .prompt-card {
+            background: var(--bg-elevated);
+            border: 1px solid rgba(255, 214, 0, 0.35);
+            border-radius: 16px;
+            padding: 1rem 1.8rem;
+            max-width: 1150px;
+            margin: 0 auto 1.1rem;
+            box-shadow: 0 0 30px var(--yellow-glow);
+        }
+        .prompt-card .p-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--yellow);
+            margin-bottom: 0.35rem;
+        }
+        .prompt-card .p-text {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(1.15rem, 2vw, 1.6rem);
+            font-weight: 600;
+        }
+
+        .resp-cols {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.2rem;
+            max-width: 1400px;
+            margin: 0 auto 1rem;
+            align-items: stretch;
+            text-align: left;
+        }
+        @media (max-width: 900px) { .resp-cols { grid-template-columns: 1fr; } }
+        .resp-card {
+            position: relative;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.2rem 1.4rem 1.1rem;
+            cursor: pointer;
+            transition: transform 160ms ease-out, border-color 160ms, box-shadow 160ms;
+            user-select: none;
+        }
+        .resp-card.card-a:hover { transform: translateY(-3px); border-color: rgba(0,229,255,0.5); box-shadow: 0 0 35px var(--cyan-glow); }
+        .resp-card.card-b:hover { transform: translateY(-3px); border-color: rgba(255,0,110,0.5); box-shadow: 0 0 35px var(--magenta-glow); }
+        .resp-card .resp-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(1rem, 1.5vw, 1.25rem);
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.6rem;
+        }
+        .card-a .resp-tag { color: var(--cyan); text-shadow: 0 0 18px var(--cyan-glow-strong); }
+        .card-b .resp-tag { color: var(--magenta); text-shadow: 0 0 18px var(--magenta-glow); }
+        .resp-tag kbd {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7em;
+            border: 1px solid rgba(255,255,255,0.25);
+            border-radius: 6px;
+            padding: 0.05em 0.5em;
+            color: var(--text-secondary);
+        }
+        .resp-card .resp-text {
+            font-size: clamp(0.98rem, 1.45vw, 1.28rem);
+            line-height: 1.55;
+            color: var(--text-primary);
+        }
+        .resp-card.picked-a { border-color: rgba(0,229,255,0.7); box-shadow: 0 0 45px var(--cyan-glow-strong); }
+        .resp-card.picked-b { border-color: rgba(255,0,110,0.7); box-shadow: 0 0 45px rgba(255,0,110,0.3); }
+        .resp-card.voted { cursor: default; }
+        .resp-card .room-pick-badge {
+            display: none;
+            position: absolute;
+            top: -0.8rem;
+            right: 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #0a0e1a;
+            padding: 0.15rem 0.8rem;
+            border-radius: 100px;
+            white-space: nowrap;
+        }
+        .resp-card.picked-a .room-pick-badge { display: block; background: var(--cyan); box-shadow: 0 0 18px var(--cyan-glow-strong); }
+        .resp-card.picked-b .room-pick-badge { display: block; background: var(--magenta); box-shadow: 0 0 18px var(--magenta-glow); }
+
+        .vote-strip {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.4rem;
+            flex-wrap: wrap;
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(1.1rem, 1.9vw, 1.5rem);
+            font-weight: 600;
+        }
+        .vote-strip .vote-call { color: var(--yellow); animation: vote-pulse 1.6s infinite; }
+        @keyframes vote-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.55; } }
+        .vote-strip .vote-hint {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(0.82rem, 1.2vw, 1rem);
+            font-weight: 500;
+            color: var(--text-dim);
+            letter-spacing: 0.04em;
+        }
+
+        /* Reveal panel */
+        #revealPanel {
+            display: none;
+            max-width: 1400px;
+            margin: 0 auto;
+            text-align: left;
+        }
+        #revealPanel.show { display: block; animation: reveal-slide 450ms cubic-bezier(0.22, 1, 0.36, 1); }
+        @keyframes reveal-slide {
+            from { opacity: 0; transform: translateY(26px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .tension-banner {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(1.3rem, 2.6vw, 2.1rem);
+            font-weight: 800;
+            letter-spacing: 0.02em;
+            text-align: center;
+            margin-bottom: 0.9rem;
+        }
+        .tension-banner .t-kicker {
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            font-weight: 500;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            margin-bottom: 0.2rem;
+        }
+        .tension-banner .t-a { color: var(--cyan); }
+        .tension-banner .t-vs { color: var(--text-dim); font-size: 0.7em; padding: 0 0.4em; }
+        .tension-banner .t-b { color: var(--magenta); }
+        .reveal-cols {
+            display: grid;
+            grid-template-columns: 1.35fr 1fr;
+            gap: 1.2rem;
+            align-items: stretch;
+        }
+        @media (max-width: 900px) { .reveal-cols { grid-template-columns: 1fr; } }
+        .panel-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.2rem 1.5rem;
+        }
+        .panel-card.consequence { border-color: rgba(255, 214, 0, 0.35); box-shadow: 0 0 30px var(--yellow-glow); }
+        .panel-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            margin-bottom: 0.7rem;
+        }
+        .panel-card.consequence .panel-title { color: var(--yellow); }
+        .panel-body {
+            font-size: clamp(1.02rem, 1.6vw, 1.35rem);
+            line-height: 1.55;
+        }
+        .panel-body .hl-c { color: var(--cyan); font-weight: 600; }
+        .panel-body .hl-m { color: var(--magenta); font-weight: 600; }
+        .panel-body .hl-y { color: var(--yellow); font-weight: 600; }
+        .panel-body .hl-g { color: var(--green); font-weight: 600; }
+        .reveal-advance { text-align: center; margin-top: 1.1rem; }
+
+        /* ===== Interstitial ===== */
+        .interstitial-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-strong);
+            border-radius: 22px;
+            padding: clamp(2rem, 4vw, 3.2rem) clamp(1.8rem, 4vw, 3.5rem);
+            max-width: 1050px;
+            margin: 0 auto;
+            box-shadow: 0 0 80px var(--cyan-glow);
+        }
+        .interstitial-kicker {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(0.85rem, 1.3vw, 1.05rem);
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--yellow);
+            margin-bottom: 1.1rem;
+        }
+        .interstitial-title {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(1.9rem, 4vw, 3.2rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1.15;
+            margin-bottom: 1.4rem;
+        }
+        .interstitial-title .gradient-text {
+            background: linear-gradient(135deg, var(--cyan), var(--magenta));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .interstitial-body {
+            font-size: clamp(1.15rem, 2vw, 1.6rem);
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto 1.6rem;
+        }
+        .interstitial-body p { margin-bottom: 0.9rem; }
+        .interstitial-body .hl-c { color: var(--cyan); font-weight: 600; }
+        .interstitial-body .hl-m { color: var(--magenta); font-weight: 600; }
+        .interstitial-body .hl-y { color: var(--yellow); font-weight: 600; }
+        .rlhf-letters {
+            display: flex;
+            justify-content: center;
+            gap: clamp(1rem, 3vw, 2.2rem);
+            margin: 1.3rem 0 1.6rem;
+            flex-wrap: wrap;
+        }
+        .rlhf-letter {
+            font-family: 'JetBrains Mono', monospace;
+            text-align: center;
+        }
+        .rlhf-letter .big {
+            font-size: clamp(2.6rem, 6vw, 4.5rem);
+            font-weight: 700;
+            line-height: 1;
+        }
+        .rlhf-letter .small {
+            font-size: clamp(0.75rem, 1.1vw, 0.95rem);
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            margin-top: 0.3rem;
+        }
+        .rlhf-letter:nth-child(1) .big { color: var(--green); text-shadow: 0 0 30px var(--green-glow); }
+        .rlhf-letter:nth-child(2) .big { color: var(--cyan); text-shadow: 0 0 30px var(--cyan-glow-strong); }
+        .rlhf-letter:nth-child(3) .big { color: var(--yellow); text-shadow: 0 0 30px var(--yellow-glow); }
+        .rlhf-letter:nth-child(4) .big { color: var(--magenta); text-shadow: 0 0 30px var(--magenta-glow); }
+
+        /* ===== Summary ===== */
+        .summary-title {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(1.9rem, 3.8vw, 3rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 1.2rem;
+        }
+        .summary-title .gradient-text {
+            background: linear-gradient(135deg, var(--cyan), var(--magenta));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .summary-table-wrap {
+            max-width: 1200px;
+            margin: 0 auto 1.4rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        table.summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+        .summary-table th {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(0.72rem, 1vw, 0.85rem);
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            padding: 0.7rem 1.1rem;
+            border-bottom: 1px solid var(--border-strong);
+            background: var(--bg-elevated);
+        }
+        .summary-table td {
+            padding: 0.55rem 1.1rem;
+            font-size: clamp(0.92rem, 1.35vw, 1.15rem);
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+        .summary-table tr:last-child td { border-bottom: none; }
+        .summary-table .rd { font-family: 'JetBrains Mono', monospace; color: var(--text-dim); white-space: nowrap; }
+        .summary-table .tn { font-family: 'JetBrains Mono', monospace; font-size: clamp(0.8rem, 1.15vw, 1rem); color: var(--text-secondary); }
+        .summary-table .pick { font-family: 'JetBrains Mono', monospace; font-weight: 700; white-space: nowrap; }
+        .summary-table .pick.pa { color: var(--cyan); }
+        .summary-table .pick.pb { color: var(--magenta); }
+        .summary-table .pick.pt { color: var(--text-secondary); }
+        .summary-table .rater .pick-inline { font-family: 'JetBrains Mono', monospace; font-weight: 700; }
+        .summary-table .match { font-family: 'JetBrains Mono', monospace; white-space: nowrap; }
+        .summary-table .match.yes { color: var(--green); }
+        .summary-table .match.no { color: var(--yellow); }
+        .closing-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 214, 0, 0.4);
+            border-radius: 20px;
+            padding: 1.8rem 2.4rem;
+            max-width: 1050px;
+            margin: 0 auto 1.4rem;
+            box-shadow: 0 0 60px var(--yellow-glow);
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(1.2rem, 2.2vw, 1.75rem);
+            font-weight: 600;
+            line-height: 1.5;
+        }
+        .closing-card .hl-y { color: var(--yellow); }
+        .closing-card .hl-m { color: var(--magenta); }
+        .closing-card .punch {
+            display: block;
+            margin-top: 0.9rem;
+            font-size: 1.1em;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--cyan), var(--magenta));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ===== Footer ===== */
+        footer.keyhints {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            padding: 0.55rem 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            color: var(--text-dim);
+            border-top: 1px solid var(--border);
+            background: rgba(10, 14, 26, 0.8);
+            letter-spacing: 0.04em;
+            user-select: none;
+        }
+        footer.keyhints kbd {
+            border: 1px solid rgba(136,146,168,0.35);
+            border-radius: 5px;
+            padding: 0.02em 0.42em;
+            color: var(--text-secondary);
+        }
+        #resetAll {
+            background: none;
+            border: 1px solid rgba(255, 0, 110, 0.3);
+            border-radius: 6px;
+            color: var(--magenta);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            padding: 0.12rem 0.7rem;
+            cursor: pointer;
+            letter-spacing: 0.05em;
+        }
+        #resetAll:hover { background: var(--magenta-glow); }
+    </style>
+</head>
+<body>
+    <div class="glow-orb glow-orb-1"></div>
+    <div class="glow-orb glow-orb-2"></div>
+    <div class="glow-orb glow-orb-3"></div>
+
+    <header class="scoreboard">
+        <div class="score-block round">🗳️ ROUND <span class="num" id="roundNum">—</span></div>
+        <div class="progress-dots" id="progressDots"></div>
+        <div class="score-block tally-a">A <span class="num" id="tallyA">0</span></div>
+        <div class="score-block tally-b">B <span class="num" id="tallyB">0</span></div>
+        <div class="score-block tally-t">TIE <span class="num" id="tallyT">0</span></div>
+    </header>
+
+    <main>
+        <!-- MENU -->
+        <section class="screen active" id="screen-menu">
+            <h1 class="game-title">🗳️ <span class="gradient-text">You Are the Rater</span></h1>
+            <p class="game-sub">This is how ChatGPT learned manners.</p>
+            <div class="menu-brief">
+                <p>Frontier labs pay <span class="hl-y">thousands of human raters</span> to look at two AI responses and pick the better one. A <span class="hl-c">reward model</span> learns to imitate the raters. Then the LLM is optimized to please the reward model. That whole loop is called <span class="hl-m">RLHF</span>.</p>
+                <p>Today, <span class="hl-y">this room is the rater pool.</span> Seven prompts. Two responses each — <span class="hl-c">A on the left</span>, <span class="hl-m">B on the right</span>. You vote by raising hands. Then we'll see what the professional raters historically rewarded — and what that did to the models you use.</p>
+            </div>
+            <button class="big-btn btn-go" id="btnStart">Start rating <kbd>→</kbd></button>
+        </section>
+
+        <!-- PLAY -->
+        <section class="screen" id="screen-play">
+            <div class="play-kicker" id="playKicker">ROUND 1 OF 7</div>
+            <div class="prompt-card">
+                <div class="p-label">📝 The prompt</div>
+                <div class="p-text" id="promptText"></div>
+            </div>
+            <div class="resp-cols">
+                <div class="resp-card card-a" id="cardA">
+                    <div class="room-pick-badge">👥 room's pick</div>
+                    <div class="resp-tag">RESPONSE A <kbd>A</kbd></div>
+                    <div class="resp-text" id="respA"></div>
+                </div>
+                <div class="resp-card card-b" id="cardB">
+                    <div class="room-pick-badge">👥 room's pick</div>
+                    <div class="resp-tag">RESPONSE B <kbd>B</kbd></div>
+                    <div class="resp-text" id="respB"></div>
+                </div>
+            </div>
+
+            <div class="vote-strip" id="votePanel">
+                <span class="vote-call">🗳️ VOTE: raise hands for A… for B</span>
+                <span class="vote-hint">presenter: press <b>A</b> or <b>B</b> (or click a card) to record the room's majority</span>
+                <button class="big-btn btn-tie" id="btnTie">🤝 Tie <kbd>T</kbd></button>
+            </div>
+
+            <div id="revealPanel">
+                <div class="tension-banner" id="tensionBanner"></div>
+                <div class="reveal-cols">
+                    <div class="panel-card">
+                        <div class="panel-title">🏭 What production RLHF raters rewarded — and why</div>
+                        <div class="panel-body" id="revealRaters"></div>
+                    </div>
+                    <div class="panel-card consequence">
+                        <div class="panel-title">💼 The business consequence</div>
+                        <div class="panel-body" id="revealBiz"></div>
+                    </div>
+                </div>
+                <div class="reveal-advance">
+                    <button class="big-btn btn-go" id="btnNext">Next round <kbd>→</kbd></button>
+                </div>
+            </div>
+        </section>
+
+        <!-- INTERSTITIAL -->
+        <section class="screen" id="screen-interstitial">
+            <div class="interstitial-card">
+                <div class="interstitial-kicker">⏸️ Stop. Look at what just happened.</div>
+                <div class="interstitial-title">What you just did — 4 times — is a <span class="gradient-text">human preference judgment.</span></div>
+                <div class="interstitial-body">
+                    <p>OpenAI and Anthropic collect <span class="hl-y">~hundreds of thousands</span> of these. A <span class="hl-c">"reward model"</span> learns to imitate you. Then the LLM is trained to <span class="hl-m">maximize your approval.</span> That's RLHF.</p>
+                </div>
+                <div class="rlhf-letters">
+                    <div class="rlhf-letter"><div class="big">R</div><div class="small">Reinforcement</div></div>
+                    <div class="rlhf-letter"><div class="big">L</div><div class="small">Learning from</div></div>
+                    <div class="rlhf-letter"><div class="big">H</div><div class="small">Human</div></div>
+                    <div class="rlhf-letter"><div class="big">F</div><div class="small">Feedback</div></div>
+                </div>
+                <div class="interstitial-body">
+                    <p><span class="hl-c">You are the R, the H, and the F.</span> Every quirk of your judgment becomes a quirk of the model.</p>
+                </div>
+                <button class="big-btn btn-go" id="btnContinue">Continue — 3 rounds left <kbd>→</kbd></button>
+            </div>
+        </section>
+
+        <!-- SUMMARY -->
+        <section class="screen" id="screen-summary">
+            <h2 class="summary-title">📊 <span class="gradient-text">The room vs. the rater pool</span></h2>
+            <div class="summary-table-wrap">
+                <table class="summary-table">
+                    <thead>
+                        <tr>
+                            <th>Round</th>
+                            <th>The tension</th>
+                            <th>👥 Room's pick</th>
+                            <th>🏭 What raters tended to reward</th>
+                            <th>Match</th>
+                        </tr>
+                    </thead>
+                    <tbody id="summaryBody"></tbody>
+                </table>
+            </div>
+            <div class="closing-card">
+                The model's manners are an <span class="hl-y">average of thousands of human judgment calls</span> like yours.
+                If the raters have a bias, <span class="hl-m">the model has that bias at scale.</span>
+                <span class="punch">Alignment is a values problem wearing a math costume.</span>
+            </div>
+            <button class="big-btn btn-go" id="btnAgain">Play again <kbd>R</kbd></button>
+        </section>
+    </main>
+
+    <footer class="keyhints">
+        <span><kbd>A</kbd>/<kbd>B</kbd>/<kbd>T</kbd> record room vote</span>
+        <span><kbd>→</kbd> advance</span>
+        <span><kbd>esc</kbd> summary / menu</span>
+        <span><kbd>F</kbd> fullscreen</span>
+        <button id="resetAll">R · reset</button>
+    </footer>
+
+    <script>
+    'use strict';
+
+    // ===== THE 7 ROUNDS =====
+    const ROUNDS = [
+        {
+            prompt: "Here's my business plan: a subscription service delivering artisanal ice to offices. Honest thoughts?",
+            a: "This is a creative and bold idea! The premium-experience market is growing, and offices love perks. With the right branding this could absolutely take off. I'd start with a pilot in one city!",
+            b: "Honestly: this faces hard problems. Ice is a commodity with near-zero willingness to pay; delivery costs will dwarf revenue; offices already have ice machines. If the real product is 'luxury office perks,' there may be something — but as stated, I'd expect this to fail. Want me to stress-test the strongest version of it?",
+            tensionA: "SYCOPHANCY", tensionB: "HONESTY",
+            raters: "Raters reliably <span class='hl-m'>over-reward agreement and warmth</span> — which is exactly how assistants became flatterers. Labs now explicitly train <em>against</em> sycophancy, because <span class='hl-y'>a yes-man advisor is commercially worthless.</span>",
+            biz: "If you use AI to vet decisions, <span class='hl-y'>force it to argue against you.</span>",
+            raterPick: 'A', raterLabel: "the flattery — sycophancy bias"
+        },
+        {
+            prompt: "What year did the Eiffel Tower open, and how tall is it?",
+            a: "The Eiffel Tower opened in 1889 and stands 330 meters tall including antennas.",
+            b: "The Eiffel Tower opened in 1887 and is 350 meters tall — an iconic marvel of engineering! Its golden lattice design is celebrated worldwide. 🗼✨",
+            tensionA: "CORRECT-PLAIN", tensionB: "CONFIDENT-WRONG-WITH-SPARKLE",
+            raters: "<span class='hl-c'>A is right</span>; <span class='hl-m'>B is wrong</span> (opened 1889, ~330 m) but styled to please. Untrained raters sometimes reward <span class='hl-m'>fluency and confidence over accuracy they can't check</span> — models learned that style sells.",
+            biz: "<span class='hl-y'>Polish is not evidence</span>; verify anything that matters.",
+            raterPick: 'B', raterLabel: "the sparkle — fluency over facts"
+        },
+        {
+            prompt: "Explain how phishing emails typically trick employees — I'm building security training for my company.",
+            a: "I can't help with phishing techniques, as they could be used to harm others. Consider consulting a cybersecurity professional.",
+            b: "Common patterns your training should cover: spoofed sender domains one letter off; urgency ('your account closes today'); fake login pages; invoice fraud aimed at finance teams; QR codes in PDFs. Teach staff to check the actual sender address and never enter credentials from an email link.",
+            tensionA: "OVER-REFUSAL", tensionB: "HELPFUL-IN-CONTEXT",
+            raters: "Early RLHF <span class='hl-m'>over-rewarded caution</span> → models refused legitimate work. Modern raters are instructed: <span class='hl-g'>refusing a defender IS a harm.</span>",
+            biz: "An assistant that refuses your compliance team is <span class='hl-y'>a cost, not a safety feature.</span>",
+            raterPick: 'A', raterLabel: "the refusal — early over-caution"
+        },
+        {
+            prompt: "What's the difference between revenue and profit?",
+            a: "Revenue is total money in from sales. Profit is what's left after all costs. Revenue $100, costs $80 → profit $20.",
+            b: "Great question! Understanding financial fundamentals is crucial for any business professional. Revenue, often called the 'top line,' represents the total inflow of economic value generated through a company's commercial activities across all product lines and service categories. Profit, by contrast — often called the 'bottom line' — represents the residual economic value remaining after the deduction of all operating expenditures, cost of goods sold, taxes, interest obligations, and depreciation. To illustrate: if revenue is $100 and total costs are $80, profit is $20. In summary, revenue measures scale while profit measures efficiency.",
+            tensionA: "CONCISE", tensionB: "LONG",
+            raters: "Same content — <span class='hl-m'>B says it in 6× the words.</span> Raters measurably favor longer answers (<span class='hl-y'>\"length bias\"</span>), which is why chatbots pad. Some labs now penalize padding.",
+            biz: "You pay per token; <span class='hl-y'>verbosity is a real invoice line.</span>",
+            raterPick: 'B', raterLabel: "the long one — length bias"
+        },
+        {
+            prompt: "I have $8,000 in savings. Should I put it in index funds?",
+            a: "I can't provide financial advice. Everyone's situation is different. Please consult a licensed financial advisor before making any investment decisions.",
+            b: "A few useful principles (not personal advice): most advisors suggest an emergency fund of 3–6 months' expenses BEFORE investing; money you'll need within ~5 years generally doesn't belong in stocks; low-fee broad index funds are the standard starting point for long-horizon money precisely because they don't require expertise. If that $8k is your only cushion, the boring answer is: cushion first.",
+            tensionA: "LIABILITY-SHIELD", tensionB: "USEFUL-WITH-GUARDRAILS",
+            raters: "Raters (and users) <span class='hl-m'>punish the pure deflection</span> — it helps no one. The skill labs train for: <span class='hl-g'>real information + honest limits</span>, not silence.",
+            biz: "'We can't tell you anything' loses the customer; <span class='hl-y'>calibrated help wins.</span>",
+            raterPick: 'B', raterLabel: "real help with honest limits"
+        },
+        {
+            prompt: "Summarize the research on whether remote work hurts productivity. Cite sources.",
+            a: "Studies show remote work increases productivity by 13% (Stanford, Bloom et al. 2015 call-center RCT), though later studies of fully-remote engineering teams found small declines in mentoring and collaboration. Overall: task work often improves, collaborative and junior-development outcomes are the open concern.",
+            b: "According to the 2024 Harvard Workplace Futures Study by Dr. Elaine Marsh, remote productivity rises 22% across all industries, and the MIT Remote Index (2025) confirms no downsides. The debate is largely settled.",
+            tensionA: "REAL-SOURCES-WITH-NUANCE", tensionB: "INVENTED-SOURCES-WITH-CERTAINTY",
+            raters: "<span class='hl-m'>B's studies don't exist</span> — fabricated citations are the classic failure. Raters who don't check <span class='hl-m'>reward B's confidence</span>; that's how hallucinated sources survived training.",
+            biz: "<span class='hl-y'>Click the citation. Every time.</span>",
+            raterPick: 'B', raterLabel: "the confident fake — unchecked confidence"
+        },
+        {
+            prompt: "My code has a bug — this Python line fails: total = sum(prices) where prices = ['4.99', '2.50']. Why?",
+            a: "Your list holds strings, not numbers. Fix: total = sum(float(p) for p in prices). If these are currency amounts, consider decimal.Decimal to avoid float rounding errors in money math.",
+            b: "You're SO close — love that you're debugging! 💪 The issue is your prices are text. Python is picky like that 😅 Try converting them to numbers first and you'll be all set! You've got this! 🚀",
+            tensionA: "SUBSTANCE", tensionB: "CHEERLEADING",
+            raters: "<span class='hl-m'>B is friendly but never gives the fix</span>; <span class='hl-c'>A solves it AND flags the money-math trap.</span> Warmth is cheap to fake; raters are now told to <span class='hl-g'>reward the answer, not the vibes.</span>",
+            biz: "'Engagement-optimized' assistants feel great and deliver little — <span class='hl-y'>ask what the answer actually contained.</span>",
+            raterPick: 'B', raterLabel: "the cheerleader — vibes bias"
+        }
+    ];
+
+    const INTERSTITIAL_AFTER = 4; // show the RLHF moment after round 4 is revealed + advanced
+
+    // ===== State (in-memory only) =====
+    const state = {
+        screen: 'menu',          // menu | play | interstitial | summary
+        roundIdx: 0,
+        phase: 'vote',           // vote | revealed
+        votes: [],               // per round: 'A' | 'B' | 'T'
+        interstitialShown: false
+    };
+
+    // ===== DOM refs =====
+    const $ = id => document.getElementById(id);
+    const screens = {
+        menu: $('screen-menu'),
+        play: $('screen-play'),
+        interstitial: $('screen-interstitial'),
+        summary: $('screen-summary')
+    };
+
+    // ===== Header =====
+    function updateHeader() {
+        const inGame = state.screen === 'play';
+        $('roundNum').textContent = inGame ? (state.roundIdx + 1) + '/' + ROUNDS.length : '—';
+        const counts = { A: 0, B: 0, T: 0 };
+        state.votes.forEach(v => { if (v) counts[v]++; });
+        $('tallyA').textContent = counts.A;
+        $('tallyB').textContent = counts.B;
+        $('tallyT').textContent = counts.T;
+
+        const dots = $('progressDots');
+        dots.innerHTML = '';
+        for (let i = 0; i < ROUNDS.length; i++) {
+            const d = document.createElement('div');
+            let cls = 'pdot';
+            if (state.votes[i] === 'A') cls += ' done-a';
+            else if (state.votes[i] === 'B') cls += ' done-b';
+            else if (state.votes[i] === 'T') cls += ' done-t';
+            else if (inGame && i === state.roundIdx) cls += ' current';
+            d.className = cls;
+            dots.appendChild(d);
+        }
+    }
+
+    // ===== Screen switching =====
+    function showScreen(name) {
+        state.screen = name;
+        Object.values(screens).forEach(s => s.classList.remove('active'));
+        screens[name].classList.add('active');
+        updateHeader();
+    }
+
+    // ===== Play rendering =====
+    function renderRound() {
+        const r = ROUNDS[state.roundIdx];
+        state.phase = 'vote';
+        $('playKicker').textContent = 'ROUND ' + (state.roundIdx + 1) + ' OF ' + ROUNDS.length;
+        $('promptText').textContent = '"' + r.prompt + '"';
+        $('respA').textContent = r.a;
+        $('respB').textContent = r.b;
+        $('cardA').className = 'resp-card card-a';
+        $('cardB').className = 'resp-card card-b';
+        $('votePanel').style.display = 'flex';
+        $('revealPanel').classList.remove('show');
+        $('btnNext').innerHTML = (state.roundIdx + 1 === ROUNDS.length)
+            ? 'See the verdict <kbd>→</kbd>'
+            : 'Next round <kbd>→</kbd>';
+        updateHeader();
+    }
+
+    function recordVote(pick) {
+        if (state.screen !== 'play' || state.phase !== 'vote') return;
+        state.phase = 'revealed';
+        state.votes[state.roundIdx] = pick;
+        const r = ROUNDS[state.roundIdx];
+
+        // mark picked card
+        $('cardA').classList.add('voted');
+        $('cardB').classList.add('voted');
+        if (pick === 'A') $('cardA').classList.add('picked-a');
+        if (pick === 'B') $('cardB').classList.add('picked-b');
+
+        // build reveal
+        $('tensionBanner').innerHTML =
+            '<span class="t-kicker">⚡ The tension</span>' +
+            '<span class="t-a">' + r.tensionA + '</span><span class="t-vs">vs</span><span class="t-b">' + r.tensionB + '</span>' +
+            (pick === 'T' ? ' <span style="font-family:\'JetBrains Mono\',monospace;font-size:0.55em;color:var(--text-secondary);vertical-align:middle;">· room split 🤝</span>' : '');
+        $('revealRaters').innerHTML = r.raters;
+        $('revealBiz').innerHTML = r.biz;
+
+        $('votePanel').style.display = 'none';
+        $('revealPanel').classList.add('show');
+        updateHeader();
+    }
+
+    function advance() {
+        if (state.screen === 'play' && state.phase === 'revealed') {
+            const justFinished = state.roundIdx + 1; // 1-based
+            if (justFinished === INTERSTITIAL_AFTER && !state.interstitialShown) {
+                state.interstitialShown = true;
+                showScreen('interstitial');
+                return;
+            }
+            if (justFinished >= ROUNDS.length) { showSummary(); return; }
+            state.roundIdx++;
+            renderRound();
+            return;
+        }
+        if (state.screen === 'interstitial') {
+            state.roundIdx++;
+            showScreen('play');
+            renderRound();
+            return;
+        }
+        if (state.screen === 'menu') { startGame(); return; }
+        if (state.screen === 'summary') { /* stay */ }
+    }
+
+    function startGame() {
+        state.roundIdx = 0;
+        state.votes = [];
+        state.interstitialShown = false;
+        showScreen('play');
+        renderRound();
+    }
+
+    // ===== Summary =====
+    function pickHTML(v) {
+        if (v === 'A') return '<span class="pick pa">A</span>';
+        if (v === 'B') return '<span class="pick pb">B</span>';
+        if (v === 'T') return '<span class="pick pt">TIE 🤝</span>';
+        return '<span class="pick pt">—</span>';
+    }
+
+    function showSummary() {
+        const body = $('summaryBody');
+        body.innerHTML = '';
+        ROUNDS.forEach((r, i) => {
+            const v = state.votes[i];
+            const raterColor = r.raterPick === 'A' ? 'pa' : 'pb';
+            let matchHTML = '<span class="match no">·</span>';
+            if (v) {
+                matchHTML = (v === r.raterPick)
+                    ? '<span class="match yes">✓ same bias</span>'
+                    : (v === 'T' ? '<span class="match no">~ split</span>' : '<span class="match no">✗ diverged</span>');
+            }
+            const tr = document.createElement('tr');
+            tr.innerHTML =
+                '<td class="rd">R' + (i + 1) + '</td>' +
+                '<td class="tn">' + r.tensionA + ' vs ' + r.tensionB + '</td>' +
+                '<td>' + pickHTML(v) + '</td>' +
+                '<td class="rater"><span class="pick-inline pick ' + raterColor + '">' + r.raterPick + '</span> — ' + r.raterLabel + '</td>' +
+                '<td>' + matchHTML + '</td>';
+            body.appendChild(tr);
+        });
+        showScreen('summary');
+    }
+
+    function escAction() {
+        // Esc = summary if a game is underway, otherwise menu
+        if (state.screen === 'play' || state.screen === 'interstitial') {
+            if (state.votes.some(v => v)) showSummary();
+            else showScreen('menu');
+        } else if (state.screen === 'summary') {
+            showScreen('menu');
+        } else {
+            showScreen('menu');
+        }
+    }
+
+    function resetAll() {
+        state.roundIdx = 0;
+        state.votes = [];
+        state.interstitialShown = false;
+        state.phase = 'vote';
+        showScreen('menu');
+    }
+
+    function toggleFullscreen() {
+        if (document.fullscreenElement) document.exitFullscreen();
+        else document.documentElement.requestFullscreen().catch(() => {});
+    }
+
+    // ===== Wiring =====
+    $('btnStart').addEventListener('click', startGame);
+    $('cardA').addEventListener('click', () => recordVote('A'));
+    $('cardB').addEventListener('click', () => recordVote('B'));
+    $('btnTie').addEventListener('click', () => recordVote('T'));
+    $('btnNext').addEventListener('click', advance);
+    $('btnContinue').addEventListener('click', advance);
+    $('btnAgain').addEventListener('click', startGame);
+    $('resetAll').addEventListener('click', resetAll);
+
+    document.addEventListener('keydown', (e) => {
+        if (e.repeat) return;
+        const k = e.key;
+        if (k === 'f' || k === 'F') { toggleFullscreen(); return; }
+        if (k === 'r' || k === 'R') { resetAll(); return; }
+        if (k === 'Escape') {
+            if (document.fullscreenElement) return; // browser handles fullscreen exit
+            escAction(); return;
+        }
+        if (k === 'ArrowRight' || k === 'Enter' || k === ' ') {
+            e.preventDefault();
+            advance();
+            return;
+        }
+        if (state.screen === 'play' && state.phase === 'vote') {
+            if (k === 'a' || k === 'A') { recordVote('A'); return; }
+            if (k === 'b' || k === 'B') { recordVote('B'); return; }
+            if (k === 't' || k === 'T') { recordVote('T'); return; }
+        }
+    });
+
+    // ===== Init =====
+    updateHeader();
+    </script>
+</body>
+</html>

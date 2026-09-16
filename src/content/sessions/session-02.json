@@ -105,13 +105,56 @@
     },
     {
       "time": "Mon Sep 21 · 12:30 PM",
-      "title": "Meeting 2 · The Machine Becomes ChatGPT",
-      "duration": "75 minutes",
-      "description": "From raw next-token predictor to helpful assistant — and how to read AI claims critically.",
+      "title": "Meeting 2 · HW #2 Debrief + The Pipeline",
+      "duration": "12 minutes",
+      "description": "Your paragraphs, then the question: why can't your name-model hold a conversation? Pretraining → instruction tuning → RLHF.",
       "bulletPoints": [
-        "Instruction tuning & RLHF: how a predictor learns manners",
-        "Scaling laws: why bigger keeps getting better, and what it costs",
-        "Reading benchmark claims without getting fooled — including GPT-6's launch numbers"
+        "Capability, format, manners — where each comes from",
+        "Step 1 is your TinyGPT at 10-million-times scale"
+      ],
+      "isBreak": false
+    },
+    {
+      "time": "Mon Sep 21 · 12:42 PM",
+      "title": "Game: You Are the Rater",
+      "duration": "18 minutes",
+      "description": "The room becomes the RLHF rater pool: vote between real response pairs, then see what production raters rewarded — and what that did to the models.",
+      "bulletPoints": [
+        "Seven rounds: sycophancy, confident-wrong, over-refusal, length bias, fabricated sources, and more",
+        "The reveal: every quirk of the raters became a quirk of the machine"
+      ],
+      "isBreak": false
+    },
+    {
+      "time": "Mon Sep 21 · 1:00 PM",
+      "title": "Scale, Economics & the Frontier Map",
+      "duration": "20 minutes",
+      "description": "Why bigger keeps winning, what it costs, and who's who on the September 2026 frontier — with a printable cheatsheet to keep.",
+      "bulletPoints": [
+        "Frontier pricing from $0.75 to $50 per million tokens — and promo pricing that doubles in January",
+        "GPT-6, Fable 5.1, Gemini 3.8, Muse Spark, and the open-weights tier"
+      ],
+      "isBreak": false
+    },
+    {
+      "time": "Mon Sep 21 · 1:20 PM",
+      "title": "Reading AI Claims: The BS-Detector",
+      "duration": "16 minutes",
+      "description": "GPT-6's launch numbers as a case study — saturation, contamination, harness conditions, relevance, freshness.",
+      "bulletPoints": [
+        "The 37% lab-vs-production gap and the 50x cost variation",
+        "Five questions to ask of any AI benchmark claim — screenshot-worthy"
+      ],
+      "isBreak": false
+    },
+    {
+      "time": "Mon Sep 21 · 1:36 PM",
+      "title": "Homework #3 + Wednesday Teaser",
+      "duration": "9 minutes",
+      "description": "The model-picker memo: take your week-1 wish, pick the model tier you'd build it on, justify it in 5 sentences.",
+      "bulletPoints": [
+        "Due Wed Sep 23, 12:30 PM on Canvas",
+        "Wednesday: Session 3 — your first API key"
       ],
       "isBreak": false
     }
@@ -195,6 +238,33 @@
       "badge": "Video",
       "badgeType": "video",
       "linkText": "Watch now"
+    },
+    {
+      "title": "Meeting 2 Slide Deck — The Machine Becomes ChatGPT",
+      "url": "/session-02/slides-meeting2.html",
+      "description": "Monday's slides: the pretraining-to-RLHF pipeline, the rater game, frontier economics, and the benchmark BS-detector.",
+      "icon": "presentation",
+      "badge": "Slides",
+      "badgeType": "interactive",
+      "linkText": "Open slides"
+    },
+    {
+      "title": "You Are the Rater — The Alignment Game",
+      "url": "/session-02/you-are-the-rater.html",
+      "description": "Seven rounds of real preference judgments: the class votes between response pairs, then sees what production RLHF raters rewarded — and the side effects (sycophancy, padding, over-refusal) that followed.",
+      "icon": "users",
+      "badge": "Game",
+      "badgeType": "interactive",
+      "linkText": "Play in class"
+    },
+    {
+      "title": "State of the Frontier — September 2026",
+      "url": "/session-02/state-of-the-frontier.html",
+      "description": "Printable cheatsheet: every major lab and flagship model with pricing, the pipeline in three steps, the 5-red-flag benchmark checklist, and the 4-question model picker. Keep it all semester.",
+      "icon": "file-text",
+      "badge": "Cheatsheet",
+      "badgeType": "tool",
+      "linkText": "Open & print"
     }
   ],
   "activities": [

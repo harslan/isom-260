@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flight Card · Session 2, Meeting 2 | ISOM 260</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Sora:wght@600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'DM Sans', sans-serif; background: #f4f2ec; color: #1a1a1a; padding: 1.2rem; font-size: 13px; line-height: 1.45; }
+    .card { max-width: 820px; margin: 0 auto; background: #fff; border: 2px solid #1a1a1a; border-radius: 10px; padding: 1.4rem 1.6rem; }
+    h1 { font-family: 'Sora', sans-serif; font-size: 1.1rem; display: flex; justify-content: space-between; align-items: baseline; border-bottom: 2px solid #1a1a1a; padding-bottom: 0.5rem; margin-bottom: 0.8rem; }
+    h1 .sub { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 400; color: #666; }
+    h2 { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: #b3003e; margin: 0.9rem 0 0.35rem; }
+    table { width: 100%; border-collapse: collapse; }
+    td { padding: 0.18rem 0.5rem 0.18rem 0; vertical-align: top; }
+    td.t { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 0.78rem; white-space: nowrap; width: 4.2rem; }
+    .cut { color: #b3003e; font-weight: 700; }
+    .hl { background: #fff3b8; padding: 0 0.25rem; font-weight: 700; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1.6rem; }
+    ul { list-style: none; }
+    li { padding-left: 1rem; position: relative; margin-bottom: 0.22rem; }
+    li::before { content: "▸"; position: absolute; left: 0; color: #b3003e; }
+    .rule { margin-top: 0.9rem; border: 2px solid #b3003e; border-radius: 8px; padding: 0.55rem 0.8rem; font-weight: 700; text-align: center; background: #fdf0f4; }
+    @media print { body { background: #fff; padding: 0; } .card { border-width: 1.5px; max-width: 100%; } @page { margin: 1cm; } }
+</style>
+</head>
+<body>
+<div class="card">
+    <h1>SESSION 2 · MEETING 2 · "BECOMES CHATGPT" <span class="sub">MON SEP 21 · 12:30–1:45 · HW2 DUE TODAY · HARD STOP 1:45</span></h1>
+
+    <div class="grid">
+    <div>
+        <h2>Timeline · slide #</h2>
+        <table>
+            <tr><td class="t">12:30</td><td>1–2 · HW2 debrief — <span class="hl">Canvas tally + read 2–3 paragraphs</span> (4 min)</td></tr>
+            <tr><td class="t">12:34</td><td>3–4 · "Why can't your model chat?" → the 3-step pipeline (8 min)</td></tr>
+            <tr><td class="t">12:42</td><td>5 · <span class="hl">GAME: You Are the Rater</span> — vote A/B by hands, argue, reveal. Interstitial after R4 is the RLHF reveal. <span class="cut">CUT 1:00</span></td></tr>
+            <tr><td class="t">1:00</td><td>6 · RLHF aftermath: sycophancy, length bias, over-refusal (6 min)</td></tr>
+            <tr><td class="t">1:06</td><td>7–8 · Scale as strategy → the economics grid (6 min)</td></tr>
+            <tr><td class="t">1:12</td><td>9 · <span class="hl">The second dial</span> — reasoning models / test-time compute; "how GPT-6 hit its numbers" segue (4 min)</td></tr>
+            <tr><td class="t">1:16</td><td>10 · Frontier map + <span class="hl">cheatsheet handout</span> (4 min)</td></tr>
+            <tr><td class="t">1:20</td><td>11–12 · GPT-6 case study → the 5-question BS-detector (12 min — don't rush, it's the payoff)</td></tr>
+            <tr><td class="t">1:32</td><td>13 · Boardroom translation (4 min)</td></tr>
+            <tr><td class="t">1:36</td><td>14 · HW #3: model-picker memo, <b>due Wed 12:30</b> (3 min)</td></tr>
+            <tr><td class="t">1:39</td><td>15–16 · Wednesday teaser (first API key!) → close + buffer</td></tr>
+        </table>
+
+        <h2>Rater game — round map &amp; keys</h2>
+        <ul>
+            <li>Keys: <b>A / B / T</b> record room vote · → advance · Esc summary · F fullscreen</li>
+            <li>R1 ice-startup (sycophancy) · R2 Eiffel (confident-wrong) · R3 phishing training (over-refusal) · R4 revenue/profit (length bias) → <b>interstitial: "you are the R, H, and F"</b></li>
+            <li>R5 $8k savings (liability-shield) · R6 remote-work sources (fabricated citations — B's studies don't exist!) · R7 code bug (cheerleading vs substance)</li>
+            <li>If time-crunched: run R1, R2, R4 + interstitial, skip to summary</li>
+        </ul>
+    </div>
+    <div>
+        <h2>Facts you'll cite (researched Sep 16)</h2>
+        <ul>
+            <li>Fable 5.1: $10/$50, cache $0.25 (−75%), 1M context</li>
+            <li>Sonnet 5 workhorse: $2/$10 · Muse Spark ~$1.25/$4.25</li>
+            <li>Gemini 3.8 Flash $0.75/$3.75 — <b>doubles Jan 1, 2027</b> (promo!)</li>
+            <li>GPT-6 launch numbers: max effort + tools + retries — contested</li>
+            <li>SWE-bench: verbatim contamination documented</li>
+            <li>Saturation: >88–90% = statistically meaningless gaps</li>
+            <li><b>37%</b> avg lab-vs-production gap · <b>50×</b> cost variation at similar accuracy</li>
+        </ul>
+
+        <h2>Callbacks to land</h2>
+        <ul>
+            <li>Pipeline step 1 = "your TinyGPT, 10-million× scale"</li>
+            <li>Rater game = Wednesday's Loan Officer, but the weights are VALUES</li>
+            <li>R6 fabricated sources = the crystal ball: confident sampling, not lookup</li>
+            <li>HW3 uses THEIR week-1 whiteboard wish — say it explicitly</li>
+        </ul>
+
+        <h2>If behind at 1:13</h2>
+        <ul>
+            <li>Compress frontier map to 2 min ("it's on your cheatsheet")</li>
+            <li>Never cut slides 10–11 (case study + checklist) — that's the business value of the whole meeting</li>
+        </ul>
+
+        <h2>Before / after</h2>
+        <ul>
+            <li>Canvas: HW2 thread up for debrief · <b>HW3 assignment posted</b> (due Wed Sep 23 12:30) · print a few cheatsheets for front row</li>
+            <li>After: note the rounds where the room split ~50/50 — those are your best exam questions later</li>
+        </ul>
+    </div>
+    </div>
+
+    <div class="rule">The BS-detector checklist (slide 11) is the deliverable of the day — land it unhurried, then tell them to screenshot it.</div>
+</div>
+</body>
+</html>

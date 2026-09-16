@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>State of the Frontier · September 2026 | ISOM 260</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --bg-card: #121828;
+    --bg-inset: #0d1322;
+    --border: rgba(255, 255, 255, 0.09);
+    --text: #eef0f6;
+    --text-2: #a3aabd;
+    --text-3: #6b7284;
+    --cyan: #00d4ff;
+    --magenta: #ff00aa;
+    --yellow: #ffd60a;
+    --green: #00ff88;
+    --orange: #ff8800;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  body {
+    font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  .sheet {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 36px 28px 24px;
+  }
+
+  h1, h2, .step-name, .flag-name, .q-num { font-family: 'Sora', sans-serif; }
+  code, .mono, .price, .tl-date { font-family: 'JetBrains Mono', monospace; }
+
+  /* ============ HEADER ============ */
+  .header {
+    border-bottom: 2px solid var(--cyan);
+    padding-bottom: 14px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .header h1 {
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    line-height: 1.1;
+    background: linear-gradient(90deg, var(--cyan), var(--magenta));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .header .kicker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-2);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .header-meta {
+    text-align: right;
+    font-size: 11px;
+    color: var(--text-3);
+  }
+
+  .header-meta .tagline {
+    color: var(--yellow);
+    font-style: italic;
+    font-size: 12px;
+    margin-top: 3px;
+  }
+
+  /* ============ SECTIONS ============ */
+  section { margin-bottom: 20px; }
+
+  h2 {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  h2::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .c-cyan { color: var(--cyan); }
+  .c-magenta { color: var(--magenta); }
+  .c-yellow { color: var(--yellow); }
+  .c-green { color: var(--green); }
+
+  /* ============ TIMELINE ============ */
+  .timeline {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  .tl-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--magenta);
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+
+  .tl-item:nth-child(2) { border-top-color: var(--cyan); }
+  .tl-item:nth-child(3) { border-top-color: var(--green); }
+
+  .tl-date {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--yellow);
+    letter-spacing: 0.08em;
+  }
+
+  .tl-what {
+    font-weight: 700;
+    font-size: 12.5px;
+    margin: 2px 0 1px;
+  }
+
+  .tl-note { font-size: 11px; color: var(--text-2); }
+
+  /* ============ TABLE ============ */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11.5px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  th {
+    font-family: 'Sora', sans-serif;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--cyan);
+    text-align: left;
+    padding: 8px 10px;
+    background: var(--bg-inset);
+    border-bottom: 1px solid var(--border);
+  }
+
+  td {
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    color: var(--text-2);
+  }
+
+  tr:last-child td { border-bottom: none; }
+
+  td.lab { color: var(--text); font-weight: 700; white-space: nowrap; }
+  td.flagship { color: var(--text); font-weight: 500; }
+  td .price { color: var(--green); font-size: 11px; }
+  td .price-note { color: var(--text-3); font-size: 10.5px; display: block; }
+  td.watch { color: var(--yellow); }
+  td.watch::before { content: "⚠ "; }
+
+  /* ============ 3-STEP STRIP ============ */
+  .steps {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto 1fr;
+    gap: 8px;
+    align-items: stretch;
+  }
+
+  .step {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+
+  .step-name {
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 3px;
+  }
+
+  .step:nth-child(1) .step-name { color: var(--cyan); }
+  .step:nth-child(3) .step-name { color: var(--magenta); }
+  .step:nth-child(5) .step-name { color: var(--green); }
+
+  .step-gives {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--yellow);
+    border: 1px solid rgba(255, 214, 10, 0.35);
+    border-radius: 999px;
+    padding: 1px 8px;
+    margin-bottom: 5px;
+  }
+
+  .step p { font-size: 11px; color: var(--text-2); }
+
+  .arrow {
+    align-self: center;
+    color: var(--text-3);
+    font-size: 18px;
+  }
+
+  /* ============ RED FLAGS ============ */
+  .flags { display: grid; gap: 8px; }
+
+  .flag {
+    display: flex;
+    gap: 10px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--magenta);
+    border-radius: 6px;
+    padding: 8px 12px;
+  }
+
+  .flag-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--magenta);
+    line-height: 1.3;
+  }
+
+  .flag-name {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .flag p { font-size: 11.5px; color: var(--text-2); }
+  .flag p strong { color: var(--yellow); font-weight: 700; }
+
+  /* ============ 4 QUESTIONS ============ */
+  .questions {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .q {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    display: flex;
+    gap: 10px;
+  }
+
+  .q-num {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--green);
+    line-height: 1.1;
+  }
+
+  .q-title { font-weight: 700; font-size: 12px; color: var(--text); }
+  .q p { font-size: 11px; color: var(--text-2); }
+  .q p em { color: var(--cyan); font-style: normal; }
+
+  .pull-quote {
+    margin-top: 10px;
+    text-align: center;
+    font-family: 'Sora', sans-serif;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--yellow);
+    background: rgba(255, 214, 10, 0.06);
+    border: 1px dashed rgba(255, 214, 10, 0.4);
+    border-radius: 8px;
+    padding: 9px 14px;
+  }
+
+  /* ============ FOOTER ============ */
+  .footer {
+    border-top: 1px solid var(--border);
+    margin-top: 4px;
+    padding-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-3);
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .footer .url { color: var(--cyan); }
+
+  /* ============ PRINT ============ */
+  @media print {
+    :root {
+      --bg: #ffffff;
+      --bg-card: #ffffff;
+      --bg-inset: #f2f4f8;
+      --border: #c9ced9;
+      --text: #14181f;
+      --text-2: #333a46;
+      --text-3: #5b6270;
+      --cyan: #0072a3;
+      --magenta: #b3006e;
+      --yellow: #8a6d00;
+      --green: #007a45;
+      --orange: #a35400;
+    }
+
+    @page { size: letter; margin: 0.45in; }
+
+    body { background: #fff; font-size: 10.5px; line-height: 1.35; }
+    .sheet { max-width: none; padding: 0; }
+
+    .header { padding-bottom: 8px; margin-bottom: 12px; border-bottom-color: var(--cyan); }
+    .header h1 {
+      font-size: 22px;
+      background: none;
+      -webkit-text-fill-color: var(--text);
+      color: var(--text);
+    }
+
+    section { margin-bottom: 12px; break-inside: avoid; }
+    h2 { font-size: 11px; margin-bottom: 6px; }
+
+    .tl-item, .step, .flag, .q, .pull-quote, table {
+      border-color: var(--border);
+      box-shadow: none;
+    }
+
+    .tl-item { padding: 6px 9px; }
+    .tl-note, .step p, .flag p, .q p { font-size: 9.5px; }
+    .tl-what, .step-name, .flag-name, .q-title { font-size: 10.5px; }
+
+    table { font-size: 9.5px; }
+    th { padding: 5px 7px; font-size: 8.5px; }
+    td { padding: 5px 7px; }
+    td .price, td .price-note { font-size: 9px; }
+
+    .steps { gap: 5px; }
+    .step { padding: 6px 9px; }
+    .step-gives { font-size: 8px; padding: 0 6px; margin-bottom: 3px; }
+
+    .flags { gap: 4px; }
+    .flag { padding: 5px 9px; }
+    .flag-num { font-size: 12px; }
+
+    .questions { gap: 6px; }
+    .q { padding: 6px 9px; }
+    .q-num { font-size: 14px; }
+
+    .pull-quote { padding: 6px 10px; font-size: 10.5px; margin-top: 6px; }
+    .footer { font-size: 8.5px; padding-top: 6px; }
+
+    a { color: inherit; text-decoration: none; }
+  }
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <!-- 1 · HEADER -->
+  <header class="header">
+    <div>
+      <div class="kicker">ISOM 260 · AI for Business · Reference Sheet</div>
+      <h1>STATE OF THE FRONTIER</h1>
+    </div>
+    <div class="header-meta">
+      September 2026 · Suffolk University<br>
+      <div class="tagline">"The map changes monthly — the questions to ask don't."</div>
+    </div>
+  </header>
+
+  <!-- 2 · THE WEEK THE FRONTIER MOVED -->
+  <section>
+    <h2 class="c-magenta">The Week the Frontier Moved</h2>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-date">SEP 1</div>
+        <div class="tl-what">Anthropic — Claude Fable 5.1 + Mythos 5.1</div>
+        <div class="tl-note">New flagship pair; Mythos 5.1 ships under a trusted-access program.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">SEP 2</div>
+        <div class="tl-what">Google Gemini 3.8 Flash (GA) + Meta Muse Spark 1.3</div>
+        <div class="tl-note">Two speed-and-price plays land on the same day.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">SEP 3</div>
+        <div class="tl-what">OpenAI — GPT-6 Astra</div>
+        <div class="tl-note">Billed as a "generational leap"; staged access via its Daybreak security program; cyber capabilities restricted.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 · THE FRONTIER TABLE -->
+  <section>
+    <h2 class="c-cyan">The Frontier Table</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Lab</th>
+          <th>Flagship</th>
+          <th>Price in / out · per 1M tokens</th>
+          <th>Known for</th>
+          <th>Watch out</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="lab">OpenAI</td>
+          <td class="flagship">GPT-6 Astra</td>
+          <td><span class="price">staged rollout</span><span class="price-note">restricted tier for paid users</span></td>
+          <td>"Generational leap" claims in cybersecurity, software engineering, science; strongest raw-capability reputation</td>
+          <td class="watch">Benchmark claims used max reasoning effort / tools / multiple attempts — read the fine print; access still staged</td>
+        </tr>
+        <tr>
+          <td class="lab">Anthropic</td>
+          <td class="flagship">Claude Fable 5.1 <span style="color:var(--text-3)">(+ trusted-access Mythos 5.1)</span></td>
+          <td><span class="price">$10 / $50</span><span class="price-note">cache reads $0.25 (−75%)</span></td>
+          <td>Long-running agents, 1M-token context, documents / spreadsheets / slides, computer use with failure recovery</td>
+          <td class="watch">Premium pricing — cache discipline matters (agentic workloads up to ~45% cheaper with caching)</td>
+        </tr>
+        <tr>
+          <td class="lab">Anthropic <span style="color:var(--text-3);font-weight:400">(mid-tier)</span></td>
+          <td class="flagship">Claude Sonnet 5</td>
+          <td><span class="price">$2 / $10</span></td>
+          <td>The workhorse tier: most business tasks at 1/5 the price</td>
+          <td class="watch">Check if your task actually needs the flagship</td>
+        </tr>
+        <tr>
+          <td class="lab">Google</td>
+          <td class="flagship">Gemini 3.8 Flash</td>
+          <td><span class="price">$0.75 / $3.75</span><span class="price-note">promo through Dec 31, 2026 — DOUBLES to $1.50 / $7.50 on Jan 1, 2027</span></td>
+          <td>Speed + price; defenders-only Cyber variant</td>
+          <td class="watch">Budget on the post-January price, not the promo</td>
+        </tr>
+        <tr>
+          <td class="lab">Meta</td>
+          <td class="flagship">Muse Spark 1.3</td>
+          <td><span class="price">~$1.25 / $4.25</span><span class="price-note">cache ~$0.15</span></td>
+          <td>Near-frontier capability at commodity pricing</td>
+          <td class="watch">API-only (not open weights, despite Meta's history)</td>
+        </tr>
+        <tr>
+          <td class="lab">Open-weights tier</td>
+          <td class="flagship">GLM-5.3 (Z.ai) · Qwen3.8 27B (Alibaba) · DeepSeek V4 Flash (experimental)</td>
+          <td><span class="price">run-it-yourself</span><span class="price-note">economics</span></td>
+          <td>Capability one tier below the frontier</td>
+          <td class="watch">The true frontier is now API-only with gated security variants</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 4 · HOW A PREDICTOR BECOMES AN ASSISTANT -->
+  <section>
+    <h2 class="c-green">How a Predictor Becomes an Assistant</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-name">1 · Pretraining</div>
+        <div class="step-gives">gives: capability</div>
+        <p>Predict the next token on roughly the internet. Raw knowledge and pattern power — but no idea it should be helpful.</p>
+      </div>
+      <div class="arrow">→</div>
+      <div class="step">
+        <div class="step-name">2 · Instruction Tuning</div>
+        <div class="step-gives">gives: format</div>
+        <p>Trained on examples of following directions. Now it answers questions instead of continuing them.</p>
+      </div>
+      <div class="arrow">→</div>
+      <div class="step">
+        <div class="step-name">3 · RLHF</div>
+        <div class="step-gives">gives: manners</div>
+        <p>Thousands of human raters pick the better answer; the model is optimized to please them. Side effects: sycophancy, verbosity, over-refusal.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 · READING A BENCHMARK CLAIM -->
+  <section>
+    <h2 class="c-magenta">Reading a Benchmark Claim — The 5 Red Flags</h2>
+    <div class="flags">
+      <div class="flag">
+        <div class="flag-num">①</div>
+        <div>
+          <span class="flag-name">Saturation</span>
+          <p>Frontier scores cluster above <strong>88–90%</strong> — differences up there are statistically meaningless. (MMLU first, GPQA following.)</p>
+        </div>
+      </div>
+      <div class="flag">
+        <div class="flag-num">②</div>
+        <div>
+          <span class="flag-name">Contamination</span>
+          <p>Models have reproduced benchmark answers <strong>verbatim</strong> from training data (documented on SWE-bench Verified) — inflated scores.</p>
+        </div>
+      </div>
+      <div class="flag">
+        <div class="flag-num">③</div>
+        <div>
+          <span class="flag-name">Harness</span>
+          <p>Was the score achieved with max reasoning effort, tools, retries, special settings? (GPT-6 Astra's launch numbers drew exactly this criticism.)</p>
+        </div>
+      </div>
+      <div class="flag">
+        <div class="flag-num">④</div>
+        <div>
+          <span class="flag-name">Relevance</span>
+          <p>A math-olympiad score says nothing about your invoice processing — enterprises measure a <strong>~37% average gap</strong> between lab benchmarks and production performance.</p>
+        </div>
+      </div>
+      <div class="flag">
+        <div class="flag-num">⑤</div>
+        <div>
+          <span class="flag-name">Freshness</span>
+          <p>Static benchmarks decay; prefer live, refreshed benchmarks — like <strong>LiveBench</strong> (refreshed monthly) and, best of all, <strong>your own eval on your own task</strong> (we build these in Session 11).</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 · PICKING A MODEL -->
+  <section>
+    <h2 class="c-green">Picking a Model — 4 Questions Before Price Sheets</h2>
+    <div class="questions">
+      <div class="q">
+        <div class="q-num">①</div>
+        <div>
+          <div class="q-title">Frontier reasoning — or extraction/formatting?</div>
+          <p>If it's extraction or formatting, the mid-tier is <em>5–10× cheaper</em>.</p>
+        </div>
+      </div>
+      <div class="q">
+        <div class="q-num">②</div>
+        <div>
+          <div class="q-title">What's your context need?</div>
+          <p>A prompt, a document, or <em>a million tokens</em>? Size the window to the job.</p>
+        </div>
+      </div>
+      <div class="q">
+        <div class="q-num">③</div>
+        <div>
+          <div class="q-title">Latency: chat-speed or batch-overnight?</div>
+          <p>Interactive needs fast tokens; pipelines can wait — and pay less.</p>
+        </div>
+      </div>
+      <div class="q">
+        <div class="q-num">④</div>
+        <div>
+          <div class="q-title">What happens when it's wrong?</div>
+          <p>Is there a human check? <em>No check → you need guardrails before you need capability</em> (Session 10).</p>
+        </div>
+      </div>
+    </div>
+    <div class="pull-quote">Similar accuracy has been observed at 50× cost variation. The savings are in the picking.</div>
+  </section>
+
+  <!-- 7 · FOOTER -->
+  <footer class="footer">
+    <div>Compiled Sep 16, 2026 · facts move fast — the questions don't</div>
+    <div class="url">isom-260.vercel.app</div>
+  </footer>
+
+</div>
+</body>
+</html>
