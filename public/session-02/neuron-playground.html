@@ -456,7 +456,7 @@
                 <div class="card formula-card">
                     <div class="panel-label cyan">The neuron · one weighted vote</div>
                     <div class="formula" id="formula"></div>
-                    <div class="formula-note">income in $k · one applicant, one score, one yes/no. That's the whole neuron.</div>
+                    <div class="formula-note">income &amp; credit are each scaled 0–1 first, so the two weights are directly comparable — real ML does this too ("feature scaling"). One applicant, one score, one yes/no. That's the whole neuron.</div>
                 </div>
 
                 <div class="card">
@@ -753,22 +753,19 @@
             }
         }
 
-        /* ============ Business-friendly formula display ============
-           Internal:  s ∝ w1*(inc-20)/160 + w2*(cr-450)/400 + bias/100
-           ×100    :  (0.625*w1)*inc + (0.25*w2)*cr + (bias − 12.5*w1 − 112.5*w2)
-           Same sign, same decision — but in $k-income and credit-point units. */
+        /* The formula shows THE SAME numbers as the sliders — one source of
+           truth. Income and credit are pre-scaled to 0–1 (feature scaling),
+           which is exactly what real ML pipelines do, and it makes the two
+           weights directly comparable. */
         function fmt(v, dp) {
             const s = v.toFixed(dp);
             return v < 0 ? '−' + s.slice(1) : s;
         }
         function renderFormula() {
-            const c1 = 0.625 * w1;
-            const c2 = 0.25 * w2;
-            const c0 = bn * 100 - 12.5 * w1 - 112.5 * w2;
             $('formula').innerHTML =
-                'score <span class="op">=</span> (<span class="num">' + fmt(c1, 2) + '</span> <span class="op">×</span> income)' +
-                ' <span class="op">+</span> (<span class="num">' + fmt(c2, 2) + '</span> <span class="op">×</span> credit)' +
-                ' <span class="op">+</span> <span class="num">' + fmt(c0, 0) + '</span><br>' +
+                'score <span class="op">=</span> (<span class="num">' + fmt(w1, 2) + '</span> <span class="op">×</span> income)' +
+                ' <span class="op">+</span> (<span class="num">' + fmt(w2, 2) + '</span> <span class="op">×</span> credit)' +
+                ' <span class="op">+</span> <span class="num">' + fmt(bn * 100, 0) + '</span><br>' +
                 '<span class="dim">→ approve if score &gt; 0</span>';
         }
 
