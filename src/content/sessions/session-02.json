@@ -35,79 +35,74 @@
   ],
   "agenda": [
     {
-      "time": "5:00 PM - 5:25 PM",
-      "title": "Part 1: The Big Picture",
-      "duration": "25 minutes",
-      "description": "Opening hook with live AI demo, then dive into the brilliant 3Blue1Brown visual explanation of neural networks.",
+      "time": "Wed Sep 16 · 12:30 PM",
+      "title": "Meeting 1 · Victory Lap: You Trained a GPT",
+      "duration": "5 minutes",
+      "description": "Homework #1 debrief — the loss you watched fall, and the best names from the Canvas thread.",
       "bulletPoints": [
-        "Live demo: What happens inside ChatGPT?",
-        "Video: \"But What is a Neural Network?\"",
-        "Key concept: Neurons are just \"things that hold numbers\""
-      ]
+        "Loss 3.5 → 1.75: you watched a machine learn, live",
+        "Favorite generated names, celebrated properly"
+      ],
+      "isBreak": false
     },
     {
-      "time": "5:25 PM - 6:05 PM",
-      "title": "Part 2: Interactive Exploration",
-      "duration": "40 minutes",
-      "description": "Hands-on learning with TensorFlow Playground and the stunning LLM Visualization tool.",
-      "bulletPoints": [
-        "TensorFlow Playground challenges (3 levels)",
-        "Explore: Why do deeper networks solve harder problems?",
-        "3D visualization of GPT-style transformers"
-      ]
-    },
-    {
-      "time": "6:05 PM - 6:40 PM",
-      "title": "Part 3: How LLMs Are Built",
-      "duration": "35 minutes",
-      "description": "The complete training pipeline from internet data to helpful assistant.",
-      "bulletPoints": [
-        "Pre-training: Learning from the internet",
-        "Tokenization: Breaking text into pieces",
-        "Post-training: Making it useful",
-        "Live coding demo in Google Colab"
-      ]
-    },
-    {
-      "time": "6:40 PM - 6:50 PM",
-      "title": "☕ Break",
+      "time": "Wed Sep 16 · 12:35 PM",
+      "title": "It's Just Numbers: The 104,475-Parameter Census",
       "duration": "10 minutes",
-      "description": "Stretch, grab a coffee, check your messages. Let the concepts settle.",
-      "isBreak": true
+      "description": "Where does a model's 'knowledge' physically live? A complete accounting of your model's brain.",
+      "bulletPoints": [
+        "Embeddings, attention, MLPs, head — every number counted",
+        "GPT-4 class: same table, ~1.8 trillion rows deep"
+      ],
+      "isBreak": false
     },
     {
-      "time": "6:50 PM - 7:20 PM",
-      "title": "Part 4: Business Applications & Limitations",
-      "duration": "30 minutes",
-      "description": "Where AI creates value — and where it fails spectacularly.",
+      "time": "Wed Sep 16 · 12:45 PM",
+      "title": "Interactive: Be the Neuron (Loan Officer)",
+      "duration": "15 minutes",
+      "description": "One artificial neuron = a weighted vote. You set the loan-approval weights by hand — then gradient descent beats you.",
       "bulletPoints": [
-        "Customer segmentation & recommendations",
-        "Fraud detection & demand forecasting",
-        "\"Jagged intelligence\": Finding where LLMs fail",
-        "Activity: 5 prompts that break AI"
-      ]
+        "Three sliders: income weight, credit weight, bias",
+        "'Let the machine learn' — watch gradient descent roll downhill",
+        "Your TinyGPT is 104,475 of these knobs"
+      ],
+      "isBreak": false
     },
     {
-      "time": "7:20 PM - 7:45 PM",
-      "title": "Part 5: Build Challenge",
-      "duration": "25 minutes",
-      "description": "Build your own image classifier with Google's Teachable Machine.",
+      "time": "Wed Sep 16 · 1:05 PM",
+      "title": "Hands-On: Open the Hood of Your Model",
+      "duration": "27 minutes",
+      "description": "Colab notebook: retrain your Session 1 model, then X-ray it four ways.",
       "bulletPoints": [
-        "Teams of 2-3 students",
-        "Train a 3-class classifier in 10 minutes",
-        "Reflect: What made it work? What didn't?"
-      ]
+        "The map of meaning: your model discovered vowels on its own",
+        "The crystal ball: the exact probabilities behind every letter",
+        "Attention heatmaps: literally watch it read",
+        "'i' wandered off the vowel cluster — and why that matters for trust"
+      ],
+      "isBreak": false
     },
     {
-      "time": "7:45 PM - 7:55 PM",
-      "title": "Part 6: Wrap-Up & Preview",
-      "duration": "10 minutes",
-      "description": "Key takeaways, homework assignment, and what's coming next.",
+      "time": "Wed Sep 16 · 1:32 PM",
+      "title": "Recap + Homework #2",
+      "duration": "13 minutes",
+      "description": "What you now know that most AI users don't — and one honest paragraph for Monday.",
       "bulletPoints": [
-        "4 key insights to remember",
-        "Homework overview",
-        "Preview: Prompt Engineering & API calls"
-      ]
+        "Meaning is location in space",
+        "HW #2: which X-ray surprised you most? 3–5 sentences on Canvas, due Mon Sep 21 12:30"
+      ],
+      "isBreak": false
+    },
+    {
+      "time": "Mon Sep 21 · 12:30 PM",
+      "title": "Meeting 2 · The Machine Becomes ChatGPT",
+      "duration": "75 minutes",
+      "description": "From raw next-token predictor to helpful assistant — and how to read AI claims critically.",
+      "bulletPoints": [
+        "Instruction tuning & RLHF: how a predictor learns manners",
+        "Scaling laws: why bigger keeps getting better, and what it costs",
+        "Reading benchmark claims without getting fooled — including GPT-6's launch numbers"
+      ],
+      "isBreak": false
     }
   ],
   "videos": [
@@ -118,6 +113,42 @@
     }
   ],
   "resources": [
+    {
+      "title": "Session 2 Slide Deck",
+      "url": "/session-02/slides.html",
+      "description": "Meeting 1 slides: the victory lap, the parameter census, the neuron, and both hands-on launches. Arrow keys to navigate, F for fullscreen.",
+      "icon": "presentation",
+      "badge": "Slides",
+      "badgeType": "interactive",
+      "linkText": "Open slides"
+    },
+    {
+      "title": "Open the Hood — Colab Notebook",
+      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-02/ISOM260_Session2_Open_The_Hood.ipynb",
+      "description": "Retrain your Session 1 model, then X-ray it: the 104,475-parameter census, the map of meaning (your model discovered vowels!), the crystal-ball probabilities, and attention heatmaps.",
+      "icon": "code",
+      "badge": "Hands-On",
+      "badgeType": "interactive",
+      "linkText": "Open in Colab"
+    },
+    {
+      "title": "The Loan Officer — Neuron Playground",
+      "url": "/session-02/neuron-playground.html",
+      "description": "Be the neuron: set loan-approval weights by hand, then press 'Let the machine learn' and watch gradient descent beat you. One neuron, three sliders, the whole idea of training.",
+      "icon": "sparkles",
+      "badge": "Interactive",
+      "badgeType": "tool",
+      "linkText": "Play"
+    },
+    {
+      "title": "AI: From Neurons to LLMs (PDF)",
+      "url": "/docs/AI_From_Neurons_To_LLMs.pdf",
+      "description": "The companion reading for this session — bridges today's single neuron to the full LLM stack we cover Monday.",
+      "icon": "book-open",
+      "badge": "Reading",
+      "badgeType": "reference",
+      "linkText": "Download PDF"
+    },
     {
       "title": "TensorFlow Playground",
       "url": "https://playground.tensorflow.org",
@@ -137,15 +168,6 @@
       "linkText": "Explore now"
     },
     {
-      "title": "Teachable Machine",
-      "url": "https://teachablemachine.withgoogle.com",
-      "description": "Train your own image, sound, or pose classifier with zero code. Export to use in your projects.",
-      "icon": "camera",
-      "badge": "Build Tool",
-      "badgeType": "tool",
-      "linkText": "Start building"
-    },
-    {
       "title": "Karpathy: Deep Dive into LLMs",
       "url": "https://www.youtube.com/watch?v=7xTGNNLPyMI",
       "description": "3.5 hour masterclass from the former Tesla AI Director. The definitive explainer for how ChatGPT works.",
@@ -153,24 +175,6 @@
       "badge": "Video",
       "badgeType": "video",
       "linkText": "Watch now"
-    },
-    {
-      "title": "OpenAI Tokenizer",
-      "url": "https://platform.openai.com/tokenizer",
-      "description": "See exactly how LLMs break text into tokens. Essential for understanding prompts and context limits.",
-      "icon": "type",
-      "badge": "Tool",
-      "badgeType": "tool",
-      "linkText": "Try it"
-    },
-    {
-      "title": "Google Colab",
-      "url": "https://colab.research.google.com",
-      "description": "Free cloud Python notebooks with GPU access. Write and run code without installing anything.",
-      "icon": "code",
-      "badge": "Code",
-      "badgeType": "code",
-      "linkText": "Open Colab"
     }
   ],
   "activities": [

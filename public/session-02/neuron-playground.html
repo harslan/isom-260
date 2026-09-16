@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Loan Officer — Be the Neuron | ISOM 260 · Session 2</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #0f1424;
+            --bg-card: #141929;
+            --bg-elevated: #1a2035;
+            --bg-code: #0d1117;
+
+            --cyan: #00e5ff;
+            --cyan-dim: #00b8d4;
+            --cyan-glow: rgba(0, 229, 255, 0.15);
+            --cyan-glow-strong: rgba(0, 229, 255, 0.3);
+
+            --magenta: #ff006e;
+            --magenta-glow: rgba(255, 0, 110, 0.15);
+
+            --yellow: #ffd600;
+            --yellow-glow: rgba(255, 214, 0, 0.15);
+
+            --green: #00e676;
+            --green-glow: rgba(0, 230, 118, 0.15);
+
+            --orange: #ff9100;
+            --purple: #b388ff;
+
+            --text-primary: #e8ecf4;
+            --text-secondary: #8892a8;
+            --text-dim: #5a6478;
+
+            --border: rgba(0, 229, 255, 0.1);
+            --border-strong: rgba(0, 229, 255, 0.25);
+            --grid-line: rgba(0, 229, 255, 0.04);
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'DM Sans', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+            background-image:
+                linear-gradient(var(--grid-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+            background-size: 40px 40px;
+            min-height: 100vh;
+        }
+
+        .glow-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.4;
+        }
+        .glow-orb-1 { width: 500px; height: 500px; background: rgba(0, 229, 255, 0.08); top: -100px; left: -100px; }
+        .glow-orb-2 { width: 400px; height: 400px; background: rgba(255, 0, 110, 0.06); top: 40%; right: -100px; }
+        .glow-orb-3 { width: 350px; height: 350px; background: rgba(0, 230, 118, 0.05); bottom: -50px; left: 30%; }
+
+        .container {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 0 1.5rem 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ---------- Header ---------- */
+        header {
+            text-align: center;
+            padding: 2.5rem 0 1.75rem;
+        }
+        .session-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+            padding: 0.45rem 1.1rem;
+            border-radius: 100px;
+            margin-bottom: 1.25rem;
+            background: var(--bg-card);
+        }
+        .session-badge .dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: var(--cyan);
+            animation: pulse-dot 2s infinite;
+        }
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 var(--cyan-glow-strong); }
+            50% { opacity: 0.7; box-shadow: 0 0 0 6px transparent; }
+        }
+        h1 {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(1.7rem, 4vw, 2.7rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.15;
+            margin-bottom: 0.6rem;
+        }
+        h1 .gradient-text {
+            background: linear-gradient(135deg, var(--cyan), var(--magenta));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            max-width: 640px;
+            margin: 0 auto;
+        }
+
+        /* ---------- Layout ---------- */
+        .playground {
+            display: grid;
+            grid-template-columns: minmax(0, 1.35fr) minmax(340px, 1fr);
+            gap: 1.5rem;
+            align-items: start;
+        }
+        @media (max-width: 940px) {
+            .playground { grid-template-columns: 1fr; }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
+        }
+
+        /* ---------- Chart ---------- */
+        .chart-card { padding: 1rem; }
+        #plot {
+            width: 100%;
+            aspect-ratio: 640 / 520;
+            display: block;
+            border-radius: 8px;
+            background: var(--bg-secondary);
+            touch-action: manipulation;
+        }
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.1rem;
+            justify-content: center;
+            margin-top: 0.75rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.68rem;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+        }
+        .legend span { display: inline-flex; align-items: center; gap: 0.4rem; }
+        .swatch-repaid {
+            width: 11px; height: 11px; border-radius: 50%;
+            background: rgba(0,230,118,0.35); border: 2px solid var(--green);
+        }
+        .swatch-default { color: var(--magenta); font-weight: 700; font-size: 0.9rem; }
+        .swatch-approve {
+            width: 14px; height: 11px; border-radius: 2px;
+            background: rgba(0,229,255,0.14); border: 1px solid rgba(0,229,255,0.4);
+        }
+        .swatch-line {
+            width: 16px; height: 0; border-top: 2px dashed var(--cyan);
+        }
+
+        /* ---------- Formula ---------- */
+        .panel-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin-bottom: 0.75rem;
+        }
+        .panel-label::before { content: ''; width: 20px; height: 1px; background: var(--text-dim); }
+        .panel-label.cyan { color: var(--cyan); }
+        .panel-label.cyan::before { background: var(--cyan); }
+        .panel-label.green { color: var(--green); }
+        .panel-label.green::before { background: var(--green); }
+        .panel-label.yellow { color: var(--yellow); }
+        .panel-label.yellow::before { background: var(--yellow); }
+
+        .formula-card { border-top: 3px solid var(--cyan); }
+        .formula {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(0.85rem, 1.6vw, 1.02rem);
+            font-weight: 600;
+            line-height: 1.9;
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.9rem 1rem;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+        .formula .num { color: var(--cyan); }
+        .formula .dim { color: var(--text-dim); }
+        .formula .op { color: var(--text-secondary); }
+        .formula-note {
+            font-size: 0.78rem;
+            color: var(--text-dim);
+            margin-top: 0.6rem;
+        }
+
+        /* ---------- Sliders ---------- */
+        .slider-row { margin-bottom: 1.1rem; }
+        .slider-row:last-child { margin-bottom: 0; }
+        .slider-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 0.35rem;
+        }
+        .slider-head label {
+            font-family: 'Sora', sans-serif;
+            font-weight: 600;
+            font-size: 0.88rem;
+        }
+        .slider-head label .sub { color: var(--text-dim); font-weight: 400; font-size: 0.75rem; }
+        .slider-val {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--cyan);
+            min-width: 4.5ch;
+            text-align: right;
+        }
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 34px;
+            background: transparent;
+            cursor: pointer;
+        }
+        input[type="range"]:disabled { cursor: not-allowed; opacity: 0.85; }
+        input[type="range"]::-webkit-slider-runnable-track {
+            height: 8px;
+            border-radius: 4px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 26px; height: 26px;
+            border-radius: 50%;
+            background: var(--cyan);
+            border: 3px solid var(--bg-primary);
+            margin-top: -10px;
+            box-shadow: 0 0 10px var(--cyan-glow-strong);
+            transition: transform 0.1s ease;
+        }
+        input[type="range"]:active::-webkit-slider-thumb { transform: scale(1.15); }
+        input[type="range"]::-moz-range-track {
+            height: 8px;
+            border-radius: 4px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 22px; height: 22px;
+            border-radius: 50%;
+            background: var(--cyan);
+            border: 3px solid var(--bg-primary);
+            box-shadow: 0 0 10px var(--cyan-glow-strong);
+        }
+
+        /* ---------- Scoreboard ---------- */
+        .scoreboard-card { border-top: 3px solid var(--yellow); }
+        .score-big {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+        .score-big .pct { color: var(--yellow); }
+        .score-loss {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 0.3rem;
+        }
+        .score-loss .num { color: var(--magenta); font-weight: 700; }
+        .score-bar {
+            height: 8px;
+            border-radius: 4px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            margin-top: 0.8rem;
+            overflow: hidden;
+        }
+        .score-bar-fill {
+            height: 100%;
+            width: 0%;
+            border-radius: 4px;
+            background: linear-gradient(90deg, var(--magenta), var(--yellow), var(--green));
+            transition: width 0.15s ease-out;
+        }
+        .scoreboard-card.flash { animation: score-flash 0.4s ease-in-out 3; }
+        @keyframes score-flash {
+            0%, 100% { box-shadow: none; border-color: var(--border); }
+            50% { box-shadow: 0 0 24px var(--green-glow), 0 0 48px var(--green-glow); border-color: var(--green); }
+        }
+
+        /* ---------- Buttons ---------- */
+        .btn-row { display: flex; flex-direction: column; gap: 0.65rem; }
+        .btn {
+            font-family: 'Sora', sans-serif;
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 0.85rem 1.2rem;
+            border-radius: 10px;
+            border: 1px solid var(--border-strong);
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+        .btn:hover:not(:disabled) { transform: translateY(-1px); border-color: var(--cyan); }
+        .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+        .btn-primary {
+            background: linear-gradient(135deg, rgba(0,230,118,0.18), rgba(0,229,255,0.12));
+            border: 1px solid rgba(0,230,118,0.5);
+            color: var(--green);
+            font-size: 1.05rem;
+            padding: 1rem 1.2rem;
+        }
+        .btn-primary:hover:not(:disabled) {
+            border-color: var(--green);
+            box-shadow: 0 0 18px var(--green-glow);
+        }
+        .btn-small { font-size: 0.82rem; padding: 0.6rem 1rem; color: var(--text-secondary); }
+        .vs-result {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.7rem 0.9rem;
+            display: none;
+        }
+        .vs-result.show { display: block; }
+        .vs-result .human { color: var(--yellow); font-weight: 700; }
+        .vs-result .machine { color: var(--green); font-weight: 700; }
+
+        /* ---------- Explainer ---------- */
+        details.explainer {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+        }
+        details.explainer summary {
+            font-family: 'Sora', sans-serif;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            color: var(--cyan);
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            user-select: none;
+        }
+        details.explainer summary::-webkit-details-marker { display: none; }
+        details.explainer summary::before {
+            content: '▸';
+            transition: transform 0.2s ease;
+            font-size: 0.8rem;
+        }
+        details.explainer[open] summary::before { transform: rotate(90deg); }
+        details.explainer ul {
+            margin: 0.8rem 0 0.2rem;
+            padding-left: 1.2rem;
+            color: var(--text-secondary);
+            font-size: 0.88rem;
+        }
+        details.explainer li { margin-bottom: 0.55rem; }
+        details.explainer li strong { color: var(--text-primary); }
+        details.explainer .hl-cyan { color: var(--cyan); }
+        details.explainer .hl-green { color: var(--green); }
+        details.explainer .hl-magenta { color: var(--magenta); }
+
+        .right-col { display: flex; flex-direction: column; gap: 1.25rem; }
+
+        /* ---------- Footer ---------- */
+        footer {
+            text-align: center;
+            padding: 2.5rem 0 2rem;
+            border-top: 1px solid var(--border);
+            margin-top: 2.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-dim);
+        }
+        footer a {
+            color: var(--cyan);
+            text-decoration: none;
+            border-bottom: 1px dashed rgba(0,229,255,0.4);
+        }
+        footer a:hover { border-bottom-style: solid; }
+    </style>
+</head>
+<body>
+    <div class="glow-orb glow-orb-1"></div>
+    <div class="glow-orb glow-orb-2"></div>
+    <div class="glow-orb glow-orb-3"></div>
+
+    <div class="container">
+        <header>
+            <div class="session-badge"><span class="dot"></span> ISOM 260 · Session 2 · How AI Actually Works</div>
+            <h1>🏦 The Loan Officer — <span class="gradient-text">Be the Neuron</span></h1>
+            <p class="subtitle">First YOU set the weights. Then the machine learns them. ISOM 260 · Session 2</p>
+        </header>
+
+        <div class="playground">
+            <!-- ================= LEFT: SCATTER PLOT ================= -->
+            <div class="card chart-card">
+                <div class="panel-label cyan">48 past loan applicants · same data for everyone</div>
+                <canvas id="plot" aria-label="Scatter plot of loan applicants by income and credit score, with the neuron's current decision boundary"></canvas>
+                <div class="legend">
+                    <span><span class="swatch-repaid"></span> repaid</span>
+                    <span><span class="swatch-default">✕</span> defaulted</span>
+                    <span><span class="swatch-line"></span> decision boundary</span>
+                    <span><span class="swatch-approve"></span> neuron says APPROVE</span>
+                </div>
+            </div>
+
+            <!-- ================= RIGHT: CONTROLS ================= -->
+            <div class="right-col">
+                <div class="card formula-card">
+                    <div class="panel-label cyan">The neuron · one weighted vote</div>
+                    <div class="formula" id="formula"></div>
+                    <div class="formula-note">income in $k · one applicant, one score, one yes/no. That's the whole neuron.</div>
+                </div>
+
+                <div class="card">
+                    <div class="panel-label cyan">Your knobs · the weights</div>
+                    <div class="slider-row">
+                        <div class="slider-head">
+                            <label for="w1">w₁ · Income weight <span class="sub">how much income matters</span></label>
+                            <span class="slider-val" id="w1val">0.00</span>
+                        </div>
+                        <input type="range" id="w1" min="-1" max="1" step="0.01" value="-0.4"
+                               aria-label="w1, income weight, from minus 1 to plus 1">
+                    </div>
+                    <div class="slider-row">
+                        <div class="slider-head">
+                            <label for="w2">w₂ · Credit weight <span class="sub">how much credit score matters</span></label>
+                            <span class="slider-val" id="w2val">0.00</span>
+                        </div>
+                        <input type="range" id="w2" min="-1" max="1" step="0.01" value="0.25"
+                               aria-label="w2, credit weight, from minus 1 to plus 1">
+                    </div>
+                    <div class="slider-row">
+                        <div class="slider-head">
+                            <label for="bias">bias <span class="sub">how generous the neuron is overall</span></label>
+                            <span class="slider-val" id="biasval">0</span>
+                        </div>
+                        <input type="range" id="bias" min="-100" max="100" step="1" value="30"
+                               aria-label="bias, from minus 100 to plus 100">
+                    </div>
+                </div>
+
+                <div class="card scoreboard-card" id="scoreboard">
+                    <div class="panel-label yellow">Scoreboard</div>
+                    <div class="score-big">Decisions correct: <span id="acc">0/48</span> <span class="pct" id="pct">(0%)</span></div>
+                    <div class="score-loss">Loss (how wrong): <span class="num" id="loss">—</span></div>
+                    <div class="score-bar"><div class="score-bar-fill" id="accbar"></div></div>
+                </div>
+
+                <div class="card">
+                    <div class="panel-label green">Now hand it over</div>
+                    <div class="btn-row">
+                        <button class="btn btn-primary" id="learnBtn">🤖 Let the machine learn</button>
+                        <button class="btn" id="resetBtn">🎲 Reset weights</button>
+                        <button class="btn btn-small" id="vsBtn">👤 Best human vs machine</button>
+                        <div class="vs-result" id="vsResult" role="status"></div>
+                    </div>
+                </div>
+
+                <details class="explainer" open>
+                    <summary>What am I looking at?</summary>
+                    <ul>
+                        <li><strong>This is ONE artificial neuron:</strong> a weighted vote plus a threshold. Multiply each input by a weight, add a bias, approve if the total clears zero. <span class="hl-cyan">That's it. That's the atom of AI.</span></li>
+                        <li><strong>"Learning" = nudging the weights downhill on the loss.</strong> When you press the green button, the machine repeats a tiny move — <em>which direction makes me less wrong?</em> — exactly what you watched your <span class="hl-green">TinyGPT</span> do 2,500 times in Session 1.</li>
+                        <li><strong>Scale is the only difference.</strong> Your TinyGPT is <span class="hl-cyan">104,475</span> of these knobs. GPT-6 is <span class="hl-magenta">trillions</span>. Same idea, same downhill walk.</li>
+                    </ul>
+                </details>
+            </div>
+        </div>
+
+        <footer>
+            <a href="/">← back to the ISOM 260 course site</a>
+        </footer>
+    </div>
+
+    <script>
+    (function () {
+        'use strict';
+
+        /* ============ Seeded PRNG (mulberry32) — identical data for every student ============ */
+        function mulberry32(a) {
+            return function () {
+                a |= 0; a = a + 0x6D2B79F5 | 0;
+                let t = Math.imul(a ^ a >>> 15, 1 | a);
+                t = t + Math.imul(t ^ t >>> 7, 61 | t) | 0;
+                return ((t ^ t >>> 14) >>> 0) / 4294967296;
+            };
+        }
+
+        /* ============ Data: 48 applicants, seed 260, ~4-5 stubborn overlaps ============ */
+        const N = 48;
+        const data = (function () {
+            const rnd = mulberry32(260);
+            const pts = [];
+            for (let i = 0; i < N; i++) {
+                const xn = rnd();               // normalized income  [0,1]  → $20k–$180k
+                const yn = rnd();               // normalized credit  [0,1]  → 450–850
+                const noise = (rnd() + rnd() + rnd() - 1.5) * 0.30;  // real data is messy
+                const t = 2.2 * xn + 2.8 * yn - 2.4 + noise;
+                pts.push({ xn, yn, label: t > 0 ? 1 : 0 });
+            }
+            return pts;
+        })();
+
+        /* ============ Model ============
+           Internal score s = A * (w1*xn + w2*yn + bn),  bn = bias/100, A = 6 (sharpness).
+           Approve if s > 0. Feature scaling keeps gradient descent stable. */
+        const A = 6;
+        let w1 = -0.4, w2 = 0.25, bn = 0.30;   // deliberately mediocre start (~56%)
+
+        function scoreOf(p) { return A * (w1 * p.xn + w2 * p.yn + bn); }
+        function sigmoid(s) { return 1 / (1 + Math.exp(-s)); }
+
+        function evaluate() {
+            let correct = 0, loss = 0;
+            for (const p of data) {
+                const s = scoreOf(p);
+                const pr = sigmoid(s);
+                if ((s > 0 ? 1 : 0) === p.label) correct++;
+                loss += p.label ? -Math.log(Math.max(pr, 1e-9)) : -Math.log(Math.max(1 - pr, 1e-9));
+            }
+            return { correct, loss: loss / N };
+        }
+
+        /* One gradient-descent step on the logistic loss, clamped to the slider box. */
+        const LR = 0.1;
+        function gdStep() {
+            let g1 = 0, g2 = 0, gb = 0;
+            for (const p of data) {
+                const e = sigmoid(scoreOf(p)) - p.label;
+                g1 += e * p.xn; g2 += e * p.yn; gb += e;
+            }
+            const cl = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+            w1 = cl(w1 - LR * A * g1 / N, -1, 1);
+            w2 = cl(w2 - LR * A * g2 / N, -1, 1);
+            bn = cl(bn - LR * A * gb / N, -1, 1);
+        }
+
+        /* ============ DOM ============ */
+        const $ = id => document.getElementById(id);
+        const sliders = { w1: $('w1'), w2: $('w2'), bias: $('bias') };
+        const learnBtn = $('learnBtn'), resetBtn = $('resetBtn'), vsBtn = $('vsBtn');
+        const vsResult = $('vsResult'), scoreboardEl = $('scoreboard');
+
+        let bestHuman = 0;       // best accuracy reached by hand this session
+        let bestMachine = 0;     // best accuracy the machine has reached
+        let running = false;
+
+        /* ============ Canvas (retina-crisp, responsive) ============ */
+        const canvas = $('plot');
+        const ctx = canvas.getContext('2d');
+        const LOGICAL_W = 640, LOGICAL_H = 520;
+        const M = { left: 62, right: 18, top: 16, bottom: 48 };   // plot margins
+        const PW = LOGICAL_W - M.left - M.right;
+        const PH = LOGICAL_H - M.top - M.bottom;
+
+        function fitCanvas() {
+            const dpr = window.devicePixelRatio || 1;
+            const cssW = canvas.clientWidth || LOGICAL_W;
+            const cssH = cssW * (LOGICAL_H / LOGICAL_W);
+            canvas.width = Math.round(cssW * dpr);
+            canvas.height = Math.round(cssH * dpr);
+            const k = (cssW * dpr) / LOGICAL_W;
+            ctx.setTransform(k, 0, 0, k, 0, 0);
+        }
+
+        const px = xn => M.left + xn * PW;               // normalized → pixel
+        const py = yn => M.top + (1 - yn) * PH;
+
+        /* Clip the unit square to the half-plane w1*x + w2*y + bn >= 0 (Sutherland–Hodgman). */
+        function approvePolygon() {
+            const f = p => w1 * p[0] + w2 * p[1] + bn;
+            let poly = [[0, 0], [1, 0], [1, 1], [0, 1]];
+            const out = [];
+            for (let i = 0; i < poly.length; i++) {
+                const a = poly[i], b = poly[(i + 1) % poly.length];
+                const fa = f(a), fb = f(b);
+                if (fa >= 0) out.push(a);
+                if ((fa >= 0) !== (fb >= 0)) {
+                    const t = fa / (fa - fb);
+                    out.push([a[0] + t * (b[0] - a[0]), a[1] + t * (b[1] - a[1])]);
+                }
+            }
+            return out;
+        }
+
+        /* Where the boundary line crosses the unit square edges. */
+        function boundarySegment() {
+            if (Math.abs(w1) < 1e-9 && Math.abs(w2) < 1e-9) return null;
+            const f = (x, y) => w1 * x + w2 * y + bn;
+            const edges = [
+                [[0, 0], [1, 0]], [[1, 0], [1, 1]], [[1, 1], [0, 1]], [[0, 1], [0, 0]]
+            ];
+            const hits = [];
+            for (const [a, b] of edges) {
+                const fa = f(a[0], a[1]), fb = f(b[0], b[1]);
+                if ((fa >= 0) !== (fb >= 0)) {
+                    const t = fa / (fa - fb);
+                    hits.push([a[0] + t * (b[0] - a[0]), a[1] + t * (b[1] - a[1])]);
+                }
+            }
+            return hits.length >= 2 ? [hits[0], hits[1]] : null;
+        }
+
+        function draw() {
+            fitCanvas();
+            ctx.clearRect(0, 0, LOGICAL_W, LOGICAL_H);
+
+            /* plot frame + gridlines */
+            ctx.save();
+            ctx.strokeStyle = 'rgba(0,229,255,0.06)';
+            ctx.lineWidth = 1;
+            const incTicks = [20, 60, 100, 140, 180];
+            const crTicks = [450, 550, 650, 750, 850];
+            for (const v of incTicks) {
+                const x = px((v - 20) / 160);
+                ctx.beginPath(); ctx.moveTo(x, M.top); ctx.lineTo(x, M.top + PH); ctx.stroke();
+            }
+            for (const v of crTicks) {
+                const y = py((v - 450) / 400);
+                ctx.beginPath(); ctx.moveTo(M.left, y); ctx.lineTo(M.left + PW, y); ctx.stroke();
+            }
+            ctx.restore();
+
+            /* approve-side tint */
+            const poly = approvePolygon();
+            if (poly.length >= 3) {
+                ctx.beginPath();
+                ctx.moveTo(px(poly[0][0]), py(poly[0][1]));
+                for (let i = 1; i < poly.length; i++) ctx.lineTo(px(poly[i][0]), py(poly[i][1]));
+                ctx.closePath();
+                ctx.fillStyle = 'rgba(0,229,255,0.07)';
+                ctx.fill();
+            }
+
+            /* decision boundary */
+            const seg = boundarySegment();
+            if (seg) {
+                ctx.save();
+                ctx.strokeStyle = '#00e5ff';
+                ctx.lineWidth = 2;
+                ctx.setLineDash([7, 5]);
+                ctx.shadowColor = 'rgba(0,229,255,0.5)';
+                ctx.shadowBlur = 8;
+                ctx.beginPath();
+                ctx.moveTo(px(seg[0][0]), py(seg[0][1]));
+                ctx.lineTo(px(seg[1][0]), py(seg[1][1]));
+                ctx.stroke();
+                ctx.restore();
+            }
+
+            /* applicants */
+            for (const p of data) {
+                const x = px(p.xn), y = py(p.yn);
+                if (p.label === 1) {                                  // repaid → green circle
+                    ctx.beginPath();
+                    ctx.arc(x, y, 5.5, 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(0,230,118,0.30)';
+                    ctx.fill();
+                    ctx.strokeStyle = '#00e676';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                } else {                                              // defaulted → magenta ✕
+                    ctx.strokeStyle = '#ff006e';
+                    ctx.lineWidth = 2.5;
+                    ctx.beginPath();
+                    ctx.moveTo(x - 5, y - 5); ctx.lineTo(x + 5, y + 5);
+                    ctx.moveTo(x + 5, y - 5); ctx.lineTo(x - 5, y + 5);
+                    ctx.stroke();
+                }
+            }
+
+            /* axes */
+            ctx.strokeStyle = 'rgba(136,146,168,0.5)';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.moveTo(M.left, M.top); ctx.lineTo(M.left, M.top + PH); ctx.lineTo(M.left + PW, M.top + PH);
+            ctx.stroke();
+
+            ctx.fillStyle = '#8892a8';
+            ctx.font = '11px "JetBrains Mono", monospace';
+            ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+            for (const v of incTicks) ctx.fillText(String(v), px((v - 20) / 160), M.top + PH + 8);
+            ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+            for (const v of crTicks) ctx.fillText(String(v), M.left - 8, py((v - 450) / 400));
+
+            ctx.fillStyle = '#5a6478';
+            ctx.font = '600 11px "JetBrains Mono", monospace';
+            ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+            ctx.fillText('INCOME ($K)', M.left + PW / 2, LOGICAL_H - 8);
+            ctx.save();
+            ctx.translate(16, M.top + PH / 2);
+            ctx.rotate(-Math.PI / 2);
+            ctx.fillText('CREDIT SCORE', 0, 0);
+            ctx.restore();
+
+            /* APPROVE tag on the approve side, if visible */
+            if (poly.length >= 3) {
+                let cx = 0, cy = 0;
+                for (const q of poly) { cx += q[0]; cy += q[1]; }
+                cx /= poly.length; cy /= poly.length;
+                ctx.fillStyle = 'rgba(0,229,255,0.55)';
+                ctx.font = '700 10px "JetBrains Mono", monospace';
+                ctx.textAlign = 'center';
+                ctx.fillText('APPROVE ✓', px(cx), py(cy));
+            }
+        }
+
+        /* ============ Business-friendly formula display ============
+           Internal:  s ∝ w1*(inc-20)/160 + w2*(cr-450)/400 + bias/100
+           ×100    :  (0.625*w1)*inc + (0.25*w2)*cr + (bias − 12.5*w1 − 112.5*w2)
+           Same sign, same decision — but in $k-income and credit-point units. */
+        function fmt(v, dp) {
+            const s = v.toFixed(dp);
+            return v < 0 ? '−' + s.slice(1) : s;
+        }
+        function renderFormula() {
+            const c1 = 0.625 * w1;
+            const c2 = 0.25 * w2;
+            const c0 = bn * 100 - 12.5 * w1 - 112.5 * w2;
+            $('formula').innerHTML =
+                'score <span class="op">=</span> (<span class="num">' + fmt(c1, 2) + '</span> <span class="op">×</span> income)' +
+                ' <span class="op">+</span> (<span class="num">' + fmt(c2, 2) + '</span> <span class="op">×</span> credit)' +
+                ' <span class="op">+</span> <span class="num">' + fmt(c0, 0) + '</span><br>' +
+                '<span class="dim">→ approve if score &gt; 0</span>';
+        }
+
+        /* ============ UI sync ============ */
+        function syncSliderReadouts() {
+            $('w1val').textContent = fmt(w1, 2);
+            $('w2val').textContent = fmt(w2, 2);
+            $('biasval').textContent = fmt(bn * 100, 0);
+        }
+        function setSliderPositions() {
+            sliders.w1.value = w1.toFixed(3);
+            sliders.w2.value = w2.toFixed(3);
+            sliders.bias.value = Math.round(bn * 100);
+        }
+        function renderScore() {
+            const { correct, loss } = evaluate();
+            const pctv = Math.round(100 * correct / N);
+            $('acc').textContent = correct + '/' + N;
+            $('pct').textContent = '(' + pctv + '%)';
+            $('loss').textContent = loss.toFixed(2);
+            $('accbar').style.width = pctv + '%';
+            return correct;
+        }
+        function updateAll() {
+            syncSliderReadouts();
+            renderFormula();
+            draw();
+            return renderScore();
+        }
+
+        /* ============ Sliders: the human IS the neuron ============ */
+        function onHumanInput() {
+            if (running) return;
+            w1 = parseFloat(sliders.w1.value);
+            w2 = parseFloat(sliders.w2.value);
+            bn = parseFloat(sliders.bias.value) / 100;
+            const correct = updateAll();
+            if (correct > bestHuman) bestHuman = correct;
+        }
+        sliders.w1.addEventListener('input', onHumanInput);
+        sliders.w2.addEventListener('input', onHumanInput);
+        sliders.bias.addEventListener('input', onHumanInput);
+
+        /* ============ 🤖 Machine learning: animated gradient descent ============ */
+        const STEPS = 90, TICK_MS = 40;
+        function setControlsEnabled(on) {
+            running = !on;
+            learnBtn.disabled = !on;
+            resetBtn.disabled = !on;
+            sliders.w1.disabled = !on;
+            sliders.w2.disabled = !on;
+            sliders.bias.disabled = !on;
+        }
+        learnBtn.addEventListener('click', function () {
+            if (running) return;
+            setControlsEnabled(false);
+            learnBtn.textContent = '🤖 Learning… step 0/' + STEPS;
+            let step = 0;
+            const timer = setInterval(function () {
+                gdStep();
+                step++;
+                setSliderPositions();       // watch the knobs turn themselves
+                updateAll();
+                learnBtn.textContent = '🤖 Learning… step ' + step + '/' + STEPS;
+                if (step >= STEPS) {
+                    clearInterval(timer);
+                    const correct = renderScore();
+                    if (correct > bestMachine) bestMachine = correct;
+                    learnBtn.textContent = '🤖 Done — ' + correct + '/' + N +
+                        ' (' + Math.round(100 * correct / N) + '%)';
+                    scoreboardEl.classList.add('flash');
+                    setTimeout(function () {
+                        scoreboardEl.classList.remove('flash');
+                        learnBtn.textContent = '🤖 Let the machine learn';
+                        setControlsEnabled(true);
+                    }, 1400);
+                }
+            }, TICK_MS);
+        });
+
+        /* ============ 🎲 Reset: seeded sequence of bad-ish starts ============ */
+        const resetRnd = mulberry32(261);   // deterministic sequence, verified to converge
+        resetBtn.addEventListener('click', function () {
+            if (running) return;
+            w1 = (resetRnd() * 2 - 1) * 0.9;
+            w2 = (resetRnd() * 2 - 1) * 0.9;
+            bn = (resetRnd() * 2 - 1) * 0.6;
+            setSliderPositions();
+            updateAll();
+            vsResult.classList.remove('show');
+        });
+
+        /* ============ 👤 Best human vs machine ============ */
+        vsBtn.addEventListener('click', function () {
+            const hp = Math.round(100 * bestHuman / N);
+            let html = '<span class="human">👤 best human:</span> ' + bestHuman + '/' + N + ' (' + hp + '%)<br>';
+            if (bestMachine > 0) {
+                const mp = Math.round(100 * bestMachine / N);
+                html += '<span class="machine">🤖 machine:</span> ' + bestMachine + '/' + N + ' (' + mp + '%)';
+                html += (bestMachine > bestHuman)
+                    ? '<br>— the machine found weights you didn\'t.'
+                    : (bestMachine === bestHuman
+                        ? '<br>— dead heat. The machine just got there faster.'
+                        : '<br>— you beat gradient descent. Enjoy it while it lasts.');
+            } else {
+                html += '<span class="machine">🤖 machine:</span> hasn\'t learned yet — press the green button.';
+            }
+            vsResult.innerHTML = html;
+            vsResult.classList.add('show');
+        });
+
+        /* ============ Boot ============ */
+        window.addEventListener('resize', function () { draw(); });
+        setSliderPositions();
+        bestHuman = updateAll();   // the starting hand counts as the human's opening move
+    })();
+    </script>
+</body>
+</html>

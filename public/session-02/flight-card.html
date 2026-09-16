@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flight Card · Session 2, Meeting 1 | ISOM 260</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Sora:wght@600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'DM Sans', sans-serif; background: #f4f2ec; color: #1a1a1a; padding: 1.2rem; font-size: 13px; line-height: 1.45; }
+    .card { max-width: 820px; margin: 0 auto; background: #fff; border: 2px solid #1a1a1a; border-radius: 10px; padding: 1.4rem 1.6rem; }
+    h1 { font-family: 'Sora', sans-serif; font-size: 1.15rem; display: flex; justify-content: space-between; align-items: baseline; border-bottom: 2px solid #1a1a1a; padding-bottom: 0.5rem; margin-bottom: 0.8rem; }
+    h1 .sub { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 400; color: #666; }
+    h2 { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: #b3003e; margin: 0.9rem 0 0.35rem; }
+    table { width: 100%; border-collapse: collapse; }
+    td { padding: 0.18rem 0.5rem 0.18rem 0; vertical-align: top; }
+    td.t { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 0.78rem; white-space: nowrap; width: 4.2rem; }
+    .cut { color: #b3003e; font-weight: 700; }
+    .hl { background: #fff3b8; padding: 0 0.25rem; font-weight: 700; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1.6rem; }
+    .mono { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; background: #f4f2ec; border: 1px solid #ccc; border-radius: 6px; padding: 0.5rem 0.65rem; white-space: pre-wrap; margin: 0.25rem 0; }
+    ul { list-style: none; }
+    li { padding-left: 1rem; position: relative; margin-bottom: 0.22rem; }
+    li::before { content: "▸"; position: absolute; left: 0; color: #b3003e; }
+    .rule { margin-top: 0.9rem; border: 2px solid #b3003e; border-radius: 8px; padding: 0.55rem 0.8rem; font-weight: 700; text-align: center; background: #fdf0f4; }
+    @media print {
+        body { background: #fff; padding: 0; }
+        .card { border-width: 1.5px; max-width: 100%; }
+        @page { margin: 1cm; }
+    }
+</style>
+</head>
+<body>
+<div class="card">
+    <h1>SESSION 2 · MEETING 1 · "OPEN THE SKULL" <span class="sub">WED SEP 16 · 12:30–1:45 · HW1 DUE TODAY · HARD STOP 1:45</span></h1>
+
+    <div class="grid">
+    <div>
+        <h2>Timeline · slide #</h2>
+        <table>
+            <tr><td class="t">12:30</td><td>1–2 · Victory lap — <span class="hl">open Canvas thread live</span>, read 3–4 favorite names aloud (5 min)</td></tr>
+            <tr><td class="t">12:35</td><td>3–4 · "Loss fell — but WHAT changed?" → the 104,475 census (7 min)</td></tr>
+            <tr><td class="t">12:42</td><td>5 · The neuron = weighted vote (loan officer formula) (4 min)</td></tr>
+            <tr><td class="t">12:46</td><td>6 · <span class="hl">Playground: Be the Neuron</span> — 5 min human tuning, "who beat 85%?", then machine learns — <span class="cut">CUT 1:00</span></td></tr>
+            <tr><td class="t">1:00</td><td>7–8 · Learning = downhill · "Meaning is location in space" (5 min)</td></tr>
+            <tr><td class="t">1:05</td><td>9 · <span class="hl">Notebook: Open the Hood</span> — retrain runs ~2 min while you narrate the census — <span class="cut">STOP 1:32</span></td></tr>
+            <tr><td class="t">1:32</td><td>10–11 · Map + crystal ball + attention recap (4 min)</td></tr>
+            <tr><td class="t">1:36</td><td>12 · HW #2: one paragraph, Canvas, <b>due Mon 12:30</b> (2 min)</td></tr>
+            <tr><td class="t">1:38</td><td>13–14 · Monday teaser (RLHF, scale, benchmarks) → close + Q&amp;A buffer</td></tr>
+        </table>
+
+        <h2>Numbers you'll narrate (seed 260 → identical for all)</h2>
+        <ul>
+            <li>Census total <b>104,475</b> · retrain loss <b>3.5 → 1.75</b></li>
+            <li>Map: <b>a,e,o,u cluster</b> · <b>'i' wanders off</b> — that's the discussion beat, not a bug</li>
+            <li>Neighbors: 'a'↔'e' 0.30 · rare crowd 'z'↔'x' 0.22, 'z'↔'q' 0.16</li>
+            <li>Crystal ball: after "q" → <b>u at 70%</b> · "jasmin" → near-certain 'e'/end</li>
+            <li>Attention demo word: "sophia" · then their own names</li>
+        </ul>
+    </div>
+    <div>
+        <h2>The 'i' moment (don't skip it)</h2>
+        <ul>
+            <li>Ask: "why would 'i' behave unlike other vowels in NAMES?" (-ia, -in endings; different job)</li>
+            <li>Land it: "imperfect map from limited data — remember this when you trust a chatbot with something it half-knows"</li>
+        </ul>
+
+        <h2>Playground beats</h2>
+        <ul>
+            <li>Let them compete 4–5 min: call out accuracies, crown the best human</li>
+            <li>Then: "🤖 Let the machine learn" — sliders move by themselves, machine wins</li>
+            <li>Line: "your TinyGPT = 104,475 of these sliders, nudged 2,500 times"</li>
+        </ul>
+
+        <h2>Fix-its</h2>
+        <ul>
+            <li>Playground is pure browser — works on phones, no login</li>
+            <li>Colab sign-in wall → personal Gmail or pair (same as last week)</li>
+            <li>Retrain slow on someone's CPU runtime → fine; plots arrive by the time you finish narrating the census</li>
+        </ul>
+
+        <h2>If behind at 1:05</h2>
+        <ul>
+            <li>Notebook is the priority — compress slides 7–8 to one sentence each</li>
+            <li>In notebook: census fast, <b>map gets full time</b>, crystal ball quick, attention can be "run it, look, discuss Monday"</li>
+        </ul>
+
+        <h2>Before / after</h2>
+        <ul>
+            <li>Canvas: <b>Session 2 thread</b> for HW #2 exists? HW #1 thread open on screen for victory lap?</li>
+            <li>After: note best student names + accuracies for Monday callbacks</li>
+        </ul>
+    </div>
+    </div>
+
+    <div class="rule">The map reveal is the moment of the day — protect 10 unhurried minutes for "your model discovered vowels."</div>
+</div>
+</body>
+</html>
