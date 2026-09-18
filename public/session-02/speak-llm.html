@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Speak LLM — The Vocabulary Card | ISOM 260</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Sora:wght@600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+        --bg: #0a0e1a; --card: #141929; --cyan: #00e5ff; --magenta: #ff006e;
+        --yellow: #ffd600; --green: #00e676; --purple: #b388ff; --orange: #ff9100;
+        --text: #e8ecf4; --text2: #8892a8; --dim: #5a6478; --border: rgba(0,229,255,0.12);
+    }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.5; padding: 2.5rem 1.5rem 4rem; }
+    .wrap { max-width: 980px; margin: 0 auto; }
+    .kicker { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; letter-spacing: 0.18em; color: var(--dim); text-transform: uppercase; }
+    h1 { font-family: 'Sora', sans-serif; font-size: 2.2rem; margin: 0.3rem 0 0.4rem; }
+    h1 .grad { background: linear-gradient(90deg, var(--cyan), var(--magenta)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .sub { color: var(--text2); margin-bottom: 2rem; max-width: 720px; }
+    h2 { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; letter-spacing: 0.16em; text-transform: uppercase; margin: 2rem 0 0.8rem; padding-bottom: 0.4rem; border-bottom: 1px solid var(--border); }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; }
+    @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } }
+    .term { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 0.85rem 1.1rem; }
+    .term b { font-family: 'Sora', sans-serif; font-size: 0.98rem; }
+    .term p { color: var(--text2); font-size: 0.88rem; margin-top: 0.2rem; }
+    .term .met { display: block; margin-top: 0.35rem; font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; }
+    .c1 h2, .c1 .met { color: var(--cyan); } .c2 h2, .c2 .met { color: var(--yellow); }
+    .c3 h2, .c3 .met { color: var(--green); } .c4 h2, .c4 .met { color: var(--magenta); }
+    .c5 h2, .c5 .met { color: var(--purple); } .c6 h2, .c6 .met { color: var(--orange); }
+    .karpathy { margin-top: 2.5rem; background: var(--card); border: 1px solid rgba(255,214,0,0.3); border-radius: 12px; padding: 1.4rem 1.6rem; }
+    .karpathy h3 { font-family: 'Sora', sans-serif; margin-bottom: 0.5rem; color: var(--yellow); }
+    .karpathy ol { margin: 0.5rem 0 0.6rem 1.3rem; color: var(--text2); font-size: 0.92rem; }
+    .karpathy li { margin-bottom: 0.25rem; }
+    .karpathy a { color: var(--cyan); text-decoration: none; }
+    .footer { margin-top: 2rem; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--dim); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
+    @media print {
+        body { background: #fff; color: #111; padding: 0; font-size: 11px; }
+        :root { --card: #fff; --text: #111; --text2: #333; --dim: #777; --border: #ccc;
+                --cyan: #0066aa; --magenta: #aa0044; --yellow: #886600; --green: #006633; --purple: #550088; --orange: #a05500; }
+        .term { break-inside: avoid; padding: 0.5rem 0.7rem; }
+        h1 .grad { color: #111; }
+        h2 { margin-top: 1rem; }
+        .karpathy { break-inside: avoid; }
+        @page { size: letter; margin: 0.5in; }
+    }
+</style>
+</head>
+<body>
+<div class="wrap">
+    <div class="kicker">ISOM 260 · AI for Business · Sessions 1–2 Vocabulary</div>
+    <h1>Speak <span class="grad">LLM.</span></h1>
+    <p class="sub">You've already <em>done</em> everything on this card — now own the words. Each term: one sentence you could say in an interview, plus the moment in class where you lived it. Print it. Keep it.</p>
+
+    <div class="c1">
+    <h2>① The Object</h2>
+    <div class="grid">
+        <div class="term"><b>Model</b><p>A trained function that turns input text into a probability distribution over what comes next.</p><span class="met">↳ you built and trained one</span></div>
+        <div class="term"><b>Parameters (weights)</b><p>The numbers inside the model that training adjusts; collectively, they are all of its "knowledge."</p><span class="met">↳ your census: 104,475 of them</span></div>
+        <div class="term"><b>Transformer</b><p>The neural-network architecture behind modern AI — its superpower is attention, and it runs in parallel on GPUs, which is why it scales.</p><span class="met">↳ the T in GPT; the code cell you trained</span></div>
+        <div class="term"><b>Architecture</b><p>The wiring diagram of a model — how many layers, how wide, connected how — as distinct from the weights learned inside it.</p><span class="met">↳ block_size 16 · 64 dims · 4 heads · 2 layers</span></div>
+    </div>
+    </div>
+
+    <div class="c2">
+    <h2>② Language In, Language Out</h2>
+    <div class="grid">
+        <div class="term"><b>Token</b><p>The unit a model reads and writes — roughly ¾ of an English word in frontier models; a single letter in your TinyGPT. You are billed per token.</p><span class="met">↳ your model: 27 possible tokens</span></div>
+        <div class="term"><b>Tokenization</b><p>Chopping text into tokens — the source of famous quirks, from letter-counting fails to some languages costing 3× more.</p><span class="met">↳ Session 3 opens with this</span></div>
+        <div class="term"><b>Embedding</b><p>The list of numbers representing a token; similar things sit close together, so meaning is literally a location in space.</p><span class="met">↳ your vowel map — a,e,o,u found each other</span></div>
+        <div class="term"><b>Context window</b><p>How much text the model can consider at once — its entire working memory; nothing outside it exists for the model.</p><span class="met">↳ TinyGPT: 16 letters · Fable 5.1: 1M tokens</span></div>
+    </div>
+    </div>
+
+    <div class="c3">
+    <h2>③ Training — How It Learns</h2>
+    <div class="grid">
+        <div class="term"><b>Training data</b><p>The text a model learned its patterns from; a model can only reflect the world it was shown.</p><span class="met">↳ 32,033 names — and why 'i' wandered off the map</span></div>
+        <div class="term"><b>Loss (cross-entropy)</b><p>The model's average surprise at the true next token — mathematically, −log of the probability it gave the right answer.</p><span class="met">↳ the surprise meter; your 3.5 → 1.75</span></div>
+        <div class="term"><b>Gradient descent</b><p>Learning by nudging every weight a tiny step in the direction that reduces the loss — rolling downhill, millions of times.</p><span class="met">↳ the Loan Officer's sliders moving themselves</span></div>
+        <div class="term"><b>Backpropagation</b><p>The algorithm that computes, for every weight at once, which direction is "downhill" — it's how the nudge is calculated.</p><span class="met">↳ the one line: loss.backward()</span></div>
+        <div class="term"><b>Training step</b><p>One batch of examples → one nudge of all the weights; training is just many steps.</p><span class="met">↳ your model: 2,501 · frontier: trillions</span></div>
+        <div class="term"><b>Seed</b><p>The fixed starting point for "random" choices; set it and every run reproduces exactly.</p><span class="met">↳ seed 260 — why the whole class got identical names</span></div>
+    </div>
+    </div>
+
+    <div class="c4">
+    <h2>④ Generation — How It Writes</h2>
+    <div class="grid">
+        <div class="term"><b>Inference</b><p>Using a trained model, as opposed to training it — milliseconds and cents, versus months and millions. Two different economies.</p><span class="met">↳ every generate cell you ran</span></div>
+        <div class="term"><b>Logits → softmax</b><p>The model's raw score for every possible next token (logits), squashed by softmax into probabilities that sum to 1.</p><span class="met">↳ the crystal-ball bar chart</span></div>
+        <div class="term"><b>Sampling</b><p>Choosing the next token by rolling weighted dice over the probabilities — generation is sampling on repeat.</p><span class="met">↳ every name your model invented</span></div>
+        <div class="term"><b>Temperature</b><p>Rescaling the probabilities before rolling — low favors the safest token (repetitive), high flattens the odds (creative, risky).</p><span class="met">↳ Faydovinerresnylenmysa, T=2.0</span></div>
+        <div class="term"><b>Hallucination</b><p>Confident generation of plausible-but-false content — the model samples what sounds right; it does not look anything up.</p><span class="met">↳ the invented remote-work studies in the Rater game</span></div>
+    </div>
+    </div>
+
+    <div class="c5">
+    <h2>⑤ Becoming an Assistant</h2>
+    <div class="grid">
+        <div class="term"><b>Pretraining</b><p>The massive next-token phase over internet-scale text — where raw capability comes from.</p><span class="met">↳ your TinyGPT's training, at 10-million× scale</span></div>
+        <div class="term"><b>Instruction tuning</b><p>Fine-tuning on examples of following directions — turns an autocomplete into something that answers you.</p><span class="met">↳ pipeline step 2, Monday</span></div>
+        <div class="term"><b>RLHF</b><p>Reinforcement Learning from Human Feedback: humans pick the better of two answers, a reward model learns their taste, the LLM is optimized to please it.</p><span class="met">↳ you were the rater — and saw the side effects</span></div>
+        <div class="term"><b>Alignment</b><p>Making a model's behavior match human intent and values — a values problem wearing a math costume.</p><span class="met">↳ sycophancy, length bias, over-refusal</span></div>
+    </div>
+    </div>
+
+    <div class="c6">
+    <h2>⑥ Scale &amp; The Frontier</h2>
+    <div class="grid">
+        <div class="term"><b>Scaling laws</b><p>The empirical finding that capability rises predictably with more parameters, data, and compute — why labs keep going bigger.</p><span class="met">↳ "scale is a strategy, not a detail"</span></div>
+        <div class="term"><b>Test-time compute</b><p>The second scaling dial: letting a model think longer per question — drafting, checking, revising before answering. You control it, and pay for it.</p><span class="met">↳ reasoning models; GPT-6's benchmark harness</span></div>
+        <div class="term"><b>Benchmark</b><p>A standardized test for models — useful until it saturates, leaks into training data, or stops resembling your actual task.</p><span class="met">↳ the 5-question BS-detector</span></div>
+        <div class="term"><b>Evaluation (eval)</b><p>Your own test, on your own task, with your own data — the only benchmark that predicts your production performance.</p><span class="met">↳ we build these in Session 11</span></div>
+    </div>
+    </div>
+
+    <div class="karpathy">
+        <h3>🎓 The Karpathy Path — when you want the deep end</h3>
+        <p style="color: var(--text2); font-size: 0.92rem;">Everything in this course descends from Andrej Karpathy's build-it-yourself school of AI education. If these two weeks lit a fire, this is the canonical free sequence:</p>
+        <ol>
+            <li><a href="https://www.youtube.com/watch?v=zjkBMFhNj_g">Intro to Large Language Models</a> — the 1-hour talk (watch this first)</li>
+            <li><a href="https://karpathy.ai/zero-to-hero.html">Neural Networks: Zero to Hero</a> — builds everything, including backprop, from scratch</li>
+            <li><a href="https://github.com/karpathy/makemore">makemore</a> — the direct ancestor of your Session 1 notebook</li>
+            <li><a href="https://github.com/karpathy/nanoGPT">nanoGPT</a> — "Let's build GPT from scratch," for real</li>
+            <li><a href="https://github.com/karpathy/nanochat">nanochat</a> — the full ChatGPT pipeline for about $100</li>
+        </ol>
+        <p style="color: var(--text2); font-size: 0.92rem;">This course gives you the shallow end of that pool. The pool is wonderful. See also: <a href="/session-02/tinygpt-annotated.html">TinyGPT, Every Line Explained</a> — your own model's code, fully annotated.</p>
+    </div>
+
+    <div class="footer">
+        <span>ISOM 260 · Sessions 1–2 · own the words, you earned them</span>
+        <span>isom-260.vercel.app</span>
+    </div>
+</div>
+</body>
+</html>

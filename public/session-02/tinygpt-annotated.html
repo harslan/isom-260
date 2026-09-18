@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TinyGPT, Every Line Explained | ISOM 260</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --bg-card: #121828;
+    --bg-inset: #0d1322;
+    --border: rgba(255, 255, 255, 0.09);
+    --text: #eef0f6;
+    --text-2: #a3aabd;
+    --text-3: #6b7284;
+    --cyan: #00d4ff;
+    --magenta: #ff00aa;
+    --yellow: #ffd60a;
+    --green: #00ff88;
+    --orange: #ff8800;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  body {
+    font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  .sheet {
+    max-width: 1060px;
+    margin: 0 auto;
+    padding: 36px 28px 24px;
+  }
+
+  h1, h2, .note-title, .path-name, .intro-title { font-family: 'Sora', sans-serif; }
+  code, .mono, .chip, .note-ref { font-family: 'JetBrains Mono', monospace; }
+
+  a { color: var(--cyan); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ============ HEADER ============ */
+  .header {
+    border-bottom: 2px solid var(--cyan);
+    padding-bottom: 14px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .header h1 {
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    line-height: 1.1;
+    background: linear-gradient(90deg, var(--cyan), var(--magenta));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .header .kicker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-2);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .header-meta {
+    text-align: right;
+    font-size: 11px;
+    color: var(--text-3);
+  }
+
+  .header-meta .tagline {
+    color: var(--yellow);
+    font-style: italic;
+    font-size: 12px;
+    margin-top: 3px;
+  }
+
+  /* ============ SECTIONS ============ */
+  section { margin-bottom: 26px; }
+
+  h2 {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  h2::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .c-cyan { color: var(--cyan); }
+  .c-magenta { color: var(--magenta); }
+  .c-yellow { color: var(--yellow); }
+  .c-green { color: var(--green); }
+  .c-orange { color: var(--orange); }
+
+  .section-lede {
+    font-size: 12px;
+    color: var(--text-2);
+    margin-bottom: 10px;
+    max-width: 860px;
+  }
+  .section-lede strong { color: var(--text); }
+
+  /* ============ INTRO ============ */
+  .intro {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--yellow);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+  }
+
+  .intro-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--yellow);
+    margin-bottom: 6px;
+  }
+
+  .intro p {
+    font-size: 12.5px;
+    color: var(--text-2);
+    margin-bottom: 6px;
+    max-width: 900px;
+  }
+  .intro p:last-child { margin-bottom: 0; }
+  .intro p strong { color: var(--text); }
+  .intro p em { color: var(--cyan); font-style: normal; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 4px; }
+
+  .chip {
+    font-size: 10px;
+    color: var(--green);
+    border: 1px solid rgba(0, 255, 136, 0.35);
+    border-radius: 999px;
+    padding: 2px 9px;
+    letter-spacing: 0.04em;
+  }
+  .chip b { color: var(--text); font-weight: 600; }
+
+  .chips-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-3);
+    margin-bottom: 5px;
+  }
+
+  /* ============ CODE + ANNOTATION PANELS ============ */
+  .panel {
+    display: grid;
+    grid-template-columns: minmax(0, 46%) minmax(0, 1fr);
+    gap: 12px;
+    align-items: start;
+  }
+
+  .codebox {
+    background: var(--bg-inset);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    overflow-x: auto;
+  }
+
+  .codebox .code-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-3);
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  pre {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    line-height: 1.75;
+    color: var(--text);
+    white-space: pre;
+  }
+
+  .ln {
+    display: inline-block;
+    min-width: 20px;
+    margin-right: 12px;
+    text-align: right;
+    color: var(--text-3);
+    font-size: 9px;
+    user-select: none;
+  }
+
+  .k { color: var(--magenta); }              /* keywords */
+  .s { color: var(--green); }                /* strings */
+  .n { color: var(--yellow); }               /* numbers */
+  .cm { color: var(--text-3); font-style: italic; } /* comments */
+  .f { color: var(--cyan); }                 /* defined names */
+
+  .notes { display: grid; gap: 8px; }
+
+  .note {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--cyan);
+    border-radius: 6px;
+    padding: 9px 12px;
+  }
+
+  .acc-cyan .note { border-left-color: var(--cyan); }
+  .acc-magenta .note { border-left-color: var(--magenta); }
+  .acc-yellow .note { border-left-color: var(--yellow); }
+  .acc-green .note { border-left-color: var(--green); }
+  .acc-orange .note { border-left-color: var(--orange); }
+
+  .note-ref {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-3);
+    margin-bottom: 2px;
+  }
+
+  .acc-cyan .note-ref { color: var(--cyan); }
+  .acc-magenta .note-ref { color: var(--magenta); }
+  .acc-yellow .note-ref { color: var(--yellow); }
+  .acc-green .note-ref { color: var(--green); }
+  .acc-orange .note-ref { color: var(--orange); }
+
+  .note-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+
+  .note p { font-size: 11.5px; color: var(--text-2); }
+  .note p code {
+    font-size: 10px;
+    color: var(--text);
+    background: var(--bg-inset);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0 4px;
+  }
+  .note p strong { color: var(--yellow); }
+  .note p em { color: var(--cyan); font-style: normal; }
+
+  .note.hero {
+    border: 1px dashed rgba(255, 214, 10, 0.45);
+    border-left: 3px solid var(--yellow);
+    background: rgba(255, 214, 10, 0.05);
+  }
+  .note.hero .note-ref { color: var(--yellow); }
+
+  .note.frontier {
+    border: 1px dashed rgba(255, 0, 170, 0.4);
+    border-left: 3px solid var(--magenta);
+    background: rgba(255, 0, 170, 0.05);
+  }
+  .note.frontier .note-ref { color: var(--magenta); }
+
+  /* ============ KARPATHY PATH ============ */
+  .path { display: grid; gap: 8px; }
+
+  .path-item {
+    display: flex;
+    gap: 12px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--green);
+    border-radius: 6px;
+    padding: 9px 12px;
+  }
+
+  .path-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--green);
+    line-height: 1.3;
+  }
+
+  .path-name { font-size: 12.5px; font-weight: 700; color: var(--text); }
+  .path-item p { font-size: 11.5px; color: var(--text-2); }
+
+  .pull-quote {
+    margin-top: 12px;
+    text-align: center;
+    font-family: 'Sora', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--yellow);
+    background: rgba(255, 214, 10, 0.06);
+    border: 1px dashed rgba(255, 214, 10, 0.4);
+    border-radius: 8px;
+    padding: 10px 14px;
+  }
+
+  /* ============ FOOTER ============ */
+  .footer {
+    border-top: 1px solid var(--border);
+    margin-top: 8px;
+    padding-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-3);
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .footer .url { color: var(--cyan); }
+
+  /* ============ MOBILE ============ */
+  @media (max-width: 820px) {
+    .panel { grid-template-columns: 1fr; }
+    .header h1 { font-size: 24px; }
+  }
+
+  /* ============ PRINT ============ */
+  @media print {
+    :root {
+      --bg: #ffffff;
+      --bg-card: #ffffff;
+      --bg-inset: #f2f4f8;
+      --border: #c9ced9;
+      --text: #14181f;
+      --text-2: #333a46;
+      --text-3: #5b6270;
+      --cyan: #0072a3;
+      --magenta: #b3006e;
+      --yellow: #8a6d00;
+      --green: #007a45;
+      --orange: #a35400;
+    }
+
+    @page { size: letter; margin: 0.45in; }
+
+    body { background: #fff; font-size: 10.5px; line-height: 1.35; }
+    .sheet { max-width: none; padding: 0; }
+
+    .header { padding-bottom: 8px; margin-bottom: 12px; border-bottom-color: var(--cyan); }
+    .header h1 {
+      font-size: 22px;
+      background: none;
+      -webkit-text-fill-color: var(--text);
+      color: var(--text);
+    }
+
+    section { margin-bottom: 14px; }
+    h2 { font-size: 11px; margin-bottom: 6px; }
+
+    /* stack code above annotations on paper */
+    .panel { grid-template-columns: 1fr; gap: 6px; }
+
+    .codebox { padding: 8px 10px; break-inside: avoid; }
+    pre { font-size: 9px; line-height: 1.55; }
+    .ln { font-size: 7.5px; }
+
+    .note, .path-item, .intro { break-inside: avoid; }
+    .notes { gap: 4px; }
+    .note { padding: 5px 9px; }
+    .note-title, .path-name { font-size: 10.5px; }
+    .note p, .path-item p, .intro p, .section-lede { font-size: 9.5px; }
+    .note p code { font-size: 8.5px; }
+
+    .intro { padding: 8px 10px; }
+    .intro-title { font-size: 11.5px; }
+    .chip { font-size: 8px; padding: 0 6px; }
+
+    .path { gap: 4px; }
+    .path-item { padding: 5px 9px; }
+    .path-num { font-size: 12px; }
+
+    .pull-quote { padding: 6px 10px; font-size: 10.5px; margin-top: 6px; }
+    .footer { font-size: 8.5px; padding-top: 6px; }
+
+    a { color: inherit; text-decoration: none; }
+  }
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div>
+      <div class="kicker">ISOM 260 · AI for Business · Optional Deep Dive</div>
+      <h1>TINYGPT, EVERY LINE EXPLAINED</h1>
+    </div>
+    <div class="header-meta">
+      Sessions 1–2 · Suffolk University<br>
+      <div class="tagline">"No magic. Just arithmetic, arranged carefully."</div>
+    </div>
+  </header>
+
+  <!-- INTRO -->
+  <section>
+    <div class="intro">
+      <div class="intro-title">You trained this model. Here's what you actually ran.</div>
+      <p>You trained this model in Sessions 1–2. You were told <strong>"you don't need to read this code."</strong> That was true. But if you <em>want</em> to — here is every line, demystified. No prior coding needed: read the annotations, glance at the code. The code is on the left; the plain-English explanation is on the right. Nothing here is beyond you.</p>
+      <p>This page exists in the spirit of Andrej Karpathy, the researcher whose free lectures build these systems from scratch on a whiteboard: <em>no magic allowed.</em> Every behavior of the model you trained — every name it invented, every point the loss dropped — comes from the roughly 30 lines below. That's the whole trick. There is no other file.</p>
+      <div class="chips-label" style="margin-top:8px;">The whole model at a glance</div>
+      <div class="chips">
+        <span class="chip">vocabulary = <b>27 symbols</b></span>
+        <span class="chip">block_size = <b>16 letters of context</b></span>
+        <span class="chip">n_embd = <b>64 numbers per letter</b></span>
+        <span class="chip">n_head = <b>4 attention lenses</b></span>
+        <span class="chip">n_layer = <b>2 blocks</b></span>
+        <span class="chip">weights = <b>104,475</b></span>
+        <span class="chip">training = <b>2,501 loops</b></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 1 · DATA -->
+  <section class="acc-cyan">
+    <h2 class="c-cyan">1 · Data — Turning Names Into Numbers</h2>
+    <p class="section-lede">Before anything can learn, text has to become numbers. This section downloads a list of thousands of baby names and converts every character into an integer. That's the entire data pipeline.</p>
+    <div class="panel">
+      <div class="codebox">
+        <div class="code-label">notebook · cell: data</div>
+<pre><span class="ln">1</span>names = urllib.request.urlopen(url).read().decode().splitlines()
+<span class="ln">2</span>text = <span class="s">"\n"</span>.join(names)
+<span class="ln">3</span>chars = sorted(set(text))                <span class="cm"># the 27-symbol vocabulary</span>
+<span class="ln">4</span>stoi = {c: i <span class="k">for</span> i, c <span class="k">in</span> enumerate(chars)}
+<span class="ln">5</span>itos = {i: c <span class="k">for</span> c, i <span class="k">in</span> stoi.items()}
+<span class="ln">6</span>data = torch.tensor([stoi[c] <span class="k">for</span> c <span class="k">in</span> text])</pre>
+      </div>
+      <div class="notes">
+        <div class="note">
+          <div class="note-ref">Line 1</div>
+          <div class="note-title">Download the dataset</div>
+          <p>One line fetches a text file from the internet (<code>urlopen</code>), reads it, converts raw bytes into readable text (<code>decode</code>), and splits it into a list — one baby name per entry. That's the entire "data acquisition" phase of this AI project.</p>
+        </div>
+        <div class="note">
+          <div class="note-ref">Line 2</div>
+          <div class="note-title">Glue it back into one long string</div>
+          <p>All the names are joined into a single stream of text, separated by the newline character (<code>"\n"</code>). That newline matters: it's how the model will eventually learn that <em>names end</em>. When it generates a newline, a name is finished.</p>
+        </div>
+        <div class="note">
+          <div class="note-ref">Line 3</div>
+          <div class="note-title">The vocabulary: 27 symbols</div>
+          <p><code>set(text)</code> keeps exactly one copy of each distinct character; <code>sorted</code> puts them in a fixed order. Result: the 26 lowercase letters plus the newline — <strong>27 symbols</strong>. This is everything the model can ever read or write. Nothing outside this list exists for it.</p>
+        </div>
+        <div class="note">
+          <div class="note-ref">Lines 4–5</div>
+          <div class="note-title">stoi / itos: the two-way phrasebook</div>
+          <p>Neural networks only eat numbers — they cannot see letters. <code>stoi</code> ("string to integer") assigns each character a number: <code>a→1, b→2, …</code>. <code>itos</code> is the same dictionary flipped, for translating the model's numeric answers back into letters. Every conversation with every AI passes through a phrasebook like this — in, and back out.</p>
+        </div>
+        <div class="note">
+          <div class="note-ref">Line 6</div>
+          <div class="note-title">The entire corpus as one number stream</div>
+          <p>Every character in the whole text is replaced by its number and packed into a <em>tensor</em> — one giant list of integers. This single object <strong>is the training data</strong>. The model will never see anything else: no meanings, no sounds, no culture. Just this stream of numbers, and the patterns hiding in it.</p>
+        </div>
+        <div class="note frontier">
+          <div class="note-ref">Frontier note · Session 3</div>
+          <div class="note-title">In GPT-6-class models, this step is called tokenization</div>
+          <p>Frontier models do exactly this, but instead of 27 letters they use ~100,000 <em>sub-word tokens</em> — chunks like "straw", "berry", "ing". Same idea, bigger phrasebook. Karpathy's rule of thumb: <strong>"every weird LLM behavior traces back to tokenization."</strong> We'll see why in Session 3.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2 · BATCHES -->
+  <section class="acc-green">
+    <h2 class="c-green">2 · Batches — The Text Labels Itself</h2>
+    <p class="section-lede">Training needs examples: "here's an input, here's the right answer." This function manufactures them — and notice that <strong>no human wrote any answers</strong>.</p>
+    <div class="panel">
+      <div class="codebox">
+        <div class="code-label">notebook · cell: batches</div>
+<pre><span class="ln">1</span><span class="k">def</span> <span class="f">get_batch</span>(batch_size=<span class="n">64</span>):
+<span class="ln">2</span>    ix = torch.randint(len(data) - block_size - <span class="n">1</span>, (batch_size,))
+<span class="ln">3</span>    x = torch.stack([data[i:i+block_size] <span class="k">for</span> i <span class="k">in</span> ix])
+<span class="ln">4</span>    y = torch.stack([data[i+<span class="n">1</span>:i+block_size+<span class="n">1</span>] <span class="k">for</span> i <span class="k">in</span> ix])
+<span class="ln">5</span>    <span class="k">return</span> x.to(device), y.to(device)</pre>
+      </div>
+      <div class="notes">
+        <div class="note">
+          <div class="note-ref">Line 1</div>
+          <div class="note-title">A function that grabs a random handful</div>
+          <p>Each time it's called, this function serves up 64 practice examples. Training will call it 2,501 times — a fresh random handful every loop, so the model never just memorizes one page.</p>
+        </div>
+        <div class="note">
+          <div class="note-ref">Line 2</div>
+          <div class="note-title">Pick 64 random starting points</div>
+          <p><code>randint</code> throws 64 darts at the number stream — 64 random positions to start reading from. The <code>- block_size - 1</code> just makes sure no window runs off the end of the data.</p>
+        </div>
+        <div class="note">
+          <div class="note-ref">Line 3</div>
+          <div class="note-title">x: 64 windows of 16 letters</div>
+          <p>From each dart position, cut out a window of 16 consecutive characters (<code>block_size</code>) and stack them into a neat 64×16 grid. These are the model's <em>inputs</em> — 64 little snippets of names.</p>
+        </div>
+        <div class="note hero">
+          <div class="note-ref">Line 4 · The big idea</div>
+          <div class="note-title">y is x shifted by exactly ONE character</div>
+          <p>Look closely: <code>y</code> is the same windows, starting one position later. So for every letter in <code>x</code>, the "correct answer" in <code>y</code> is simply <strong>the next letter in the text</strong>. That is the entire supervision of a language model. No labels, no teachers, no human graders — <em>the text labels itself</em>. This is why the whole internet is trainable: every sentence ever written comes pre-packaged with its own answer key, one character to the right.</p>
+        </div>
+        <div class="note">
+          <div class="note-ref">Line 5</div>
+          <div class="note-title">Ship both to the GPU</div>
+          <p><code>.to(device)</code> moves the grids onto the graphics chip, which does thousands of multiplications in parallel. Plumbing, not intelligence.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3 · THE BLOCK -->
+  <section class="acc-magenta">
+    <h2 class="c-magenta">3 · The Block — Attention + Thinking</h2>
+    <p class="section-lede">This is the famous <strong>Transformer block</strong> — the component the "Attention Is All You Need" paper introduced in 2017 and that every frontier model still stacks by the hundred. One block = one reading pass: <em>look around</em> (attention), then <em>think it over</em> (MLP).</p>
+    <div class="panel">
+      <div class="codebox">
+        <div class="code-label">notebook · cell: transformer block</div>
+<pre><span class="ln">1</span><span class="k">class</span> <span class="f">Block</span>(nn.Module):
+<span class="ln">2</span>    <span class="k">def</span> <span class="f">__init__</span>(self):
+<span class="ln">3</span>        super().__init__()
+<span class="ln">4</span>        self.ln1 = nn.LayerNorm(n_embd)
+<span class="ln">5</span>        self.attn = nn.MultiheadAttention(n_embd, n_head, batch_first=<span class="n">True</span>)
+<span class="ln">6</span>        self.ln2 = nn.LayerNorm(n_embd)
+<span class="ln">7</span>        self.mlp = nn.Sequential(nn.Linear(n_embd, <span class="n">4</span>*n_embd), nn.GELU(),
+<span class="ln">8</span>                                 nn.Linear(<span class="n">4</span>*n_embd, n_embd))
+<span class="ln">9</span>    <span class="k">def</span> <span class="f">forward</span>(self, x):
+<span class="ln">10</span>        T = x.shape[<span class="n">1</span>]
+<span class="ln">11</span>        mask = torch.triu(torch.ones(T, T, device=x.device), <span class="n">1</span>).bool()
+<span class="ln">12</span>        h = self.ln1(x)
+<span class="ln">13</span>        x = x + self.attn(h, h, h, attn_mask=mask, need_weights=<span class="n">False</span>)[<span class="n">0</span>]
+<span class="ln">14</span>        <span class="k">return</span> x + self.mlp(self.ln2(x))</pre>
+      </div>
+      <div class="notes">
+        <div class="note">
+          <div class="note-ref">Lines 1–3</div>
+          <div class="note-title">Declare a reusable part</div>
+          <p>A <code>class</code> is a blueprint. This one defines a single Transformer block; later, TinyGPT will stack two of them. GPT-6-class models stack 100+ copies of essentially this same blueprint.</p>
+        </div>
+        <div class="note">
+          <div class="note-ref">Lines 4 &amp; 6</div>
+          <div class="note-title">LayerNorm: keep the numbers in a healthy range</div>
+          <p>As numbers flow through many layers of multiplication, they can drift huge or shrink to nothing. <code>LayerNorm</code> re-centers them before each step — like normalizing exam scores from different classes before averaging them, so no single wild scale dominates. Unglamorous, essential: without it, deep networks simply refuse to train.</p>
+        </div>
+        <div class="note">
+          <div class="note-ref">Line 5</div>
+          <div class="note-title">MultiheadAttention: four parallel lenses</div>
+          <p>Attention is the mechanism that lets each letter <em>look back</em> at earlier letters and decide which ones matter for predicting what comes next. "Multihead" with <code>n_head=4</code> means four of these lenses run in parallel, and each learns to look for something different — one might track vowels, another the previous consonant, another distance from the start of the name. Nobody assigns those jobs; they emerge from training.</p>
+        </div>
+        <div class="note">
+          <div class="note-ref">Lines 7–8</div>
+          <div class="note-title">MLP: the per-position thinking layer</div>
+          <p>After looking around, each position thinks privately. The <code>Linear → GELU → Linear</code> sandwich expands each 64-number summary to 256 numbers (4× scratch space to work in), passes it through a soft on/off gate (<code>GELU</code> — the modern cousin of the neuron switch you saw in the playground), then compresses back to 64. Expand, compute, condense.</p>
+        </div>
+        <div class="note hero">
+          <div class="note-ref">Lines 10–11 · The single most important line</div>
+          <div class="note-title">The causal mask: a triangle of "no peeking"</div>
+          <p><code>torch.triu</code> builds a triangle of flags covering every <em>future</em> position, and the mask forbids attention from looking there. During training the model sees a whole 16-letter window at once — this triangle forces each position to predict the next letter using <strong>only the past</strong>. Delete this one line and the model could "predict" letters it can already see: perfect score, zero learning. This is the line that makes it a language <em>model</em> rather than a cheater.</p>
+        </div>
+        <div class="note">
+          <div class="note-ref">Lines 12–13</div>
+          <div class="note-title">self.attn(h, h, h): the text attends to ITSELF</div>
+          <p>Attention takes three inputs — roughly <em>what am I looking for, what's on offer, what do I take</em>. Passing the same sequence <code>h</code> for all three means the sequence queries itself: that's the "self" in <strong>self-attention</strong>. Every letter asks every earlier letter, "are you relevant to me?" and blends what it hears.</p>
+        </div>
+        <div class="note">
+          <div class="note-ref">Lines 13–14 · The x+ pattern</div>
+          <div class="note-title">Residual connections: keep what you had, ADD the refinement</div>
+          <p>Notice both lines say <code>x + …</code> rather than replacing <code>x</code>. Each layer contributes an <em>edit</em> on top of the running total instead of overwriting it — like a memo passing through reviewers who each add margin notes rather than rewriting the whole thing. This small trick is what makes very deep networks trainable at all; without it, information degrades layer by layer and learning stalls.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4 · TINYGPT -->
+  <section class="acc-yellow">
+    <h2 class="c-yellow">4 · TinyGPT — Assembling the Whole Model</h2>
+    <p class="section-lede">Ten lines. This is the entire architecture of the model you trained — and, at a conceptual level, the entire architecture of the frontier models you'll use all semester.</p>
+    <div class="panel">
+      <div class="codebox">
+        <div class="code-label">notebook · cell: the model</div>
+<pre><span class="ln">1</span><span class="k">class</span> <span class="f">TinyGPT</span>(nn.Module):
+<span class="ln">2</span>    <span class="k">def</span> <span class="f">__init__</span>(self):
+<span class="ln">3</span>        super().__init__()
+<span class="ln">4</span>        self.tok = nn.Embedding(len(chars), n_embd)
+<span class="ln">5</span>        self.pos = nn.Embedding(block_size, n_embd)
+<span class="ln">6</span>        self.blocks = nn.Sequential(*[Block() <span class="k">for</span> _ <span class="k">in</span> range(n_layer)])
+<span class="ln">7</span>        self.head = nn.Linear(n_embd, len(chars))
+<span class="ln">8</span>    <span class="k">def</span> <span class="f">forward</span>(self, idx):
+<span class="ln">9</span>        T = idx.shape[<span class="n">1</span>]
+<span class="ln">10</span>        x = self.tok(idx) + self.pos(torch.arange(T, device=idx.device))
+<span class="ln">11</span>        <span class="k">return</span> self.head(self.blocks(x))</pre>
+      </div>
+      <div class="notes">
+        <div class="note">
+          <div class="note-ref">Line 4</div>
+          <div class="note-title">tok: the map of meaning</div>
+          <p>This is the embedding table you <em>visualized</em> in class — each of the 27 characters gets its own learned list of 64 numbers. Before training those numbers are random noise; after training, similar-behaving letters drift near each other on the map. Meaning, as geometry.</p>
+        </div>
+        <div class="note">
+          <div class="note-ref">Line 5</div>
+          <div class="note-title">pos: "where am I in the sequence?"</div>
+          <p>Here's a secret: attention by itself is <strong>order-blind</strong> — it sees the letters of a window as a bag, not a sequence. "dog" and "god" would look identical. The fix: give each of the 16 <em>positions</em> its own learned 64-number vector, so position 1 feels different from position 9.</p>
+        </div>
+        <div class="note">
+          <div class="note-ref">Line 10</div>
+          <div class="note-title">tok + pos = "what" + "where"</div>
+          <p>Each letter's meaning vector is added to its position vector. Every slot entering the blocks now carries both <em>which character I am</em> and <em>where I sit</em>. Simple addition — and it works.</p>
+        </div>
+        <div class="note">
+          <div class="note-ref">Lines 6 &amp; 11</div>
+          <div class="note-title">Two stacked Blocks: read the text twice, deeper each time</div>
+          <p>The input flows through Block 1, and its refined output flows through Block 2. Pass one catches surface patterns (letter pairs); pass two builds on them (syllable shapes, name endings). Depth = re-reading with better notes each time.</p>
+        </div>
+        <div class="note">
+          <div class="note-ref">Line 7 &amp; 11</div>
+          <div class="note-title">head: from a 64-number summary to 27 scores</div>
+          <p>The final layer converts each position's 64-number summary into <strong>27 raw scores called logits</strong> — one per possible next character. Higher score = the model finds that letter more plausible next. Turn those into percentages and sample one, and you get the invented names you watched scroll by.</p>
+        </div>
+        <div class="note frontier">
+          <div class="note-ref">Frontier note</div>
+          <div class="note-title">What GPT-6 changes — and what it doesn't</div>
+          <p>GPT-6-class models differ by: a ~100,000-token vocabulary instead of 27 letters, <strong>100+ blocks</strong> instead of 2, and thousands of embedding dimensions instead of 64 — <em>and conceptually nothing else</em>. Embed, add position, stack blocks, score the vocabulary. You have now read the architecture of the frontier.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 5 · TRAINING LOOP -->
+  <section class="acc-orange">
+    <h2 class="c-orange">5 · The Training Loop — Where Learning Happens</h2>
+    <p class="section-lede">Six lines. This is the loop you sat and watched — the loss falling from 3.5 toward 1.75 while the invented names went from gibberish to plausible.</p>
+    <div class="panel">
+      <div class="codebox">
+        <div class="code-label">notebook · cell: training</div>
+<pre><span class="ln">1</span>opt = torch.optim.AdamW(model.parameters(), lr=<span class="n">3e-3</span>)
+<span class="ln">2</span>model.train()
+<span class="ln">3</span><span class="k">for</span> step <span class="k">in</span> range(<span class="n">2501</span>):
+<span class="ln">4</span>    x, y = get_batch()
+<span class="ln">5</span>    loss = F.cross_entropy(model(x).view(-<span class="n">1</span>, len(chars)), y.view(-<span class="n">1</span>))
+<span class="ln">6</span>    opt.zero_grad(); loss.backward(); opt.step()</pre>
+      </div>
+      <div class="notes">
+        <div class="note">
+          <div class="note-ref">Line 1</div>
+          <div class="note-title">AdamW: a smarter step-size manager</div>
+          <p>The optimizer is the thing that will actually adjust the weights. <code>AdamW</code> is plain gradient descent plus bookkeeping: it remembers each weight's recent history and gives steady ones bigger steps, jittery ones smaller steps. <code>lr=3e-3</code> is the base step size — the same "learning rate" knob you saw in the neuron playground.</p>
+        </div>
+        <div class="note">
+          <div class="note-ref">Lines 2–4</div>
+          <div class="note-title">2,501 loops of: grab examples, try, get graded</div>
+          <p><code>model.train()</code> flips the model into learning mode; then the loop runs 2,501 times. Each pass: grab a fresh random batch of 64 windows, predict, get scored, adjust. That repetition <strong>is the whole of "learning."</strong> There is no other mechanism.</p>
+        </div>
+        <div class="note hero">
+          <div class="note-ref">Line 5 · The number you watched</div>
+          <div class="note-title">cross_entropy: the surprise meter</div>
+          <p>For every position, take the probability the model assigned to the <em>true</em> next letter and compute <strong>−log(that probability)</strong> — big when the model is surprised, near zero when it saw it coming — then average over the whole batch. This is THE number you watched fall from <strong>3.5 to about 1.75</strong>, and it's exactly the average of the surprise gauge from the Beat-Your-AI game. All of training is one instruction: <em>be less surprised by the data.</em></p>
+        </div>
+        <div class="note">
+          <div class="note-ref">Line 6 · opt.zero_grad()</div>
+          <div class="note-title">Wipe the slate</div>
+          <p>Clear last loop's adjustment notes so this batch's feedback starts fresh. Housekeeping.</p>
+        </div>
+        <div class="note">
+          <div class="note-ref">Line 6 · loss.backward()</div>
+          <div class="note-title">Backpropagation — the most important call in modern AI</div>
+          <p>This computes, for <strong>all 104,475 weights simultaneously</strong>, which direction each should move to make the surprise slightly smaller — which way is "downhill." It works by walking the chain of arithmetic backwards from the loss to every weight that contributed. One line of code; the discovery underneath it is why the deep-learning era exists.</p>
+        </div>
+        <div class="note">
+          <div class="note-ref">Line 6 · opt.step()</div>
+          <div class="note-title">Gradient descent: take the tiny step</div>
+          <p>Nudge every weight a small amount in its downhill direction. This is the Loan Officer's sliders — except instead of you dragging three sliders by hand, 104,475 sliders move themselves, a hair at a time, 2,501 times. Zoom out and that's all "training an AI" ever means, from TinyGPT to the frontier: measure surprise, find downhill, step. Repeat until the money runs out.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLOSING · THE KARPATHY PATH -->
+  <section>
+    <h2 class="c-green">If You Caught the Bug — The Karpathy Path</h2>
+    <p class="section-lede">Everything on this page descends from the free teaching of <a href="https://karpathy.ai">Andrej Karpathy</a> (founding team at OpenAI, former head of AI at Tesla). If this page was fun rather than painful, this is the canonical free sequence — in order, no paywalls, no prerequisites beyond patience.</p>
+    <div class="path">
+      <div class="path-item">
+        <div class="path-num">1</div>
+        <div>
+          <div class="path-name">"Intro to Large Language Models" — the 1-hour talk</div>
+          <p>The single best lay-of-the-land hour on what LLMs are, how they're trained, and where they're going. Watch this even if you stop here.</p>
+        </div>
+      </div>
+      <div class="path-item">
+        <div class="path-num">2</div>
+        <div>
+          <div class="path-name">Neural Networks: Zero to Hero — the playlist</div>
+          <p>Builds everything from scratch, including backpropagation by hand, in plain Python. Nothing imported, nothing hidden. The definitive "no magic" course.</p>
+        </div>
+      </div>
+      <div class="path-item">
+        <div class="path-num">3</div>
+        <div>
+          <div class="path-name">makemore — this notebook's direct ancestor</div>
+          <p>A character-level name generator, built five different ways of increasing power. The TinyGPT you trained is a compressed homage to it.</p>
+        </div>
+      </div>
+      <div class="path-item">
+        <div class="path-num">4</div>
+        <div>
+          <div class="path-name">"Let's build GPT from scratch" — the nanoGPT video</div>
+          <p>Two hours of live-coding a real GPT, line by line, up to a model that writes Shakespeare. Every line of our Block appears here, explained at full depth.</p>
+        </div>
+      </div>
+      <div class="path-item">
+        <div class="path-num">5</div>
+        <div>
+          <div class="path-name">nanochat — the full ChatGPT pipeline for ~$100</div>
+          <p>The complete recipe — pretraining, fine-tuning, chat interface — condensed into one codebase you can train end-to-end for about a hundred dollars of compute. The whole industry, in miniature.</p>
+        </div>
+      </div>
+    </div>
+    <p class="section-lede" style="margin-top:10px;">Start at <a href="https://karpathy.ai">karpathy.ai</a> · code at <a href="https://github.com/karpathy">github.com/karpathy</a></p>
+    <div class="pull-quote">"This course gives you the shallow end of that pool. The pool is wonderful."</div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div>ISOM 260 · Sessions 1–2 · TinyGPT, Every Line Explained · optional deep dive — nothing here is on the exam</div>
+    <div><span class="url">karpathy.ai</span> · <span class="url">github.com/karpathy</span></div>
+  </footer>
+
+</div>
+</body>
+</html>

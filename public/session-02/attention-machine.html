@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Attention Machine — How Attention Decides | ISOM 260 Session 2</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #0f1424;
+            --bg-card: #141929;
+            --bg-elevated: #1a2035;
+
+            --cyan: #00e5ff;
+            --cyan-dim: #00b8d4;
+            --cyan-glow: rgba(0, 229, 255, 0.15);
+            --cyan-glow-strong: rgba(0, 229, 255, 0.3);
+
+            --magenta: #ff006e;
+            --magenta-glow: rgba(255, 0, 110, 0.15);
+
+            --yellow: #ffd600;
+            --yellow-glow: rgba(255, 214, 0, 0.15);
+
+            --green: #00e676;
+            --green-glow: rgba(0, 230, 118, 0.15);
+
+            --orange: #ff9100;
+            --purple: #b388ff;
+            --purple-glow: rgba(179, 136, 255, 0.15);
+
+            --text-primary: #e8ecf4;
+            --text-secondary: #8892a8;
+            --text-dim: #5a6478;
+
+            --border: rgba(0, 229, 255, 0.1);
+            --border-strong: rgba(0, 229, 255, 0.25);
+            --grid-line: rgba(0, 229, 255, 0.04);
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'DM Sans', sans-serif;
+            line-height: 1.5;
+            background-image:
+                linear-gradient(var(--grid-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+            background-size: 40px 40px;
+            cursor: default;
+            min-height: 100vh;
+        }
+
+        .glow-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.4;
+        }
+        .glow-orb-1 { width: 500px; height: 500px; background: rgba(0, 229, 255, 0.08); top: -100px; left: -100px; }
+        .glow-orb-2 { width: 400px; height: 400px; background: rgba(255, 0, 110, 0.06); top: 40%; right: -100px; }
+        .glow-orb-3 { width: 350px; height: 350px; background: rgba(0, 230, 118, 0.05); bottom: -50px; left: 30%; }
+
+        /* ===== Sticky section nav ===== */
+        nav.section-nav {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(0.8rem, 2.5vw, 2.2rem);
+            padding: 0.75rem 2rem;
+            background: rgba(15, 20, 36, 0.88);
+            border-bottom: 1px solid var(--border-strong);
+            backdrop-filter: blur(8px);
+            flex-wrap: wrap;
+        }
+        .nav-brand {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(0.75rem, 1.1vw, 0.9rem);
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            white-space: nowrap;
+        }
+        .nav-brand strong { color: var(--cyan); }
+        nav.section-nav a.nav-link {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(0.8rem, 1.2vw, 0.95rem);
+            letter-spacing: 0.08em;
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 0.3rem 0.85rem;
+            border: 1px solid transparent;
+            border-radius: 100px;
+            transition: color 150ms, border-color 150ms, box-shadow 150ms;
+            white-space: nowrap;
+        }
+        nav.section-nav a.nav-link:hover {
+            color: var(--cyan);
+            border-color: var(--border-strong);
+            box-shadow: 0 0 20px var(--cyan-glow);
+        }
+        nav.section-nav a.nav-link .n { color: var(--yellow); margin-right: 0.35em; }
+
+        main { position: relative; z-index: 1; }
+
+        section.part {
+            max-width: 1250px;
+            margin: 0 auto;
+            padding: clamp(2.5rem, 5vh, 4.5rem) 4vw 1.5rem;
+        }
+
+        .part-kicker {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(0.85rem, 1.2vw, 1rem);
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--cyan);
+            margin-bottom: 0.6rem;
+            text-align: center;
+        }
+        .part-title {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(2rem, 4.2vw, 3.3rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            text-align: center;
+            margin-bottom: 0.6rem;
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, var(--cyan), var(--magenta));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .gradient-text-2 {
+            background: linear-gradient(135deg, var(--yellow), var(--magenta));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .gradient-text-3 {
+            background: linear-gradient(135deg, var(--green), var(--cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .part-sub {
+            font-size: clamp(1.05rem, 1.8vw, 1.4rem);
+            color: var(--text-secondary);
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto 2.2rem;
+        }
+
+        /* ===== Part 1: The Meeting ===== */
+        .meeting-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.2rem;
+            margin-bottom: 1.8rem;
+        }
+        .meeting-card {
+            position: relative;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.7rem 1.5rem 1.5rem;
+            transition: transform 160ms ease-out, border-color 160ms, box-shadow 160ms;
+        }
+        .meeting-card:hover { transform: translateY(-4px); }
+        .meeting-card.ask:hover     { border-color: rgba(0, 229, 255, 0.45);  box-shadow: 0 0 35px var(--cyan-glow); }
+        .meeting-card.offer:hover   { border-color: rgba(255, 214, 0, 0.45);  box-shadow: 0 0 35px var(--yellow-glow); }
+        .meeting-card.give:hover    { border-color: rgba(0, 230, 118, 0.45);  box-shadow: 0 0 35px var(--green-glow); }
+        .meeting-card .emoji { font-size: clamp(2rem, 3.2vw, 2.7rem); margin-bottom: 0.5rem; }
+        .meeting-card h3 {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(1.3rem, 2vw, 1.65rem);
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            margin-bottom: 0.55rem;
+        }
+        .meeting-card.ask h3   { color: var(--cyan); }
+        .meeting-card.offer h3 { color: var(--yellow); }
+        .meeting-card.give h3  { color: var(--green); }
+        .meeting-card p {
+            font-size: clamp(1rem, 1.55vw, 1.25rem);
+            color: var(--text-secondary);
+        }
+        .meeting-card p em { color: var(--text-primary); font-style: normal; }
+        .meeting-card .math-name {
+            position: absolute;
+            top: 0.8rem;
+            right: 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.1rem 0.55rem;
+        }
+
+        .mechanism-line {
+            background: var(--bg-card);
+            border: 1px solid var(--border-strong);
+            border-radius: 16px;
+            padding: 1.4rem 2rem;
+            text-align: center;
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(1.1rem, 2vw, 1.55rem);
+            font-weight: 600;
+            box-shadow: 0 0 45px var(--cyan-glow);
+            max-width: 1050px;
+            margin: 0 auto 1.4rem;
+        }
+        .mechanism-line .flow { color: var(--cyan); }
+        .mechanism-line .scale { color: var(--magenta); }
+        .mechanism-line small {
+            display: block;
+            margin-top: 0.55rem;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 400;
+            font-size: clamp(0.95rem, 1.5vw, 1.2rem);
+            color: var(--text-secondary);
+        }
+
+        .qkv-chip {
+            display: block;
+            width: fit-content;
+            margin: 0 auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(0.85rem, 1.3vw, 1.05rem);
+            letter-spacing: 0.1em;
+            color: var(--purple);
+            background: var(--purple-glow);
+            border: 1px solid rgba(179, 136, 255, 0.4);
+            border-radius: 100px;
+            padding: 0.45rem 1.4rem;
+        }
+
+        /* ===== Part 2: Explorer ===== */
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem 1.6rem;
+            margin-bottom: 1.6rem;
+        }
+        .ctrl-group {
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            padding: 0.4rem 0.6rem;
+        }
+        .ctrl-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            padding: 0 0.4rem 0 0.55rem;
+        }
+        .ctrl-btn {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(0.9rem, 1.4vw, 1.1rem);
+            font-weight: 600;
+            color: var(--text-secondary);
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 100px;
+            padding: 0.35rem 0.95rem;
+            cursor: pointer;
+            transition: color 130ms, border-color 130ms, box-shadow 130ms, background 130ms;
+            white-space: nowrap;
+        }
+        .ctrl-btn:hover { color: var(--text-primary); border-color: var(--border-strong); }
+        .ctrl-btn.active {
+            color: #0a0e1a;
+            background: var(--cyan);
+            border-color: var(--cyan);
+            box-shadow: 0 0 22px var(--cyan-glow-strong);
+        }
+        .ctrl-btn.active.h1 { background: var(--cyan); box-shadow: 0 0 22px var(--cyan-glow-strong); }
+        .ctrl-btn.active.h2 { background: var(--magenta); border-color: var(--magenta); box-shadow: 0 0 22px var(--magenta-glow); color: #fff; }
+        .ctrl-btn.active.h3 { background: var(--yellow); border-color: var(--yellow); box-shadow: 0 0 22px var(--yellow-glow); }
+        .ctrl-btn.active.h4 { background: var(--green); border-color: var(--green); box-shadow: 0 0 22px var(--green-glow); }
+        .ctrl-btn.active.havg { background: var(--purple); border-color: var(--purple); box-shadow: 0 0 22px var(--purple-glow); }
+        .ctrl-btn.step { font-size: 1.15rem; padding: 0.3rem 0.85rem; }
+        .ctrl-btn.playing {
+            color: var(--green);
+            border-color: rgba(0, 230, 118, 0.55);
+            box-shadow: 0 0 20px var(--green-glow);
+        }
+
+        /* Stage */
+        .stage-wrap {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-strong);
+            border-radius: 20px;
+            padding: 0.5rem 1rem 1.4rem;
+            box-shadow: 0 0 60px rgba(0, 229, 255, 0.06);
+            overflow-x: auto;
+        }
+        .stage {
+            position: relative;
+            margin: 0 auto;
+            width: fit-content;
+            min-width: 100%;
+        }
+        #arcSvg {
+            display: block;
+            margin: 0 auto;
+            overflow: visible;
+        }
+        .tile-row {
+            display: flex;
+            justify-content: center;
+            gap: clamp(0.5rem, 1.4vw, 1.1rem);
+            padding: 0 0.5rem;
+        }
+        .letter-tile {
+            position: relative;
+            width: clamp(58px, 8.5vw, 96px);
+            height: clamp(58px, 8.5vw, 96px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(1.6rem, 3.4vw, 2.7rem);
+            font-weight: 700;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: border-color 180ms, box-shadow 180ms, transform 180ms, color 180ms;
+            user-select: none;
+            flex-shrink: 0;
+        }
+        .letter-tile.start-tile { font-size: clamp(0.72rem, 1.4vw, 1rem); color: var(--text-dim); letter-spacing: 0.02em; }
+        .letter-tile.future { opacity: 0.32; }
+        .letter-tile.reading {
+            border-color: var(--yellow);
+            color: var(--yellow);
+            box-shadow: 0 0 0 3px rgba(255, 214, 0, 0.35), 0 0 40px var(--yellow-glow);
+            transform: translateY(-4px);
+        }
+        .letter-tile.reading.start-tile { color: var(--yellow); }
+        .letter-tile .pos-idx {
+            position: absolute;
+            bottom: -1.4rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.72rem;
+            font-weight: 500;
+            color: var(--text-dim);
+            letter-spacing: 0.05em;
+        }
+        .letter-tile .self-chip {
+            position: absolute;
+            top: -1.35rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.68rem;
+            color: var(--text-secondary);
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            padding: 0.06rem 0.5rem;
+            white-space: nowrap;
+        }
+        .tile-row-pad { height: 1.9rem; }
+
+        .live-sentence {
+            margin: 1.6rem auto 0;
+            max-width: 1050px;
+            text-align: center;
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(1.15rem, 2.2vw, 1.75rem);
+            font-weight: 600;
+            min-height: 2.6em;
+            padding: 0 1rem;
+        }
+        .live-sentence .lw { color: var(--yellow); }
+        .live-sentence .lh { }
+        .live-sentence .lp { color: var(--cyan); }
+        .live-sentence .lt { color: var(--magenta); }
+        .live-sentence .muted { color: var(--text-secondary); font-weight: 400; }
+
+        .kbd-hints {
+            margin-top: 1.3rem;
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(0.75rem, 1.1vw, 0.9rem);
+            color: var(--text-dim);
+            letter-spacing: 0.04em;
+        }
+        .kbd-hints kbd {
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 5px;
+            padding: 0.05em 0.45em;
+            margin: 0 0.15em;
+            color: var(--text-secondary);
+            background: var(--bg-elevated);
+        }
+
+        /* ===== Part 3: Employees ===== */
+        .employee-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.2rem;
+            margin-bottom: 1.5rem;
+        }
+        .employee-card {
+            position: relative;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.6rem 1.5rem 1.4rem;
+            transition: transform 160ms ease-out, border-color 160ms, box-shadow 160ms;
+        }
+        .employee-card.clickable { cursor: pointer; }
+        .employee-card.clickable:hover { transform: translateY(-4px); }
+        .employee-card.c-magenta:hover { border-color: rgba(255, 0, 110, 0.5); box-shadow: 0 0 35px var(--magenta-glow); }
+        .employee-card.c-cyan:hover    { border-color: rgba(0, 229, 255, 0.5); box-shadow: 0 0 35px var(--cyan-glow); }
+        .employee-card.c-green:hover   { border-color: rgba(0, 230, 118, 0.5); box-shadow: 0 0 35px var(--green-glow); }
+        .employee-card .head-id {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            letter-spacing: 0.16em;
+            color: var(--text-dim);
+            margin-bottom: 0.35rem;
+        }
+        .employee-card h3 {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(1.35rem, 2.1vw, 1.7rem);
+            font-weight: 700;
+            margin-bottom: 0.7rem;
+        }
+        .employee-card.c-magenta h3 { color: var(--magenta); }
+        .employee-card.c-cyan h3    { color: var(--cyan); }
+        .employee-card.c-green h3   { color: var(--green); }
+        .employee-card.c-purple h3  { color: var(--purple); }
+        .employee-card .stat-line {
+            font-size: clamp(1rem, 1.5vw, 1.2rem);
+            color: var(--text-secondary);
+            margin-bottom: 0.7rem;
+        }
+        .employee-card .stat-line strong { color: var(--text-primary); font-size: 1.25em; font-family: 'JetBrains Mono', monospace; }
+        .employee-card .punchline {
+            font-size: clamp(0.95rem, 1.45vw, 1.15rem);
+            color: var(--text-primary);
+            border-left: 3px solid var(--yellow);
+            padding-left: 0.85rem;
+            font-style: italic;
+        }
+        .employee-card .try-it {
+            display: inline-block;
+            margin-top: 0.85rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--cyan);
+            opacity: 0.85;
+        }
+
+        .not-assigned {
+            max-width: 1000px;
+            margin: 0 auto 2rem;
+            text-align: center;
+            font-size: clamp(1.05rem, 1.8vw, 1.4rem);
+            color: var(--text-secondary);
+        }
+        .not-assigned strong { color: var(--yellow); }
+
+        .stats-table-wrap {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.4rem 1.6rem 1.1rem;
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+        }
+        .stats-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            margin-bottom: 0.9rem;
+        }
+        table.head-stats {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(0.85rem, 1.3vw, 1.05rem);
+        }
+        table.head-stats th, table.head-stats td {
+            padding: 0.5rem 0.9rem;
+            text-align: right;
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+        table.head-stats th {
+            color: var(--text-dim);
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            font-size: 0.78em;
+        }
+        table.head-stats td:first-child, table.head-stats th:first-child { text-align: left; }
+        table.head-stats td.name-col { color: var(--text-secondary); font-family: 'DM Sans', sans-serif; text-align: left; }
+        table.head-stats tr.hl-magenta td { background: rgba(255, 0, 110, 0.07); }
+        table.head-stats tr.hl-cyan td    { background: rgba(0, 229, 255, 0.06); }
+        table.head-stats tr.hl-green td   { background: rgba(0, 230, 118, 0.06); }
+        table.head-stats td.big { color: var(--yellow); font-weight: 700; }
+        .table-note {
+            margin-top: 0.8rem;
+            font-size: clamp(0.8rem, 1.2vw, 0.95rem);
+            color: var(--text-dim);
+        }
+
+        .insight-card {
+            max-width: 1000px;
+            margin: 0 auto 1rem;
+            background: var(--yellow-glow);
+            border: 1px solid rgba(255, 214, 0, 0.4);
+            border-radius: 16px;
+            padding: 1.6rem 2rem;
+            text-align: center;
+            font-size: clamp(1.1rem, 2vw, 1.5rem);
+            box-shadow: 0 0 45px var(--yellow-glow);
+        }
+        .insight-card strong { color: var(--yellow); }
+
+        /* ===== Footer ===== */
+        footer.page-footer {
+            position: relative;
+            z-index: 1;
+            margin-top: 2.5rem;
+            padding: 1.6rem 4vw 2.4rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: center;
+            gap: clamp(1rem, 3vw, 2.5rem);
+            flex-wrap: wrap;
+        }
+        footer.page-footer a {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(0.85rem, 1.3vw, 1rem);
+            color: var(--text-secondary);
+            text-decoration: none;
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            padding: 0.5rem 1.3rem;
+            transition: color 150ms, border-color 150ms, box-shadow 150ms;
+            white-space: nowrap;
+        }
+        footer.page-footer a:hover {
+            color: var(--cyan);
+            border-color: var(--border-strong);
+            box-shadow: 0 0 20px var(--cyan-glow);
+        }
+
+        @media (max-width: 640px) {
+            .controls { gap: 0.6rem; }
+            .ctrl-btn { padding: 0.3rem 0.7rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="glow-orb glow-orb-1"></div>
+    <div class="glow-orb glow-orb-2"></div>
+    <div class="glow-orb glow-orb-3"></div>
+
+    <nav class="section-nav">
+        <span class="nav-brand"><strong>ISOM 260</strong> · S2 · THE ATTENTION MACHINE</span>
+        <a class="nav-link" href="#part1"><span class="n">1</span>THE MEETING</a>
+        <a class="nav-link" href="#part2"><span class="n">2</span>WATCH IT DECIDE</a>
+        <a class="nav-link" href="#part3"><span class="n">3</span>FOUR EMPLOYEES</a>
+    </nav>
+
+    <main>
+        <!-- ============ PART 1 ============ -->
+        <section class="part" id="part1">
+            <div class="part-kicker">Part 1 · The Metaphor</div>
+            <h1 class="part-title">THE <span class="gradient-text">MEETING</span></h1>
+            <p class="part-sub">
+                At every position, every letter joins a meeting with everything that came before it.
+                Three things happen — every time, at every position, in every layer.
+            </p>
+
+            <div class="meeting-cards">
+                <div class="meeting-card ask">
+                    <span class="math-name">query</span>
+                    <div class="emoji">🙋</div>
+                    <h3>ASK</h3>
+                    <p>Every letter broadcasts a question: <em>"I'm an <em>i</em> in position 4 — who's relevant to me?"</em></p>
+                </div>
+                <div class="meeting-card offer">
+                    <span class="math-name">key</span>
+                    <div class="emoji">📢</div>
+                    <h3>OFFER</h3>
+                    <p>Every earlier letter advertises what it has: <em>"I'm an <em>h</em>, right before you."</em></p>
+                </div>
+                <div class="meeting-card give">
+                    <span class="math-name">value</span>
+                    <div class="emoji">🎁</div>
+                    <h3>CONTRIBUTE</h3>
+                    <p>The good matches hand over their information, <em>weighted by relevance</em>.</p>
+                </div>
+            </div>
+
+            <div class="mechanism-line">
+                <span class="flow">Relevance scores → softmax → a weighted blend.</span> That's the entire mechanism.
+                <small>Multiply by <span class="scale">4 heads × 2 layers</span> and you have your model; by <span class="scale">100+ layers</span> and you have GPT-6.</small>
+            </div>
+
+            <span class="qkv-chip">the math names: Query · Key · Value</span>
+        </section>
+
+        <!-- ============ PART 2 ============ -->
+        <section class="part" id="part2">
+            <div class="part-kicker">Part 2 · The Explorer</div>
+            <h1 class="part-title">WATCH IT <span class="gradient-text-2">DECIDE</span></h1>
+            <p class="part-sub">
+                These are <strong style="color:var(--text-primary)">real attention weights</strong> pulled from the model you trained —
+                same seed, same weights. Pick a word, pick a head, and step through it letter by letter.
+            </p>
+
+            <div class="controls">
+                <div class="ctrl-group" id="wordGroup">
+                    <span class="ctrl-label">Word</span>
+                    <button class="ctrl-btn word-btn active" data-word="0">sophia</button>
+                    <button class="ctrl-btn word-btn" data-word="1">brooklyn</button>
+                    <button class="ctrl-btn word-btn" data-word="2">hasan</button>
+                </div>
+                <div class="ctrl-group" id="layerGroup">
+                    <span class="ctrl-label">Layer</span>
+                    <button class="ctrl-btn layer-btn active" data-layer="0">L1</button>
+                    <button class="ctrl-btn layer-btn" data-layer="1">L2</button>
+                </div>
+                <div class="ctrl-group" id="headGroup">
+                    <span class="ctrl-label">Head</span>
+                    <button class="ctrl-btn head-btn h1" data-head="0">H1</button>
+                    <button class="ctrl-btn head-btn h2 active" data-head="1">H2</button>
+                    <button class="ctrl-btn head-btn h3" data-head="2">H3</button>
+                    <button class="ctrl-btn head-btn h4" data-head="3">H4</button>
+                    <button class="ctrl-btn head-btn havg" data-head="avg">AVG</button>
+                </div>
+                <div class="ctrl-group" id="stepGroup">
+                    <span class="ctrl-label">Position</span>
+                    <button class="ctrl-btn step" id="stepBack" title="previous position">◀</button>
+                    <button class="ctrl-btn step" id="stepFwd" title="next position">▶</button>
+                    <button class="ctrl-btn step" id="playBtn" title="autoplay">▶️</button>
+                </div>
+            </div>
+
+            <div class="stage-wrap">
+                <div class="stage" id="stage">
+                    <svg id="arcSvg" xmlns="http://www.w3.org/2000/svg"></svg>
+                    <div class="tile-row" id="tileRow"></div>
+                    <div class="tile-row-pad"></div>
+                </div>
+            </div>
+
+            <div class="live-sentence" id="liveSentence"></div>
+
+            <div class="kbd-hints">
+                <kbd>←</kbd><kbd>→</kbd> step position &nbsp;·&nbsp;
+                <kbd>1</kbd>–<kbd>4</kbd> select head &nbsp;·&nbsp;
+                <kbd>A</kbd> average &nbsp;·&nbsp;
+                <kbd>L</kbd> toggle layer &nbsp;·&nbsp;
+                <kbd>Space</kbd> autoplay
+            </div>
+        </section>
+
+        <!-- ============ PART 3 ============ -->
+        <section class="part" id="part3">
+            <div class="part-kicker">Part 3 · The Interpretability Reveal</div>
+            <h1 class="part-title">MEET YOUR MODEL'S <span class="gradient-text-3">FOUR EMPLOYEES</span></h1>
+            <p class="not-assigned">
+                Nobody assigned these heads their jobs. <strong>Gradient descent found this division of labor on its own</strong> —
+                the stats below are measured from your trained model, averaged over 300 real names.
+            </p>
+
+            <div class="employee-grid">
+                <div class="employee-card c-magenta clickable" data-jump-layer="0" data-jump-head="1">
+                    <div class="head-id">L1 · H2</div>
+                    <h3>The Bigram Clerk</h3>
+                    <p class="stat-line">Watches the <strong>previous letter</strong> — <strong>97%</strong> of its attention, on average.</p>
+                    <p class="punchline">This head independently reinvented your Act 1 counting model. Nobody told it to.</p>
+                    <span class="try-it">▶ click to watch this head</span>
+                </div>
+                <div class="employee-card c-cyan clickable" data-jump-layer="0" data-jump-head="0">
+                    <div class="head-id">L1 · H1</div>
+                    <h3>The Assistant Clerk</h3>
+                    <p class="stat-line">Previous letter <strong>66%</strong>, start token <strong>22%</strong>.</p>
+                    <p class="punchline">Backs up the Bigram Clerk with a wider view — mostly the last letter, one eye on the beginning.</p>
+                    <span class="try-it">▶ click to watch this head</span>
+                </div>
+                <div class="employee-card c-green clickable" data-jump-layer="1" data-jump-head="3">
+                    <div class="head-id">L2 · H4</div>
+                    <h3>The Anchor</h3>
+                    <p class="stat-line">Watches the <strong>·start token</strong> — <strong>74%</strong> of its attention.</p>
+                    <p class="punchline">Keeps asking the same question all the way through: "what kind of name did we begin?"</p>
+                    <span class="try-it">▶ click to watch this head</span>
+                </div>
+                <div class="employee-card c-purple">
+                    <div class="head-id">L1·H3 · L1·H4 · L2·H1–H3</div>
+                    <h3>The Blenders</h3>
+                    <p class="stat-line">The other five heads <strong style="font-size:1em">spread</strong> attention across self, previous letter, and start — mixing context instead of specializing.</p>
+                    <p class="punchline">Not every employee gets a nameplate. Blended context is a job too.</p>
+                </div>
+            </div>
+
+            <div class="stats-table-wrap">
+                <div class="stats-title">Where each head looks · measured over 300 real names · % of attention</div>
+                <table class="head-stats">
+                    <thead>
+                        <tr><th>Head</th><th>Role</th><th>Self</th><th>Prev letter</th><th>·start</th><th>Farther back</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr class="hl-cyan"><td>L1·H1</td><td class="name-col">The Assistant Clerk</td><td>7</td><td class="big">66</td><td>22</td><td>3</td></tr>
+                        <tr class="hl-magenta"><td>L1·H2</td><td class="name-col">The Bigram Clerk</td><td>1</td><td class="big">97</td><td>17</td><td>0</td></tr>
+                        <tr><td>L1·H3</td><td class="name-col">Blender</td><td>11</td><td>19</td><td>31</td><td>12</td></tr>
+                        <tr><td>L1·H4</td><td class="name-col">Blender</td><td>16</td><td>28</td><td>38</td><td>8</td></tr>
+                        <tr><td>L2·H1</td><td class="name-col">Blender</td><td>21</td><td>41</td><td>27</td><td>11</td></tr>
+                        <tr><td>L2·H2</td><td class="name-col">Blender</td><td>12</td><td>36</td><td>36</td><td>13</td></tr>
+                        <tr><td>L2·H3</td><td class="name-col">Blender</td><td>17</td><td>30</td><td>31</td><td>15</td></tr>
+                        <tr class="hl-green"><td>L2·H4</td><td class="name-col">The Anchor</td><td>9</td><td>22</td><td class="big">74</td><td>6</td></tr>
+                    </tbody>
+                </table>
+                <p class="table-note">
+                    Note: rows can sum to more than 100% — at position 1 the previous letter <em>is</em> the ·start token,
+                    so short positions get counted in both the "prev" and "start" columns.
+                </p>
+            </div>
+
+            <div class="insight-card">
+                This is <strong>INTERPRETABILITY</strong> — opening a model to see what its parts learned.
+                At frontier scale it's a research field (and a safety discipline).
+                You just did it on a model you trained yourself.
+            </div>
+        </section>
+    </main>
+
+    <footer class="page-footer">
+        <a href="/session-02/tinygpt-annotated.html">⌨ the code behind this</a>
+        <a href="/session-02/speak-llm.html">🗂 the vocabulary card</a>
+        <a href="/">← back to course site</a>
+    </footer>
+
+    <script>
+    'use strict';
+    // ===== REAL attention weights from the students' seeded model — do not alter =====
+    const ATTN = {"words":[{"word":"sophia","labels":["·start","s","o","p","h","i","a"],"layers":[[[[1.0,0.0,0.0,0.0,0.0,0.0,0.0],[0.851,0.149,0.0,0.0,0.0,0.0,0.0],[0.21,0.75,0.04,0.0,0.0,0.0,0.0],[0.063,0.335,0.412,0.19,0.0,0.0,0.0],[0.006,0.009,0.02,0.946,0.019,0.0,0.0],[0.004,0.012,0.003,0.699,0.266,0.014,0.0],[0.012,0.022,0.006,0.395,0.193,0.322,0.049]],[[1.0,0.0,0.0,0.0,0.0,0.0,0.0],[0.992,0.008,0.0,0.0,0.0,0.0,0.0],[0.005,0.988,0.007,0.0,0.0,0.0,0.0],[0.009,0.003,0.982,0.006,0.0,0.0,0.0],[0.007,0.005,0.036,0.925,0.027,0.0,0.0],[0.005,0.0,0.001,0.023,0.946,0.024,0.0],[0.001,0.001,0.0,0.002,0.002,0.992,0.002]],[[1.0,0.0,0.0,0.0,0.0,0.0,0.0],[0.54,0.46,0.0,0.0,0.0,0.0,0.0],[0.708,0.249,0.043,0.0,0.0,0.0,0.0],[0.096,0.696,0.167,0.041,0.0,0.0,0.0],[0.152,0.222,0.454,0.156,0.015,0.0,0.0],[0.089,0.046,0.186,0.488,0.124,0.068,0.0],[0.03,0.012,0.052,0.174,0.59,0.122,0.02]],[[1.0,0.0,0.0,0.0,0.0,0.0,0.0],[0.821,0.179,0.0,0.0,0.0,0.0,0.0],[0.632,0.242,0.125,0.0,0.0,0.0,0.0],[0.343,0.248,0.261,0.149,0.0,0.0,0.0],[0.242,0.072,0.526,0.143,0.018,0.0,0.0],[0.109,0.029,0.263,0.498,0.028,0.073,0.0],[0.06,0.01,0.073,0.342,0.095,0.161,0.26]]],[[[1.0,0.0,0.0,0.0,0.0,0.0,0.0],[0.992,0.008,0.0,0.0,0.0,0.0,0.0],[0.411,0.045,0.544,0.0,0.0,0.0,0.0],[0.001,0.008,0.006,0.986,0.0,0.0,0.0],[0.007,0.004,0.115,0.868,0.006,0.0,0.0],[0.001,0.001,0.004,0.98,0.014,0.0,0.0],[0.001,0.001,0.005,0.985,0.002,0.0,0.005]],[[1.0,0.0,0.0,0.0,0.0,0.0,0.0],[0.865,0.135,0.0,0.0,0.0,0.0,0.0],[0.731,0.069,0.2,0.0,0.0,0.0,0.0],[0.068,0.071,0.202,0.659,0.0,0.0,0.0],[0.12,0.006,0.599,0.267,0.008,0.0,0.0],[0.143,0.013,0.721,0.101,0.002,0.02,0.0],[0.022,0.0,0.183,0.247,0.001,0.534,0.013]],[[1.0,0.0,0.0,0.0,0.0,0.0,0.0],[0.537,0.463,0.0,0.0,0.0,0.0,0.0],[0.054,0.188,0.757,0.0,0.0,0.0,0.0],[0.062,0.049,0.873,0.017,0.0,0.0,0.0],[0.078,0.724,0.057,0.137,0.005,0.0,0.0],[0.131,0.432,0.029,0.167,0.236,0.005,0.0],[0.162,0.086,0.075,0.209,0.26,0.18,0.028]],[[1.0,0.0,0.0,0.0,0.0,0.0,0.0],[0.981,0.019,0.0,0.0,0.0,0.0,0.0],[0.892,0.016,0.091,0.0,0.0,0.0,0.0],[0.193,0.008,0.786,0.013,0.0,0.0,0.0],[0.95,0.01,0.035,0.002,0.003,0.0,0.0],[0.816,0.058,0.046,0.046,0.008,0.026,0.0],[0.488,0.033,0.018,0.013,0.013,0.417,0.018]]]]},{"word":"brooklyn","labels":["·start","b","r","o","o","k","l","y","n"],"layers":[[[[1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],[0.819,0.181,0.0,0.0,0.0,0.0,0.0,0.0,0.0],[0.069,0.924,0.007,0.0,0.0,0.0,0.0,0.0,0.0],[0.096,0.306,0.53,0.068,0.0,0.0,0.0,0.0,0.0],[0.055,0.075,0.158,0.58,0.132,0.0,0.0,0.0,0.0],[0.043,0.048,0.084,0.149,0.552,0.124,0.0,0.0,0.0],[0.009,0.008,0.004,0.017,0.082,0.801,0.079,0.0,0.0],[0.006,0.021,0.002,0.001,0.003,0.289,0.633,0.046,0.0],[0.008,0.014,0.002,0.009,0.004,0.04,0.103,0.744,0.076]],[[1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],[0.996,0.004,0.0,0.0,0.0,0.0,0.0,0.0,0.0],[0.01,0.983,0.006,0.0,0.0,0.0,0.0,0.0,0.0],[0.017,0.045,0.928,0.01,0.0,0.0,0.0,0.0,0.0],[0.01,0.021,0.013,0.937,0.02,0.0,0.0,0.0,0.0],[0.02,0.004,0.027,0.01,0.916,0.024,0.0,0.0,0.0],[0.005,0.002,0.001,0.019,0.02,0.941,0.014,0.0,0.0],[0.004,0.001,0.002,0.004,0.01,0.014,0.955,0.01,0.0],[0.0,0.001,0.0,0.001,0.0,0.0,0.001,0.994,0.003]],[[1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],[0.483,0.517,0.0,0.0,0.0,0.0,0.0,0.0,0.0],[0.772,0.189,0.039,0.0,0.0,0.0,0.0,0.0,0.0],[0.23,0.483,0.219,0.068,0.0,0.0,0.0,0.0,0.0],[0.057,0.158,0.634,0.107,0.044,0.0,0.0,0.0,0.0],[0.026,0.024,0.106,0.646,0.176,0.021,0.0,0.0,0.0],[0.012,0.007,0.06,0.185,0.689,0.036,0.011,0.0,0.0],[0.013,0.01,0.01,0.064,0.275,0.482,0.123,0.023,0.0],[0.016,0.004,0.001,0.012,0.076,0.172,0.634,0.07,0.014]],[[1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],[0.598,0.402,0.0,0.0,0.0,0.0,0.0,0.0,0.0],[0.692,0.263,0.045,0.0,0.0,0.0,0.0,0.0,0.0],[0.248,0.542,0.109,0.102,0.0,0.0,0.0,0.0,0.0],[0.196,0.237,0.224,0.216,0.128,0.0,0.0,0.0,0.0],[0.118,0.061,0.04,0.331,0.346,0.103,0.0,0.0,0.0],[0.055,0.04,0.025,0.142,0.379,0.269,0.09,0.0,0.0],[0.023,0.011,0.006,0.109,0.247,0.262,0.19,0.152,0.0],[0.016,0.007,0.002,0.018,0.047,0.144,0.2,0.499,0.067]]],[[[1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],[0.913,0.087,0.0,0.0,0.0,0.0,0.0,0.0,0.0],[0.802,0.023,0.175,0.0,0.0,0.0,0.0,0.0,0.0],[0.086,0.893,0.021,0.001,0.0,0.0,0.0,0.0,0.0],[0.012,0.852,0.008,0.0,0.128,0.0,0.0,0.0,0.0],[0.002,0.897,0.006,0.0,0.023,0.071,0.0,0.0,0.0],[0.039,0.256,0.069,0.158,0.239,0.081,0.159,0.0,0.0],[0.003,0.012,0.007,0.004,0.007,0.034,0.934,0.0,0.0],[0.002,0.123,0.013,0.003,0.011,0.067,0.758,0.001,0.021]],[[1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],[0.525,0.475,0.0,0.0,0.0,0.0,0.0,0.0,0.0],[0.485,0.329,0.186,0.0,0.0,0.0,0.0,0.0,0.0],[0.47,0.302,0.173,0.055,0.0,0.0,0.0,0.0,0.0],[0.116,0.225,0.006,0.096,0.557,0.0,0.0,0.0,0.0],[0.098,0.395,0.007,0.155,0.232,0.113,0.0,0.0,0.0],[0.035,0.403,0.002,0.159,0.17,0.207,0.024,0.0,0.0],[0.011,0.491,0.0,0.039,0.128,0.047,0.003,0.28,0.0],[0.0,0.003,0.0,0.002,0.021,0.219,0.009,0.699,0.047]],[[1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],[0.072,0.928,0.0,0.0,0.0,0.0,0.0,0.0,0.0],[0.272,0.031,0.698,0.0,0.0,0.0,0.0,0.0,0.0],[0.234,0.67,0.072,0.023,0.0,0.0,0.0,0.0,0.0],[0.027,0.97,0.002,0.0,0.001,0.0,0.0,0.0,0.0],[0.282,0.581,0.006,0.003,0.021,0.107,0.0,0.0,0.0],[0.307,0.006,0.004,0.057,0.381,0.231,0.015,0.0,0.0],[0.105,0.06,0.004,0.007,0.031,0.306,0.051,0.436,0.0],[0.027,0.002,0.0,0.002,0.004,0.014,0.004,0.884,0.064]],[[1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],[0.874,0.126,0.0,0.0,0.0,0.0,0.0,0.0,0.0],[0.972,0.006,0.022,0.0,0.0,0.0,0.0,0.0,0.0],[0.94,0.003,0.0,0.057,0.0,0.0,0.0,0.0,0.0],[0.637,0.009,0.0,0.005,0.349,0.0,0.0,0.0,0.0],[0.489,0.299,0.165,0.037,0.006,0.004,0.0,0.0,0.0],[0.62,0.025,0.027,0.139,0.039,0.011,0.139,0.0,0.0],[0.29,0.004,0.002,0.247,0.157,0.203,0.022,0.074,0.0],[0.115,0.011,0.009,0.192,0.066,0.186,0.346,0.058,0.016]]]]},{"word":"hasan","labels":["·start","h","a","s","a","n"],"layers":[[[[1.0,0.0,0.0,0.0,0.0,0.0],[0.868,0.132,0.0,0.0,0.0,0.0],[0.411,0.574,0.014,0.0,0.0,0.0],[0.174,0.333,0.257,0.236,0.0,0.0],[0.006,0.003,0.008,0.97,0.012,0.0],[0.021,0.01,0.013,0.56,0.349,0.046]],[[1.0,0.0,0.0,0.0,0.0,0.0],[0.999,0.001,0.0,0.0,0.0,0.0],[0.003,0.995,0.002,0.0,0.0,0.0],[0.009,0.007,0.98,0.004,0.0,0.0],[0.003,0.009,0.008,0.964,0.015,0.0],[0.005,0.001,0.002,0.002,0.955,0.036]],[[1.0,0.0,0.0,0.0,0.0,0.0],[0.855,0.145,0.0,0.0,0.0,0.0],[0.805,0.164,0.031,0.0,0.0,0.0],[0.37,0.399,0.065,0.167,0.0,0.0],[0.106,0.285,0.358,0.22,0.031,0.0],[0.057,0.009,0.07,0.775,0.053,0.036]],[[1.0,0.0,0.0,0.0,0.0,0.0],[0.574,0.426,0.0,0.0,0.0,0.0],[0.792,0.051,0.156,0.0,0.0,0.0],[0.542,0.049,0.332,0.076,0.0,0.0],[0.29,0.013,0.323,0.166,0.208,0.0],[0.122,0.02,0.127,0.279,0.366,0.086]]],[[[1.0,0.0,0.0,0.0,0.0,0.0],[0.982,0.018,0.0,0.0,0.0,0.0],[0.259,0.008,0.733,0.0,0.0,0.0],[0.041,0.008,0.264,0.687,0.0,0.0],[0.157,0.01,0.14,0.319,0.374,0.0],[0.034,0.098,0.04,0.068,0.711,0.049]],[[1.0,0.0,0.0,0.0,0.0,0.0],[0.987,0.013,0.0,0.0,0.0,0.0],[0.836,0.02,0.144,0.0,0.0,0.0],[0.883,0.018,0.043,0.056,0.0,0.0],[0.659,0.016,0.143,0.163,0.02,0.0],[0.057,0.008,0.02,0.018,0.892,0.004]],[[1.0,0.0,0.0,0.0,0.0,0.0],[0.705,0.295,0.0,0.0,0.0,0.0],[0.739,0.184,0.077,0.0,0.0,0.0],[0.377,0.493,0.081,0.049,0.0,0.0],[0.271,0.02,0.078,0.062,0.569,0.0],[0.327,0.024,0.015,0.03,0.448,0.156]],[[1.0,0.0,0.0,0.0,0.0,0.0],[0.997,0.003,0.0,0.0,0.0,0.0],[0.792,0.015,0.193,0.0,0.0,0.0],[0.515,0.003,0.475,0.007,0.0,0.0],[0.224,0.018,0.026,0.405,0.327,0.0],[0.556,0.276,0.004,0.02,0.133,0.011]]]]}]};
+
+    // ===== State =====
+    const state = {
+        word: 0,          // index into ATTN.words
+        layer: 0,         // 0 or 1
+        head: 1,          // 0..3 or 'avg'  (default: L1·H2, the Bigram Clerk)
+        pos: 4,           // current reading position
+        playing: false,
+        timer: null
+    };
+
+    const SVG_NS = 'http://www.w3.org/2000/svg';
+    const ARC_H = 190;    // svg height for arcs above the tiles
+    const HEAD_COLORS = ['#00e5ff', '#ff006e', '#ffd600', '#00e676']; // H1..H4
+    const AVG_COLOR = '#b388ff';
+
+    const stage = document.getElementById('stage');
+    const svg = document.getElementById('arcSvg');
+    const tileRow = document.getElementById('tileRow');
+    const liveSentence = document.getElementById('liveSentence');
+
+    function currentWord() { return ATTN.words[state.word]; }
+
+    // Attention row for the current layer/head/position (AVG = mean of the 4 heads).
+    function attnRow(pos) {
+        const heads = currentWord().layers[state.layer];
+        if (state.head === 'avg') {
+            const T = heads[0][pos].length;
+            const row = new Array(T).fill(0);
+            for (let h = 0; h < 4; h++)
+                for (let c = 0; c < T; c++) row[c] += heads[h][pos][c];
+            return row.map(v => v / 4);
+        }
+        return heads[state.head][pos];
+    }
+
+    function headColor() { return state.head === 'avg' ? AVG_COLOR : HEAD_COLORS[state.head]; }
+    function headName() { return state.head === 'avg' ? 'the average of all 4 heads' : 'Head ' + (state.head + 1); }
+
+    // ===== Build tiles for the current word =====
+    function buildTiles() {
+        tileRow.innerHTML = '';
+        const labels = currentWord().labels;
+        labels.forEach((lab, i) => {
+            const t = document.createElement('div');
+            t.className = 'letter-tile' + (i === 0 ? ' start-tile' : '');
+            t.dataset.pos = i;
+            t.innerHTML = '<span class="glyph">' + lab + '</span>' +
+                          '<span class="pos-idx">pos ' + i + '</span>';
+            t.addEventListener('click', () => { setPos(i); stopPlay(); });
+            tileRow.appendChild(t);
+        });
+        if (state.pos >= labels.length) state.pos = labels.length - 1;
+    }
+
+    // ===== Render everything for current state =====
+    function render() {
+        // control button states
+        document.querySelectorAll('.word-btn').forEach(b =>
+            b.classList.toggle('active', +b.dataset.word === state.word));
+        document.querySelectorAll('.layer-btn').forEach(b =>
+            b.classList.toggle('active', +b.dataset.layer === state.layer));
+        document.querySelectorAll('.head-btn').forEach(b => {
+            const v = b.dataset.head === 'avg' ? 'avg' : +b.dataset.head;
+            b.classList.toggle('active', v === state.head);
+        });
+
+        // tile highlighting
+        const tiles = tileRow.children;
+        for (let i = 0; i < tiles.length; i++) {
+            tiles[i].classList.toggle('reading', i === state.pos);
+            tiles[i].classList.toggle('future', i > state.pos);
+            const old = tiles[i].querySelector('.self-chip');
+            if (old) old.remove();
+        }
+
+        // self-attention chip on the reading tile
+        const row = attnRow(state.pos);
+        const selfW = row[state.pos];
+        if (state.pos > 0 && selfW >= 0.005) {
+            const chip = document.createElement('span');
+            chip.className = 'self-chip';
+            chip.textContent = 'self ' + Math.round(selfW * 100) + '%';
+            tiles[state.pos].appendChild(chip);
+        }
+
+        drawArcs();
+        writeSentence();
+    }
+
+    // ===== Arcs =====
+    function drawArcs() {
+        svg.innerHTML = '';
+        const stageRect = stage.getBoundingClientRect();
+        svg.setAttribute('width', stageRect.width);
+        svg.setAttribute('height', ARC_H);
+        svg.setAttribute('viewBox', '0 0 ' + stageRect.width + ' ' + ARC_H);
+
+        if (state.pos === 0) return; // ·start: nothing before it to look at
+
+        const tiles = tileRow.children;
+        const row = attnRow(state.pos);
+        const color = headColor();
+
+        const centerX = i => {
+            const r = tiles[i].getBoundingClientRect();
+            return r.left - stageRect.left + r.width / 2;
+        };
+        const x1 = centerX(state.pos);
+        const y = ARC_H - 2; // arc endpoints sit just above the tile row
+
+        // Find strongest earlier target to emphasize
+        let maxCol = 0, maxW = -1;
+        for (let c = 0; c < state.pos; c++)
+            if (row[c] > maxW) { maxW = row[c]; maxCol = c; }
+
+        for (let c = 0; c < state.pos; c++) {
+            const w = row[c];
+            if (w < 0.004) continue;
+            const x2 = centerX(c);
+            const dist = Math.abs(x1 - x2);
+            const arcH = Math.min(ARC_H - 26, 42 + dist * 0.30);
+            const cx = (x1 + x2) / 2;
+            const cy = y - arcH * 2; // quadratic control point (apex ≈ y - arcH)
+
+            const path = document.createElementNS(SVG_NS, 'path');
+            path.setAttribute('d', `M ${x1} ${y} Q ${cx} ${cy} ${x2} ${y}`);
+            path.setAttribute('fill', 'none');
+            path.setAttribute('stroke', color);
+            path.setAttribute('stroke-width', (1 + w * 13).toFixed(2));
+            path.setAttribute('stroke-linecap', 'round');
+            path.setAttribute('opacity', (0.18 + w * 0.82).toFixed(3));
+            svg.appendChild(path);
+
+            // endpoint dot on the letter being looked at
+            const dot = document.createElementNS(SVG_NS, 'circle');
+            dot.setAttribute('cx', x2);
+            dot.setAttribute('cy', y);
+            dot.setAttribute('r', (2 + w * 6).toFixed(2));
+            dot.setAttribute('fill', color);
+            dot.setAttribute('opacity', (0.25 + w * 0.75).toFixed(3));
+            svg.appendChild(dot);
+
+            // % label for meaningful weights
+            if (w >= 0.15) {
+                const apexX = (x1 + 2 * cx + x2) / 4;
+                const apexY = (y + 2 * cy + y) / 4;
+                const label = document.createElementNS(SVG_NS, 'text');
+                label.setAttribute('x', apexX);
+                label.setAttribute('y', apexY - 7);
+                label.setAttribute('text-anchor', 'middle');
+                label.setAttribute('fill', c === maxCol ? '#ffd600' : color);
+                label.setAttribute('font-family', "'JetBrains Mono', monospace");
+                label.setAttribute('font-size', c === maxCol ? '16' : '13');
+                label.setAttribute('font-weight', '700');
+                label.textContent = Math.round(w * 100) + '%';
+                svg.appendChild(label);
+            }
+        }
+    }
+
+    // ===== Live sentence =====
+    function describeTarget(col, pos, labels) {
+        const glyph = '‘' + labels[col] + '’';
+        if (col === pos) return 'itself';
+        if (col === pos - 1 && col === 0) return 'the ·start token — the previous position';
+        if (col === pos - 1) return glyph + ' — the previous letter';
+        if (col === 0) return 'the ·start token';
+        return glyph + ' (position ' + col + ', ' + (pos - col) + ' letters back)';
+    }
+
+    function writeSentence() {
+        const w = currentWord();
+        const labels = w.labels;
+        if (state.pos === 0) {
+            liveSentence.innerHTML =
+                'The <span class="lw">·start</span> token has ' +
+                '<span class="muted">nothing before me to look at</span> — ' +
+                '100% of its attention stays on itself.';
+            return;
+        }
+        const row = attnRow(state.pos);
+        let maxCol = 0, maxW = -1;
+        for (let c = 0; c <= state.pos; c++)
+            if (row[c] > maxW) { maxW = row[c]; maxCol = c; }
+
+        const hSpan = '<span class="lh" style="color:' + headColor() + '">' +
+                      headName() + '</span>';
+        const pct = Math.round(maxW * 100);
+
+        liveSentence.innerHTML =
+            'Reading <span class="lw">‘' + labels[state.pos] + '’</span> ' +
+            '<span class="muted">(position ' + state.pos + ')</span>, ' +
+            hSpan + ' puts <span class="lp">' + pct + '%</span> of its attention on ' +
+            '<span class="lt">' + describeTarget(maxCol, state.pos, labels) + '</span>.';
+    }
+
+    // ===== State setters =====
+    function setWord(i) {
+        state.word = i;
+        state.pos = Math.min(state.pos, currentWord().labels.length - 1);
+        buildTiles();
+        render();
+    }
+    function setPos(p) {
+        const T = currentWord().labels.length;
+        state.pos = ((p % T) + T) % T;
+        render();
+    }
+    function setHead(h) { state.head = h; render(); }
+    function setLayer(l) { state.layer = l; render(); }
+
+    // ===== Autoplay =====
+    const playBtn = document.getElementById('playBtn');
+    function startPlay() {
+        state.playing = true;
+        playBtn.textContent = '⏸';
+        playBtn.classList.add('playing');
+        state.timer = setInterval(() => setPos(state.pos + 1), 1200);
+    }
+    function stopPlay() {
+        if (!state.playing) return;
+        state.playing = false;
+        playBtn.textContent = '▶️';
+        playBtn.classList.remove('playing');
+        clearInterval(state.timer);
+        state.timer = null;
+    }
+    function togglePlay() { state.playing ? stopPlay() : startPlay(); }
+
+    // ===== Wire controls =====
+    document.querySelectorAll('.word-btn').forEach(b =>
+        b.addEventListener('click', () => { setWord(+b.dataset.word); }));
+    document.querySelectorAll('.layer-btn').forEach(b =>
+        b.addEventListener('click', () => setLayer(+b.dataset.layer)));
+    document.querySelectorAll('.head-btn').forEach(b =>
+        b.addEventListener('click', () =>
+            setHead(b.dataset.head === 'avg' ? 'avg' : +b.dataset.head)));
+    document.getElementById('stepBack').addEventListener('click', () => { stopPlay(); setPos(state.pos - 1); });
+    document.getElementById('stepFwd').addEventListener('click', () => { stopPlay(); setPos(state.pos + 1); });
+    playBtn.addEventListener('click', togglePlay);
+
+    // Part 3 cards jump into the explorer with that head selected
+    document.querySelectorAll('.employee-card.clickable').forEach(card => {
+        card.addEventListener('click', () => {
+            setLayer(+card.dataset.jumpLayer);
+            setHead(+card.dataset.jumpHead);
+            setPos(Math.min(4, currentWord().labels.length - 1));
+            document.getElementById('part2').scrollIntoView({ behavior: 'smooth' });
+        });
+    });
+
+    // ===== Keyboard =====
+    document.addEventListener('keydown', e => {
+        if (e.target.matches('input, textarea')) return;
+        switch (e.key) {
+            case 'ArrowLeft':  e.preventDefault(); stopPlay(); setPos(state.pos - 1); break;
+            case 'ArrowRight': e.preventDefault(); stopPlay(); setPos(state.pos + 1); break;
+            case '1': case '2': case '3': case '4':
+                setHead(+e.key - 1); break;
+            case 'a': case 'A': setHead('avg'); break;
+            case 'l': case 'L': setLayer(state.layer === 0 ? 1 : 0); break;
+            case ' ': e.preventDefault(); togglePlay(); break;
+        }
+    });
+
+    // Redraw arcs on resize (tile positions shift)
+    let resizeT = null;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeT);
+        resizeT = setTimeout(drawArcs, 120);
+    });
+
+    // ===== Boot =====
+    buildTiles();
+    render();
+    </script>
+</body>
+</html>

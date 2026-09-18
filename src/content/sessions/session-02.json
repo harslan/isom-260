@@ -195,6 +195,33 @@
       "linkText": "Play in class"
     },
     {
+      "title": "The Attention Machine",
+      "url": "/session-02/attention-machine.html",
+      "description": "Interactive explorer of YOUR model's real attention: step through a name letter by letter, watch each head decide where to look, and meet the four 'employees' your model hired — including the head that independently reinvented the Act 1 counting model (97% previous-letter attention).",
+      "icon": "eye",
+      "badge": "Interactive",
+      "badgeType": "tool",
+      "linkText": "Explore"
+    },
+    {
+      "title": "Speak LLM — The Vocabulary Card",
+      "url": "/session-02/speak-llm.html",
+      "description": "Every core LLM term from Sessions 1-2 in one printable card: an interview-ready one-sentence definition plus the exact class moment where you lived it. Ends with the Karpathy Path for going deeper.",
+      "icon": "book-open",
+      "badge": "Glossary",
+      "badgeType": "reference",
+      "linkText": "Open & print"
+    },
+    {
+      "title": "TinyGPT, Every Line Explained",
+      "url": "/session-02/tinygpt-annotated.html",
+      "description": "Optional deep dive for the curious: the exact model code you trained, annotated line by line in plain English — no magic left. Karpathy-approved ethos.",
+      "icon": "code",
+      "badge": "Go Deeper",
+      "badgeType": "code",
+      "linkText": "Read the code"
+    },
+    {
       "title": "The Loan Officer — Neuron Playground",
       "url": "/session-02/neuron-playground.html",
       "description": "Be the neuron: set loan-approval weights by hand, then press 'Let the machine learn' and watch gradient descent beat you. One neuron, three sliders, the whole idea of training.",
