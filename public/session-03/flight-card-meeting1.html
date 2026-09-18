@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flight Card · Session 3, Meeting 1 | ISOM 260</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Sora:wght@600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'DM Sans', sans-serif; background: #f4f2ec; color: #1a1a1a; padding: 1.2rem; font-size: 13px; line-height: 1.45; }
+    .card { max-width: 820px; margin: 0 auto; background: #fff; border: 2px solid #1a1a1a; border-radius: 10px; padding: 1.4rem 1.6rem; }
+    h1 { font-family: 'Sora', sans-serif; font-size: 1.1rem; display: flex; justify-content: space-between; align-items: baseline; border-bottom: 2px solid #1a1a1a; padding-bottom: 0.5rem; margin-bottom: 0.8rem; }
+    h1 .sub { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 400; color: #666; }
+    h2 { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: #b3003e; margin: 0.9rem 0 0.35rem; }
+    table { width: 100%; border-collapse: collapse; }
+    td { padding: 0.18rem 0.5rem 0.18rem 0; vertical-align: top; }
+    td.t { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 0.78rem; white-space: nowrap; width: 4.2rem; }
+    .cut { color: #b3003e; font-weight: 700; }
+    .hl { background: #fff3b8; padding: 0 0.25rem; font-weight: 700; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1.6rem; }
+    .mono { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; background: #f4f2ec; border: 1px solid #ccc; border-radius: 6px; padding: 0.5rem 0.65rem; white-space: pre-wrap; margin: 0.25rem 0; }
+    ul { list-style: none; }
+    li { padding-left: 1rem; position: relative; margin-bottom: 0.22rem; }
+    li::before { content: "▸"; position: absolute; left: 0; color: #b3003e; }
+    .rule { margin-top: 0.9rem; border: 2px solid #b3003e; border-radius: 8px; padding: 0.55rem 0.8rem; font-weight: 700; text-align: center; background: #fdf0f4; }
+    @media print { body { background: #fff; padding: 0; } .card { border-width: 1.5px; max-width: 100%; } @page { margin: 1cm; } }
+</style>
+</head>
+<body>
+<div class="card">
+    <h1>SESSION 3 · MEETING 1 · "THE KEY" <span class="sub">WED SEP 23 · 12:30–1:45 · HW3 DUE TODAY · HARD STOP 1:45</span></h1>
+
+    <div class="grid">
+    <div>
+        <h2>Timeline · slide #</h2>
+        <table>
+            <tr><td class="t">12:30</td><td>1–2 · HW3 debrief — <span class="hl">tally picks by tier by hands</span>, read 2 memos (4 min)</td></tr>
+            <tr><td class="t">12:34</td><td>3 · "Three secrets" framing (2 min)</td></tr>
+            <tr><td class="t">12:36</td><td>4–5 · <span class="hl">TOKENS + live tokenizer</span> — paste sentence / emoji / another language; strawberry slide — <span class="cut">CUT 12:48</span></td></tr>
+            <tr><td class="t">12:48</td><td>6 · Context window — block_size=16 callback → 1M → billing (6 min)</td></tr>
+            <tr><td class="t">12:54</td><td>7–8 · <span class="hl">In-context learning LIVE</span> — vague ask → add 3 examples → transformation (8 min)</td></tr>
+            <tr><td class="t">1:02</td><td>9–10 · <span class="hl">THE KEY MOMENT</span> — AI Studio walkthrough, everyone gets a key + into Colab Secrets — <span class="cut">CUT 1:16</span></td></tr>
+            <tr><td class="t">1:16</td><td>11 · <span class="hl">Notebook: First API Call</span> — hello → temperature → token meter → personas — <span class="cut">STOP 1:32</span></td></tr>
+            <tr><td class="t">1:32</td><td>12–13 · "Six lines is the moat" + boardroom (4 min)</td></tr>
+            <tr><td class="t">1:36</td><td>14 · HW #4 Tokenizer Safari, <b>due Mon 12:30</b> (2 min)</td></tr>
+            <tr><td class="t">1:38</td><td>15–16 · Monday teaser (CRAFT + 3 mini-apps) → close</td></tr>
+        </table>
+
+        <h2>ICL live demo (slide 7 cue)</h2>
+        <div class="mono">Ask plain: "Categorize: 'The app crashes
+when I upload photos'"
+→ then re-ask with 3 examples:
+"Billing question → BILLING
+Can't log in → ACCOUNT
+Feature request → PRODUCT
+Categorize: 'The app crashes when I upload photos'"</div>
+        <ul><li>Point: same model, no training — the examples ARE the programming</li></ul>
+    </div>
+    <div>
+        <h2>Key-moment fix-its (this is the scramble)</h2>
+        <ul>
+            <li>AI Studio needs <b>personal Google</b> (Suffolk ≠ Google) — same as Colab week 1</li>
+            <li>Key goes in <b>🔑 Secrets panel</b>, name exactly <span class="hl">GOOGLE_API_KEY</span>, notebook access ON — never in code</li>
+            <li>"No Get-API-key button" → they're in the wrong Google account; switch top-right avatar</li>
+            <li>429 rate limit in class (free tier, whole room calling) → normal! wait 30s, re-run; stagger by rows if needed</li>
+            <li>Student can't get key at all → pair for today, fix via notebook's troubleshooting cell at home</li>
+        </ul>
+
+        <h2>Tokenizer demo beats</h2>
+        <ul>
+            <li>English sentence → count · same idea in Spanish/Turkish/Chinese → <b>more tokens = more money</b></li>
+            <li>strawberry → [straw][berry] → "it sees chunks, not letters"</li>
+            <li>Tie back: "your TinyGPT's tokens were letters — vocabulary 27 vs ~100K"</li>
+        </ul>
+
+        <h2>If behind at 1:02</h2>
+        <ul>
+            <li>The KEY + first call are untouchable — compress ICL demo to 3 min, cut slide 12</li>
+            <li>Worst case: personas cell becomes homework, boardroom in one sentence</li>
+        </ul>
+
+        <h2>Before / after</h2>
+        <ul>
+            <li>⚠️ <b>Smoke-test the notebook with YOUR key before class</b> (5 min, Runtime → Run all)</li>
+            <li>Canvas: HW3 closes today · create <b>Session 3 discussion</b> for HW #4 (due Mon Sep 28 12:30)</li>
+            <li>Tabs: slides · aistudio.google.com · tokenizer · notebook</li>
+            <li>After: note how long the key scramble really took (calibrates Monday)</li>
+        </ul>
+    </div>
+    </div>
+
+    <div class="rule">The day's one job: every student leaves with a WORKING key in Colab Secrets and one successful API call. Everything else is negotiable.</div>
+</div>
+</body>
+</html>

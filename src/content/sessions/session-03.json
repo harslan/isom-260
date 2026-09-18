@@ -36,98 +36,79 @@
   ],
   "agenda": [
     {
-      "time": "5:00 PM - 5:25 PM",
-      "title": "Part 1: Prompt Engineering Fundamentals",
-      "duration": "25 minutes",
-      "description": "Why prompt clarity matters. Transform vague requests into precise instructions.",
+      "time": "Wed Sep 23 · 12:30 PM",
+      "title": "Meeting 1 · HW #3 Debrief + Three Secrets",
+      "duration": "32 minutes",
+      "description": "Your model-picker memos, then the three things your chatbot never told you: tokens, the context window, and in-context learning.",
       "bulletPoints": [
-        "Live demo: Weak vs strong prompts — same task, dramatically different results",
-        "The 6 core techniques: zero-shot, few-shot, chain-of-thought, role, structured output, chaining",
-        "Why explicit beats implicit every time"
-      ]
+        "Live tokenizer: why 'strawberry' breaks letter-counting and why some languages cost 3x more",
+        "Context window: your TinyGPT remembered 16 letters; Fable remembers a million tokens — same rule",
+        "In-context learning: three examples in the prompt reprogram the model with zero training"
+      ],
+      "isBreak": false
     },
     {
-      "time": "5:25 PM - 5:45 PM",
-      "title": "Part 2: The CRAFT Framework",
-      "duration": "20 minutes",
-      "description": "A memorable system for writing effective prompts every time.",
-      "bulletPoints": [
-        "C = Context: Background and situation",
-        "R = Role: Who the AI should be",
-        "A = Action: What to do",
-        "F = Format: How to structure output",
-        "T = Tone: Voice and style",
-        "Live transformation of real prompts using CRAFT"
-      ]
-    },
-    {
-      "time": "5:45 PM - 6:10 PM",
-      "title": "Part 3: Prompt Reflection Lab",
-      "duration": "25 minutes",
-      "description": "Analyze your own AI conversations and discover your prompting patterns.",
-      "bulletPoints": [
-        "Paste your real AI conversation logs into the AI Collaboration Analyzer",
-        "Get scored across 6 dimensions: Clarity, Context, Structure, Iteration, Critical Thinking, Efficiency",
-        "Discover your AI Collaboration Level: Novice, Developing, Skilled, or Master",
-        "Partner discussion: What surprised you? What will you change?"
-      ]
-    },
-    {
-      "time": "6:10 PM - 6:20 PM",
-      "title": "Break",
-      "duration": "10 minutes",
-      "description": "Stretch, grab coffee, let the concepts settle.",
-      "isBreak": true
-    },
-    {
-      "time": "6:20 PM - 6:45 PM",
-      "title": "Part 4: API Integration",
-      "duration": "25 minutes",
-      "description": "From chat interface to code — how to build AI into real applications.",
-      "bulletPoints": [
-        "What is an API? (Software talking to software)",
-        "Anatomy of an API call: model, messages, tokens, temperature, system prompts",
-        "Live demo: Your first API call to Claude",
-        "Understanding costs: tokens, pricing, and ROI thinking"
-      ]
-    },
-    {
-      "time": "6:45 PM - 7:15 PM",
-      "title": "Part 5: Build Your Application",
+      "time": "Wed Sep 23 · 1:02 PM",
+      "title": "The Rite of Passage: Your First API Key",
       "duration": "30 minutes",
-      "description": "Hands-on Google Colab workshop — build a real AI-powered tool.",
+      "description": "Everyone gets a free Google AI Studio key into Colab Secrets, then your own code talks to a frontier model.",
       "bulletPoints": [
-        "Open the pre-built Colab notebook",
-        "Choose your project: Email Tone Analyzer, Meeting Summarizer, or Product Description Generator",
-        "Apply the CRAFT framework programmatically",
-        "Test, iterate, and refine your prompts"
-      ]
+        "aistudio.google.com → key → Colab 🔑 Secrets (never in code)",
+        "First call, the temperature dial you already know, and the token meter — price a call like a CFO",
+        "One system instruction = a different product"
+      ],
+      "isBreak": false
     },
     {
-      "time": "7:15 PM - 7:35 PM",
-      "title": "Part 6: Prompt Battle Royale",
-      "duration": "20 minutes",
-      "description": "Competition time! Who can craft the best prompt for a given task?",
+      "time": "Wed Sep 23 · 1:32 PM",
+      "title": "Wrap: Six Lines Is the Moat + HW #4",
+      "duration": "13 minutes",
+      "description": "The distance from AI user to AI builder, in business terms — and the Tokenizer Safari.",
       "bulletPoints": [
-        "Challenge: Write a prompt that generates a compelling LinkedIn post",
-        "Judging criteria: Prompt structure, output quality, creativity",
-        "Winner gets bragging rights (and maybe extra credit)"
-      ]
+        "HW #4: tokenizer safari — one surprising screenshot + a pricing implication, due Mon Sep 28 12:30"
+      ],
+      "isBreak": false
     },
     {
-      "time": "7:35 PM - 7:50 PM",
-      "title": "Part 7: Wrap-Up & Preview",
-      "duration": "15 minutes",
-      "description": "Key takeaways, homework, and what's coming next.",
+      "time": "Mon Sep 28 · 12:30 PM",
+      "title": "Meeting 2 · The Full Craft: CRAFT + Three Mini-Apps",
+      "duration": "75 minutes",
+      "description": "The CRAFT prompt framework, then a build session: email analyzer, meeting summarizer, product descriptions — with your own key.",
       "bulletPoints": [
-        "4 key insights to remember",
-        "Download the Prompt Engineering Cheat Sheet",
-        "Homework overview",
-        "Preview: AI Agents & Workflows in Session 4"
-      ]
+        "From vague asks to reliable output",
+        "Bring your working API key — we build all class"
+      ],
+      "isBreak": false
     }
   ],
   "resources": [
+    {
+      "title": "Meeting 1 Slide Deck — Three Secrets & Your First API Key",
+      "url": "/session-03/slides-meeting1.html",
+      "description": "Wednesday's slides: tokens (live tokenizer + strawberry), context windows, in-context learning, and the API-key rite of passage.",
+      "icon": "presentation",
+      "badge": "Slides",
+      "badgeType": "interactive",
+      "linkText": "Open slides"
+    },
+    {
+      "title": "First API Call — Colab Notebook",
+      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-03/ISOM260_Session3_First_API_Call.ipynb",
+      "description": "Your own code talks to a frontier model: the six-line call, the temperature dial, the live token meter priced like a CFO, and a taste of system instructions. Free tier, $0.",
+      "icon": "code",
+      "badge": "Hands-On",
+      "badgeType": "interactive",
+      "linkText": "Open in Colab"
+    },
+    {
+      "title": "Google AI Studio — Get Your API Key",
+      "url": "https://aistudio.google.com",
+      "description": "Where your free API key lives. Sign in with a personal Google account, click Get API key, and store it in Colab's Secrets panel as GOOGLE_API_KEY.",
+      "icon": "sparkles",
+      "badge": "Setup",
+      "badgeType": "tool",
+      "linkText": "Get your key"
+    },
     {
       "title": "Prompt Engineering Cheat Sheet",
       "url": "/session-03/prompt-engineering-cheatsheet.html",
@@ -138,49 +119,22 @@
       "linkText": "Open cheat sheet"
     },
     {
-      "title": "Colab Workshop Notebook",
-      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-03/ISOM260_Session3_API_Workshop.ipynb",
-      "description": "Hands-on notebook for building your first AI application. Includes Email Analyzer, Meeting Summarizer, and Product Description Generator.",
-      "icon": "code",
-      "badge": "Hands-On",
-      "badgeType": "interactive",
-      "linkText": "Open in Colab"
+      "title": "OpenAI Tokenizer (visualizer)",
+      "url": "https://platform.openai.com/tokenizer",
+      "description": "Paste anything and watch it become tokens — the tool for the in-class demo and HW #4's Tokenizer Safari.",
+      "icon": "type",
+      "badge": "Tool",
+      "badgeType": "tool",
+      "linkText": "Tokenize something"
     },
     {
-      "title": "Anthropic Documentation",
-      "url": "https://docs.anthropic.com",
-      "description": "Official documentation for Claude API. The source of truth for building with Claude.",
+      "title": "Gemini API Documentation",
+      "url": "https://ai.google.dev/gemini-api/docs",
+      "description": "Official docs for the API you're using all semester — models, parameters, and the free-tier limits.",
       "icon": "book-open",
       "badge": "Docs",
       "badgeType": "code",
       "linkText": "Read docs"
-    },
-    {
-      "title": "API Console",
-      "url": "https://console.anthropic.com",
-      "description": "Get your API key, monitor usage, and manage billing for Claude API access.",
-      "icon": "key",
-      "badge": "Tool",
-      "badgeType": "tool",
-      "linkText": "Get API key"
-    },
-    {
-      "title": "Prompting Guide",
-      "url": "https://www.promptingguide.ai/",
-      "description": "Comprehensive resource covering all prompt engineering techniques with examples and research.",
-      "icon": "graduation-cap",
-      "badge": "Guide",
-      "badgeType": "video",
-      "linkText": "Learn more"
-    },
-    {
-      "title": "Anthropic Cookbook",
-      "url": "https://github.com/anthropics/anthropic-cookbook",
-      "description": "Code examples and recipes for common Claude use cases. Perfect for reference.",
-      "icon": "git-branch",
-      "badge": "Code",
-      "badgeType": "code",
-      "linkText": "View examples"
     }
   ],
   "activities": [
