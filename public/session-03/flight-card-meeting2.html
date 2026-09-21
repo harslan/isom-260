@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flight Card · Session 3, Meeting 2 | ISOM 260</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Sora:wght@600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'DM Sans', sans-serif; background: #f4f2ec; color: #1a1a1a; padding: 1.2rem; font-size: 13px; line-height: 1.45; }
+    .card { max-width: 820px; margin: 0 auto; background: #fff; border: 2px solid #1a1a1a; border-radius: 10px; padding: 1.4rem 1.6rem; }
+    h1 { font-family: 'Sora', sans-serif; font-size: 1.1rem; display: flex; justify-content: space-between; align-items: baseline; border-bottom: 2px solid #1a1a1a; padding-bottom: 0.5rem; margin-bottom: 0.8rem; }
+    h1 .sub { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 400; color: #666; }
+    h2 { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: #b3003e; margin: 0.9rem 0 0.35rem; }
+    table { width: 100%; border-collapse: collapse; }
+    td { padding: 0.18rem 0.5rem 0.18rem 0; vertical-align: top; }
+    td.t { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 0.78rem; white-space: nowrap; width: 4.2rem; }
+    .cut { color: #b3003e; font-weight: 700; }
+    .hl { background: #fff3b8; padding: 0 0.25rem; font-weight: 700; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1.6rem; }
+    ul { list-style: none; }
+    li { padding-left: 1rem; position: relative; margin-bottom: 0.22rem; }
+    li::before { content: "▸"; position: absolute; left: 0; color: #b3003e; }
+    .rule { margin-top: 0.9rem; border: 2px solid #b3003e; border-radius: 8px; padding: 0.55rem 0.8rem; font-weight: 700; text-align: center; background: #fdf0f4; }
+    @media print { body { background: #fff; padding: 0; } .card { border-width: 1.5px; max-width: 100%; } @page { margin: 1cm; } }
+</style>
+</head>
+<body>
+<div class="card">
+    <h1>SESSION 3 · MEETING 2 · "THE FULL CRAFT" <span class="sub">MON SEP 28 · 12:30–1:45 · BUILD DAY · HARD STOP 1:45</span></h1>
+
+    <div class="grid">
+    <div>
+        <h2>Timeline · slide #</h2>
+        <table>
+            <tr><td class="t">12:30</td><td>1–2 · <span class="hl">Key pulse check</span> — everyone runs Wednesday's hello cell, thumbs up 🖐; pair broken keys with green neighbors (5 min)</td></tr>
+            <tr><td class="t">12:35</td><td>3–4 · "The prompt is the product" → CRAFT, five ingredients (6 min)</td></tr>
+            <tr><td class="t">12:41</td><td>5 · <span class="hl">LIVE before/after</span> — run the vague shipment prompt, then the CRAFTed one, in the workshop notebook on screen (6 min)</td></tr>
+            <tr><td class="t">12:47</td><td>6 · <span class="hl">WORKSHOP: pick a mini-app &amp; build</span> — A email · B meetings · C product copy. Sample first, then THEIR real input. Walk the room. — <span class="cut">CUT 1:15</span></td></tr>
+            <tr><td class="t">1:15</td><td>7–8 · Tuning guide (one knob at a time) + <span class="hl">show &amp; tell: 2–3 volunteers</span>, 60 sec each (9 min)</td></tr>
+            <tr><td class="t">1:24</td><td>9 · Multi-turn: run the mentor chat — "that idea"…"it" resolves; memory = context window = billed (5 min)</td></tr>
+            <tr><td class="t">1:29</td><td>10 · <span class="hl">The CFO slide</span> — run the cost cell live: per-call → $12/month at 500/day (4 min)</td></tr>
+            <tr><td class="t">1:33</td><td>11 · Boardroom translation (3 min)</td></tr>
+            <tr><td class="t">1:36</td><td>12 · Wednesday = FIRST AGENT hype + <b>HW #4 due Thu 11:59 PM</b> last call (3 min)</td></tr>
+            <tr><td class="t">1:39</td><td>13 · Close + buffer for stragglers' key fixes</td></tr>
+        </table>
+
+        <h2>Workshop floor-walking prompts</h2>
+        <ul>
+            <li>"What's your REAL input?" — sample data is practice; their data is the lesson</li>
+            <li>Stuck output → "which CRAFT ingredient is loose?" (point at slide 7)</li>
+            <li>Fast finishers → mini-app D (build your own) or a second app</li>
+            <li>Meeting-app users: ask if they noticed <b>⚠️ UNASSIGNED</b> — that's a hallucination guardrail; celebrate whoever spots it</li>
+        </ul>
+    </div>
+    <div>
+        <h2>Fix-its</h2>
+        <ul>
+            <li>Key broken → pair up NOW, debug after class (don't stall the room)</li>
+            <li>429 rate limits during workshop → normal; wait 30s; stagger reruns</li>
+            <li>Weird output ≠ bug — it's a tuning opportunity; use the knobs slide</li>
+            <li>"My rewrite is worse than the original" → temperature: analysis apps run 0.2–0.4, creative 0.8</li>
+        </ul>
+
+        <h2>Say-lines that carry the day</h2>
+        <ul>
+            <li>"Same model, same price — <b>the prompt is the product</b>"</li>
+            <li>"One knob at a time — that's how you learn what each ingredient does"</li>
+            <li>"An employee-hour costs more than your app's month"</li>
+            <li>"Wednesday, the model starts deciding for itself. Your first agent."</li>
+        </ul>
+
+        <h2>If behind at 1:15</h2>
+        <ul>
+            <li>Protect the workshop — cut show &amp; tell to ONE volunteer</li>
+            <li>Multi-turn + CFO can compress to 5 min combined (run both cells, one line each)</li>
+            <li>Boardroom slide: skip — the workshop was the translation</li>
+        </ul>
+
+        <h2>Before / after</h2>
+        <ul>
+            <li>⚠️ <b>Smoke-test the CRAFT workshop notebook with your key</b> (Runtime → Run all, ~3 min) — it's also your live-demo rehearsal</li>
+            <li>Canvas: HW #4 thread up? (due Thu Oct 1, 11:59 PM) · grade HW #2/#3 (closed last Thu)</li>
+            <li>After: note which mini-app was most popular — it calibrates Session 4's agent examples</li>
+        </ul>
+    </div>
+    </div>
+
+    <div class="rule">Today's one job: every student ships ONE mini-app that works on THEIR real input — and leaves knowing the prompt is the product.</div>
+</div>
+</body>
+</html>

@@ -71,12 +71,36 @@
     },
     {
       "time": "Mon Sep 28 · 12:30 PM",
-      "title": "Meeting 2 · The Full Craft: CRAFT + Three Mini-Apps",
-      "duration": "75 minutes",
-      "description": "The CRAFT prompt framework, then a build session: email analyzer, meeting summarizer, product descriptions — with your own key.",
+      "title": "Meeting 2 · Key Pulse Check + CRAFT",
+      "duration": "17 minutes",
+      "description": "Everyone confirms a working key, then the framework that turns vague asks into reliable output: Context, Role, Action, Format, Tone.",
       "bulletPoints": [
-        "From vague asks to reliable output",
-        "Bring your working API key — we build all class"
+        "The live before/after: 'write something about our late shipment' vs. the CRAFTed version",
+        "Same model, same price — the prompt is the product"
+      ],
+      "isBreak": false
+    },
+    {
+      "time": "Mon Sep 28 · 12:47 PM",
+      "title": "Workshop: Ship a Mini-App",
+      "duration": "37 minutes",
+      "description": "Pick one — Email Tone Analyzer, Meeting Notes → Action Items, or Product Copy Generator — make it work, then tune it on your own real input.",
+      "bulletPoints": [
+        "One function, one CRAFT prompt, one real task from your life",
+        "The tuning guide: when output is off, turn ONE knob",
+        "Show & tell: would you actually use this tomorrow?"
+      ],
+      "isBreak": false
+    },
+    {
+      "time": "Mon Sep 28 · 1:24 PM",
+      "title": "Memory, Money & the Road to Agents",
+      "duration": "21 minutes",
+      "description": "Multi-turn chat (and why memory is billed), pricing your app at business scale, and Wednesday's big reveal.",
+      "bulletPoints": [
+        "chat.send_message: the SDK resends history every turn — context-window economics live",
+        "The CFO math: ~$12/month at 500 calls/day — cheaper than one employee-hour",
+        "Wednesday: Session 4 — the model starts deciding for itself. Your first agent."
       ],
       "isBreak": false
     }
@@ -90,6 +114,24 @@
       "badge": "Slides",
       "badgeType": "interactive",
       "linkText": "Open slides"
+    },
+    {
+      "title": "Meeting 2 Slide Deck — The Full Craft",
+      "url": "/session-03/slides-meeting2.html",
+      "description": "Monday's slides: the CRAFT framework, the live before/after, the mini-app workshop, multi-turn memory, and the CFO cost math.",
+      "icon": "presentation",
+      "badge": "Slides",
+      "badgeType": "interactive",
+      "linkText": "Open slides"
+    },
+    {
+      "title": "CRAFT Workshop — Colab Notebook",
+      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-03/ISOM260_Session3_CRAFT_Workshop.ipynb",
+      "description": "The build-day notebook: the craft_prompt function, the before/after demo, three mini-apps (email analyzer, meeting summarizer, product copy), build-your-own, multi-turn chat with memory, and the business-scale cost estimator.",
+      "icon": "code",
+      "badge": "Hands-On",
+      "badgeType": "interactive",
+      "linkText": "Open in Colab"
     },
     {
       "title": "First API Call — Colab Notebook",
