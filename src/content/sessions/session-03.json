@@ -101,6 +101,15 @@
       "linkText": "Open in Colab"
     },
     {
+      "title": "🕵️ Job Hunter — Agent Sneak Peek",
+      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-03/ISOM260_JobHunter_Sneak_Peek.ipynb",
+      "description": "For the impatient: a proto-agent that fetches ~100 live job listings, filters them for YOUR profile, has Gemini rank the top 3 fits, and drafts an outreach note. Requires Wednesday's API key. Agents proper begin Session 4.",
+      "icon": "search",
+      "badge": "Sneak Peek",
+      "badgeType": "interactive",
+      "linkText": "Open in Colab"
+    },
+    {
       "title": "Google AI Studio — Get Your API Key",
       "url": "https://aistudio.google.com",
       "description": "Where your free API key lives. Sign in with a personal Google account, click Get API key, and store it in Colab's Secrets panel as GOOGLE_API_KEY.",
