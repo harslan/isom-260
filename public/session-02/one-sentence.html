@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>One Sentence Through the Transformer | ISOM 260 Session 2</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #0f1424;
+            --bg-card: #141929;
+            --bg-elevated: #1a2035;
+
+            --cyan: #00e5ff;
+            --cyan-dim: #00b8d4;
+            --cyan-glow: rgba(0, 229, 255, 0.15);
+            --cyan-glow-strong: rgba(0, 229, 255, 0.3);
+
+            --magenta: #ff006e;
+            --magenta-glow: rgba(255, 0, 110, 0.15);
+
+            --yellow: #ffd600;
+            --yellow-glow: rgba(255, 214, 0, 0.15);
+
+            --green: #00e676;
+            --green-glow: rgba(0, 230, 118, 0.15);
+
+            --orange: #ff9100;
+            --purple: #b388ff;
+            --purple-glow: rgba(179, 136, 255, 0.15);
+
+            --text-primary: #e8ecf4;
+            --text-secondary: #8892a8;
+            --text-dim: #5a6478;
+
+            --border: rgba(0, 229, 255, 0.1);
+            --border-strong: rgba(0, 229, 255, 0.25);
+            --grid-line: rgba(0, 229, 255, 0.04);
+
+            --footer-h: 96px;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'DM Sans', sans-serif;
+            line-height: 1.5;
+            cursor: default;
+            min-height: 100vh;
+            background-image:
+                linear-gradient(var(--grid-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+            background-size: 40px 40px;
+            overflow-x: hidden;
+        }
+
+        .glow-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.4;
+        }
+        .glow-orb-1 { width: 500px; height: 500px; background: rgba(0, 229, 255, 0.08); top: -100px; left: -100px; }
+        .glow-orb-2 { width: 400px; height: 400px; background: rgba(255, 0, 110, 0.06); top: 40%; right: -100px; }
+        .glow-orb-3 { width: 350px; height: 350px; background: rgba(0, 230, 118, 0.05); bottom: -50px; left: 30%; }
+
+        /* ===== Brand strip ===== */
+        .brand-strip {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 40;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.6rem 1.6rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(0.7rem, 1vw, 0.85rem);
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            pointer-events: none;
+        }
+        .brand-strip strong { color: var(--cyan); font-weight: 600; }
+        .brand-strip .keys { color: var(--text-dim); letter-spacing: 0.08em; text-transform: none; }
+        .brand-strip .keys b { color: var(--text-secondary); font-weight: 500; }
+
+        /* ===== Stations ===== */
+        main { position: relative; z-index: 1; }
+
+        section.station {
+            display: none;
+            min-height: 100vh;
+            padding: clamp(2.6rem, 5vh, 3.6rem) 4vw calc(var(--footer-h) + 1.2rem);
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(0.9rem, 2vh, 1.5rem);
+        }
+        section.station.active { display: flex; }
+
+        .station-kicker {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(0.85rem, 1.2vw, 1rem);
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--cyan);
+            text-align: center;
+        }
+        .station-title {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(1.7rem, 3.6vw, 2.9rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            text-align: center;
+            line-height: 1.12;
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, var(--cyan), var(--magenta));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .gradient-text-2 {
+            background: linear-gradient(135deg, var(--yellow), var(--magenta));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .gradient-text-3 {
+            background: linear-gradient(135deg, var(--green), var(--cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Stage */
+        .stage-wrap {
+            width: min(960px, 94vw);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-strong);
+            border-radius: 20px;
+            padding: 0.8rem 1rem;
+            box-shadow: 0 0 60px rgba(0, 229, 255, 0.06);
+        }
+        .stage-wrap svg { display: block; width: 100%; height: auto; }
+
+        /* Narration panel */
+        .narration {
+            width: min(960px, 94vw);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.8rem;
+        }
+        .narration .plain {
+            font-size: clamp(1.02rem, 1.7vw, 1.3rem);
+            color: var(--text-secondary);
+            text-align: center;
+            max-width: 880px;
+            margin: 0 auto;
+        }
+        .narration .plain em { color: var(--text-primary); font-style: normal; font-weight: 600; }
+        .narration .plain .hl-c { color: var(--cyan); font-weight: 600; }
+        .narration .plain .hl-m { color: var(--magenta); font-weight: 600; }
+        .narration .plain .hl-y { color: var(--yellow); font-weight: 600; }
+        .narration .plain .hl-g { color: var(--green); font-weight: 600; }
+        .narration .plain .hl-p { color: var(--purple); font-weight: 600; }
+
+        .sayit {
+            background: var(--bg-card);
+            border: 1px solid rgba(0, 230, 118, 0.3);
+            border-radius: 14px;
+            padding: 0.85rem 1.4rem;
+            max-width: 880px;
+            margin: 0 auto;
+            box-shadow: 0 0 30px rgba(0, 230, 118, 0.06);
+        }
+        .sayit .tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--green);
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+        .sayit .line {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(0.9rem, 1.45vw, 1.1rem);
+            color: var(--text-primary);
+            line-height: 1.55;
+        }
+
+        .see-real {
+            text-align: center;
+        }
+        .see-real a {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(0.8rem, 1.2vw, 0.95rem);
+            letter-spacing: 0.08em;
+            color: var(--cyan);
+            text-decoration: none;
+            border: 1px solid var(--border-strong);
+            border-radius: 100px;
+            padding: 0.4rem 1.2rem;
+            transition: box-shadow 150ms, color 150ms, border-color 150ms;
+        }
+        .see-real a:hover { box-shadow: 0 0 22px var(--cyan-glow-strong); color: #fff; }
+
+        /* ===== Coda ===== */
+        .coda-card {
+            width: min(880px, 94vw);
+            background: var(--bg-card);
+            border: 1px solid var(--border-strong);
+            border-radius: 20px;
+            padding: clamp(1.4rem, 3vw, 2.2rem);
+            box-shadow: 0 0 60px rgba(0, 229, 255, 0.07);
+        }
+        .coda-card ol { list-style: none; counter-reset: sayit; display: grid; gap: 0.85rem; }
+        .coda-card ol li {
+            counter-increment: sayit;
+            position: relative;
+            padding-left: 2.6rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(0.85rem, 1.35vw, 1.05rem);
+            line-height: 1.55;
+            color: var(--text-primary);
+        }
+        .coda-card ol li::before {
+            content: counter(sayit);
+            position: absolute;
+            left: 0; top: 0.05rem;
+            width: 1.75rem; height: 1.75rem;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Sora', sans-serif;
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #0a0e1a;
+            background: var(--cyan);
+            border-radius: 8px;
+        }
+        .coda-card ol li:nth-child(2)::before { background: var(--magenta); color: #fff; }
+        .coda-card ol li:nth-child(3)::before { background: var(--yellow); }
+        .coda-card ol li:nth-child(4)::before { background: var(--purple); }
+        .coda-card ol li:nth-child(5)::before { background: var(--green); }
+        .coda-card ol li b { color: var(--cyan); font-weight: 600; }
+
+        .coda-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 0.9rem;
+            width: min(880px, 94vw);
+        }
+        .coda-links a {
+            display: block;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1rem 1.2rem;
+            text-decoration: none;
+            transition: transform 160ms ease-out, border-color 160ms, box-shadow 160ms;
+        }
+        .coda-links a:hover { transform: translateY(-4px); border-color: var(--border-strong); box-shadow: 0 0 30px var(--cyan-glow); }
+        .coda-links a .l-path {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            letter-spacing: 0.06em;
+            color: var(--cyan);
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+        .coda-links a .l-desc {
+            font-size: clamp(0.92rem, 1.35vw, 1.05rem);
+            color: var(--text-secondary);
+        }
+        .home-link {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            letter-spacing: 0.1em;
+            color: var(--text-dim);
+            text-decoration: none;
+            transition: color 150ms;
+        }
+        .home-link:hover { color: var(--cyan); }
+
+        /* ===== Fixed footer: controls + honesty banner ===== */
+        footer.deck-footer {
+            position: fixed;
+            left: 0; right: 0; bottom: 0;
+            z-index: 50;
+            background: rgba(15, 20, 36, 0.92);
+            border-top: 1px solid var(--border-strong);
+            backdrop-filter: blur(8px);
+        }
+        .deck-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(0.9rem, 3vw, 2rem);
+            padding: 0.55rem 1rem 0.35rem;
+        }
+        .nav-btn {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(0.82rem, 1.25vw, 1rem);
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            color: var(--text-secondary);
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            padding: 0.42rem 1.3rem;
+            cursor: pointer;
+            transition: color 140ms, border-color 140ms, box-shadow 140ms, opacity 140ms;
+            white-space: nowrap;
+        }
+        .nav-btn:hover:not(:disabled) {
+            color: var(--cyan);
+            border-color: var(--border-strong);
+            box-shadow: 0 0 20px var(--cyan-glow);
+        }
+        .nav-btn.next {
+            color: #0a0e1a;
+            background: var(--cyan);
+            border-color: var(--cyan);
+        }
+        .nav-btn.next:hover:not(:disabled) { color: #0a0e1a; box-shadow: 0 0 24px var(--cyan-glow-strong); }
+        .nav-btn:disabled { opacity: 0.3; cursor: default; }
+
+        .dot-nav { display: flex; align-items: center; gap: 0.55rem; }
+        .dot {
+            width: 11px; height: 11px;
+            border-radius: 50%;
+            border: 1px solid var(--text-dim);
+            background: transparent;
+            cursor: pointer;
+            padding: 0;
+            transition: background 150ms, border-color 150ms, box-shadow 150ms, transform 150ms;
+        }
+        .dot:hover { border-color: var(--cyan); transform: scale(1.2); }
+        .dot.active {
+            background: var(--cyan);
+            border-color: var(--cyan);
+            box-shadow: 0 0 12px var(--cyan-glow-strong);
+        }
+        .dot-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            letter-spacing: 0.14em;
+            color: var(--text-dim);
+            min-width: 12.5em;
+            text-align: left;
+        }
+        .dot-label b { color: var(--yellow); font-weight: 600; }
+
+        .honesty {
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(0.62rem, 0.95vw, 0.74rem);
+            letter-spacing: 0.06em;
+            color: var(--text-dim);
+            padding: 0 1rem 0.5rem;
+        }
+        .honesty a { color: var(--cyan-dim); text-decoration: none; }
+        .honesty a:hover { color: var(--cyan); }
+        .honesty .warn { color: var(--yellow); }
+
+        /* ===== SVG shared styles ===== */
+        svg text { user-select: none; }
+        .sv-mono   { font-family: 'JetBrains Mono', monospace; }
+        .sv-sora   { font-family: 'Sora', sans-serif; }
+        .sv-dm     { font-family: 'DM Sans', sans-serif; }
+
+        /* --- keyframe library --- */
+        @keyframes fadeIn  { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes riseIn  { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes dropIn  { from { opacity: 0; transform: translateY(-14px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes popIn   { 0% { opacity: 0; transform: scale(0.4); } 70% { transform: scale(1.12); } 100% { opacity: 1; transform: scale(1); } }
+        @keyframes blinkBlank { 0%, 100% { opacity: 1; } 50% { opacity: 0.18; } }
+        @keyframes softPulse  { 0%, 100% { opacity: 0.9; } 50% { opacity: 0.35; } }
+        @keyframes drawPath   { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+        @keyframes growBar    { from { transform: scaleY(0.001); } to { transform: scaleY(1); } }
+        @keyframes glowPulse  {
+            0%, 100% { filter: drop-shadow(0 0 3px rgba(255, 214, 0, 0.7)); }
+            50%      { filter: drop-shadow(0 0 12px rgba(255, 214, 0, 1)); }
+        }
+
+        /* Animations are only ever run inside the active station, so they
+           restart deterministically every time a station is (re)entered. */
+        .station.active .a-fade   { animation: fadeIn 0.6s ease-out both; }
+        .station.active .a-rise   { animation: riseIn 0.6s cubic-bezier(0.33, 1, 0.68, 1) both; }
+        .station.active .a-drop   { animation: dropIn 0.55s cubic-bezier(0.33, 1, 0.68, 1) both; }
+        .station.active .a-pop    { animation: popIn 0.5s cubic-bezier(0.33, 1, 0.68, 1) both; }
+        .station.active .a-blank  { animation: blinkBlank 1.4s ease-in-out infinite; }
+        .station.active .a-pulse  { animation: softPulse 1.6s ease-in-out infinite; }
+        .station.active .a-draw   { stroke-dasharray: 1; animation: drawPath 0.7s ease-out both; }
+        .station.active .a-grow   { transform-box: fill-box; transform-origin: bottom; animation: growBar 0.7s cubic-bezier(0.33, 1, 0.68, 1) both; }
+        .station.active .a-qmark  { animation: glowPulse 1.5s ease-in-out infinite; }
+        .station:not(.active) .a-fade, .station:not(.active) .a-rise,
+        .station:not(.active) .a-drop, .station:not(.active) .a-pop,
+        .station:not(.active) .a-draw, .station:not(.active) .a-grow { opacity: 0; }
+
+        @media (max-width: 720px) {
+            :root { --footer-h: 118px; }
+            .dot-label { display: none; }
+            .brand-strip .keys { display: none; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+        }
+    </style>
+</head>
+<body>
+    <div class="glow-orb glow-orb-1"></div>
+    <div class="glow-orb glow-orb-2"></div>
+    <div class="glow-orb glow-orb-3"></div>
+
+    <div class="brand-strip">
+        <span><strong>ISOM 260</strong> · Session 2 · Suffolk University</span>
+        <span class="keys"><b>←</b>/<b>→</b> stations &nbsp;·&nbsp; <b>F</b> fullscreen</span>
+    </div>
+
+    <main id="deck">
+
+        <!-- ================= S0 · THE QUESTION ================= -->
+        <section class="station active" id="s0" data-name="S0 · THE QUESTION">
+            <div class="station-kicker">S0 · The Question</div>
+            <h1 class="station-title">One Sentence Through the <span class="gradient-text">Transformer</span></h1>
+
+            <div class="stage-wrap">
+                <svg viewBox="0 0 900 420" role="img" aria-label="The sentence: The bank raised interest, blank">
+                    <text class="sv-mono a-fade" x="450" y="200" text-anchor="middle"
+                          font-size="46" font-weight="600" fill="#e8ecf4" letter-spacing="1">The bank raised interest</text>
+                    <g class="a-blank">
+                        <rect x="330" y="245" width="240" height="66" rx="12" fill="rgba(0,229,255,0.08)"
+                              stroke="#00e5ff" stroke-width="2"/>
+                        <text class="sv-mono" x="450" y="290" text-anchor="middle" font-size="38"
+                              font-weight="700" fill="#00e5ff">___</text>
+                    </g>
+                    <text class="sv-mono a-fade" style="animation-delay: 0.8s" x="450" y="365" text-anchor="middle"
+                          font-size="16" fill="#5a6478" letter-spacing="3">WHAT GOES HERE — AND HOW DOES IT KNOW?</text>
+                </svg>
+            </div>
+
+            <div class="narration">
+                <p class="plain">
+                    You type this. A trillion-parameter machine fills the blank in <em>40 milliseconds</em>.
+                    What <em>actually</em> happens in there?
+                    <span class="hl-c">Six stops. No math. One sentence.</span>
+                </p>
+                <div class="sayit">
+                    <span class="tag">Say it like a pro</span>
+                    <span class="line">"A language model is a machine that turns context into a probability for every possible next word."</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= S1 · TOKENS ================= -->
+        <section class="station" id="s1" data-name="S1 · TOKENS">
+            <div class="station-kicker">S1 · Tokens</div>
+            <h1 class="station-title">First, the sentence gets <span class="gradient-text-2">chopped</span></h1>
+
+            <div class="stage-wrap">
+                <svg viewBox="0 0 900 420" role="img" aria-label="The sentence split into token tiles with id numbers">
+                    <text class="sv-mono a-fade" x="450" y="70" text-anchor="middle" font-size="22"
+                          fill="#5a6478">The bank raised interest ___</text>
+                    <path class="a-fade" style="animation-delay: 0.25s" d="M450 92 L450 128" stroke="#5a6478"
+                          stroke-width="2" stroke-dasharray="4 5" fill="none"/>
+                    <path class="a-fade" style="animation-delay: 0.25s" d="M441 120 L450 132 L459 120" stroke="#5a6478"
+                          stroke-width="2" fill="none"/>
+
+                    <!-- token tiles -->
+                    <g class="a-pop" style="animation-delay: 0.4s">
+                        <rect x="105" y="160" width="130" height="90" rx="14" fill="#141929"
+                              stroke="#00e5ff" stroke-width="2"/>
+                        <text class="sv-mono" x="170" y="216" text-anchor="middle" font-size="30"
+                              font-weight="600" fill="#e8ecf4">The</text>
+                        <text class="sv-mono" x="170" y="290" text-anchor="middle" font-size="19" fill="#00e5ff">id 464</text>
+                    </g>
+                    <g class="a-pop" style="animation-delay: 0.6s">
+                        <rect x="265" y="160" width="150" height="90" rx="14" fill="#141929"
+                              stroke="#ffd600" stroke-width="2"/>
+                        <text class="sv-mono" x="340" y="216" text-anchor="middle" font-size="30"
+                              font-weight="600" fill="#e8ecf4">bank</text>
+                        <text class="sv-mono" x="340" y="290" text-anchor="middle" font-size="19" fill="#ffd600">id 3200</text>
+                    </g>
+                    <g class="a-pop" style="animation-delay: 0.8s">
+                        <rect x="445" y="160" width="160" height="90" rx="14" fill="#141929"
+                              stroke="#ff006e" stroke-width="2"/>
+                        <text class="sv-mono" x="525" y="216" text-anchor="middle" font-size="30"
+                              font-weight="600" fill="#e8ecf4">raised</text>
+                        <text class="sv-mono" x="525" y="290" text-anchor="middle" font-size="19" fill="#ff006e">id 9301</text>
+                    </g>
+                    <g class="a-pop" style="animation-delay: 1.0s">
+                        <rect x="635" y="160" width="180" height="90" rx="14" fill="#141929"
+                              stroke="#00e676" stroke-width="2"/>
+                        <text class="sv-mono" x="725" y="216" text-anchor="middle" font-size="30"
+                              font-weight="600" fill="#e8ecf4">interest</text>
+                        <text class="sv-mono" x="725" y="290" text-anchor="middle" font-size="19" fill="#00e676">id 2773</text>
+                    </g>
+
+                    <text class="sv-dm a-fade" style="animation-delay: 1.3s" x="450" y="360" text-anchor="middle"
+                          font-size="19" fill="#8892a8">The model never sees letters — only these numbers.</text>
+                </svg>
+            </div>
+
+            <div class="narration">
+                <p class="plain">
+                    Models don't read letters or words — they read <em>tokens</em>, chunks of roughly
+                    <span class="hl-y">¾ of a word</span>. Every token is just an ID in a big lookup table.
+                    <em>Cost, context limits, and the model's weird quirks</em> are all measured in tokens.
+                </p>
+                <div class="sayit">
+                    <span class="tag">Say it like a pro</span>
+                    <span class="line">"First, text is tokenized — chopped into chunks the model can look up."</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= S2 · EMBEDDINGS ================= -->
+        <section class="station" id="s2" data-name="S2 · EMBEDDINGS">
+            <div class="station-kicker">S2 · Embeddings</div>
+            <h1 class="station-title">Every token becomes a <span class="gradient-text">place on a map</span></h1>
+
+            <div class="stage-wrap">
+                <svg viewBox="0 0 900 420" role="img" aria-label="Map of meaning with river-land and money-land regions">
+                    <!-- regions -->
+                    <g class="a-fade">
+                        <ellipse cx="200" cy="115" rx="160" ry="90" fill="rgba(0,229,255,0.05)"
+                                 stroke="rgba(0,229,255,0.25)" stroke-width="1.5" stroke-dasharray="6 6"/>
+                        <text class="sv-mono" x="200" y="52" text-anchor="middle" font-size="17"
+                              letter-spacing="4" fill="rgba(0,229,255,0.5)">RIVER-LAND</text>
+                        <circle cx="155" cy="95" r="5" fill="rgba(0,229,255,0.35)"/>
+                        <text class="sv-dm" x="155" y="80" text-anchor="middle" font-size="15" fill="rgba(136,146,168,0.7)">river</text>
+                        <circle cx="245" cy="128" r="5" fill="rgba(0,229,255,0.35)"/>
+                        <text class="sv-dm" x="245" y="150" text-anchor="middle" font-size="15" fill="rgba(136,146,168,0.7)">shore</text>
+                        <circle cx="180" cy="155" r="5" fill="rgba(0,229,255,0.35)"/>
+                        <text class="sv-dm" x="180" y="177" text-anchor="middle" font-size="15" fill="rgba(136,146,168,0.7)">fishing</text>
+                    </g>
+                    <g class="a-fade" style="animation-delay: 0.15s">
+                        <ellipse cx="690" cy="205" rx="165" ry="115" fill="rgba(0,230,118,0.05)"
+                                 stroke="rgba(0,230,118,0.3)" stroke-width="1.5" stroke-dasharray="6 6"/>
+                        <text class="sv-mono" x="690" y="115" text-anchor="middle" font-size="17"
+                              letter-spacing="4" fill="rgba(0,230,118,0.55)">MONEY-LAND</text>
+                        <circle cx="650" cy="165" r="5" fill="rgba(0,230,118,0.35)"/>
+                        <text class="sv-dm" x="650" y="150" text-anchor="middle" font-size="15" fill="rgba(136,146,168,0.7)">loan</text>
+                        <circle cx="745" cy="215" r="5" fill="rgba(0,230,118,0.35)"/>
+                        <text class="sv-dm" x="745" y="237" text-anchor="middle" font-size="15" fill="rgba(136,146,168,0.7)">credit</text>
+                        <circle cx="665" cy="265" r="5" fill="rgba(0,230,118,0.35)"/>
+                        <text class="sv-dm" x="665" y="290" text-anchor="middle" font-size="15" fill="rgba(136,146,168,0.7)">deposit</text>
+                    </g>
+
+                    <!-- our tokens -->
+                    <g class="a-pop" style="animation-delay: 0.5s">
+                        <circle cx="430" cy="350" r="9" fill="#8892a8"/>
+                        <text class="sv-mono" x="430" y="382" text-anchor="middle" font-size="19" fill="#8892a8">The</text>
+                    </g>
+                    <g class="a-pop" style="animation-delay: 0.7s">
+                        <circle cx="548" cy="145" r="9" fill="#ff006e"/>
+                        <text class="sv-mono" x="548" y="124" text-anchor="middle" font-size="19" fill="#ff006e">raised</text>
+                    </g>
+                    <g class="a-pop" style="animation-delay: 0.9s">
+                        <circle cx="565" cy="255" r="9" fill="#00e676"/>
+                        <text class="sv-mono" x="565" y="288" text-anchor="middle" font-size="19" fill="#00e676">interest</text>
+                    </g>
+                    <g class="a-pop" style="animation-delay: 1.15s">
+                        <circle cx="415" cy="165" r="11" fill="#ffd600"/>
+                        <text class="sv-mono" x="415" y="200" text-anchor="middle" font-size="21"
+                              font-weight="700" fill="#ffd600">bank</text>
+                        <text class="sv-sora a-qmark" x="415" y="140" text-anchor="middle" font-size="30"
+                              font-weight="800" fill="#ffd600">?</text>
+                    </g>
+                    <text class="sv-dm a-fade" style="animation-delay: 1.5s" x="415" y="235" text-anchor="middle"
+                          font-size="15" fill="#5a6478">stuck exactly between its two meanings</text>
+                </svg>
+            </div>
+
+            <div class="narration">
+                <p class="plain">
+                    In an embedding, <em>meaning is location</em> — remember your vowel map! Words used alike
+                    live near each other. But <span class="hl-y">"bank"</span> was seen next to rivers <em>and</em>
+                    next to loans, so its stored point is the <em>average of every "bank" it ever read</em> —
+                    parked in limbo between <span class="hl-c">RIVER-LAND</span> and <span class="hl-g">MONEY-LAND</span>.
+                </p>
+                <div class="sayit">
+                    <span class="tag">Say it like a pro</span>
+                    <span class="line">"Each token becomes a point in meaning-space — and an ambiguous word like 'bank' starts between its meanings."</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= S3 · ATTENTION ================= -->
+        <section class="station" id="s3" data-name="S3 · ATTENTION">
+            <div class="station-kicker">S3 · Attention — the hero move</div>
+            <h1 class="station-title">The other words <span class="gradient-text-3">pull "bank" home</span></h1>
+
+            <div class="stage-wrap">
+                <svg viewBox="0 0 900 420" role="img" aria-label="Attention arcs pull bank into money-land">
+                    <!-- regions (dimmer, same geography as S2) -->
+                    <g opacity="0.55">
+                        <ellipse cx="200" cy="115" rx="160" ry="90" fill="rgba(0,229,255,0.04)"
+                                 stroke="rgba(0,229,255,0.2)" stroke-width="1.5" stroke-dasharray="6 6"/>
+                        <text class="sv-mono" x="200" y="52" text-anchor="middle" font-size="17"
+                              letter-spacing="4" fill="rgba(0,229,255,0.4)">RIVER-LAND</text>
+                    </g>
+                    <g>
+                        <ellipse cx="690" cy="205" rx="165" ry="115" fill="rgba(0,230,118,0.06)"
+                                 stroke="rgba(0,230,118,0.35)" stroke-width="1.5" stroke-dasharray="6 6"/>
+                        <text class="sv-mono" x="690" y="115" text-anchor="middle" font-size="17"
+                              letter-spacing="4" fill="rgba(0,230,118,0.55)">MONEY-LAND</text>
+                    </g>
+
+                    <!-- source tokens -->
+                    <circle cx="430" cy="350" r="9" fill="#8892a8"/>
+                    <text class="sv-mono" x="430" y="382" text-anchor="middle" font-size="19" fill="#8892a8">The</text>
+                    <circle cx="548" cy="145" r="9" fill="#ff006e"/>
+                    <text class="sv-mono" x="548" y="124" text-anchor="middle" font-size="19" fill="#ff006e">raised</text>
+                    <circle cx="565" cy="255" r="9" fill="#00e676"/>
+                    <text class="sv-mono" x="565" y="288" text-anchor="middle" font-size="19" fill="#00e676">interest</text>
+
+                    <!-- attention arcs into bank's ORIGINAL spot (415,165) -->
+                    <g id="arcs3">
+                        <path class="a-draw" style="animation-delay: 0.3s" pathLength="1"
+                              d="M565 255 Q 470 245 415 165" fill="none" stroke="#00e5ff"
+                              stroke-width="6.5" stroke-linecap="round" opacity="0.95"/>
+                        <text class="sv-mono a-fade" style="animation-delay: 0.85s" x="472" y="248"
+                              text-anchor="middle" font-size="18" font-weight="700" fill="#00e5ff">0.55</text>
+
+                        <path class="a-draw" style="animation-delay: 0.55s" pathLength="1"
+                              d="M548 145 Q 480 130 415 165" fill="none" stroke="#ff006e"
+                              stroke-width="3" stroke-linecap="round" opacity="0.8"/>
+                        <text class="sv-mono a-fade" style="animation-delay: 1.05s" x="483" y="120"
+                              text-anchor="middle" font-size="16" fill="#ff006e">0.25</text>
+
+                        <path class="a-draw" style="animation-delay: 0.75s" pathLength="1"
+                              d="M430 350 Q 400 260 415 165" fill="none" stroke="#8892a8"
+                              stroke-width="1.3" stroke-linecap="round" opacity="0.45"/>
+                        <text class="sv-mono a-fade" style="animation-delay: 1.2s" x="385" y="265"
+                              text-anchor="middle" font-size="14" fill="#8892a8">0.05</text>
+                    </g>
+
+                    <!-- dotted trail (revealed by JS during the tween) -->
+                    <line id="trail3" x1="415" y1="165" x2="640" y2="205"
+                          stroke="#ffd600" stroke-width="2" stroke-dasharray="3 7" opacity="0"/>
+                    <!-- ghost of old position -->
+                    <circle id="ghost3" cx="415" cy="165" r="11" fill="none"
+                            stroke="#ffd600" stroke-width="1.5" stroke-dasharray="3 4" opacity="0"/>
+
+                    <!-- the bank dot (JS-tweened) -->
+                    <g id="bankDot" transform="translate(415, 165)">
+                        <circle r="11" fill="#ffd600" filter="drop-shadow(0 0 8px rgba(255,214,0,0.8))"/>
+                        <text class="sv-mono" x="0" y="35" text-anchor="middle" font-size="21"
+                              font-weight="700" fill="#ffd600">bank</text>
+                    </g>
+
+                    <text id="landed3" class="sv-dm" x="640" y="330" text-anchor="middle" font-size="17"
+                          fill="#00e676" opacity="0">"bank" now means the money kind ✓</text>
+                </svg>
+            </div>
+
+            <div class="narration">
+                <p class="plain">
+                    Attention is a negotiation: every word asks <span class="hl-c">"who's relevant to me?"</span>,
+                    every other word <em>offers what it has</em>, and strong matches
+                    <em>pull your meaning into the right neighborhood</em>. Here, <span class="hl-g">interest</span>
+                    matches hardest (0.55) — and drags <span class="hl-y">bank</span> into MONEY-LAND.
+                </p>
+                <div class="sayit">
+                    <span class="tag">Say it like a pro</span>
+                    <span class="line">"Attention lets each word's meaning be rewritten by the words around it — 'interest' pulls 'bank' into finance."</span>
+                </div>
+                <p class="see-real"><a href="/session-02/attention-machine.html">see it for real → your model's real attention</a></p>
+            </div>
+        </section>
+
+        <!-- ================= S4 · LAYERS ================= -->
+        <section class="station" id="s4" data-name="S4 · LAYERS">
+            <div class="station-kicker">S4 · Layers</div>
+            <h1 class="station-title">One pass fixes a word. <span class="gradient-text-2">Stacked passes build meaning.</span></h1>
+
+            <div class="stage-wrap">
+                <svg viewBox="0 0 900 420" role="img" aria-label="Stacked layers refine the sentence into one meaning">
+                    <!-- dimmed map from before -->
+                    <g opacity="0.12">
+                        <ellipse cx="200" cy="115" rx="160" ry="90" fill="none" stroke="#00e5ff"
+                                 stroke-width="1.5" stroke-dasharray="6 6"/>
+                        <ellipse cx="690" cy="205" rx="165" ry="115" fill="none" stroke="#00e676"
+                                 stroke-width="1.5" stroke-dasharray="6 6"/>
+                    </g>
+
+                    <!-- stacked translucent layer panes -->
+                    <g class="a-rise" style="animation-delay: 0.1s">
+                        <rect x="200" y="255" width="420" height="130" rx="16"
+                              fill="rgba(0,229,255,0.05)" stroke="rgba(0,229,255,0.3)" stroke-width="1.5"/>
+                        <text class="sv-mono" x="235" y="372" font-size="16" letter-spacing="2"
+                              fill="rgba(0,229,255,0.6)">LAYER 1 — fix ambiguous words</text>
+                    </g>
+                    <g class="a-rise" style="animation-delay: 0.45s">
+                        <rect x="250" y="185" width="420" height="130" rx="16"
+                              fill="rgba(179,136,255,0.06)" stroke="rgba(179,136,255,0.4)" stroke-width="1.5"/>
+                        <text class="sv-mono" x="285" y="302" font-size="16" letter-spacing="2"
+                              fill="rgba(179,136,255,0.75)">LAYER 2 — build phrases</text>
+                    </g>
+                    <g class="a-rise" style="animation-delay: 0.8s">
+                        <rect x="300" y="115" width="420" height="130" rx="16"
+                              fill="rgba(255,0,110,0.06)" stroke="rgba(255,0,110,0.4)" stroke-width="1.5"/>
+                        <text class="sv-mono" x="335" y="232" font-size="16" letter-spacing="2"
+                              fill="rgba(255,0,110,0.8)">LAYER N — sentence-level meaning</text>
+
+                        <!-- tight cluster on the top pane -->
+                        <g class="a-pop" style="animation-delay: 1.25s">
+                            <circle cx="505" cy="168" r="7" fill="#8892a8"/>
+                            <circle cx="527" cy="158" r="7" fill="#ffd600"/>
+                            <circle cx="546" cy="172" r="7" fill="#ff006e"/>
+                            <circle cx="524" cy="182" r="7" fill="#00e676"/>
+                            <circle cx="525" cy="170" r="34" fill="none" stroke="#00e5ff"
+                                    stroke-width="1.5" stroke-dasharray="4 5"/>
+                            <text class="sv-mono" x="610" y="168" font-size="18" font-weight="600"
+                                  fill="#00e5ff">"a rate-hike</text>
+                            <text class="sv-mono" x="622" y="190" font-size="18" font-weight="600"
+                                  fill="#00e5ff">sentence"</text>
+                        </g>
+                    </g>
+
+                    <text class="sv-dm a-fade" style="animation-delay: 1.6s" x="450" y="55" text-anchor="middle"
+                          font-size="19" fill="#8892a8">Your TinyGPT: 2 layers  ·  Frontier models: 100+</text>
+                </svg>
+            </div>
+
+            <div class="narration">
+                <p class="plain">
+                    One attention pass fixed <span class="hl-y">"bank"</span>. Now stack that move:
+                    <span class="hl-c">Layer 1</span> fixes words, <span class="hl-p">Layer 2</span> builds phrases,
+                    deeper layers compress the whole thing into <em>one sentence-level idea</em>.
+                    Your TinyGPT does this <em>2 times</em>. GPT-6 class models: <em>100+</em>.
+                </p>
+                <div class="sayit">
+                    <span class="tag">Say it like a pro</span>
+                    <span class="line">"Layers repeat attention-then-think dozens of times — each pass a deeper reading of the same sentence."</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= S5 · THE PREDICTION ================= -->
+        <section class="station" id="s5" data-name="S5 · PREDICTION">
+            <div class="station-kicker">S5 · The Prediction</div>
+            <h1 class="station-title">Meaning becomes a <span class="gradient-text">bet</span></h1>
+
+            <div class="stage-wrap">
+                <svg viewBox="0 0 900 420" role="img" aria-label="Probability bar chart choosing the word rates">
+                    <!-- the understood sentence cluster -->
+                    <g class="a-fade">
+                        <circle cx="140" cy="175" r="7" fill="#8892a8"/>
+                        <circle cx="162" cy="165" r="7" fill="#ffd600"/>
+                        <circle cx="181" cy="179" r="7" fill="#ff006e"/>
+                        <circle cx="159" cy="189" r="7" fill="#00e676"/>
+                        <circle cx="160" cy="177" r="34" fill="none" stroke="#00e5ff"
+                                stroke-width="1.5" stroke-dasharray="4 5"/>
+                        <text class="sv-mono" x="160" y="240" text-anchor="middle" font-size="15"
+                              fill="#8892a8">a rate-hike sentence</text>
+                    </g>
+                    <g class="a-fade" style="animation-delay: 0.3s">
+                        <path d="M215 177 L330 177" stroke="#00e5ff" stroke-width="2.5" fill="none"/>
+                        <path d="M320 168 L334 177 L320 186" stroke="#00e5ff" stroke-width="2.5" fill="none"/>
+                        <text class="sv-mono" x="272" y="163" text-anchor="middle" font-size="13"
+                              letter-spacing="2" fill="#5a6478">SOFTMAX</text>
+                    </g>
+
+                    <!-- probability bars: baseline y=300, chart 370..840 -->
+                    <g>
+                        <line x1="360" y1="300" x2="850" y2="300" stroke="rgba(136,146,168,0.4)" stroke-width="1.5"/>
+
+                        <rect class="a-grow" style="animation-delay: 0.5s" x="380" y="70" width="58" height="230"
+                              rx="6" fill="#00e5ff"/>
+                        <text class="sv-mono a-fade" style="animation-delay: 1.1s" x="409" y="55"
+                              text-anchor="middle" font-size="20" font-weight="700" fill="#00e5ff">72%</text>
+                        <text class="sv-mono" x="409" y="328" text-anchor="middle" font-size="18"
+                              font-weight="600" fill="#e8ecf4">rates</text>
+
+                        <rect class="a-grow" style="animation-delay: 0.62s" x="478" y="281" width="58" height="19"
+                              rx="4" fill="rgba(136,146,168,0.7)"/>
+                        <text class="sv-mono a-fade" style="animation-delay: 1.15s" x="507" y="270"
+                              text-anchor="middle" font-size="15" fill="#8892a8">6%</text>
+                        <text class="sv-mono" x="507" y="328" text-anchor="middle" font-size="17" fill="#8892a8">in</text>
+
+                        <rect class="a-grow" style="animation-delay: 0.72s" x="576" y="284" width="58" height="16"
+                              rx="4" fill="rgba(136,146,168,0.6)"/>
+                        <text class="sv-mono a-fade" style="animation-delay: 1.2s" x="605" y="270"
+                              text-anchor="middle" font-size="15" fill="#8892a8">5%</text>
+                        <text class="sv-mono" x="605" y="328" text-anchor="middle" font-size="17" fill="#8892a8">on</text>
+
+                        <rect class="a-grow" style="animation-delay: 0.82s" x="674" y="287" width="58" height="13"
+                              rx="4" fill="rgba(136,146,168,0.5)"/>
+                        <text class="sv-mono a-fade" style="animation-delay: 1.25s" x="703" y="270"
+                              text-anchor="middle" font-size="15" fill="#8892a8">4%</text>
+                        <text class="sv-mono" x="703" y="328" text-anchor="middle" font-size="15" fill="#8892a8">concerns</text>
+
+                        <rect class="a-grow" style="animation-delay: 0.92s" x="772" y="290" width="58" height="10"
+                              rx="4" fill="rgba(136,146,168,0.4)"/>
+                        <text class="sv-mono a-fade" style="animation-delay: 1.3s" x="801" y="270"
+                              text-anchor="middle" font-size="15" fill="#8892a8">3%</text>
+                        <text class="sv-mono" x="801" y="328" text-anchor="middle" font-size="15" fill="#8892a8">sharply</text>
+                    </g>
+
+                    <!-- completed sentence -->
+                    <g class="a-rise" style="animation-delay: 1.7s">
+                        <text class="sv-mono" x="450" y="392" text-anchor="middle" font-size="27"
+                              font-weight="600" fill="#e8ecf4">The bank raised interest <tspan fill="#00e676" font-weight="700">rates</tspan><tspan fill="#e8ecf4">.</tspan></text>
+                    </g>
+                </svg>
+            </div>
+
+            <div class="narration">
+                <p class="plain">
+                    The final position becomes a <em>score for every token in the vocabulary</em>;
+                    <span class="hl-c">softmax</span> turns scores into probabilities;
+                    <span class="hl-m">temperature</span> decides how boldly it bets; it
+                    <em>samples one token, appends it, and repeats</em> — one word at a time, forever.
+                </p>
+                <div class="sayit">
+                    <span class="tag">Say it like a pro</span>
+                    <span class="line">"The model outputs probabilities for every possible next token, samples one, and repeats — that's the whole show."</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= CODA ================= -->
+        <section class="station" id="coda" data-name="✦ · THE 30-SECOND VERSION">
+            <div class="station-kicker">✦ · Coda</div>
+            <h1 class="station-title">How an LLM works — <span class="gradient-text-3">the 30-second version</span></h1>
+            <p class="plain" style="color: var(--text-secondary); text-align: center; max-width: 760px;">
+                Screenshot this. Say it in any interview.
+            </p>
+
+            <div class="coda-card a-rise">
+                <ol>
+                    <li><b>Tokens.</b> "First, text is tokenized — chopped into chunks the model can look up."</li>
+                    <li><b>Embeddings.</b> "Each token becomes a point in meaning-space — and an ambiguous word like 'bank' starts between its meanings."</li>
+                    <li><b>Attention.</b> "Attention lets each word's meaning be rewritten by the words around it — 'interest' pulls 'bank' into finance."</li>
+                    <li><b>Layers.</b> "Layers repeat attention-then-think dozens of times — each pass a deeper reading of the same sentence."</li>
+                    <li><b>Prediction.</b> "The model outputs probabilities for every possible next token, samples one, and repeats — that's the whole show."</li>
+                </ol>
+            </div>
+
+            <div class="coda-links a-rise" style="animation-delay: 0.25s">
+                <a href="/session-02/attention-machine.html">
+                    <span class="l-path">/session-02/attention-machine.html</span>
+                    <span class="l-desc">your model's REAL attention</span>
+                </a>
+                <a href="/session-02/tinygpt-annotated.html">
+                    <span class="l-path">/session-02/tinygpt-annotated.html</span>
+                    <span class="l-desc">every line of the code</span>
+                </a>
+                <a href="/session-02/speak-llm.html">
+                    <span class="l-path">/session-02/speak-llm.html</span>
+                    <span class="l-desc">the vocabulary card</span>
+                </a>
+            </div>
+
+            <a class="home-link a-fade" style="animation-delay: 0.45s" href="/">← isom260 home</a>
+        </section>
+    </main>
+
+    <footer class="deck-footer">
+        <div class="deck-controls">
+            <button class="nav-btn" id="btnBack" type="button">← Back</button>
+            <div class="dot-nav" id="dotNav" role="tablist" aria-label="Stations"></div>
+            <span class="dot-label" id="dotLabel"><b>S0</b> · THE QUESTION</span>
+            <button class="nav-btn next" id="btnNext" type="button">Next →</button>
+        </div>
+        <div class="honesty">
+            <span class="warn">⚠</span> Illustrative numbers for teaching —
+            see <a href="/session-02/attention-machine.html">the Attention Machine</a> for YOUR model's real attention weights.
+        </div>
+    </footer>
+
+    <script>
+    (function () {
+        'use strict';
+
+        var stations = Array.prototype.slice.call(document.querySelectorAll('section.station'));
+        var btnBack  = document.getElementById('btnBack');
+        var btnNext  = document.getElementById('btnNext');
+        var dotNav   = document.getElementById('dotNav');
+        var dotLabel = document.getElementById('dotLabel');
+        var current  = 0;
+
+        // ---- dot nav ----
+        var dots = stations.map(function (s, i) {
+            var d = document.createElement('button');
+            d.className = 'dot';
+            d.type = 'button';
+            d.setAttribute('role', 'tab');
+            d.setAttribute('aria-label', s.dataset.name);
+            d.title = s.dataset.name;
+            d.addEventListener('click', function () { show(i); });
+            dotNav.appendChild(d);
+            return d;
+        });
+
+        // ---- S3 bank-dot tween ----
+        var bankDot = document.getElementById('bankDot');
+        var trail3  = document.getElementById('trail3');
+        var ghost3  = document.getElementById('ghost3');
+        var arcs3   = document.getElementById('arcs3');
+        var landed3 = document.getElementById('landed3');
+        var S3_START = { x: 415, y: 165 };
+        var S3_END   = { x: 640, y: 205 };
+        var s3Raf = null, s3Timer = null;
+
+        function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+
+        function resetS3() {
+            if (s3Raf)   { cancelAnimationFrame(s3Raf); s3Raf = null; }
+            if (s3Timer) { clearTimeout(s3Timer); s3Timer = null; }
+            bankDot.setAttribute('transform', 'translate(' + S3_START.x + ', ' + S3_START.y + ')');
+            trail3.setAttribute('opacity', '0');
+            ghost3.setAttribute('opacity', '0');
+            landed3.setAttribute('opacity', '0');
+            arcs3.style.transition = 'none';
+            arcs3.style.opacity = '1';
+        }
+
+        function runS3() {
+            resetS3();
+            // Wait for the arcs to draw, then slide "bank" into money-land.
+            s3Timer = setTimeout(function () {
+                var DUR = 600;
+                var t0 = null;
+                ghost3.setAttribute('opacity', '0.6');
+                trail3.setAttribute('opacity', '0.7');
+                arcs3.style.transition = 'opacity 600ms ease';
+                arcs3.style.opacity = '0.28';
+                function frame(ts) {
+                    if (t0 === null) t0 = ts;
+                    var t = Math.min((ts - t0) / DUR, 1);
+                    var e = easeOutCubic(t);
+                    var x = S3_START.x + (S3_END.x - S3_START.x) * e;
+                    var y = S3_START.y + (S3_END.y - S3_START.y) * e;
+                    bankDot.setAttribute('transform', 'translate(' + x + ', ' + y + ')');
+                    if (t < 1) {
+                        s3Raf = requestAnimationFrame(frame);
+                    } else {
+                        s3Raf = null;
+                        landed3.setAttribute('opacity', '1');
+                    }
+                }
+                s3Raf = requestAnimationFrame(frame);
+            }, 1600);
+        }
+
+        // ---- station switching ----
+        function show(i) {
+            if (i < 0 || i >= stations.length) return;
+            current = i;
+            stations.forEach(function (s, j) {
+                s.classList.toggle('active', j === i);
+            });
+            dots.forEach(function (d, j) {
+                d.classList.toggle('active', j === i);
+                d.setAttribute('aria-selected', j === i ? 'true' : 'false');
+            });
+            var name = stations[i].dataset.name;
+            var parts = name.split(' · ');
+            dotLabel.innerHTML = '<b>' + parts[0] + '</b> · ' + parts.slice(1).join(' · ');
+            btnBack.disabled = (i === 0);
+            btnNext.disabled = (i === stations.length - 1);
+            window.scrollTo(0, 0);
+
+            resetS3();
+            if (stations[i].id === 's3') runS3();
+        }
+
+        btnBack.addEventListener('click', function () { show(current - 1); });
+        btnNext.addEventListener('click', function () { show(current + 1); });
+
+        // ---- keyboard ----
+        document.addEventListener('keydown', function (e) {
+            if (e.metaKey || e.ctrlKey || e.altKey) return;
+            if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+                e.preventDefault();
+                show(current + 1);
+            } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+                e.preventDefault();
+                show(current - 1);
+            } else if (e.key === 'f' || e.key === 'F') {
+                if (document.fullscreenElement) {
+                    document.exitFullscreen();
+                } else if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen();
+                }
+            } else if (e.key === 'Home') {
+                e.preventDefault();
+                show(0);
+            } else if (e.key === 'End') {
+                e.preventDefault();
+                show(stations.length - 1);
+            }
+        });
+
+        show(0);
+    })();
+    </script>
+</body>
+</html>

@@ -195,6 +195,15 @@
       "linkText": "Play in class"
     },
     {
+      "title": "One Sentence Through the Transformer",
+      "url": "/session-02/one-sentence.html",
+      "description": "The black box, dissected with a single sentence: watch \"The bank raised interest ___\" go tokens → meaning map → attention (the moment 'interest' pulls 'bank' into finance-land) → layers → the probability bars. Ends with the 30-second explanation you can give in any interview.",
+      "icon": "eye",
+      "badge": "Explainer",
+      "badgeType": "interactive",
+      "linkText": "Step through it"
+    },
+    {
       "title": "The Attention Machine",
       "url": "/session-02/attention-machine.html",
       "description": "Interactive explorer of YOUR model's real attention: step through a name letter by letter, watch each head decide where to look, and meet the four 'employees' your model hired — including the head that independently reinvented the Act 1 counting model (97% previous-letter attention).",
