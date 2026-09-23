@@ -486,37 +486,38 @@
             
             <!-- API Basics -->
             <div class="section api-section">
-                <div class="section-title"><span class="emoji">🔌</span> API ESSENTIALS</div>
+                <div class="section-title"><span class="emoji">🔌</span> API ESSENTIALS (Gemini, the course stack)</div>
                 <div class="api-grid">
                     <div class="api-param">
                         <div class="api-param-name">model</div>
-                        <div class="api-param-desc">Which AI: "claude-sonnet-4-5-20250514"</div>
+                        <div class="api-param-desc">Which AI: "gemini-2.5-flash"</div>
                     </div>
                     <div class="api-param">
-                        <div class="api-param-name">messages</div>
-                        <div class="api-param-desc">[{"role": "user", "content": "..."}]</div>
+                        <div class="api-param-name">contents</div>
+                        <div class="api-param-desc">Your prompt (a string, or the chat history)</div>
                     </div>
                     <div class="api-param">
-                        <div class="api-param-name">max_tokens</div>
-                        <div class="api-param-desc">Response length limit (1024 ≈ 750 words)</div>
-                    </div>
-                    <div class="api-param">
-                        <div class="api-param-name">system</div>
-                        <div class="api-param-desc">Persistent instructions/persona</div>
+                        <div class="api-param-name">system_instruction</div>
+                        <div class="api-param-desc">Persistent persona/rules — one line = a different product</div>
                     </div>
                     <div class="api-param">
                         <div class="api-param-name">temperature</div>
-                        <div class="api-param-desc">0 = focused, 1 = creative</div>
+                        <div class="api-param-desc">0 = focused/repeatable, 1 = normal, 2 = wild</div>
                     </div>
                     <div class="api-param">
-                        <div class="api-param-name">stop_sequences</div>
-                        <div class="api-param-desc">Where to stop generating</div>
+                        <div class="api-param-name">max_output_tokens</div>
+                        <div class="api-param-desc">Response length cap (1,000 tokens ≈ 750 words)</div>
+                    </div>
+                    <div class="api-param">
+                        <div class="api-param-name">usage_metadata</div>
+                        <div class="api-param-desc">Tokens in / out / thinking — this is the bill</div>
                     </div>
                 </div>
                 <div class="code-block">
-<span class="keyword">import</span> anthropic
-client = anthropic.<span class="function">Anthropic</span>()
-message = client.messages.<span class="function">create</span>(model=<span class="string">"claude-sonnet-4-5-20250514"</span>, max_tokens=<span class="string">1024</span>, messages=[{<span class="string">"role"</span>: <span class="string">"user"</span>, <span class="string">"content"</span>: <span class="string">"Your prompt"</span>}])
+<span class="keyword">from</span> google <span class="keyword">import</span> genai
+client = genai.<span class="function">Client</span>(api_key=GOOGLE_API_KEY)   <span style="color:#6b7280"># key from Colab 🔑 Secrets, never in code</span>
+r = client.models.<span class="function">generate_content</span>(model=<span class="string">"gemini-2.5-flash"</span>, contents=<span class="string">"Your CRAFT prompt"</span>)
+<span class="function">print</span>(r.text)
                 </div>
             </div>
             
