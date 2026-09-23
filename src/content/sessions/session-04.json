@@ -1,142 +1,170 @@
 {
   "number": 4,
   "slug": "session-04",
-  "title": "Building AI Products + Intro to AI Agents",
-  "subtitle": "Ship a real product in 50 minutes, build your first AI agent, then read production code",
-  "heroTitle": "Building AI <span class=\"bg-gradient-to-br from-accent-cyan to-accent-purple bg-clip-text text-transparent\">Products & Agents</span>",
+  "title": "Your First Agent + Ship a Product",
+  "subtitle": "Wednesday the model starts deciding for itself — your first AI agent, with production guardrails. Monday your team ships a real product with a link.",
+  "heroTitle": "Your First <span class=\"bg-gradient-to-br from-accent-cyan to-accent-purple bg-clip-text text-transparent\">AI Agent</span>",
   "duration": "2 meetings · 75 min",
   "meetings": [
     "Wed Sep 30",
     "Mon Oct 5"
   ],
-  "icon": "rocket",
+  "icon": "bot",
   "tags": [
-    "Product Building",
     "AI Agents",
-    "NanoClaw",
     "Tool Use",
+    "Guardrails",
+    "Product Building",
     "Ship Fast"
   ],
   "objectives": [
     {
-      "title": "Ship a Real AI Product",
-      "description": "Build and deploy a working AI-powered product in 50 minutes using Lovable, Bolt, or Claude Artifacts."
-    },
-    {
-      "title": "Master Product Thinking",
-      "description": "Apply the AI Product Canvas: Problem First, 10x Better, One Core Flow, Ship & Learn."
-    },
-    {
       "title": "Build Your First Agent",
-      "description": "Give Claude real tools and watch it reason about which to use. 25 minutes of hands-on coding."
+      "description": "Give Gemini tools and watch it decide — on its own — which to call, when, and when not to. You write the ~40-line agent loop yourself and read every line."
     },
     {
-      "title": "Read Production Agent Code",
-      "description": "Walk through NanoClaw's actual source — 700 lines that power 10,500+ GitHub stars. See the theory in practice."
+      "title": "Make It Enterprise-Grade",
+      "description": "Retries with backoff, error propagation, a circuit breaker, a human approval gate for risky actions, and an audit log. The trust layer that turns a demo into something a company can run."
+    },
+    {
+      "title": "Think Like a Product Builder",
+      "description": "Problem First, 10× Better, One Core Flow, Ship & Learn — plus the three UX patterns every AI product needs."
+    },
+    {
+      "title": "Ship a Real Product",
+      "description": "In one class, a team of 2–3 goes from a paper canvas to a published link a stranger could use. Demo day with peer votes."
     }
   ],
   "agenda": [
     {
-      "time": "5:00 PM - 5:18 PM",
-      "title": "Part 1: The Shift + Product Thinking",
-      "duration": "18 minutes",
-      "description": "The world changed. You can build in hours what used to take months. Here's how to think about it.",
+      "time": "Wed Sep 30 · 12:30 PM",
+      "title": "Meeting 1 · HW #4 Pulse + The Shift",
+      "duration": "11 minutes",
+      "description": "Whose language cost more tokens? Then the one new idea of the day: the model can ask your code to run a function.",
       "bulletPoints": [
-        "Opening hook: By 7:30, every team ships a product AND builds an AI agent",
-        "Stats: 70% faster prototyping, 10x more builders, $0 cost to start",
-        "4 Principles rapid-fire: Problem First, 10x Better, One Core Flow, Ship & Learn",
-        "LIVE DEMO: Build 'Resume Roaster' in Lovable from a single prompt"
-      ]
-    },
-    {
-      "time": "5:18 PM - 5:25 PM",
-      "title": "Part 2: Builder's Toolkit",
-      "duration": "7 minutes",
-      "description": "Quick overview of your options. Pick your weapon.",
-      "bulletPoints": [
-        "Tool categories: Chat-to-Artifact, Cloud Builders (Lovable, Bolt), AI IDEs",
-        "Decision Matrix: When to use what",
-        "Recommendation: Lovable or Bolt for today. Claude Artifacts for simple tools.",
-        "UX patterns you'll need: Set Expectations, Easy Recovery, User Control"
-      ]
-    },
-    {
-      "time": "5:25 PM - 6:15 PM",
-      "title": "Part 3: The 50-Minute Startup",
-      "duration": "50 minutes",
-      "description": "Build, test, and deploy a real AI product. Teams of 2-3.",
-      "bulletPoints": [
-        "5:25-5:33 — Fill AI Product Canvas (problem, user, 10x advantage, core flow)",
-        "5:33-6:05 — BUILD PHASE: Prompt your tool, iterate, walk the room for feedback",
-        "6:05-6:12 — Test with another team, identify and fix the #1 issue",
-        "6:12-6:15 — Deploy + prepare 90-second pitch"
-      ]
-    },
-    {
-      "time": "6:15 PM - 6:30 PM",
-      "title": "Part 4: Demo Day",
-      "duration": "15 minutes",
-      "description": "Gallery walk + top pitches. Celebrate what you built!",
-      "bulletPoints": [
-        "Gallery Walk: Try every team's product (~1 min each)",
-        "Vote for favorites: Best Problem-Solution Fit, Most Delightful, Best UX",
-        "Top 3 teams do 90-second live demos",
-        "Quick peer feedback round"
+        "Chatbot answers, agent does: LLM + Tools + Loop + Memory",
+        "The agent loop in four steps — a tool is a Python function, its description is a job description",
+        "Live: watch it reach for the calculator, and NOT reach for it on 'capital of France'"
       ],
       "isBreak": false
     },
     {
-      "time": "6:30 PM - 6:45 PM",
-      "title": "Part 5: From Products to Agents",
+      "time": "Wed Sep 30 · 12:47 PM",
+      "title": "Hands-On: Build the Loop Yourself",
+      "duration": "30 minutes",
+      "description": "Parts 1–4 of the notebook: setup, a calculator tool, the agent loop, and a three-tool agent that chains calls.",
+      "bulletPoints": [
+        "Count the tool calls in the multi-tool test",
+        "Read run_agent once, slowly — this loop is inside every agent on Earth",
+        "Stop at Part 5; we do that one together"
+      ],
+      "isBreak": false
+    },
+    {
+      "time": "Wed Sep 30 · 1:17 PM",
+      "title": "Part 5 Together: Enterprise-Grade",
+      "duration": "10 minutes",
+      "description": "Your agent works. It would also get you fired. Retries, error handling, a circuit breaker, an approval gate, an audit log.",
+      "bulletPoints": [
+        "The agent tries to send an email → the gate blocks it → it reports honestly instead of pretending",
+        "A volunteer flips HUMAN_IN_THE_LOOP and approves live",
+        "The audit log: what compliance asks for on day one"
+      ],
+      "isBreak": false
+    },
+    {
+      "time": "Wed Sep 30 · 1:27 PM",
+      "title": "Wrap: Boardroom + HW #5 + Monday Logistics",
+      "duration": "18 minutes",
+      "description": "What you can now say in a meeting, the Build-a-Tool homework, and how to arrive Monday ready to ship.",
+      "bulletPoints": [
+        "HW #5: a 4th tool for a real problem, 3 test queries, 3 reflections — due Thu Oct 8, 11:59 PM",
+        "Tonight: create a free Lovable account; bring a problem worth solving and a teammate"
+      ],
+      "isBreak": false
+    },
+    {
+      "time": "Mon Oct 5 · 12:30 PM",
+      "title": "Meeting 2 · Product Thinking + Live Build",
       "duration": "15 minutes",
-      "description": "The #1 trend in AI right now: agents that take action, not just answer questions.",
+      "description": "Four principles, then Resume Roaster built live from a single CRAFT prompt and published to a link.",
       "bulletPoints": [
-        "THE KEY INSIGHT: Chatbot answers questions. Agent DOES things.",
-        "The Equation: LLM + Tools + Reasoning Loop + Memory = AI Agent",
-        "The Agent Loop: Receive → Think → Execute Tool → Synthesize → Remember",
-        "NanoClaw vs OpenClaw: How 500 lines beat 400,000 (security + simplicity)",
-        "ACTION: Open Colab now, enter your API key while I talk"
-      ]
+        "Problem First · 10× Better · One Core Flow · Ship & Learn",
+        "The builder's toolkit and the one rule: whichever you can publish from in 30 minutes",
+        "Teams of 2–3 form now"
+      ],
+      "isBreak": false
     },
     {
-      "time": "6:45 PM - 7:10 PM",
-      "title": "Part 6: Hands-On Agent Building",
-      "duration": "25 minutes",
-      "description": "Build your first AI agent. Real tools. Real reasoning. Real magic.",
+      "time": "Mon Oct 5 · 12:45 PM",
+      "title": "The 40-Minute Startup",
+      "duration": "37 minutes",
+      "description": "Paper canvas, build, swap-test with a neighbor team, publish.",
       "bulletPoints": [
-        "Single Tool (5 min): Give Claude a calculator. Ask '7,394 × 8,261' — watch it DECIDE to use the tool",
-        "Multi-Tool (8 min): Add stock + company info tools. Watch Claude chain them for complex queries",
-        "Experiment (12 min): Try your own questions. Build a custom tool for YOUR product",
-        "Key moment: Ask 'What's the capital of France?' — Claude knows it doesn't need a tool"
-      ]
+        "12:45 canvas on paper: problem, user, 10× advantage, one core flow",
+        "12:50 build: CRAFT the prompt, generate, test with real input, fix the #1 issue",
+        "1:15 swap-test another team's product · 1:20 post your live link in the Canvas Session 4 discussion"
+      ],
+      "isBreak": false
     },
     {
-      "time": "7:10 PM - 7:22 PM",
-      "title": "Part 7: Production Code Walkthrough",
-      "duration": "12 minutes",
-      "description": "You built a simple agent. Now see what production looks like.",
+      "time": "Mon Oct 5 · 1:22 PM",
+      "title": "Demo Day + Zoom Out",
+      "duration": "23 minutes",
+      "description": "Sixty seconds per team, live link, real input, votes by hands. Then why Wednesday's agent plus today's product is the whole game.",
       "bulletPoints": [
-        "Open NanoClaw Code Walkthrough — real source code, annotated",
-        "index.ts: The brain — where Claude decides what to do",
-        "ipc-mcp.ts: The tools — how Claude talks to the outside world",
-        "db.ts: The memory — how Claude remembers across sessions",
-        "700 lines total. You could audit this in an afternoon. That's the point."
-      ]
-    },
-    {
-      "time": "7:22 PM - 7:30 PM",
-      "title": "Part 8: Wrap-Up + Homework",
-      "duration": "8 minutes",
-      "description": "The transformation narrative and what comes next.",
-      "bulletPoints": [
-        "At 5:00 you used AI. At 6:30 you BUILT AI products. At 7:10 you built agents. At 7:22 you read production code.",
-        "You went from consumer → builder → architect in 150 minutes",
-        "Homework: Iterate your product, add a 4th tool to Colab, user test with 3 people, write 1-page brief",
-        "Next week: Data & Analytics — the fuel that powers every AI product and agent"
-      ]
+        "Best problem–solution fit · Most delightful · Best UX",
+        "Session 5 on Wednesday: agents meet the real world — real APIs, error handling, memory"
+      ],
+      "isBreak": false
     }
   ],
   "resources": [
+    {
+      "title": "Meeting 1 Slide Deck — Your First Agent",
+      "url": "/session-04/slides-meeting1.html",
+      "description": "Wednesday's slides: chatbot vs agent, the agent loop, the live decide-or-not demo, the hands-on launch, and the enterprise-grade trust layer.",
+      "icon": "presentation",
+      "badge": "Slides",
+      "badgeType": "interactive",
+      "linkText": "Open slides"
+    },
+    {
+      "title": "Meeting 2 Slide Deck — Ship It",
+      "url": "/session-04/slides-meeting2.html",
+      "description": "Monday's slides: four product principles, the live Resume Roaster build, the builder's toolkit, the 40-minute startup, UX patterns, and demo day.",
+      "icon": "presentation",
+      "badge": "Slides",
+      "badgeType": "interactive",
+      "linkText": "Open slides"
+    },
+    {
+      "title": "Build Your First Agent — Colab Notebook",
+      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-04/ISOM260_Session4_Build_Your_First_Agent_Gemini.ipynb",
+      "description": "The agent loop you write yourself, a calculator tool, a three-tool agent, then Part 5: retries, error propagation, a circuit breaker, an approval gate, and an audit log. Uses your Session 3 Gemini key.",
+      "icon": "code",
+      "badge": "Hands-On",
+      "badgeType": "interactive",
+      "linkText": "Open in Colab"
+    },
+    {
+      "title": "Homework #5 — Build a Tool",
+      "url": "/session-04/homework-session4.html",
+      "description": "The full brief: design a 4th tool for a real problem, test it with three queries (one multi-tool), write three reflections, submit your notebook. Due Thu Oct 8, 11:59 PM.",
+      "icon": "file-text",
+      "badge": "Homework",
+      "badgeType": "reference",
+      "linkText": "Read the brief"
+    },
+    {
+      "title": "Homework #5 — Step-by-Step Guide",
+      "url": "/session-04/homework-session4-guide.html",
+      "description": "Stuck on the tool definition, the parameters, or the multi-tool test? A worked walkthrough with examples.",
+      "icon": "graduation-cap",
+      "badge": "Guide",
+      "badgeType": "reference",
+      "linkText": "Open the guide"
+    },
     {
       "title": "Agentic AI Deep-Dive",
       "url": "/session-04/agentic-ai-deep-dive.html",
@@ -149,43 +177,25 @@
     {
       "title": "NanoClaw for Beginners",
       "url": "/session-04/nanoclaw-beginners-guide.html",
-      "description": "No programming experience needed. Understand how a production AI agent works through business analogies, pseudocode, and just ~20 key lines of real code. Interactive detective challenges included.",
+      "description": "No programming experience needed. How a production AI agent works through business analogies, pseudocode, and ~20 key lines of real code.",
       "icon": "graduation-cap",
-      "badge": "Start Here",
+      "badge": "Optional Reading",
       "badgeType": "interactive",
       "linkText": "Start learning"
     },
     {
       "title": "Inside NanoClaw: Full Code Walkthrough",
       "url": "/session-04/nanoclaw-code-walkthrough.html",
-      "description": "Ready for more? Read real production agent code file-by-file. See how index.ts, ipc-mcp.ts, and db.ts map to the Agent Formula. ~700 lines that power 10,500+ GitHub stars.",
+      "description": "Ready for more? Read real production agent code file by file — the same loop you wrote, with the trust layer around it.",
       "icon": "file-code",
       "badge": "Deep Dive",
       "badgeType": "code",
       "linkText": "Explore the code"
     },
     {
-      "title": "Agent Workshop Notebook (Claude)",
-      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-04/ISOM260_Session4_Build_Your_First_Agent.ipynb",
-      "description": "Build your first AI agent with 3 tools: calculator, stock lookup, company info. Watch Claude reason about which to use. Requires an Anthropic API key.",
-      "icon": "code",
-      "badge": "Hands-On",
-      "badgeType": "interactive",
-      "linkText": "Open in Colab"
-    },
-    {
-      "title": "Agent Workshop Notebook (Gemini)",
-      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-04/ISOM260_Session4_Build_Your_First_Agent_Gemini.ipynb",
-      "description": "Same agent workshop using Google Gemini instead of Claude. Identical tools and structure — just a different LLM backend. Requires a Google API key.",
-      "icon": "code",
-      "badge": "Hands-On",
-      "badgeType": "interactive",
-      "linkText": "Open in Colab"
-    },
-    {
       "title": "Lovable",
       "url": "https://lovable.dev",
-      "description": "AI-powered full-stack builder. Describe your app, get working code with backend, database, and deployment.",
+      "description": "Monday's default builder. Describe your app, get a working product with a published link. Create a free account before Monday with a personal Google account.",
       "icon": "heart",
       "badge": "Builder",
       "badgeType": "tool",
@@ -194,25 +204,16 @@
     {
       "title": "Bolt.new",
       "url": "https://bolt.new",
-      "description": "Instant web apps from prompts. Great for rapid prototyping and iteration.",
+      "description": "The fallback builder: fastest to first pixel, great for single-page tools.",
       "icon": "zap",
       "badge": "Builder",
       "badgeType": "tool",
       "linkText": "Try Bolt"
     },
     {
-      "title": "Claude Artifacts",
-      "url": "https://claude.ai",
-      "description": "Create interactive tools, visualizations, and mini-apps directly in Claude conversations.",
-      "icon": "sparkles",
-      "badge": "Builder",
-      "badgeType": "tool",
-      "linkText": "Open Claude"
-    },
-    {
-      "title": "Anthropic Tool Use Docs",
-      "url": "https://docs.anthropic.com/en/docs/build-with-claude/tool-use",
-      "description": "Official documentation for giving Claude tools. The foundation of building AI agents.",
+      "title": "Gemini Function Calling — Docs",
+      "url": "https://ai.google.dev/gemini-api/docs/function-calling",
+      "description": "The official reference for what you built: tool declarations, function calls, and function responses.",
       "icon": "book-open",
       "badge": "Docs",
       "badgeType": "code",
@@ -222,144 +223,141 @@
   "activities": [
     {
       "number": 1,
-      "icon": "rocket",
-      "title": "The 50-Minute Startup",
-      "description": "Build and deploy a real AI-powered product in teams of 2-3:",
+      "icon": "bot",
+      "title": "Build the Agent Loop (Wednesday)",
+      "description": "Parts 1–4 of the notebook, on your own key:",
       "steps": [
         {
-          "title": "Fill the AI Product Canvas (8 min)",
-          "description": "Problem you're solving, target user, 10x advantage over alternatives, one core flow."
+          "title": "Define a tool",
+          "description": "A job description for Gemini (name, what it does, what inputs) plus the Python function that actually runs."
         },
         {
-          "title": "Build Phase (32 min)",
-          "description": "Use Lovable, Bolt, or Claude Artifacts. Prompt, iterate, get instructor feedback walking the room."
+          "title": "Write the loop",
+          "description": "Send message + tools → model decides → your code runs the tool → result goes back → repeat until it answers."
         },
         {
-          "title": "Test & Refine (7 min)",
-          "description": "Swap with another team. Get real user feedback. Fix the #1 issue."
+          "title": "Watch it decide",
+          "description": "7,394 × 8,261 reaches for the calculator. 'Capital of France' does not. Nobody wrote an if-statement."
         },
         {
-          "title": "Deploy & Pitch Prep (3 min)",
-          "description": "One-click deploy. Prepare your 90-second pitch: Problem, Solution, Demo, Ask."
+          "title": "Chain three tools",
+          "description": "Calculator, stock lookup, company info: count the calls and watch results feed each other."
         }
       ]
     },
     {
       "number": 2,
-      "icon": "trophy",
-      "title": "Demo Day",
-      "description": "Showcase your creations and learn from classmates:",
+      "icon": "shield",
+      "title": "Make It Enterprise-Grade (Wednesday, together)",
+      "description": "Part 5: the trust layer that separates a demo from a deployment:",
       "steps": [
         {
-          "title": "Gallery Walk (8 min)",
-          "description": "Walk around, try every team's product for ~1 minute each."
+          "title": "Retries and a circuit breaker",
+          "description": "Exponential backoff on 429s, a max-steps guard so it can never loop forever."
         },
         {
-          "title": "Vote",
-          "description": "Pick your favorites: Best Problem-Solution Fit, Most Delightful, Best UX."
+          "title": "Error propagation",
+          "description": "A failing tool returns its error to the model, which reports honestly instead of filling the gap."
         },
         {
-          "title": "Top 3 Pitches (7 min)",
-          "description": "Winners do 90-second live demos. Celebrate all teams!"
+          "title": "The approval gate",
+          "description": "The agent wants to send an email. HUMAN_IN_THE_LOOP decides. Flip it and approve one yourself."
+        },
+        {
+          "title": "The audit log",
+          "description": "Every tool call, timestamped, as a table. What compliance asks for on day one."
+        }
+      ],
+      "discussionNote": "The loop is 40 lines. The trust layer around it is the product."
+    },
+    {
+      "number": 3,
+      "icon": "rocket",
+      "title": "The 40-Minute Startup (Monday)",
+      "description": "Teams of 2–3. From paper canvas to published link:",
+      "steps": [
+        {
+          "title": "Canvas on paper (5 min)",
+          "description": "Problem · user · 10× advantage · the one core flow. Feature lists are killed on sight."
+        },
+        {
+          "title": "Build (25 min)",
+          "description": "CRAFT the prompt in Lovable or Bolt, generate, test with real input, fix the #1 issue."
+        },
+        {
+          "title": "Swap-test (5 min)",
+          "description": "Use a neighbor team's product. Write them one thing to fix."
+        },
+        {
+          "title": "Publish",
+          "description": "Post your live link in the Canvas Session 4 discussion."
         }
       ]
     },
     {
-      "number": 3,
-      "icon": "bot",
-      "title": "Build Your First AI Agent",
-      "description": "25 minutes in Google Colab — real tools, real reasoning, real magic:",
-      "steps": [
-        {
-          "title": "Single Tool (5 min)",
-          "description": "Give Claude a calculator. Ask: 'What is 7,394 × 8,261?' Watch it DECIDE to use the tool."
-        },
-        {
-          "title": "Multi-Tool Agent (8 min)",
-          "description": "Add stock lookup + company info. Ask: 'Compare Apple and Microsoft market caps.' Watch Claude chain tools."
-        },
-        {
-          "title": "Experiment (12 min)",
-          "description": "Try your own questions. Build a custom tool that would be useful for YOUR product from the build session."
-        }
-      ],
-      "codeBlock": {
-        "language": "The Agent Equation",
-        "code": "AI Agent = LLM + Tools + Reasoning Loop + Memory\n\n┌─────────────────────────────────────────────┐\n│  Chatbot: \"What's our Q4 revenue?\"          │\n│  → \"I don't have access to that data.\"     │\n│  ❌ Dead end. YOU go find it.               │\n└─────────────────────────────────────────────┘\n\n┌─────────────────────────────────────────────┐\n│  Agent: \"What's our Q4 revenue?\"            │\n│  → *calls* query_database(\"revenue\", \"Q4\") │\n│  → *calls* calculator(\"2.3M - 2.05M\")      │\n│  → \"Revenue: $2.3M, up 12% QoQ\"            │\n│  ✅ Agent did the work. You got the insight.│\n└─────────────────────────────────────────────┘"
-      }
-    },
-    {
       "number": 4,
-      "icon": "file-code",
-      "title": "Production Code Walkthrough",
-      "description": "You built a simple agent. Now see what a production agent looks like — NanoClaw's actual source:",
+      "icon": "trophy",
+      "title": "Demo Day (Monday)",
+      "description": "Sixty seconds per team, live link, real input:",
       "steps": [
         {
-          "title": "index.ts — The Brain",
-          "description": "Where Claude decides what to do. The reasoning loop that powers every action."
+          "title": "Show, don't tell",
+          "description": "No slides, no 'imagine that'. Open the link and use it."
         },
         {
-          "title": "ipc-mcp.ts — The Tools",
-          "description": "How Claude talks to the outside world. The MCP protocol that enables any tool."
+          "title": "Vote by hands",
+          "description": "Best problem–solution fit · Most delightful · Best UX."
         },
         {
-          "title": "db.ts — The Memory",
-          "description": "How Claude remembers across sessions. SQLite keeps context without the cloud."
-        },
-        {
-          "title": "The Takeaway",
-          "description": "700 lines total. You could audit this in an afternoon. That's why NanoClaw won."
+          "title": "The only question",
+          "description": "Would a stranger use this tomorrow?"
         }
-      ],
-      "codeBlock": {
-        "language": "NanoClaw vs OpenClaw",
-        "code": "┌─────────────────────────────────────────────┐\n│  OpenClaw (Operator)                        │\n│  • 400,000 lines of code                    │\n│  • Closed source — can't audit              │\n│  • Summer Yue's inbox deleted               │\n│  • \"Trust us\" security model                │\n└─────────────────────────────────────────────┘\n\n┌─────────────────────────────────────────────┐\n│  NanoClaw                                   │\n│  • ~700 lines of code                       │\n│  • Fully open source                        │\n│  • Audit everything in an afternoon         │\n│  • Built by 1 dev in 1 weekend              │\n│  • 10,500+ GitHub stars                     │\n│  • Karpathy endorsed                        │\n└─────────────────────────────────────────────┘\n\n\"Simplicity beats features. Security is PMF.\""
-      }
+      ]
     }
   ],
   "takeaways": [
     {
-      "icon": "rocket",
-      "text": "<strong>Ship fast, learn faster.</strong> A working prototype beats a perfect plan. You built a real product in 50 minutes."
-    },
-    {
       "icon": "bot",
-      "text": "<strong>Agents = LLM + Tools + Loop + Memory.</strong> This equation powers every AI agent in the world. You built one. You understand it."
+      "text": "<strong>A chatbot answers. An agent does.</strong> LLM + Tools + Loop + Memory — the model decides which tool, when, and whether it's done."
     },
     {
-      "icon": "brain",
-      "text": "<strong>The AI decides.</strong> You didn't write if/else logic. Claude REASONED about which tools to use. That's the breakthrough."
+      "icon": "wrench",
+      "text": "<strong>A tool is a Python function with a job description.</strong> Which tools to build is a business decision, not an engineering one."
     },
     {
-      "icon": "file-code",
-      "text": "<strong>Production code is readable.</strong> NanoClaw's 700 lines beat OpenClaw's 400,000. Simplicity wins. Security is product-market fit."
+      "icon": "shield",
+      "text": "<strong>The trust layer is the product.</strong> Retries, error propagation, a step limit, an approval gate, an audit log — day one, not after the incident."
     },
     {
-      "icon": "graduation-cap",
-      "text": "<strong>Consumer → Builder → Architect.</strong> You went from using AI to building products to understanding production systems in 150 minutes."
+      "icon": "target",
+      "text": "<strong>Problem First, One Core Flow.</strong> A link a stranger can use beats any deck or spec."
+    },
+    {
+      "icon": "rocket",
+      "text": "<strong>Prototype before you buy.</strong> You can now build an MVP in an afternoon — cheaper than the meeting about it."
     }
   ],
   "homework": [
     {
-      "label": "Iterate:",
-      "text": "Make 3 meaningful improvements to your product based on peer feedback. Document before/after."
+      "label": "HW #5 · due Thu Oct 8, 11:59 PM:",
+      "text": "Build a Tool. Design a 4th tool for a real problem (name, description, parameters, function), test it with 3 queries including one multi-tool query, answer the three reflection questions, and submit your .ipynb with outputs on Canvas. Full brief and step-by-step guide on this page."
     },
     {
-      "label": "Build:",
-      "text": "Add a 4th custom tool to the Colab notebook that would be useful for your product. Test it with 3 different queries."
+      "label": "Before Monday:",
+      "text": "Create a free Lovable account with a personal Google account, and come with a problem worth solving and a teammate in mind."
     },
     {
-      "label": "Test:",
-      "text": "User test your product with 3 people outside class. Write down their exact feedback (don't interpret, just record)."
+      "label": "Monday, in class:",
+      "text": "Post your team's published product link in the Canvas Session 4 discussion. That link is the deliverable."
     },
     {
-      "label": "Write:",
-      "text": "1-page product brief: Problem, Target User, Competition, Monetization Strategy, Next 3 Features."
+      "label": "Optional:",
+      "text": "Read NanoClaw for Beginners — a production agent's code explained for non-programmers. You'll recognize the loop."
     }
   ],
   "nextSession": {
     "title": "Session 5: Agents Meet the Real World",
-    "description": "Real APIs, error handling, and memory — take your agents from simulated toys to production-ready tools.",
+    "description": "Real APIs, error handling, and memory — take your agent from simulated tools to something that touches live data.",
     "tags": [
       "Real APIs",
       "Error Handling",

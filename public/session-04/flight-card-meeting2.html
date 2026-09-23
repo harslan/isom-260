@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flight Card · Session 4, Meeting 2 | ISOM 260</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Sora:wght@600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'DM Sans', sans-serif; background: #f4f2ec; color: #1a1a1a; padding: 1.2rem; font-size: 13px; line-height: 1.45; }
+    .card { max-width: 820px; margin: 0 auto; background: #fff; border: 2px solid #1a1a1a; border-radius: 10px; padding: 1.4rem 1.6rem; }
+    h1 { font-family: 'Sora', sans-serif; font-size: 1.1rem; display: flex; justify-content: space-between; align-items: baseline; border-bottom: 2px solid #1a1a1a; padding-bottom: 0.5rem; margin-bottom: 0.8rem; }
+    h1 .sub { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 400; color: #666; }
+    h2 { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: #b3003e; margin: 0.9rem 0 0.35rem; }
+    table { width: 100%; border-collapse: collapse; }
+    td { padding: 0.18rem 0.5rem 0.18rem 0; vertical-align: top; }
+    td.t { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 0.78rem; white-space: nowrap; width: 4.2rem; }
+    .cut { color: #b3003e; font-weight: 700; }
+    .hl { background: #fff3b8; padding: 0 0.25rem; font-weight: 700; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1.6rem; }
+    .mono { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; background: #f4f2ec; border: 1px solid #ccc; border-radius: 6px; padding: 0.5rem 0.65rem; white-space: pre-wrap; margin: 0.25rem 0; }
+    ul { list-style: none; }
+    li { padding-left: 1rem; position: relative; margin-bottom: 0.22rem; }
+    li::before { content: "▸"; position: absolute; left: 0; color: #b3003e; }
+    .rule { margin-top: 0.9rem; border: 2px solid #b3003e; border-radius: 8px; padding: 0.55rem 0.8rem; font-weight: 700; text-align: center; background: #fdf0f4; }
+    @media print { body { background: #fff; padding: 0; } .card { border-width: 1.5px; max-width: 100%; } @page { margin: 1cm; } }
+</style>
+</head>
+<body>
+<div class="card">
+    <h1>SESSION 4 · MEETING 2 · "SHIP IT" <span class="sub">MON OCT 5 · 12:30–1:45 · HW5 DUE THU OCT 8 · HARD STOP 1:45</span></h1>
+
+    <div class="grid">
+    <div>
+        <h2>Timeline · slide #</h2>
+        <table>
+            <tr><td class="t">12:30</td><td>1–3 · "Build in an hour what took a quarter" · four principles — Problem First / 10× / One Core Flow / Ship &amp; Learn (5 min)</td></tr>
+            <tr><td class="t">12:35</td><td>4 · <span class="hl">LIVE: Resume Roaster in Lovable</span> from the prompt below → test with a real paragraph → fix one thing → Publish → open the link on your phone — <span class="cut">CUT 12:41</span></td></tr>
+            <tr><td class="t">12:41</td><td>5 · Toolkit, one rule: "whichever you can publish from in 30 min" (3 min) · form teams of 2–3 NOW</td></tr>
+            <tr><td class="t">12:45</td><td>6 · <span class="hl">Canvas on paper</span> (5 min): problem · user · 10× · one core flow. Walk the room, kill feature lists</td></tr>
+            <tr><td class="t">12:50</td><td>6–7 · <span class="hl">BUILD</span> (25 min) · slide 7 UX patterns stays up · walk the room every 5 min: "what's your ONE flow?" — <span class="cut">STOP 1:15</span></td></tr>
+            <tr><td class="t">1:15</td><td>Swap: each team uses a neighbor team's product, writes ONE fix on a sticky (5 min)</td></tr>
+            <tr><td class="t">1:20</td><td>Publish + post link in the Canvas Session 4 discussion (2 min)</td></tr>
+            <tr><td class="t">1:22</td><td>8 · <span class="hl">DEMO DAY</span> — 60 s per team, live link, real input · votes by hands for 3 categories — <span class="cut">CUT 1:35</span></td></tr>
+            <tr><td class="t">1:35</td><td>9–10 · Zoom out (agent + product) · boardroom (5 min)</td></tr>
+            <tr><td class="t">1:40</td><td>11–12 · HW #5 reminder (Thu Oct 8) · NanoClaw reading optional · Wed = Session 5 → close</td></tr>
+        </table>
+
+        <h2>Resume Roaster prompt (slide 4 — paste into Lovable)</h2>
+        <div class="mono">CONTEXT: College students paste a resume paragraph and get brutally honest feedback.
+ROLE: You are building a one-page web app called Resume Roaster.
+ACTION: One textarea, one "Roast me" button. Send the text to an AI and show:
+a 1–10 score, the 3 biggest problems, and a rewritten version.
+FORMAT: Single page, mobile-friendly, results below the input. Include a one-line
+note under the title saying what the app can and cannot do.
+TONE: Playful UI copy, the feedback itself is direct but not cruel.</div>
+    </div>
+    <div>
+        <h2>Fix-its</h2>
+        <ul>
+            <li>Lovable free tier = limited daily messages → <b>one account per team</b>, pairs share; Bolt.new is the fallback</li>
+            <li>Sign-in needs Google or GitHub → personal accounts (told them Wed)</li>
+            <li>Wi-Fi bad / builder down → Claude or Gemini artifact route: one-file tool, share the chat link</li>
+            <li>Team stuck at minute 10 with nothing rendering → give them the Roaster prompt and swap the domain</li>
+            <li>"Add login / payments / dashboard" → no. One core flow. Kill features on sight</li>
+            <li>Publish failing → screen-share the local preview for demo day; link can come tonight</li>
+        </ul>
+
+        <h2>If behind at 1:15</h2>
+        <ul>
+            <li>Drop the swap step; demo day shrinks to 45 s per team; slide 10 in one sentence</li>
+            <li>Demo day is untouchable — a link on a screen is the whole lesson</li>
+        </ul>
+
+        <h2>Before / after</h2>
+        <ul>
+            <li>⚠️ <b>Build Resume Roaster once yourself tonight</b> so the live prompt is proven; keep the published link as a fallback</li>
+            <li>Canvas: <b>Session 4 discussion open</b> for product links · HW #5 posted (due Thu Oct 8) · print paper canvases (one per team)</li>
+            <li>Tabs: slides · lovable.dev (signed in) · bolt.new · Canvas discussion</li>
+            <li>After: record the 3 winners; note which builder worked best — feeds the final-project guidance</li>
+        </ul>
+    </div>
+    </div>
+
+    <div class="rule">The day's one job: every team leaves with a PUBLISHED LINK to something a stranger could use. Everything else is negotiable.</div>
+</div>
+</body>
+</html>
