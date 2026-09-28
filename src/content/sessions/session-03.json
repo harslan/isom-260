@@ -71,9 +71,9 @@
     },
     {
       "time": "Mon Sep 28 · 12:30 PM",
-      "title": "Meeting 2 · Build Day: Key Pulse + Run a Focus Group",
-      "duration": "30 minutes",
-      "description": "Everyone confirms a working key, then the first build: pitch YOUR idea to 25 synthetic customers, chart the objections, fix the pitch, re-run the same room.",
+      "title": "Meeting 2 · Build Day, Part A: You Are the Loop",
+      "duration": "35 minutes",
+      "description": "Everyone confirms a working key, then: pitch YOUR idea to 25 synthetic customers, chart the objections, fix the pitch, re-run the same room.",
       "bulletPoints": [
         "Prose is for people, data is for systems — the model fills in a schema you designed",
         "Would they pay, at what price, their #1 objection in their own voice — one call, 25 rows, a chart",
@@ -82,25 +82,25 @@
       "isBreak": false
     },
     {
-      "time": "Mon Sep 28 · 1:00 PM",
-      "title": "Sight: A Photo Becomes Data",
-      "duration": "5 minutes",
-      "description": "Live on the projector: a phone photo of a receipt becomes a table, with the arithmetic check finance will demand.",
+      "time": "Mon Sep 28 · 1:05 PM",
+      "title": "Part B: The Model Is the Loop",
+      "duration": "27 minutes",
+      "description": "Hand the model the focus group as a tool and one goal. Press play. It decides when to run the room, what to change, and when to stop — your first agent. Then an audit checks whether it cheated.",
       "bulletPoints": [
-        "Same call, image bytes instead of text",
-        "The ⚠️ mismatch flag is what makes a finance team trust it"
+        "LLM + Tools + Loop + Memory = Agent — nobody wrote an if-statement",
+        "Every 'the model chose:' line in the trace is a decision you didn't code",
+        "Goodhart's law, live: give an agent a number and it finds the cheapest way to move it — why humans approve"
       ],
       "isBreak": false
     },
     {
-      "time": "Mon Sep 28 · 1:05 PM",
-      "title": "Your First Agent",
-      "duration": "37 minutes",
-      "description": "The shift: a chatbot answers, an agent does. Watch Gemini reach for a calculator — and not reach for it — then build the loop yourself.",
+      "time": "Mon Sep 28 · 1:32 PM",
+      "title": "Wrap: Boardroom + Wednesday",
+      "duration": "13 minutes",
+      "description": "If ahead, a phone photo of a receipt becomes a table. Then what you can now say in a meeting, and Wednesday: you write the 40-line loop yourself, then make it enterprise-grade.",
       "bulletPoints": [
-        "LLM + Tools + Loop + Memory = Agent; a tool is a Python function, its description is a job description",
-        "Hands-on Parts 1–4: setup, calculator tool, the agent loop, a three-tool agent that chains calls",
-        "Stop at Part 5 — Wednesday makes it the version that wouldn't get you fired"
+        "\"Can we just let the agent optimize it?\" — only with an audit and a human gate",
+        "HW #4 (Tokenizer Safari) due Thu Oct 1, 11:59 PM — last call"
       ],
       "isBreak": false
     }
@@ -118,20 +118,11 @@
     {
       "title": "Meeting 2 Slide Deck — Build Day",
       "url": "/session-03/slides-meeting2.html",
-      "description": "Monday's slides: key pulse, the focus-group build, the live receipt demo, the shift to agents, and the hands-on agent loop.",
+      "description": "Monday's slides: key pulse, Part A (you are the loop), Part B (the model is the loop), the agent-will-game-your-metric lesson, boardroom, Wednesday.",
       "icon": "presentation",
       "badge": "Slides",
       "badgeType": "interactive",
       "linkText": "Open slides"
-    },
-    {
-      "title": "Build Your First Agent — Colab Notebook (Session 4, used Monday)",
-      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-04/ISOM260_Session4_Build_Your_First_Agent_Gemini.ipynb",
-      "description": "Parts 1–4 on Monday: setup, a calculator tool, the ~40-line agent loop, a three-tool agent that chains calls. Part 5 (retries, circuit breaker, approval gate, audit log) is Wednesday.",
-      "icon": "bot",
-      "badge": "Hands-On",
-      "badgeType": "interactive",
-      "linkText": "Open in Colab"
     },
     {
       "title": "CRAFT Workshop — Colab Notebook (optional)",
@@ -143,9 +134,9 @@
       "linkText": "Open in Colab"
     },
     {
-      "title": "Run a Focus Group Before Lunch — Colab Notebook (Build 1)",
+      "title": "Run a Focus Group Before Lunch — Colab Notebook (today's build)",
       "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-03/ISOM260_Session3_Focus_Group_Before_Lunch.ipynb",
-      "description": "Pitch YOUR idea to 25 synthetic customers Gemini invents — budgets, skepticism, quirks. All 25 react in one call: would they pay, at what price, their top objection in their own voice. Chart the objections, fix the pitch, re-run the same room and read who flipped. Then the honesty check: a hypothesis, not evidence — and exactly what to ask five real people. Optional Part 6 turns the whole class's ideas into a chart.",
+      "description": "Part A, you are the loop: pitch YOUR idea to 25 synthetic customers Gemini invents, chart the objections, fix the pitch, re-run the same room. Part B, the model is the loop: hand it the focus group as a tool and one goal, press play, watch it decide — then audit whether it cheated. Optional Part 6 charts the whole class's ideas.",
       "icon": "sparkles",
       "badge": "Hands-On",
       "badgeType": "interactive",
@@ -291,11 +282,11 @@
     {
       "number": 4,
       "icon": "users",
-      "title": "Build Day (Monday): Focus Group → Photo → Agent",
-      "description": "Three builds, same key, increasing autonomy:",
+      "title": "Build Day (Monday): You Are the Loop → The Model Is the Loop",
+      "description": "One notebook, two levels of autonomy:",
       "steps": [
         {
-          "title": "Run a focus group before lunch",
+          "title": "Part A · Run a focus group before lunch",
           "description": "Your idea in one sentence. Gemini invents 25 customers; all 25 react in one call. Chart the objections, fix the pitch, re-run the same room."
         },
         {
@@ -303,15 +294,15 @@
           "description": "A hypothesis, not evidence. Take the <strong>what would change their mind</strong> column to five real people."
         },
         {
-          "title": "A photo becomes data",
-          "description": "Photograph a receipt, get a table back, and check the arithmetic — the guardrail finance insists on."
+          "title": "Part B · Press play",
+          "description": "The model gets the focus group as a tool and one goal. Watch the trace: every <strong>the model chose:</strong> line is a decision nobody coded."
         },
         {
-          "title": "Your first agent, Parts 1–4",
-          "description": "A calculator tool, the agent loop, a three-tool agent. Count the tool calls. Stop at Part 5."
+          "title": "The audit",
+          "description": "Did the agent beat your v2? Did it cheat to do it — invent guarantees a student founder can't keep? Goodhart's law, live."
         }
       ],
-      "discussionNote": "Show & tell: your pitch, your #1 objection, what moved the number."
+      "discussionNote": "Hands up: whose agent beat their v2? Whose agent cheated?"
     }
   ],
   "takeaways": [
@@ -337,7 +328,7 @@
     },
     {
       "icon": "bot",
-      "text": "<strong>Nobody wrote an if-statement.</strong> Give the model tools and a loop, and it decides which to call, when, and whether it is done. That is an agent."
+      "text": "<strong>Nobody wrote an if-statement.</strong> Give the model a tool and a goal, and it decides which to call, when, and whether it is done. That is an agent — and it will game any metric you hand it, which is why humans approve."
     }
   ],
   "homework": [
@@ -355,7 +346,7 @@
     },
     {
       "label": "Before Wednesday:",
-      "text": "Re-read run_agent in the agent notebook once, slowly. Wednesday starts at Part 5: the guardrails that make an agent safe to run at a company."
+      "text": "Re-read Part B's run_agent once, slowly — it is 30 lines. Wednesday you write it yourself and then add the guardrails that make it safe to run at a company."
     }
   ],
   "nextSession": {
