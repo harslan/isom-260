@@ -89,7 +89,7 @@
         "One function, one CRAFT prompt, one real task from your life",
         "The tuning guide: when output is off, turn ONE knob",
         "Show & tell: would you actually use this tomorrow?",
-        "Done early? The bonus notebook: schema → guaranteed JSON, 30 reviews → chart in one call, phone photo → data"
+        "Done early? Pitch your own idea to 25 synthetic customers, chart the objections, fix the pitch, re-run — the bonus notebook"
       ],
       "isBreak": false
     },
@@ -135,10 +135,19 @@
       "linkText": "Open in Colab"
     },
     {
-      "title": "Bonus — Three Things a Chatbot Can't Do (Colab)",
+      "title": "Bonus — Run a Focus Group Before Lunch (Colab)",
+      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-03/ISOM260_Session3_Focus_Group_Before_Lunch.ipynb",
+      "description": "Pitch YOUR idea to 25 synthetic customers Gemini invents — budgets, skepticism, quirks. All 25 react in one call: would they pay, at what price, their top objection in their own voice. Chart the objections, fix the pitch, re-run the same room and read who flipped. Then the honesty check: a hypothesis, not evidence — and exactly what to ask five real people. Optional Part 6 turns the whole class's ideas into a chart.",
+      "icon": "sparkles",
+      "badge": "Bonus",
+      "badgeType": "interactive",
+      "linkText": "Open in Colab"
+    },
+    {
+      "title": "Bonus #2 — Three Things a Chatbot Can't Do (Colab)",
       "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-03/ISOM260_Session3_Three_Things_A_Chatbot_Cant_Do.ipynb",
       "description": "For fast finishers and the curious: structured output (a schema the model must fill in), 30 reviews tagged in one call with a chart and a 10,000-review price tag, and a phone photo of a receipt, business card, or whiteboard turned into data. Three calls, same key.",
-      "icon": "sparkles",
+      "icon": "layers",
       "badge": "Bonus",
       "badgeType": "interactive",
       "linkText": "Open in Colab"
