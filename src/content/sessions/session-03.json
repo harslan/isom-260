@@ -100,7 +100,7 @@
       "description": "Multi-turn chat (and why memory is billed), pricing your app at business scale, and Wednesday's big reveal.",
       "bulletPoints": [
         "chat.send_message: the SDK resends history every turn — context-window economics live",
-        "The CFO math: $15–30/month at 500 calls/day — cheaper than one employee-hour",
+        "The CFO math: $30–50/month at 500 calls/day, mostly hidden thinking tokens — cheaper than one employee-hour",
         "Wednesday: Session 4 — the model starts deciding for itself. Your first agent."
       ],
       "isBreak": false
