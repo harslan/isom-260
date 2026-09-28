@@ -2,7 +2,7 @@
   "number": 3,
   "slug": "session-03",
   "title": "The Art of Prompt Engineering",
-  "subtitle": "Tokens, the context window, in-context learning — then your first API key and the CRAFT framework",
+  "subtitle": "Tokens, the context window, your first API key — then a build day: structured output, a focus group from your own idea, a photo that becomes data, and your first agent",
   "heroTitle": "The Art of <span class=\"bg-gradient-to-br from-accent-cyan to-accent-purple bg-clip-text text-transparent\">Prompt Engineering</span>",
   "duration": "2 meetings · 75 min",
   "meetings": [
@@ -13,8 +13,8 @@
   "tags": [
     "Tokens & Context",
     "Your First API Key",
-    "CRAFT Framework",
-    "Ship a Mini-App"
+    "Structured Output",
+    "Your First Agent"
   ],
   "objectives": [
     {
@@ -26,12 +26,12 @@
       "description": "A free Google AI Studio key, stored the professional way in Colab Secrets. Then your own Python talks to a frontier model — the foundation for agents, RAG, and your final project."
     },
     {
-      "title": "Apply the CRAFT Framework",
-      "description": "Context, Role, Action, Format, Tone: the five ingredients that turn a vague ask into output you would actually use, on the first try."
+      "title": "Make the Model Fill In a Form",
+      "description": "Structured output: hand Gemini a schema and get guaranteed JSON back — a support ticket from a messy email, 25 customer reactions from one call, a receipt from a phone photo. The bridge from AI to your systems."
     },
     {
-      "title": "Ship a Mini-App and Price It",
-      "description": "Build an email tone analyzer, a meeting summarizer, or a product-copy generator on your own real input, give it memory, and napkin-math what it would cost at business scale."
+      "title": "Build Your First Agent",
+      "description": "Give the model tools and watch it decide — which to call, when, and whether it is done. You read the ~40-line loop that is inside every agent on Earth."
     }
   ],
   "agenda": [
@@ -71,37 +71,36 @@
     },
     {
       "time": "Mon Sep 28 · 12:30 PM",
-      "title": "Meeting 2 · Key Pulse Check + CRAFT",
-      "duration": "17 minutes",
-      "description": "Everyone confirms a working key, then the framework that turns vague asks into reliable output: Context, Role, Action, Format, Tone.",
+      "title": "Meeting 2 · Build Day: Key Pulse + Run a Focus Group",
+      "duration": "30 minutes",
+      "description": "Everyone confirms a working key, then the first build: pitch YOUR idea to 25 synthetic customers, chart the objections, fix the pitch, re-run the same room.",
       "bulletPoints": [
-        "The live before/after: 'write something about our late shipment' vs. the CRAFTed version",
-        "Same model, same price — the prompt is the product"
+        "Prose is for people, data is for systems — the model fills in a schema you designed",
+        "Would they pay, at what price, their #1 objection in their own voice — one call, 25 rows, a chart",
+        "The honesty check: a hypothesis, not evidence — and exactly what to ask five real people"
       ],
       "isBreak": false
     },
     {
-      "time": "Mon Sep 28 · 12:47 PM",
-      "title": "Workshop: Ship a Mini-App",
+      "time": "Mon Sep 28 · 1:00 PM",
+      "title": "Sight: A Photo Becomes Data",
+      "duration": "5 minutes",
+      "description": "Live on the projector: a phone photo of a receipt becomes a table, with the arithmetic check finance will demand.",
+      "bulletPoints": [
+        "Same call, image bytes instead of text",
+        "The ⚠️ mismatch flag is what makes a finance team trust it"
+      ],
+      "isBreak": false
+    },
+    {
+      "time": "Mon Sep 28 · 1:05 PM",
+      "title": "Your First Agent",
       "duration": "37 minutes",
-      "description": "Pick one — Email Tone Analyzer, Meeting Notes → Action Items, or Product Copy Generator — make it work, then tune it on your own real input.",
+      "description": "The shift: a chatbot answers, an agent does. Watch Gemini reach for a calculator — and not reach for it — then build the loop yourself.",
       "bulletPoints": [
-        "One function, one CRAFT prompt, one real task from your life",
-        "The tuning guide: when output is off, turn ONE knob",
-        "Show & tell: would you actually use this tomorrow?",
-        "Done early? Pitch your own idea to 25 synthetic customers, chart the objections, fix the pitch, re-run — the bonus notebook"
-      ],
-      "isBreak": false
-    },
-    {
-      "time": "Mon Sep 28 · 1:24 PM",
-      "title": "Memory, Money & the Road to Agents",
-      "duration": "21 minutes",
-      "description": "Multi-turn chat (and why memory is billed), pricing your app at business scale, and Wednesday's big reveal.",
-      "bulletPoints": [
-        "chat.send_message: the SDK resends history every turn — context-window economics live",
-        "The CFO math: $30–50/month at 500 calls/day, mostly hidden thinking tokens — cheaper than one employee-hour",
-        "Wednesday: Session 4 — the model starts deciding for itself. Your first agent."
+        "LLM + Tools + Loop + Memory = Agent; a tool is a Python function, its description is a job description",
+        "Hands-on Parts 1–4: setup, calculator tool, the agent loop, a three-tool agent that chains calls",
+        "Stop at Part 5 — Wednesday makes it the version that wouldn't get you fired"
       ],
       "isBreak": false
     }
@@ -117,29 +116,38 @@
       "linkText": "Open slides"
     },
     {
-      "title": "Meeting 2 Slide Deck — The Full Craft",
+      "title": "Meeting 2 Slide Deck — Build Day",
       "url": "/session-03/slides-meeting2.html",
-      "description": "Monday's slides: the CRAFT framework, the live before/after, the mini-app workshop, multi-turn memory, and the CFO cost math.",
+      "description": "Monday's slides: key pulse, the focus-group build, the live receipt demo, the shift to agents, and the hands-on agent loop.",
       "icon": "presentation",
       "badge": "Slides",
       "badgeType": "interactive",
       "linkText": "Open slides"
     },
     {
-      "title": "CRAFT Workshop — Colab Notebook",
-      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-03/ISOM260_Session3_CRAFT_Workshop.ipynb",
-      "description": "The build-day notebook: the craft_prompt function, the before/after demo, three mini-apps (email analyzer, meeting summarizer, product copy), build-your-own, multi-turn chat with memory, and the business-scale cost estimator.",
-      "icon": "code",
+      "title": "Build Your First Agent — Colab Notebook (Session 4, used Monday)",
+      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-04/ISOM260_Session4_Build_Your_First_Agent_Gemini.ipynb",
+      "description": "Parts 1–4 on Monday: setup, a calculator tool, the ~40-line agent loop, a three-tool agent that chains calls. Part 5 (retries, circuit breaker, approval gate, audit log) is Wednesday.",
+      "icon": "bot",
       "badge": "Hands-On",
       "badgeType": "interactive",
       "linkText": "Open in Colab"
     },
     {
-      "title": "Bonus — Run a Focus Group Before Lunch (Colab)",
+      "title": "CRAFT Workshop — Colab Notebook (optional)",
+      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-03/ISOM260_Session3_CRAFT_Workshop.ipynb",
+      "description": "Skipped in class — for anyone who wants the prompt-engineering drill: the craft_prompt function, three mini-apps, multi-turn chat with memory, and the cost estimator.",
+      "icon": "code",
+      "badge": "Optional",
+      "badgeType": "tool",
+      "linkText": "Open in Colab"
+    },
+    {
+      "title": "Run a Focus Group Before Lunch — Colab Notebook (Build 1)",
       "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-03/ISOM260_Session3_Focus_Group_Before_Lunch.ipynb",
       "description": "Pitch YOUR idea to 25 synthetic customers Gemini invents — budgets, skepticism, quirks. All 25 react in one call: would they pay, at what price, their top objection in their own voice. Chart the objections, fix the pitch, re-run the same room and read who flipped. Then the honesty check: a hypothesis, not evidence — and exactly what to ask five real people. Optional Part 6 turns the whole class's ideas into a chart.",
       "icon": "sparkles",
-      "badge": "Bonus",
+      "badge": "Hands-On",
       "badgeType": "interactive",
       "linkText": "Open in Colab"
     },
@@ -282,28 +290,28 @@
     },
     {
       "number": 4,
-      "icon": "wrench",
-      "title": "CRAFT Workshop: Ship a Mini-App (Monday)",
-      "description": "One function, one CRAFT prompt, one real task from your life:",
+      "icon": "users",
+      "title": "Build Day (Monday): Focus Group → Photo → Agent",
+      "description": "Three builds, same key, increasing autonomy:",
       "steps": [
         {
-          "title": "Watch the flip",
-          "description": "'Write something about our late shipment' vs. the CRAFTed version. Same model, same price."
+          "title": "Run a focus group before lunch",
+          "description": "Your idea in one sentence. Gemini invents 25 customers; all 25 react in one call. Chart the objections, fix the pitch, re-run the same room."
         },
         {
-          "title": "Pick ONE mini-app",
-          "description": "📧 Email Tone Analyzer · 📝 Meeting Notes → Action Items · 🛍️ Product Copy Generator. Make it work with the sample."
+          "title": "The honesty check",
+          "description": "A hypothesis, not evidence. Take the <strong>what would change their mind</strong> column to five real people."
         },
         {
-          "title": "Swap in your real input",
-          "description": "When the output is off, turn <strong>one</strong> knob: Context, Role, Action, Format, or Tone."
+          "title": "A photo becomes data",
+          "description": "Photograph a receipt, get a table back, and check the arithmetic — the guardrail finance insists on."
         },
         {
-          "title": "Give it memory, then price it",
-          "description": "Multi-turn chat that resends history every turn, and the cost of your app at 500 calls a day."
+          "title": "Your first agent, Parts 1–4",
+          "description": "A calculator tool, the agent loop, a three-tool agent. Count the tool calls. Stop at Part 5."
         }
       ],
-      "discussionNote": "Show & tell question for the room: would you actually use this tomorrow?"
+      "discussionNote": "Show & tell: your pitch, your #1 objection, what moved the number."
     }
   ],
   "takeaways": [
@@ -320,12 +328,16 @@
       "text": "<strong>Examples are programming.</strong> A few examples in the prompt change behavior with zero training — cheaper, faster, and reversible compared with fine-tuning."
     },
     {
-      "icon": "message-square",
-      "text": "<strong>The prompt is the product.</strong> Same model, same price — CRAFT decides whether the output is usable."
+      "icon": "file-json",
+      "text": "<strong>Prose is for people, data is for systems.</strong> Hand the model a schema and it fills in the form — that is the bridge from AI to your dashboards, databases, and spreadsheets."
     },
     {
       "icon": "zap",
       "text": "<strong>Six lines is the moat.</strong> The distance from AI user to AI builder is one API key and one call. You crossed it."
+    },
+    {
+      "icon": "bot",
+      "text": "<strong>Nobody wrote an if-statement.</strong> Give the model tools and a loop, and it decides which to call, when, and whether it is done. That is an agent."
     }
   ],
   "homework": [
@@ -338,12 +350,12 @@
       "text": "The Tokenizer Safari. Paste three things into a tokenizer (an English sentence, the same idea in another language, something weird). Post ONE surprising screenshot plus two sentences on the pricing implication for a real product in the Canvas Session 3 discussion."
     },
     {
-      "label": "Before Monday:",
-      "text": "Run the First API Call notebook top to bottom with your own key. Monday is a build day — nothing works without a working key in Colab Secrets."
-    },
-    {
       "label": "Optional:",
       "text": "Try the Job Hunter sneak peek: a proto-agent that fetches live job listings, ranks them for your profile, and drafts an outreach note."
+    },
+    {
+      "label": "Before Wednesday:",
+      "text": "Re-read run_agent in the agent notebook once, slowly. Wednesday starts at Part 5: the guardrails that make an agent safe to run at a company."
     }
   ],
   "nextSession": {
