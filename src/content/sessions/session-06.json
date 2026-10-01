@@ -1,340 +1,318 @@
 {
   "number": 6,
   "slug": "session-06",
-  "title": "Agent Patterns & Production Intelligence",
-  "subtitle": "ReAct reasoning, multi-agent architectures, and the patterns that separate demos from production systems",
-  "heroTitle": "Agent Patterns & <span class=\"bg-gradient-to-br from-accent-cyan to-accent-purple bg-clip-text text-transparent\">Production Intelligence</span>",
+  "title": "Make It Think + Your Midterm",
+  "subtitle": "Monday: the same loop, the same tools, one paragraph — and your agent plans before it acts. Wednesday: one agent or many, what MCP actually is, and the midterm project assigned with a plan on paper before you leave.",
+  "heroTitle": "Make It <span class=\"bg-gradient-to-br from-accent-cyan to-accent-purple bg-clip-text text-transparent\">Think</span>",
   "duration": "2 meetings · 75 min",
   "meetings": [
     "Mon Oct 19",
     "Wed Oct 21"
   ],
-  "icon": "bot",
+  "icon": "brain",
   "tags": [
-    "ReAct Pattern",
-    "Multi-Agent Systems",
+    "ReAct",
+    "Agent Patterns",
     "MCP",
-    "Business Automation",
-    "Agent Architecture"
+    "Midterm Project",
+    "Cost of Thinking"
   ],
   "objectives": [
     {
-      "title": "Master the ReAct Pattern",
-      "description": "Understand Reason + Act: how production agents think before they act, observe results, and adapt. Build an agent that reasons visibly through a multi-step research task."
+      "title": "Turn a Lookup Bot into a Researcher",
+      "description": "ReAct: think, act, observe, repeat. One paragraph of system prompt, zero changes to the loop. Run the same question at three levels and read the agent's thoughts."
     },
     {
-      "title": "Understand Multi-Agent Architectures",
-      "description": "Learn three patterns — Pipeline, Debate, and Orchestrator — and when each is the right call. Design a multi-agent system on paper."
+      "title": "Price the Thinking",
+      "description": "Steps, tool calls, thinking tokens, dollars. ReAct is several times more expensive than a plain loop, so deciding which questions deserve it is a business decision you can now make with numbers."
     },
     {
-      "title": "Build a ReAct Research Agent",
-      "description": "Hands-on: take your Session 5 tools (Wikipedia, web fetch, calculator) and add a ReAct system prompt. Same tools, same loop — one paragraph transforms the behavior. Then push it to failure with real APIs."
+      "title": "Decide One Agent or Many",
+      "description": "Pipeline, orchestrator, debate, and the rule that more agents is not more intelligence. Split only for a reason you can name: permissions, specialization, context isolation, parallelism. Plus MCP, and why a protocol is not a permission."
     },
     {
-      "title": "Evaluate Agent ROI for Business",
-      "description": "Apply the Automation Matrix to decide what to automate, what to augment, and what stays human. Calculate agent ROI with a real framework."
+      "title": "Start Your Midterm with a Plan",
+      "description": "Your bot, for a real problem: one user, two tools with one real API, the trust layer, five tests, one honest page. Assigned Wednesday, kicked off on paper in class, due Mon Nov 2."
     }
   ],
   "agenda": [
     {
-      "time": "5:00 PM - 5:12 PM",
-      "title": "Part 1: The Pattern Gap",
-      "duration": "12 minutes",
-      "description": "Bridge from Session 5's NanoClaw demo — the patterns behind production agents.",
+      "time": "Mon Oct 19 · 12:30 PM",
+      "title": "Meeting 1 · HW #7 Pulse + The Pattern Gap",
+      "duration": "13 minutes",
+      "description": "Which vendor said 'not disclosed'? Then: your bot answers the first thing it can, and a researcher plans first.",
       "bulletPoints": [
-        "When NanoClaw researched for us live, did it call one tool and stop? No. It searched, evaluated, searched again, then answered. That's a PATTERN.",
-        "The Competence Ladder: Tool Use (Session 4) → Real APIs + Memory (Session 5) → ReAct + Multi-Agent + MCP (TODAY)",
-        "Three patterns we'll master: ReAct (think before acting), Multi-Agent (team of specialists), MCP (universal tool standard)",
-        "ACTION: Open Colab notebook now. API key ready. We're building a research agent that thinks before it acts."
-      ]
+        "Three levels of the same agent: the model alone, your Session 4 loop, ReAct",
+        "The paragraph: THINK before every call, OBSERVE after, and never invent when a tool says 'no results'",
+        "Nobody touched the loop. The loop can't tell the difference. The model can"
+      ],
+      "isBreak": false
     },
     {
-      "time": "5:12 PM - 5:40 PM",
-      "title": "Part 2: ReAct Deep Dive",
-      "duration": "28 minutes",
-      "description": "The pattern that powers every serious AI agent: Reason + Act. Think, then do, then evaluate, then decide what's next.",
+      "time": "Mon Oct 19 · 12:43 PM",
+      "title": "Live, Then Hands-On: Same Question, Three Times",
+      "duration": "34 minutes",
+      "description": "'How is AI affecting employment?' at levels 0, 1, and 2 on the projector, then on your own key. Count the hops, read the thoughts, run the bill.",
       "bulletPoints": [
-        "A (10 min): ReAct pattern explained. LIVE on projector: react-agent-example.html animated trace — watch an agent reason step-by-step. NanoClaw uses this exact pattern.",
-        "B (8 min): System prompt anatomy. The magic isn't in the code — it's in the SYSTEM PROMPT. The agent loop is identical to Session 5's run_agent(). Exercise: write a 3-sentence ReAct prompt for a different domain.",
-        "C (10 min): Three Levels live demo in notebook. Same question, three approaches: no tools → Session 5 agent → ReAct agent. Same tools for Levels 1 & 2 — watch the escalation in real-time."
-      ]
+        "Only your Gemini key today — tools are calculator, the job board, and real Wikipedia",
+        "The bill table: steps, tool calls, thinking tokens, dollars — how many times more did thinking cost?",
+        "Stop at Part 5; we break it together"
+      ],
+      "isBreak": false
     },
     {
-      "time": "5:40 PM - 6:25 PM",
-      "title": "Part 3: Build a ReAct Research Agent",
-      "duration": "45 minutes",
-      "description": "Hands-on in Colab. Build an agent that researches, evaluates sources, and synthesizes — with visible reasoning at every step.",
+      "time": "Mon Oct 19 · 1:17 PM",
+      "title": "Part 5 Together: When Does It Fail?",
+      "duration": "8 minutes",
+      "description": "A company that does not exist, an opinion dressed as research, and a calculator question with ReAct on.",
       "bulletPoints": [
-        "Phase 1 (10 min): Bring back your Session 5 tools — same real Wikipedia API, web fetcher, and calculator. Verify they still work. Then see the Three Levels: no tools vs Session 5 agent vs ReAct agent — same question, same tools, dramatically different behavior.",
-        "Phase 2 (10 min): Wire the ReAct loop — it's your Session 5 run_agent() with ONE change: the system prompt tells the agent to THINK before acting. Run the same question and watch the transformation.",
-        "Phase 3 (15 min): Push the agent — try different topics, explore failure modes with REAL APIs. Wikipedia 404s, vague questions, made-up companies. When does it struggle? When does it recover?",
-        "Phase 4 (5 min): Generate a structured research report from the agent's conversation — key facts, source quality, confidence level",
-        "Phase 5 (5 min): Build Your Own Tool challenge — add a 4th tool using a real API (weather, country data, etc.). See the worked example, then build your own."
-      ]
+        "QuantumLeaf Technologies: does it admit there is no data, or produce a revenue figure?",
+        "The fix for a confident fake is a sentence in the tool description, not a bigger model",
+        "Part 6: one line puts the paragraph in your phone bot, one more line routes simple lookups around it"
+      ],
+      "isBreak": false
     },
     {
-      "time": "6:25 PM - 6:35 PM",
-      "title": "Break",
-      "duration": "10 minutes",
-      "description": "Stretch, grab coffee. Your agent now reasons before it acts — that's the production difference.",
-      "isBreak": true
+      "time": "Mon Oct 19 · 1:25 PM",
+      "title": "Wrap: Boardroom + Wednesday",
+      "duration": "20 minutes",
+      "description": "Why the vendor's agent takes 20 seconds, whether it can show its work, and what to bring Wednesday.",
+      "bulletPoints": [
+        "HW #7 due Thu Oct 22, 11:59 PM",
+        "Wednesday: one agent or many, MCP, and the midterm assigned — bring one real problem and the name of one person who has it"
+      ],
+      "isBreak": false
     },
     {
-      "time": "6:35 PM - 7:00 PM",
-      "title": "Part 5: Multi-Agent Systems & MCP",
+      "time": "Wed Oct 21 · 12:30 PM",
+      "title": "Meeting 2 · One Agent or Many?",
+      "duration": "23 minutes",
+      "description": "Three patterns on paper, the rule for splitting, your phone bot as the case, and MCP in one slide.",
+      "bulletPoints": [
+        "Pipeline, orchestrator, debate — every box is the Session 4 loop; multi-agent is an org chart",
+        "Split only when you can name the reason: permissions, specialization, context isolation, parallelism",
+        "Pair exercise: should your phone bot become two? The first legitimate split is permissions, the day send_email talks to a real inbox",
+        "MCP: a standard plug for tools. A protocol is not a permission"
+      ],
+      "isBreak": false
+    },
+    {
+      "time": "Wed Oct 21 · 12:53 PM",
+      "title": "The Midterm Project, Assigned",
+      "duration": "8 minutes",
+      "description": "Your bot, for a real problem. Four requirements, the rubric, the bonuses, the grad addendum. Due Mon Nov 2, 12:30 PM.",
+      "bulletPoints": [
+        "One real problem, one named user, two tools with one real API, the trust layer, five tests (two hostile), a one-page memo",
+        "Individual. Colab notebook with outputs + memo PDF on Canvas. 20% of the grade (ISOM 900: 15% plus an architecture page)"
+      ],
+      "isBreak": false
+    },
+    {
+      "time": "Wed Oct 21 · 1:01 PM",
+      "title": "Kickoff: Leave with a Plan",
       "duration": "25 minutes",
-      "description": "One agent is useful. A team of agents is powerful. And MCP is how they connect to the world.",
+      "description": "Ten minutes alone on paper, eight minutes of a neighbor trying to break it, three volunteers and a room vote.",
       "bulletPoints": [
-        "A (15 min): Three architectures — Pipeline (assembly line), Debate (adversarial review), Orchestrator (manager + workers). Org chart analogy: just like companies have departments.",
-        "Quick design exercise in pairs (4 min): Pick a business process, sketch a 3-agent pipeline on paper.",
-        "B (10 min): MCP = USB-C of AI. Build a tool once, every agent uses it. 1,000+ servers already exist.",
-        "NanoClaw's ipc-mcp.ts: See how a real production agent connects to tools via MCP.",
-        "Browse modelcontextprotocol.io live — Slack, GitHub, Google Drive, databases, and more."
-      ]
+        "The sheet: problem · user's name · two tools (which API?) · the risky action and who approves · five queries, two hostile",
+        "Neighbor's three questions: would a stranger use this? what's the API? what breaks?",
+        "Photograph the sheet. It is the first draft of your memo"
+      ],
+      "isBreak": false
     },
     {
-      "time": "7:00 PM - 7:18 PM",
-      "title": "Part 6: Business Automation & Agent ROI",
-      "duration": "18 minutes",
-      "description": "Where do agents create real business value? A framework for deciding what to automate, augment, or leave to humans.",
+      "time": "Wed Oct 21 · 1:26 PM",
+      "title": "Wrap: Session 7 + Logistics",
+      "duration": "19 minutes",
+      "description": "Your agent doesn't know your business yet. No HW #8 while the midterm is open. Office hours: bring the sheet, not the code.",
       "bulletPoints": [
-        "The Automation Matrix: plot tasks on Volume (how often?) × Judgment (how much thinking?). Four quadrants: automate / augment / assist / don't bother.",
-        "Case studies: Invoice processing (full automation), sales outreach (agent + human review), strategy consulting (human + AI assist)",
-        "ROI formula: (Hours Saved × Hourly Cost × Error Reduction) − Agent Cost = Monthly Value",
-        "The Trust Equation: Agent autonomy scales as stakes shrink. High stakes = human in the loop. Low stakes = let it run.",
-        "Quick discussion: What task from your job or internship would you automate first? Where on the matrix does it land?"
-      ]
-    },
-    {
-      "time": "7:18 PM - 7:30 PM",
-      "title": "Part 7: The Road Ahead + Wrap-Up",
-      "duration": "12 minutes",
-      "description": "Where we've been, where we're going, and why the agentic arc is the future of this course.",
-      "bulletPoints": [
-        "Journey so far: AI Fundamentals (S1-2) → Prompts & Products (S3-4) → Real-World Agents (S5) → Agent Patterns (TODAY)",
-        "The agentic arc ahead: RAG (S7) → Multi-Agent Build (S8) → Industry Agents (S9) → Guardrails (S10) → Evaluation (S11) → Final Project (S12-13)",
-        "Homework preview: Extend your agent, critique its research, design a multi-agent system, explore MCP",
-        "The code difference between your Session 5 agent and today's ReAct agent was ONE system prompt paragraph. But the THINKING difference was everything."
-      ]
+        "Session 7 Mon Oct 26: RAG — a search tool over your own documents",
+        "Midterm due Mon Nov 2, 12:30 PM, before class"
+      ],
+      "isBreak": false
     }
   ],
   "resources": [
     {
-      "title": "Session 6 Lecture Guide",
-      "url": "/session-06/lecture-guide.html",
-      "description": "Projectable lecture companion — visual slides for the full Session 6 lecture with key diagrams, code comparisons, and interactive navigation.",
+      "title": "Meeting 1 Slide Deck — Make It Think",
+      "url": "/session-06/slides-meeting1.html",
+      "description": "Monday Oct 19: the pattern gap, three levels of the same agent, the ReAct paragraph, the live three-level demo, hands-on, when it fails, boardroom.",
       "icon": "presentation",
-      "badge": "Lecture",
+      "badge": "Slides",
       "badgeType": "interactive",
-      "linkText": "Open lecture guide"
+      "linkText": "Open slides"
     },
     {
-      "title": "Advanced Agent Patterns",
-      "url": "/session-06/advanced-agent-patterns.html",
-      "description": "Visual explainer: ReAct reasoning, Chain-of-Thought planning, multi-agent architectures, and MCP. The patterns that power production AI agents.",
-      "icon": "bot",
-      "badge": "Key Concept",
+      "title": "Meeting 2 Slide Deck — One Agent or Many? + Your Midterm",
+      "url": "/session-06/slides-meeting2.html",
+      "description": "Wednesday Oct 21: three patterns, when to split, your bot as the case, MCP, the midterm requirements and rubric, the kickoff workshop.",
+      "icon": "presentation",
+      "badge": "Slides",
       "badgeType": "interactive",
-      "linkText": "View patterns"
+      "linkText": "Open slides"
     },
     {
-      "title": "ReAct Agent: Live Walkthrough",
-      "url": "/session-06/react-agent-example.html",
-      "description": "Watch a ReAct agent think step-by-step: search, evaluate sources, extract facts, and synthesize a research report. Interactive trace with real data.",
-      "icon": "play-circle",
-      "badge": "Start Here",
-      "badgeType": "interactive",
-      "linkText": "Watch the agent"
+      "title": "Midterm Project Brief — Your Agent, For Real",
+      "url": "/session-06/midterm-project.html",
+      "description": "Requirements, rubric (100 points + 10 bonus), suggested timeline, FAQ, and the submission checklist. ISOM 900 addendum included. Due Mon Nov 2, 12:30 PM.",
+      "icon": "target",
+      "badge": "Midterm",
+      "badgeType": "reference",
+      "linkText": "Read the brief"
     },
     {
-      "title": "Research Agent Workshop Notebook",
-      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-06/ISOM260_Session6_Agent_Patterns.ipynb",
-      "description": "Take your Session 5 tools, change one system prompt, and watch the behavior transform. Three-level comparison, failure exploration with real APIs, and a structured report generator.",
-      "icon": "code",
+      "title": "Make It Think — Colab Notebook (Meeting 1)",
+      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-06/ISOM260_Session6_Make_It_Think_Gemini.ipynb",
+      "description": "One loop, two prompts. Levels 0, 1, 2 on the same research question with real Wikipedia, a bill table with thinking tokens, two failure tests, and the one-liner that puts ReAct in your phone bot. Needs only your Gemini key.",
+      "icon": "brain",
       "badge": "Hands-On",
       "badgeType": "interactive",
       "linkText": "Open in Colab"
     },
     {
-      "title": "Anthropic Agent Documentation",
-      "url": "https://docs.anthropic.com/en/docs/build-with-claude/agentic",
-      "description": "Official guide to building agentic systems with Claude. Covers tool use, multi-step reasoning, and best practices for production agents.",
-      "icon": "book-open",
-      "badge": "Docs",
-      "badgeType": "code",
-      "linkText": "Read docs"
+      "title": "ReAct Agent: Live Walkthrough",
+      "url": "/session-06/react-agent-example.html",
+      "description": "An animated trace of a ReAct agent searching, judging sources, and synthesizing. Watch it before Monday if you want the pattern in your head first.",
+      "icon": "play-circle",
+      "badge": "Review",
+      "badgeType": "interactive",
+      "linkText": "Watch the trace"
     },
     {
-      "title": "Model Context Protocol (MCP)",
-      "url": "https://modelcontextprotocol.io",
-      "description": "The open standard for connecting AI agents to tools and data sources. Think USB-C for AI. Browse 1,000+ available servers.",
-      "icon": "plug-zap",
-      "badge": "Key Concept",
+      "title": "Advanced Agent Patterns — Visual Explainer",
+      "url": "/session-06/advanced-agent-patterns.html",
+      "description": "Pipeline, orchestrator, debate, and MCP, with diagrams. The vocabulary for Wednesday and the code for Session 8.",
+      "icon": "network",
+      "badge": "Review",
       "badgeType": "interactive",
-      "linkText": "Explore MCP"
-    },
-    {
-      "title": "Building Effective Agents (Anthropic)",
-      "url": "https://www.anthropic.com/engineering/building-effective-agents",
-      "description": "Anthropic's guide to building effective agents. Practical patterns, common pitfalls, and when to use agents vs. simpler solutions.",
-      "icon": "bot",
-      "badge": "Guide",
-      "badgeType": "interactive",
-      "linkText": "Read guide"
+      "linkText": "View patterns"
     },
     {
       "title": "ReAct: Synergizing Reasoning and Acting",
       "url": "https://arxiv.org/abs/2210.03629",
-      "description": "The original research paper that introduced the ReAct pattern. Showed that interleaving reasoning and action dramatically improves agent performance.",
-      "icon": "file-text",
-      "badge": "Research",
-      "badgeType": "code",
-      "linkText": "Read paper"
+      "description": "The 2022 paper. You do not need to read it; you need to know that the paragraph you ran on Monday has a citation.",
+      "icon": "book-open",
+      "badge": "Docs",
+      "badgeType": "reference",
+      "linkText": "Read the paper"
     },
     {
-      "title": "Claude Code",
-      "url": "https://docs.anthropic.com/en/docs/claude-code",
-      "description": "Anthropic's agentic coding tool. A real-world example of everything we discussed: ReAct reasoning, tool use, multi-step planning, MCP.",
-      "icon": "terminal",
-      "badge": "Tool",
-      "badgeType": "tool",
-      "linkText": "Try Claude Code"
+      "title": "Model Context Protocol",
+      "url": "https://modelcontextprotocol.io",
+      "description": "The standard plug for tools. Browse the server list and ask the Wednesday question of each one: compatible with what, and who said yes?",
+      "icon": "plug-zap",
+      "badge": "Docs",
+      "badgeType": "code",
+      "linkText": "Browse MCP"
+    },
+    {
+      "title": "Building Effective Agents (Anthropic)",
+      "url": "https://www.anthropic.com/engineering/building-effective-agents",
+      "description": "The best short argument for starting with one agent. Read the section on when not to use agents before you write your midterm memo.",
+      "icon": "lightbulb",
+      "badge": "Reading",
+      "badgeType": "reference",
+      "linkText": "Read the guide"
     }
   ],
   "activities": [
     {
       "number": 1,
-      "icon": "bot",
-      "title": "Build a ReAct Research Agent",
-      "description": "45 minutes in Google Colab. Build an agent that uses ReAct reasoning to research, evaluate, and report:",
+      "icon": "brain",
+      "title": "Same Question, Three Times (Mon Oct 19)",
+      "description": "Parts 1–4 of the notebook, on your own key:",
       "steps": [
         {
-          "title": "Three Levels of Intelligence (10 min)",
-          "description": "Bring back your Session 5 tools (real Wikipedia, web fetch, calculator). Run the same research question three ways: no tools, Session 5 agent, ReAct agent. See the difference one system prompt makes."
+          "title": "Read the paragraph",
+          "description": "REACT_PROMPT, once, slowly. THINK before every call, OBSERVE after, never invent on 'no results'."
         },
         {
-          "title": "Wire the ReAct Loop (10 min)",
-          "description": "The agent loop is your Session 5 run_agent() — the only change is the system prompt that tells the agent to THINK before each action. Watch the same tools produce dramatically better research."
+          "title": "Level 0, 1, 2",
+          "description": "The model alone, the plain loop, the ReAct loop. Same question about AI and employment. Count the hops."
         },
         {
-          "title": "Push the Agent (15 min)",
-          "description": "Test failure modes with REAL APIs: Wikipedia 404s for made-up companies, vague opinion questions, ambiguous queries. Does the agent recover? Does it admit uncertainty? Does it hallucinate?"
+          "title": "Run the bill",
+          "description": "Steps, tool calls, thinking tokens, dollars. How many times more expensive was thinking? Was it worth it for this question?"
         },
         {
-          "title": "Report + Build Your Own Tool (10 min)",
-          "description": "Generate a structured research briefing from the agent's work. Then add a 4th tool using a real API (weather, country data, etc.) — see the worked example and build your own."
+          "title": "Break it, together",
+          "description": "A fake company, an opinion question, a calculator question with ReAct on. Watch for the confident fake."
         }
-      ],
-      "codeBlock": {
-        "language": "Three Levels — Same Question",
-        "code": "┌─────────────────────────────────────────────┐\n│  LEVEL 0: No Tools                          │\n│  → Generates text from training data        │\n│  → \"AI affects 40% of jobs...\" (real? 🤷)   │\n│  ❌ Looks good. No way to verify.           │\n└─────────────────────────────────────────────┘\n\n┌─────────────────────────────────────────────┐\n│  LEVEL 1: Session 5 Agent (same tools!)     │\n│  → wikipedia_search(\"AI\")                   │\n│  → \"Here's what Wikipedia says: [dump]\"     │\n│  ⚠️  Real data, but grabbed first result.   │\n└─────────────────────────────────────────────┘\n\n┌─────────────────────────────────────────────┐\n│  LEVEL 2: ReAct Agent (same tools!!!)       │\n│  THINK: Need employment data + sources      │\n│  → wikipedia_search(\"Technological_unemp\")  │\n│  OBSERVE: Good background, need specifics   │\n│  THINK: Let me find more targeted data      │\n│  → wikipedia_search(\"AI_and_employment\")    │\n│  OBSERVE: Better. Let me verify...          │\n│  → fetch_web_page(\"https://...\")            │\n│  THINK: Have enough. Let me synthesize.     │\n│  ✅ Planned. Evaluated. Synthesized.        │\n└─────────────────────────────────────────────┘"
-      }
+      ]
     },
     {
       "number": 2,
-      "icon": "users",
-      "title": "Multi-Agent Design Challenge",
-      "description": "Design a multi-agent system for a real business process. Think like an architect:",
+      "icon": "target",
+      "title": "Midterm Kickoff (Wed Oct 21)",
+      "description": "Paper first. Twenty-five minutes:",
       "steps": [
         {
-          "title": "Pick a Business Process",
-          "description": "Choose one: customer support ticket handling, weekly competitor report, content publishing pipeline, or employee onboarding. Or pick something from your own experience."
+          "title": "The sheet, alone",
+          "description": "Problem · the user's name · two tools and which API · the risky action and who approves · five test queries, two of them hostile."
         },
         {
-          "title": "Define Your Agents (3+ agents)",
-          "description": "Name each agent, define its specialty, list its tools, and describe when it hands off to the next agent. Think org chart — each agent is a department."
+          "title": "The neighbor",
+          "description": "Would a stranger use this? What's the API? What breaks? Write their worst question on your sheet."
         },
         {
-          "title": "Draw the Flow",
-          "description": "Sketch the pipeline: triggers, handoffs, decision points, and human review gates. Where does a human need to approve? Where can agents run autonomously?"
+          "title": "The room",
+          "description": "Three volunteers read theirs. Vote: one agent or many? Name the reason or say no."
         },
         {
-          "title": "Present to Another Pair (3 min)",
-          "description": "Walk them through your design. They ask: Where could this fail? What needs human oversight? What's the ROI? How does information distort across agents?"
+          "title": "Photograph it",
+          "description": "The sheet is the first draft of your memo and the thing to bring to office hours."
         }
       ],
-      "codeBlock": {
-        "language": "Multi-Agent Pipeline Example",
-        "code": "┌──────────────┐    ┌──────────────┐    ┌──────────────┐\n│  RESEARCHER  │───>│    WRITER    │───>│   EDITOR     │\n│              │    │              │    │              │\n│ Tools:       │    │ Tools:       │    │ Tools:       │\n│ • web_search │    │ • draft_doc  │    │ • check_facts│\n│ • read_pdf   │    │ • format     │    │ • check_tone │\n│ • summarize  │    │ • cite       │    │ • score      │\n│              │    │              │    │              │\n│ Output:      │    │ Output:      │    │ Output:      │\n│ Research     │    │ Draft        │    │ Final report │\n│ brief        │    │ report       │    │ + score      │\n└──────────────┘    └──────────────┘    └──────────────┘\n        │                                      │\n        │          ┌──────────────┐             │\n        └─────────>│  COORDINATOR │<────────────┘\n                   │              │\n                   │ Decides:     │\n                   │ • Good enough?│\n                   │ • Redo step? │\n                   │ • Send to    │\n                   │   human?     │\n                   └──────────────┘"
-      }
-    },
-    {
-      "number": 3,
-      "icon": "briefcase",
-      "title": "Automation ROI Assessment",
-      "description": "Apply the Automation Matrix to a real business process and calculate potential ROI:",
-      "steps": [
-        {
-          "title": "Pick a Process You Know",
-          "description": "Choose a repetitive business task from your job, internship, or a company you admire. Something done at least weekly."
-        },
-        {
-          "title": "Map It on the Automation Matrix",
-          "description": "Plot it on two axes: Volume (how often?) and Judgment Required (how much human thinking?). Decide: Full automation, augmentation, or human-only?"
-        },
-        {
-          "title": "Calculate the ROI",
-          "description": "Estimate: Hours per week × hourly cost × 52 weeks = annual cost. Subtract agent cost (~$50-200/month API). Factor in error reduction. What's the payback period?"
-        },
-        {
-          "title": "Identify the Risks",
-          "description": "What could go wrong? What's the worst-case failure? Where do you need a human-in-the-loop checkpoint? What's the cost of a wrong answer?"
-        }
-      ]
+      "discussionNote": "The plan is where midterms are won. Code is the easy part now."
     }
   ],
   "takeaways": [
     {
       "icon": "brain",
-      "text": "<strong>ReAct = Think before you act.</strong> The best agents don't just execute — they reason about what to do, observe results, and adapt. This pattern separates toy demos from production systems."
+      "text": "<strong>Reasoning is a paragraph, not a model upgrade.</strong> Think, act, observe, repeat. The loop never changed; the behavior did."
     },
     {
-      "icon": "users",
-      "text": "<strong>Agent teams beat solo agents.</strong> Just like human organizations, specialized agents collaborating on complex tasks produce better results than one agent trying to do everything."
+      "icon": "bar-chart",
+      "text": "<strong>Thinking has a price.</strong> ReAct costs several times a plain loop. Route research to it and lookups around it. That routing is a business decision."
+    },
+    {
+      "icon": "shield-alert",
+      "text": "<strong>The fix for a confident fake is in the tool.</strong> A tool that says 'no results' plus a prompt that forbids filling the gap. You wrote both."
+    },
+    {
+      "icon": "network",
+      "text": "<strong>More agents is not more intelligence.</strong> Start with one. Split only for a reason you can name: permissions, specialization, isolation, parallelism."
     },
     {
       "icon": "plug-zap",
-      "text": "<strong>MCP is the USB-C of AI.</strong> The Model Context Protocol means you build a tool integration once and every agent can use it. This standard is reshaping how agents connect to the world."
-    },
-    {
-      "icon": "trending-up",
-      "text": "<strong>Automate the routine, augment the judgment.</strong> The Automation Matrix helps you decide what to fully automate, what to augment with AI, and what must stay human."
-    },
-    {
-      "icon": "lightbulb",
-      "text": "<strong>The code changed one paragraph. The thinking changed everything.</strong> Your Session 5 agent — same tools, same loop — became a research powerhouse with one system prompt change. That's the ReAct pattern."
+      "text": "<strong>A protocol is not a permission.</strong> MCP standardizes the plug. It does not open the door."
     }
   ],
   "homework": [
     {
-      "label": "Extend:",
-      "text": "Add a 4th tool to your research agent (e.g., competitor_lookup, financial_data, or industry_news). Test it with 3 different business questions and document the reasoning traces."
+      "label": "HW #7 · due Thu Oct 22, 11:59 PM:",
+      "text": "The Four Questions, for real. One AI product a real company sells, the four questions answered from its public docs ('not disclosed' is a finding), and one paragraph on whether you would let it touch your company's email. Canvas post, 200 words max, with links."
     },
     {
-      "label": "Analyze:",
-      "text": "Pick one research output from your agent. Write a 1-page critique: Were the sources credible? Did the reasoning have gaps? What would a human analyst do differently?"
+      "label": "Midterm Project · assigned Wed Oct 21 · due Mon Nov 2, 12:30 PM:",
+      "text": "Your Agent, For Real. One real problem and one named user, two or more tools with at least one real API, the trust layer (gate, audit log, door if on Telegram), five tests with two hostile ones, and a one-page memo. Individual. Notebook with outputs + memo PDF on Canvas before class. Full brief, rubric, timeline, and FAQ on this page. ISOM 900: add a one-page architecture proposal."
     },
     {
-      "label": "Design:",
-      "text": "Write a 1-page multi-agent system proposal for a business process you care about. Include: 3+ agent roles, tools for each, handoff logic, human review gates, and estimated ROI."
+      "label": "No HW #8:",
+      "text": "The midterm is the homework while it is open. Office hours: bring your kickoff sheet, not your code."
     },
     {
-      "label": "Explore:",
-      "text": "Browse modelcontextprotocol.io and find 3 MCP servers relevant to your final project idea. Write one paragraph each on how they would help your agent."
-    },
-    {
-      "label": "Read:",
-      "text": "Read Anthropic's 'Building Effective Agents' guide. Write 3 key takeaways and identify one scenario where you should NOT use an agent."
+      "label": "Optional:",
+      "text": "Read 'Building Effective Agents' before writing the memo's last section. If you can't name the reason to split your agent in two, the answer is one."
     }
   ],
   "nextSession": {
     "title": "Session 7: Knowledge Agents — RAG",
-    "description": "Your agent is smart, but it doesn't know YOUR business. Add company knowledge with Retrieval-Augmented Generation.",
+    "description": "Your agent is smart but does not know your business. Hand it your documents with a search tool over your own files — optional for the midterm, central to the final.",
     "tags": [
       "RAG",
-      "Knowledge Agents",
       "Document Search",
-      "Long Context"
+      "Long Context",
+      "Your Data"
     ],
     "slug": "session-07"
   }

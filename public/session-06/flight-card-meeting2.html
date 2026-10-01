@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flight Card · Session 6, Meeting 2 | ISOM 260</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Sora:wght@600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'DM Sans', sans-serif; background: #f4f2ec; color: #1a1a1a; padding: 1.2rem; font-size: 13px; line-height: 1.45; }
+    .card { max-width: 820px; margin: 0 auto; background: #fff; border: 2px solid #1a1a1a; border-radius: 10px; padding: 1.4rem 1.6rem; }
+    h1 { font-family: 'Sora', sans-serif; font-size: 1.1rem; display: flex; justify-content: space-between; align-items: baseline; border-bottom: 2px solid #1a1a1a; padding-bottom: 0.5rem; margin-bottom: 0.8rem; }
+    h1 .sub { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 400; color: #666; }
+    h2 { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: #b3003e; margin: 0.9rem 0 0.35rem; }
+    table { width: 100%; border-collapse: collapse; }
+    td { padding: 0.18rem 0.5rem 0.18rem 0; vertical-align: top; }
+    td.t { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 0.78rem; white-space: nowrap; width: 4.2rem; }
+    .cut { color: #b3003e; font-weight: 700; }
+    .hl { background: #fff3b8; padding: 0 0.25rem; font-weight: 700; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1.6rem; }
+    .mono { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; background: #f4f2ec; border: 1px solid #ccc; border-radius: 6px; padding: 0.5rem 0.65rem; white-space: pre-wrap; margin: 0.25rem 0; }
+    ul { list-style: none; }
+    li { padding-left: 1rem; position: relative; margin-bottom: 0.22rem; }
+    li::before { content: "▸"; position: absolute; left: 0; color: #b3003e; }
+</head>
+<body>
+<div class="card">
+    <h1>SESSION 6 · MEETING 2 · "ONE AGENT OR MANY? + YOUR MIDTERM" <span class="sub">WED OCT 21 · 12:30–1:45 · HW7 DUE THU 11:59 PM · MIDTERM ASSIGNED · HARD STOP 1:45</span></h1>
+
+    <div class="grid">
+    <div>
+        <h2>Timeline · slide #</h2>
+        <table>
+            <tr><td class="t">12:30</td><td>1–2 · "More agents is not more intelligence" — latency, cost, coordination, failure points (3 min)</td></tr>
+            <tr><td class="t">12:33</td><td>3 · Three patterns: pipeline / orchestrator / debate — "every box is the Session 4 loop; multi-agent is an org chart" (5 min)</td></tr>
+            <tr><td class="t">12:38</td><td>4 · When to split: permissions · specialization · context isolation · parallelism. "No reason on the list? One agent" (4 min)</td></tr>
+            <tr><td class="t">12:42</td><td>5 · <span class="hl">Pair exercise</span>: should your phone bot become two? 3 min pairs + 3 pairs report. Land on "permissions is the first legit split" — <span class="cut">CUT 12:49</span></td></tr>
+            <tr><td class="t">12:49</td><td>6 · MCP — USB-C for tools; <span class="hl">"a protocol is not a permission"</span> (4 min)</td></tr>
+            <tr><td class="t">12:53</td><td>7–8 · <span class="hl">MIDTERM assigned</span>: the four requirements, the rubric, bonuses, grad addendum. Due <b>Mon Nov 2, 12:30 PM</b>, Canvas (8 min)</td></tr>
+            <tr><td class="t">1:01</td><td>9 · <span class="hl">Kickoff</span>: 10 min solo on paper → 8 min neighbor's three questions → 7 min three volunteers + room vote "one or many?" — <span class="cut">STOP 1:26</span></td></tr>
+            <tr><td class="t">1:26</td><td>10 · Session 7 RAG teaser · no HW #8 · office hours: bring the sheet (3 min)</td></tr>
+            <tr><td class="t">1:29</td><td>11 · Close. Buffer to 1:45 — use it for kickoff questions</td></tr>
+        </table>
+
+        <h2>Kickoff sheet (slide 9) — write on the board</h2>
+        <div class="mono">PROBLEM:  ___________________________   USER (a name): ___________
+TOOL 1: ____________  TOOL 2 (real API): ____________
+RISKY ACTION: ____________   WHO APPROVES: ____________
+5 TEST QUERIES (2 hostile): 1. ___ 2. ___ 3. ___ 4. ___ 5. ___
+NEIGHBOR'S WORST QUESTION: _______________________________</div>
+        <ul><li>Beat: "the sheet is the first draft of the memo — photograph it"</li></ul>
+    </div>
+    <div>
+        <h2>Fix-its (the scramble)</h2>
+        <ul>
+            <li>"Can I do it in a team?" → No. Individual. The final (Session 12–13) is teams of 2–3</li>
+            <li>"Can I use my Telegram bot?" → Yes — it's the intended starting point. Colab-only is equally fine; Telegram earns the +5 stranger bonus, nothing else</li>
+            <li>"Does send_email have to be real?" → No. Simulated is fine; the GATE is graded, not the delivery</li>
+            <li>"What counts as a real API?" → anything outside your notebook: Wikipedia, Open-Meteo, RemoteOK, Adzuna, a public government dataset. The HW #5 tool counts as the second tool</li>
+            <li>"My problem is too small" → small and real beats big and vague. The rubric's first row is specificity</li>
+            <li>Pair exercise stalls → ask "what happens the day send_email talks to a real inbox?"</li>
+            <li>Grad students → the one-page architecture proposal is on the brief: tools, flow, trade-offs incl. one-vs-many and build-vs-buy</li>
+        </ul>
+
+        <h2>If behind at 1:01</h2>
+        <ul>
+            <li>Kickoff shrinks to 10 min solo + 5 min neighbor; skip the volunteers</li>
+            <li>Slides 7–8 are untouchable; MCP (slide 6) can become one sentence</li>
+        </ul>
+
+        <h2>Before / after</h2>
+        <ul>
+            <li>⚠️ <b>Read the brief tonight</b> (session-06/midterm-project.html) — the rubric weights and bonuses are Claude's proposal; adjust before students see it</li>
+            <li>Canvas: create the <b>Midterm Project assignment</b> (due Mon Nov 2, 12:30 PM, two files: .ipynb + memo PDF) · HW #7 closes tomorrow · no HW #8</li>
+            <li>Print or project the kickoff sheet; bring blank paper — phones stay down for the 10 solo minutes</li>
+            <li>Tabs: slides · the brief · Canvas assignment</li>
+            <li>After: collect the three volunteers' problems — they're your examples for Session 7's "what would RAG add?"</li>
+        </ul>
+    </div>
+    </div>
+
+    <div class="rule">The day's one job: every student leaves with a midterm plan on paper that a neighbor already tried to break. Everything else is negotiable.</div>
+</div>
+</body>
+</html>

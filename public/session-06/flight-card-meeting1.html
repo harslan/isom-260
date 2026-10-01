@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flight Card · Session 6, Meeting 1 | ISOM 260</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Sora:wght@600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'DM Sans', sans-serif; background: #f4f2ec; color: #1a1a1a; padding: 1.2rem; font-size: 13px; line-height: 1.45; }
+    .card { max-width: 820px; margin: 0 auto; background: #fff; border: 2px solid #1a1a1a; border-radius: 10px; padding: 1.4rem 1.6rem; }
+    h1 { font-family: 'Sora', sans-serif; font-size: 1.1rem; display: flex; justify-content: space-between; align-items: baseline; border-bottom: 2px solid #1a1a1a; padding-bottom: 0.5rem; margin-bottom: 0.8rem; }
+    h1 .sub { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 400; color: #666; }
+    h2 { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: #b3003e; margin: 0.9rem 0 0.35rem; }
+    table { width: 100%; border-collapse: collapse; }
+    td { padding: 0.18rem 0.5rem 0.18rem 0; vertical-align: top; }
+    td.t { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 0.78rem; white-space: nowrap; width: 4.2rem; }
+    .cut { color: #b3003e; font-weight: 700; }
+    .hl { background: #fff3b8; padding: 0 0.25rem; font-weight: 700; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1.6rem; }
+    .mono { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; background: #f4f2ec; border: 1px solid #ccc; border-radius: 6px; padding: 0.5rem 0.65rem; white-space: pre-wrap; margin: 0.25rem 0; }
+    ul { list-style: none; }
+    li { padding-left: 1rem; position: relative; margin-bottom: 0.22rem; }
+    li::before { content: "▸"; position: absolute; left: 0; color: #b3003e; }
+</head>
+<body>
+<div class="card">
+    <h1>SESSION 6 · MEETING 1 · "MAKE IT THINK" <span class="sub">MON OCT 19 · 12:30–1:45 · HW7 DUE THU 11:59 PM · HARD STOP 1:45</span></h1>
+
+    <div class="grid">
+    <div>
+        <h2>Timeline · slide #</h2>
+        <table>
+            <tr><td class="t">12:30</td><td>1–2 · HW7 pulse — <span class="hl">hands: which product? which question went "not disclosed"?</span> · two "would you let it touch your email" sentences (4 min)</td></tr>
+            <tr><td class="t">12:34</td><td>3–4 · "Your bot answers the first thing it can; a researcher plans first" · three levels of the same agent (5 min)</td></tr>
+            <tr><td class="t">12:39</td><td>5 · The paragraph — THINK / ACT / OBSERVE / the guardrail sentence. "Nobody touched the loop" (4 min)</td></tr>
+            <tr><td class="t">12:43</td><td>6 · <span class="hl">LIVE: same question, three levels</span> from YOUR pre-run notebook — Level 0 "trust it?" → Level 1 step counter → Level 2 read the 💭 lines → the bill table — <span class="cut">CUT 12:49</span></td></tr>
+            <tr><td class="t">12:49</td><td>7 · <span class="hl">Hands-on Parts 1–4</span> — walk the room: "how many hops did Level 2 take? how many times the cost?" — <span class="cut">STOP 1:17</span></td></tr>
+            <tr><td class="t">1:17</td><td>8 · <span class="hl">Part 5 together</span> — QuantumLeaf (admit or invent?) · "Is AI good or bad?" · the 15% question with ReAct on (waste) · Part 6 one-liner for the phone bot (8 min)</td></tr>
+            <tr><td class="t">1:25</td><td>9 · Boardroom (4 min)</td></tr>
+            <tr><td class="t">1:29</td><td>10 · Wednesday: one agent or many + <b>midterm assigned</b>. "Bring one real problem and one person who has it" (3 min)</td></tr>
+            <tr><td class="t">1:32</td><td>11 · Close. Buffer to 1:45</td></tr>
+        </table>
+
+        <h2>Live demo cues (slide 6)</h2>
+        <div class="mono">QUESTION = "How is AI affecting employment? specific data, credible sources, balanced"
+Level 0  → fluent paragraph, no sources. Ask: "would you put this in a memo?"
+Level 1  → 1–2 steps, one wikipedia_search, then answers
+Level 2  → 💭 THOUGHT lines · 3–5 hops · wikipedia × 2–3, maybe find_jobs("AI") · sources named
+bill     → thinking tokens column; "ReAct cost N× — worth it for THIS question?"</div>
+        <ul><li>Beat: "the loop can't tell the difference. The model can."</li></ul>
+    </div>
+    <div>
+        <h2>Fix-its (the scramble)</h2>
+        <ul>
+            <li>Level 2 answers in 1 step with no 💭 lines → the model skipped the format; re-run, or add "You MUST write a THINK line before every tool call" to REACT_PROMPT. It's probabilistic</li>
+            <li>Wikipedia 403/429 → the User-Agent header is in the tool; if the room hammers it, pair up and share one run</li>
+            <li>Gemini 429 → free tier ~10 calls/min per key; Level 2 burns 3–5 calls per question. Tell the room to run Level 2 once, not five times</li>
+            <li>thoughts_token_count is None → older SDK; the code already treats None as 0</li>
+            <li>Bill shows $0.00 → it's rounding four decimals of a tiny number; multiply by 1,000 employees × 20 questions for the reflection</li>
+            <li>Key not found → 🔑 Secrets, GOOGLE_API_KEY, Notebook access ON (Session 3 ritual)</li>
+        </ul>
+
+        <h2>If behind at 1:17</h2>
+        <ul>
+            <li>Part 5 becomes "watch me": QuantumLeaf only, on the projector (4 min)</li>
+            <li>Skip slide 9; slide 10 (midterm Wednesday, bring a problem) is untouchable</li>
+        </ul>
+
+        <h2>Before / after</h2>
+        <ul>
+            <li>⚠️ <b>Run the whole notebook with YOUR key before class</b> and leave outputs visible — Level 2 takes 20–40 s live; you scroll instead of waiting. Mock-tested only as of Sep 30</li>
+            <li>Note how many hops and what cost ratio YOUR run produced; say those numbers on slide 6</li>
+            <li>Canvas: HW #7 closes Thu · the <b>midterm brief</b> (session-06/midterm-project.html) goes up Wednesday — read it tonight, adjust the rubric if needed</li>
+            <li>Tabs: slides · notebook (run) · Canvas HW7 thread</li>
+            <li>After: which failure test surprised the room — reuse Wednesday as the "why trust layer" opener</li>
+        </ul>
+    </div>
+    </div>
+
+    <div class="rule">The day's one job: every student sees the SAME loop behave differently because of ONE paragraph — and sees the bill. Everything else is negotiable.</div>
+</div>
+</body>
+</html>

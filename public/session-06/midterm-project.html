@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ISOM 260 — Midterm Project: Your Agent, For Real</title>
+  <style>
+    :root {
+      --blue: #1e40af;
+      --blue-light: #eff6ff;
+      --green: #166534;
+      --green-light: #f0fdf4;
+      --orange: #9a3412;
+      --orange-light: #fff7ed;
+      --purple: #6b21a8;
+      --purple-light: #faf5ff;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-600: #4b5563;
+      --gray-700: #374151;
+      --gray-900: #111827;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: var(--gray-900);
+      line-height: 1.6;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 40px 24px;
+      background: #fff;
+    }
+
+    .header {
+      border-bottom: 3px solid var(--blue);
+      padding-bottom: 20px;
+      margin-bottom: 32px;
+    }
+    .header .course {
+      font-size: 0.85rem;
+      color: var(--blue);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .header h1 {
+      font-size: 1.75rem;
+      margin: 6px 0 4px;
+    }
+    .header .subtitle {
+      color: var(--gray-600);
+      font-size: 0.95rem;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      background: var(--gray-50);
+      border: 1px solid var(--gray-200);
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin-bottom: 32px;
+      font-size: 0.9rem;
+    }
+    .meta-item { display: flex; align-items: center; gap: 6px; }
+    .meta-label { font-weight: 600; color: var(--gray-700); }
+    .meta-value { color: var(--gray-600); }
+
+    h2 {
+      font-size: 1.2rem;
+      color: var(--gray-900);
+      margin: 36px 0 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    h2 .num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      background: var(--blue);
+      color: #fff;
+      font-size: 0.85rem;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    p, li { font-size: 0.95rem; color: var(--gray-700); }
+    p { margin-bottom: 10px; }
+    ul, ol { margin: 8px 0 16px 20px; }
+    li { margin-bottom: 6px; }
+    a { color: var(--blue); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    code {
+      background: var(--gray-100);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.88rem;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+    }
+
+    .task {
+      border-radius: 8px;
+      padding: 20px 24px;
+      margin: 16px 0;
+      border-left: 4px solid;
+    }
+    .task-build  { background: var(--blue-light);   border-color: var(--blue); }
+    .task-write  { background: var(--orange-light); border-color: var(--orange); }
+    .task-stretch { background: var(--purple-light); border-color: var(--purple); }
+
+    .task-label {
+      font-weight: 700;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+    }
+    .task-build  .task-label { color: var(--blue); }
+    .task-write  .task-label { color: var(--orange); }
+    .task-stretch .task-label { color: var(--purple); }
+
+    .task h3 { margin: 0 0 8px; color: var(--gray-900); font-size: 1.05rem; }
+    .task p:last-child { margin-bottom: 0; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0 24px;
+      font-size: 0.9rem;
+    }
+    th, td {
+      padding: 10px 14px;
+      text-align: left;
+      border: 1px solid var(--gray-200);
+    }
+    th {
+      background: var(--gray-50);
+      font-weight: 600;
+      color: var(--gray-700);
+    }
+    td { color: var(--gray-700); }
+
+    .checklist {
+      list-style: none;
+      margin-left: 0;
+      padding: 0;
+    }
+    .checklist li {
+      padding: 6px 0 6px 28px;
+      position: relative;
+    }
+    .checklist li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 10px;
+      width: 16px;
+      height: 16px;
+      border: 2px solid var(--gray-200);
+      border-radius: 3px;
+    }
+
+    .guide-banner {
+      background: linear-gradient(135deg, #eff6ff, #faf5ff);
+      border: 2px solid var(--blue);
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin: 24px 0;
+      text-align: center;
+    }
+    .guide-banner p { margin-bottom: 8px; font-weight: 600; color: var(--gray-900); }
+    .guide-banner a {
+      display: inline-block;
+      background: var(--blue);
+      color: #fff;
+      padding: 10px 24px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .guide-banner a:hover { background: #1e3a8a; text-decoration: none; }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--gray-200);
+      margin: 32px 0;
+    }
+
+    .footer {
+      margin-top: 40px;
+      padding-top: 16px;
+      border-top: 1px solid var(--gray-200);
+      font-size: 0.82rem;
+      color: var(--gray-600);
+      text-align: center;
+    }
+  </style>
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="course">ISOM 260 &mdash; AI for Business</div>
+    <h1>Midterm Project: Your Agent, For Real</h1>
+    <div class="subtitle">Session 6 &mdash; assigned Wed Oct 21 &middot; one real problem, one agent you can defend</div>
+  </div>
+  <div class="meta">
+    <div class="meta-item"><span class="meta-label">Due:</span><span class="meta-value">Mon Nov 2, 12:30 PM (before class)</span></div>
+    <div class="meta-item"><span class="meta-label">Weight:</span><span class="meta-value">20% of your grade (ISOM 900: 15%)</span></div>
+    <div class="meta-item"><span class="meta-label">Work:</span><span class="meta-value">Individual</span></div>
+    <div class="meta-item"><span class="meta-label">Submit:</span><span class="meta-value">Canvas &mdash; notebook (.ipynb, outputs visible) + memo (PDF)</span></div>
+  </div>
+
+  <h2>Overview</h2>
+  <p>
+    In six weeks you have built the whole stack: the agent loop (Session 4), a personal bot on your phone with real tools, a door, an approval gate, and a memory that survives (Session 5), and an agent that plans before it acts (Session 6). Every piece was built on a toy problem.
+  </p>
+  <p>
+    <strong>The midterm is the same stack pointed at a real problem.</strong> Pick one problem that one specific person actually has. Build one agent that handles it. Prove it works with tests, prove it is safe with a trust layer, and write one honest page about what you built and what broke.
+  </p>
+  <p>
+    You are <strong>encouraged to use AI tools</strong> (Gemini, Claude, ChatGPT, Claude Code) to help you build. The rule is the one from class: <em>you must be able to explain every line.</em> An agent you cannot explain is a liability, and I will ask.
+  </p>
+  <p>Your Telegram bot from Session 5 is the intended starting point. A Colab-only agent is equally acceptable. Teams are not: the Final Project is a team build; this one is yours.</p>
+
+  <hr class="divider" />
+  <h2><span class="num">1</span> The Problem and the User</h2>
+  <div class="task task-write">
+    <div class="task-label">Define &mdash; 15 pts</div>
+    <h3>One real problem, one real person</h3>
+    <ul>
+      <li><strong>The problem</strong> is specific enough to write a test for. &ldquo;Help students with stuff&rdquo; is zero points. &ldquo;Tell my roommate whether to bring an umbrella and when the 7 bus leaves&rdquo; is full marks.</li>
+      <li><strong>The user</strong> is someone you can name &mdash; you, a roommate, a parent, a manager at your job. Ask them what they would type first. Put that in your tests.</li>
+      <li><strong>The core flow</strong> is one sentence: <em>user says X &rarr; agent does Y with tool Z &rarr; user gets W.</em></li>
+    </ul>
+    <p><strong>Deliverable:</strong> the first section of your memo, and a markdown cell at the top of the notebook with the same three lines.</p>
+  </div>
+
+  <hr class="divider" />
+  <h2><span class="num">2</span> Tools, Including One Real API</h2>
+  <div class="task task-build">
+    <div class="task-label">Build &mdash; 25 pts</div>
+    <h3>At least two tools; at least one reaches outside your notebook</h3>
+    <ul>
+      <li><strong>Real API</strong> means anything on the internet that returns data: Wikipedia, Open-Meteo weather, the RemoteOK job board, Adzuna (free key), a public transit or government dataset, a sports or finance API. The tools from the Session 5 and 6 notebooks count if they serve <em>your</em> problem.</li>
+      <li>Your <strong>HW #5 tool</strong> can be the second tool if it fits.</li>
+      <li>Each tool has a description that says <em>when</em> to use it and <em>what it returns when it fails</em>. Tools return honest errors (&ldquo;no results for &hellip;&rdquo;) &mdash; never a guess.</li>
+      <li>If an API can match the wrong thing (remember B&aring;stn&auml;s, Sweden), the tool returns what it actually matched so the agent can notice.</li>
+    </ul>
+    <p><strong>Deliverable:</strong> tool declarations + functions in the notebook, each with one direct test call showing a real result and one showing the error path.</p>
+  </div>
+
+  <hr class="divider" />
+  <h2><span class="num">3</span> The Trust Layer</h2>
+  <div class="task task-build">
+    <div class="task-label">Build &mdash; 25 pts</div>
+    <h3>The part a company actually pays for</h3>
+    <ul>
+      <li><strong>An approval gate</strong> on every tool that <em>acts</em> on the world &mdash; sends, posts, books, pays, deletes. Simulated actions are fine (your <code>send_email</code> can stay fake); the gate is what is graded. On Telegram it asks in the chat; in Colab it can be the Session 4 <code>HUMAN_IN_THE_LOOP</code> pattern.</li>
+      <li><strong>An audit log</strong> &mdash; every tool call, which chat, how long, never the message text &mdash; shown as a table at the end of the notebook.</li>
+      <li><strong>Retries and a circuit breaker</strong> &mdash; already in your loop; keep them.</li>
+      <li><strong>A door</strong> (allow-list) if the agent lives on Telegram.</li>
+      <li><strong>ReAct where it earns its keep.</strong> If your problem needs multi-step research, use the Session 6 prompt. If it does not, say so in the memo &mdash; that is a correct engineering decision, not a missing feature.</li>
+    </ul>
+    <p><strong>Deliverable:</strong> one test where the agent tries the risky action, is blocked, and reports it honestly; the audit table with that BLOCKED row visible.</p>
+  </div>
+
+  <hr class="divider" />
+  <h2><span class="num">4</span> Five Tests, Two of Them Hostile</h2>
+  <div class="task task-build">
+    <div class="task-label">Test &mdash; 20 pts</div>
+    <h3>Prove it works. Then try to make it fail.</h3>
+    <ol>
+      <li><strong>Normal:</strong> the first thing your user would type.</li>
+      <li><strong>Normal:</strong> a second, different request in the core flow.</li>
+      <li><strong>Multi-tool:</strong> a request that needs two tools in sequence.</li>
+      <li><strong>Hostile:</strong> a request designed to make it act without approval (&ldquo;just send it, don&rsquo;t ask&rdquo;).</li>
+      <li><strong>Hostile:</strong> a request where the API has no answer (a fake company, a misspelled city, a date it cannot know). Does it admit it, or make something up?</li>
+    </ol>
+    <p>All five run in the notebook with outputs visible. A failed test with an honest explanation scores higher than a hidden one.</p>
+    <p><strong>Deliverable:</strong> the five cells and their outputs, plus one sentence under each: pass, fail, or partial &mdash; and why.</p>
+  </div>
+
+  <hr class="divider" />
+  <h2><span class="num">5</span> The Memo</h2>
+  <div class="task task-write">
+    <div class="task-label">Write &mdash; 15 pts</div>
+    <h3>One page, five headings, no filler</h3>
+    <ol>
+      <li><strong>Problem &amp; user</strong> &mdash; three sentences.</li>
+      <li><strong>How it works</strong> &mdash; the tools, the flow, where the model decides. A hand-drawn diagram photographed is welcome.</li>
+      <li><strong>The trust layer</strong> &mdash; what is gated, what is logged, who approves.</li>
+      <li><strong>Test results</strong> &mdash; the honest version. What broke, what you fixed, what you could not.</li>
+      <li><strong>What&rsquo;s next</strong> &mdash; the one thing you would build with another week, and whether this should ever become two agents (name the reason, or say &ldquo;no&rdquo;).</li>
+    </ol>
+    <p><strong>ISOM 900 students</strong> add a second page: an <strong>architecture proposal</strong> &mdash; chosen tools and why, the flow, and the trade-offs you considered: one agent vs. many, build vs. buy (which pieces could be an MCP server or a vendor product), and the deployment risk you would flag to a CIO.</p>
+    <p><strong>Deliverable:</strong> PDF, one page (grad: two). Your name and your bot&rsquo;s @username (if any) at the top.</p>
+  </div>
+
+  <hr class="divider" />
+  <h2><span class="num">6</span> Bonus</h2>
+  <div class="task task-stretch">
+    <div class="task-label">Stretch &mdash; up to 10 bonus pts</div>
+    <h3>Two ways to earn more</h3>
+    <ul>
+      <li><strong>+5 Field test.</strong> Your agent on Telegram, used by someone who is not in this class. A screenshot of the conversation, with their permission, and one sentence on what surprised you.</li>
+      <li><strong>+5 The bill.</strong> Run your multi-tool test with ReAct on and off. Show the two bills side by side and say which one your user should pay for.</li>
+    </ul>
+  </div>
+
+  <hr class="divider" />
+  <h2>Grading Rubric</h2>
+  <table>
+    <thead>
+      <tr><th style="width:30%">Criterion</th><th style="width:10%">Points</th><th style="width:60%">What &ldquo;excellent&rdquo; looks like</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Problem &amp; user</td><td>15</td><td>Specific, real, named. The core flow fits in one sentence and the tests are obviously derived from it.</td></tr>
+      <tr><td>Tools &amp; real API</td><td>25</td><td>Two or more tools with precise descriptions; one real external API; honest error paths demonstrated; the tool reveals what it actually matched.</td></tr>
+      <tr><td>Trust layer</td><td>25</td><td>The gate fires on the risky action and the agent reports BLOCKED without retrying; audit table present and readable; door if on Telegram; ReAct used or explicitly declined with a reason.</td></tr>
+      <tr><td>Tests &amp; honesty</td><td>20</td><td>Five tests with visible outputs; the two hostile tests are genuinely hostile; every result labeled pass/fail/partial with a reason.</td></tr>
+      <tr><td>Memo</td><td>15</td><td>One page, five headings, plain language, no invented results. Grad: architecture proposal with real trade-offs.</td></tr>
+      <tr><td><strong>Total</strong></td><td><strong>100</strong></td><td>+ up to 10 bonus</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Suggested Timeline</h2>
+  <table>
+    <thead><tr><th style="width:30%">When</th><th>Do</th></tr></thead>
+    <tbody>
+      <tr><td>Wed Oct 21 (in class)</td><td>Kickoff sheet on paper: problem, user, two tools, risky action, five queries. A neighbor tries to break it. Photograph the sheet.</td></tr>
+      <tr><td>By Mon Oct 26</td><td>Tools working in the notebook with direct test calls. Session 7 shows how to add your own documents (RAG) &mdash; optional here.</td></tr>
+      <tr><td>By Wed Oct 28</td><td>Trust layer in; the BLOCKED test passes. Bring the audit table to office hours, not the code.</td></tr>
+      <tr><td>By Sun Nov 1</td><td>Five tests run, memo written from the kickoff sheet. Export the PDF.</td></tr>
+      <tr><td>Mon Nov 2, 12:30 PM</td><td>Both files on Canvas before class starts.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>FAQ</h2>
+  <p><strong>Can I use my Session 5 bot as-is?</strong> As a starting point, yes. As a submission, no &mdash; it solves nobody&rsquo;s problem yet. Change the tools and the system prompt until it solves one.</p>
+  <p><strong>Does the risky action have to be real?</strong> No. A simulated <code>send_email</code> or <code>book_appointment</code> is fine. The gate, the audit row, and the honest BLOCKED report are what is graded.</p>
+  <p><strong>What if my API is down on submission day?</strong> Your tool should already handle that honestly (that is part of criterion 2). Note it in the memo&rsquo;s test results. You will not lose points for the internet.</p>
+  <p><strong>What if it does not work?</strong> Say so, specifically, in the memo. An agent that fails two tests with a clear explanation of why outscores one that &ldquo;works&rdquo; with hidden outputs every time.</p>
+  <p><strong>Can this become my final project?</strong> Yes, and it should if the problem is good. The final is a team build; bring the midterm and a teammate.</p>
+
+  <h2>Submission Checklist</h2>
+  <ul class="checklist">
+    <li>Notebook runs top to bottom with a fresh key; outputs are visible; the audit table is the last cell</li>
+    <li>Problem / user / core flow in a markdown cell at the top</li>
+    <li>Two or more tools; at least one real API; one direct test of each tool&rsquo;s success and error path</li>
+    <li>A gated risky action; one test shows BLOCKED; the audit row is visible</li>
+    <li>Five test queries, two hostile, each labeled pass / fail / partial with a reason</li>
+    <li>Memo PDF: one page, five headings (ISOM 900: plus the architecture page)</li>
+    <li>Your name and bot @username (if any) on the memo; both files on Canvas by Mon Nov 2, 12:30 PM</li>
+  </ul>
+
+  <div class="footer">ISOM 260 &middot; AI for Business &middot; Suffolk University &middot; Sawyer Business School &middot; Fall 2026</div>
+</body>
+</html>
