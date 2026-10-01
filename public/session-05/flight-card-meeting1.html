@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flight Card · Session 5, Meeting 1 | ISOM 260</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Sora:wght@600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'DM Sans', sans-serif; background: #f4f2ec; color: #1a1a1a; padding: 1.2rem; font-size: 13px; line-height: 1.45; }
+    .card { max-width: 820px; margin: 0 auto; background: #fff; border: 2px solid #1a1a1a; border-radius: 10px; padding: 1.4rem 1.6rem; }
+    h1 { font-family: 'Sora', sans-serif; font-size: 1.1rem; display: flex; justify-content: space-between; align-items: baseline; border-bottom: 2px solid #1a1a1a; padding-bottom: 0.5rem; margin-bottom: 0.8rem; }
+    h1 .sub { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 400; color: #666; }
+    h2 { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: #b3003e; margin: 0.9rem 0 0.35rem; }
+    table { width: 100%; border-collapse: collapse; }
+    td { padding: 0.18rem 0.5rem 0.18rem 0; vertical-align: top; }
+    td.t { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 0.78rem; white-space: nowrap; width: 4.2rem; }
+    .cut { color: #b3003e; font-weight: 700; }
+    .hl { background: #fff3b8; padding: 0 0.25rem; font-weight: 700; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1.6rem; }
+    .mono { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; background: #f4f2ec; border: 1px solid #ccc; border-radius: 6px; padding: 0.5rem 0.65rem; white-space: pre-wrap; margin: 0.25rem 0; }
+    ul { list-style: none; }
+    li { padding-left: 1rem; position: relative; margin-bottom: 0.22rem; }
+    li::before { content: "▸"; position: absolute; left: 0; color: #b3003e; }
+</head>
+<body>
+<div class="card">
+    <h1>SESSION 5 · MEETING 1 · "YOUR AGENT, ON YOUR PHONE" <span class="sub">WED OCT 7 · 12:30–1:45 · HW5 DUE THU 11:59 PM · HARD STOP 1:45</span></h1>
+
+    <div class="grid">
+    <div>
+        <h2>Timeline · slide #</h2>
+        <table>
+            <tr><td class="t">12:30</td><td>1–2 · HW5 pulse — <span class="hl">hands: whose tool solves a real problem?</span> · two descriptions read aloud · "did it ever call your tool when it shouldn't?" (3 min)</td></tr>
+            <tr><td class="t">12:33</td><td>3–4 · "Colab was the lab; today the agent leaves the building" · where does an agent live: interface / queue / agent / brain (5 min)</td></tr>
+            <tr><td class="t">12:38</td><td>5 · <span class="hl">LIVE: a volunteer texts YOUR bot</span> from their phone — math → Boston jobs → "which pays most" (memory). Projector shows the Colab log: who, never what — <span class="cut">CUT 12:44</span></td></tr>
+            <tr><td class="t">12:44</td><td>6 · <span class="hl">Hands-on</span> — BotFather → token → Secrets → Parts 1–3 (paste HW5 tool) → Part 4 bridge → Part 5 break-it + phone swap. Walk the room: "did it answer on your phone yet?" — <span class="cut">STOP 1:17</span></td></tr>
+            <tr><td class="t">1:17</td><td>7 · Three lines that make it trustworthy — MEMORY[chat_id] · the FALLBACK label · the audit table (5 min)</td></tr>
+            <tr><td class="t">1:22</td><td>8 · Life after Colab — Part 6 downloads bot.py; "only one copy polls a token" (3 min)</td></tr>
+            <tr><td class="t">1:25</td><td>9 · Boardroom (4 min)</td></tr>
+            <tr><td class="t">1:29</td><td>10 · HW #6 Field Test, <b>due Thu Oct 15, 11:59 PM</b> · bot @username in the Canvas thread (3 min)</td></tr>
+            <tr><td class="t">1:32</td><td>11–12 · Next Wed: three things it can't do yet · <b>no class Mon Oct 12</b> → close. Buffer to 1:45</td></tr>
+        </table>
+
+        <h2>Live demo cues (slide 5)</h2>
+        <div class="mono">volunteer:  "What's 15% of $4,500 plus $2,800?"      → calculator → 3,475
+volunteer:  "Entry-level analyst jobs in Boston"      → find_local_jobs (Adzuna live, or FALLBACK + it says so)
+volunteer:  "Which of those pays the most?"           → no tool call. "It remembered."
+projector:  12:40:11  💬 #1 from Ada                   → "who, never what"</div>
+        <ul><li>Beat: "the brain never sees the phone. Swap Telegram for Slack and the loop can't tell."</li></ul>
+    </div>
+    <div>
+        <h2>Fix-its (the scramble)</h2>
+        <ul>
+            <li>"Secret not found" → 🔑 panel, exactly <span class="hl">TELEGRAM_BOT_TOKEN</span>, Notebook access ON — same mistake as GOOGLE_API_KEY in S3</li>
+            <li>Bot never replies → <b>the Part 4 cell is the bot.</b> Is it still running? Stopped cell = sleeping bot</li>
+            <li>409 Conflict in the log → two copies polling one token (a second tab, or last run's runtime). Runtime → Interrupt everywhere, run once</li>
+            <li>No Telegram account → pair up: one phone, their bot, your Gemini key in a quick <span class="hl">agent_reply("test", …)</span> cell</li>
+            <li>429 from Gemini → retries are built in; tell the room to pace, free tier is ~10 calls/min per key</li>
+            <li>Adzuna → optional, skip in class. Fallback is the lesson anyway</li>
+            <li>"Is this private?" → messages pass through Telegram + Google. Fictional résumés only; nothing is written to disk this week</li>
+        </ul>
+
+        <h2>If behind at 1:17</h2>
+        <ul>
+            <li>Slide 7 becomes two sentences; skip slide 8 (bot.py is in the notebook)</li>
+            <li>HW #6 and "no class Monday" are untouchable</li>
+        </ul>
+
+        <h2>Before / after</h2>
+        <ul>
+            <li>⚠️ <b>Smoke-test with YOUR phone</b>: BotFather bot, both secrets, Run all, text it the three demo lines. Not yet done with real keys as of Sep 30</li>
+            <li>Optional: get an Adzuna key (developer.adzuna.com, 3 min) so the live demo shows Boston jobs, not the fallback</li>
+            <li>Canvas: HW #5 closes tomorrow · post <b>HW #6</b> (due Thu Oct 15) · create the <b>Session 5 discussion</b> for screenshots + bot usernames</li>
+            <li>Tabs: slides · notebook (bot running, Part 4 log visible) · Telegram Desktop with your bot open</li>
+            <li>After: count how many had a reply on their phone by 1:17 — sets Oct 14's hands-on window</li>
+        </ul>
+    </div>
+    </div>
+
+    <div class="rule">The day's one job: every student gets a reply from THEIR OWN agent on THEIR OWN phone — and sees a neighbor get a separate conversation. Everything else is negotiable.</div>
+</div>
+</body>
+</html>

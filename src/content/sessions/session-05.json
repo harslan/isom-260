@@ -1,328 +1,311 @@
 {
   "number": 5,
   "slug": "session-05",
-  "title": "Agents Meet the Real World",
-  "subtitle": "Real APIs, error handling, memory — take your agents from simulated toys to production-ready tools",
-  "heroTitle": "Agents Meet the <span class=\"bg-gradient-to-br from-accent-cyan to-accent-purple bg-clip-text text-transparent\">Real World</span>",
+  "title": "Your Agent, On Your Phone",
+  "subtitle": "Wednesday your Session 4 agent becomes a personal Telegram bot your friends can text. The Wednesday after, you close the three holes a business would never accept: a door, an approval gate inside the chat, and a memory that survives — and can be erased.",
+  "heroTitle": "Your Agent, <span class=\"bg-gradient-to-br from-accent-cyan to-accent-purple bg-clip-text text-transparent\">On Your Phone</span>",
   "duration": "2 meetings · 75 min",
   "meetings": [
     "Wed Oct 7",
     "Wed Oct 14"
   ],
-  "icon": "globe",
+  "icon": "message-circle",
   "tags": [
+    "Telegram Bot",
     "Real APIs",
-    "Error Handling",
+    "Approval Gate",
     "Agent Memory",
-    "Wikipedia API",
-    "Web Fetching"
+    "Access Control"
   ],
   "objectives": [
     {
-      "title": "Connect Agents to Real APIs",
-      "description": "Replace simulated tools with live data sources. Build a Wikipedia search tool and a web page fetcher that work with real HTTP requests."
+      "title": "Take the Agent Out of Colab",
+      "description": "Wrap the loop you wrote in Session 4 in a Telegram bot. Your phone is the interface, Colab is the server for now, and a downloaded bot.py runs it on your laptop with no Colab at all."
     },
     {
-      "title": "Handle Real-World Failures",
-      "description": "Build agents that gracefully handle 404s, timeouts, and bad input — instead of crashing, they adapt and try alternatives."
+      "title": "Give It Real Tools",
+      "description": "A live job board with no key, Adzuna local listings with an optional key that fall back honestly, and a weather API that fails the interesting way: not with an error, with a confident wrong answer."
     },
     {
-      "title": "Give Agents Memory",
-      "description": "Implement conversation history so your agent remembers context across turns. Understand why memory is just a list — and why that matters."
+      "title": "Close the Three Holes",
+      "description": "Anyone can use it, it acts without asking, it forgets when the cell stops. An allow-list, an approval gate that asks you on your phone, and memory on disk with a /forget command."
     },
     {
-      "title": "Iterate Your Session 4 Product",
-      "description": "Apply real tools, error handling, and memory concepts to upgrade the product and agent you built last session."
+      "title": "Ask the Four Questions",
+      "description": "Who can use it? What can it do without asking? What does it remember, and can it forget? What happens when the API is wrong? The questions to put to any AI product a vendor shows you."
     }
   ],
   "agenda": [
     {
-      "time": "5:00 PM - 5:15 PM",
-      "title": "Part 1: NanoClaw Live Demo",
-      "duration": "15 minutes",
-      "description": "See a production AI agent in action — the theory from Session 4 running in the real world.",
+      "time": "Wed Oct 7 · 12:30 PM",
+      "title": "Meeting 1 · HW #5 Pulse + Where Does an Agent Live?",
+      "duration": "14 minutes",
+      "description": "Whose tool solves a real problem? Then the one new idea: the interface is not the agent. Phone, queue, loop, brain.",
       "bulletPoints": [
-        "LIVE DEMO: Send a WhatsApp message to NanoClaw, watch it reason and respond in real-time",
-        "Code highlights: How index.ts, ipc-mcp.ts, and db.ts work together (Session 4 overflow)",
-        "Key observation: Real agents deal with real problems — network delays, bad input, context limits",
-        "The gap: Your Session 4 agent used fake data. Today we close that gap."
-      ]
+        "Colab was the lab. Today the agent leaves the building — same 40 lines, new address",
+        "Interface (your phone) · queue (Telegram) · agent (your loop) · brain (Gemini) — swap Telegram for Slack and the loop can't tell",
+        "Live: a volunteer texts the professor's bot — math, Boston jobs, then 'which pays most' from memory"
+      ],
+      "isBreak": false
     },
     {
-      "time": "5:15 PM - 5:35 PM",
-      "title": "Part 2: From Fake to Real",
+      "time": "Wed Oct 7 · 12:44 PM",
+      "title": "Hands-On: Put It On Your Phone",
+      "duration": "33 minutes",
+      "description": "BotFather in 60 seconds, the token into Colab Secrets, Parts 1–4 of the notebook, and your HW #5 tool answering from your pocket.",
+      "bulletPoints": [
+        "The Part 4 cell is the bot — while it runs, your phone gets replies",
+        "Part 5: try to break it, then swap phones with a neighbor — their bot, your question, separate memories",
+        "No Telegram account? Pair up: one phone, two keys"
+      ],
+      "isBreak": false
+    },
+    {
+      "time": "Wed Oct 7 · 1:17 PM",
+      "title": "Three Lines That Make It Trustworthy + Life After Colab",
+      "duration": "8 minutes",
+      "description": "Per-chat memory, the FALLBACK label that stops the model from passing remote jobs off as local, and the audit log. Then bot.py: one file, zero Colab.",
+      "bulletPoints": [
+        "MEMORY[chat_id] — one dictionary is multi-tenancy",
+        "Provider abstraction: the workflow never changed, only where the data came from — and the tool confessed",
+        "Only one copy polls a token at a time: stop the cell before you start the file"
+      ],
+      "isBreak": false
+    },
+    {
+      "time": "Wed Oct 7 · 1:25 PM",
+      "title": "Wrap: Boardroom + HW #6 + No Class Monday",
       "duration": "20 minutes",
-      "description": "Why simulated tools aren't enough, and how to connect agents to the real world.",
+      "description": "What you can now say when someone asks to 'put the AI in Slack', the Field Test homework, and the October Break reminder.",
       "bulletPoints": [
-        "The problem: Your Session 4 stock tool returns the SAME price every time. Real data changes.",
-        "Real APIs 101: What is an API endpoint? HTTP requests. JSON responses. Status codes.",
-        "Wikipedia API: Free, no key needed, returns structured summaries — perfect first real tool",
-        "Web fetching: requests + BeautifulSoup = read any web page programmatically",
-        "ACTION: Open Colab now, run Setup cells while I talk"
-      ]
+        "HW #6: two people outside this class text your bot — screenshot, audit table, two sentences, your bot's @username — due Thu Oct 15, 11:59 PM",
+        "No class Mon Oct 12 (October Break). Next: Wed Oct 14"
+      ],
+      "isBreak": false
     },
     {
-      "time": "5:35 PM - 6:20 PM",
-      "title": "Part 3: Hands-On — Real-World Agent",
-      "duration": "45 minutes",
-      "description": "Build an agent with real tools that fetches live data from the internet.",
+      "time": "Wed Oct 14 · 12:30 PM",
+      "title": "Meeting 2 · HW #6 Pulse + Three Things Your Bot Can't Do Yet",
+      "duration": "17 minutes",
+      "description": "Who texted your bot, and what was the worst thing it did? Then the three holes and a live demo of an API that guesses.",
       "bulletPoints": [
-        "5:35-5:45 — Bring back the calculator from Session 4 + the run_agent() loop as foundation",
-        "5:45-5:55 — Build Wikipedia search tool: live API, real data, error handling for 404s",
-        "5:55-6:10 — Build web page fetcher: requests + BeautifulSoup, timeout handling, text truncation",
-        "6:10-6:20 — Multi-tool challenge: Ask questions that require calculator + Wikipedia + web fetch together"
-      ]
+        "A door with your name on it: chat_id was a memory key, now it's a key key",
+        "The 🚦 moves into the chat: the loop pauses, asks on your phone, resumes on YES — Session 4's gate where the human actually is",
+        "Memory that survives the cell — and /forget, because memory is a liability too",
+        "Live: get_weather('Bostn') → Båstnäs, Sweden. No error. Real APIs don't fail, they guess"
+      ],
+      "isBreak": false
     },
     {
-      "time": "6:20 PM - 6:30 PM",
-      "title": "Break",
-      "duration": "10 minutes",
-      "description": "Stretch, grab coffee. Your agent now talks to the real internet.",
-      "isBreak": true
+      "time": "Wed Oct 14 · 12:47 PM",
+      "title": "Hands-On: Close the Three Holes",
+      "duration": "35 minutes",
+      "description": "Parts 1–5 of the Meeting 2 notebook: /whoami, the allow-list, decline and approve an email, restart and remember, the Bostn test, /forget.",
+      "bulletPoints": [
+        "Your neighbor is now a stranger — watch them hit the door",
+        "One BLOCKED row and one SENT row in the audit table: that's the slide for the CFO",
+        "Stop the cell, run it again, ask what you emailed earlier"
+      ],
+      "isBreak": false
     },
     {
-      "time": "6:30 PM - 6:50 PM",
-      "title": "Part 4: Agent Memory",
-      "duration": "20 minutes",
-      "description": "The missing piece — agents that remember what you said 5 minutes ago.",
+      "time": "Wed Oct 14 · 1:22 PM",
+      "title": "Wrap: The Four Questions + HW #7 + Session 6",
+      "duration": "23 minutes",
+      "description": "The four questions to ask any AI product, the homework that puts them to a real vendor, and what's next: when one agent should become two.",
       "bulletPoints": [
-        "THE PROBLEM: Ask 'Who founded Tesla?' then 'How old is he?' — agent forgets everything",
-        "The fix: Conversation history = just a list of messages. That's it. Memory demystified.",
-        "LIVE CODING: run_agent_with_memory() — maintains context across turns",
-        "Multi-turn test: research → follow-up → calculation chain",
-        "Trade-offs: More memory = more tokens = more cost. When to forget on purpose."
-      ]
-    },
-    {
-      "time": "6:50 PM - 7:10 PM",
-      "title": "Part 5: Product Iteration Workshop",
-      "duration": "20 minutes",
-      "description": "Apply what you learned to upgrade your Session 4 product.",
-      "bulletPoints": [
-        "Review: Session 4 = simulated tools. Session 5 = real APIs + errors + memory.",
-        "Exercise: Pick one real API that would make your Session 4 product actually useful",
-        "Design: What errors could happen? How should your agent handle them?",
-        "Memory: Does your product need multi-turn conversation? Why or why not?",
-        "Share: 60-second pitch of your upgraded product concept to a neighbor"
-      ]
-    },
-    {
-      "time": "7:10 PM - 7:30 PM",
-      "title": "Part 6: Wrap-Up + Homework",
-      "duration": "20 minutes",
-      "description": "From consumer to builder to architect — and the journey ahead.",
-      "bulletPoints": [
-        "The arc: Session 4 built agents with fake tools → Session 5 connected them to the real world",
-        "You learned 3 production essentials: real APIs, error handling, conversation memory",
-        "Next session: Agent Patterns & Production Intelligence — ReAct reasoning, multi-agent architectures, and MCP. The patterns that power NanoClaw.",
-        "Homework preview: Add a real API tool to your agent, test edge cases, design memory strategy"
-      ]
+        "HW #7: the four questions applied to one real AI product, 200 words, due Thu Oct 22, 11:59 PM",
+        "Session 6 Mon Oct 19: agent patterns, MCP ('a protocol is not a permission'), and the midterm project assigned Wed Oct 21"
+      ],
+      "isBreak": false
     }
   ],
   "resources": [
     {
-      "title": "Your Agent, On Your Phone — Colab Notebook",
+      "title": "Meeting 1 Slide Deck — Your Agent, On Your Phone",
+      "url": "/session-05/slides-meeting1.html",
+      "description": "Wednesday Oct 7: where an agent lives, the live volunteer demo, the hands-on launch with QR, three lines that make it trustworthy, life after Colab, boardroom, HW #6.",
+      "icon": "presentation",
+      "badge": "Slides",
+      "badgeType": "interactive",
+      "linkText": "Open slides"
+    },
+    {
+      "title": "Meeting 2 Slide Deck — Three Things Your Bot Can't Do Yet",
+      "url": "/session-05/slides-meeting2.html",
+      "description": "Wednesday Oct 14: the door, the 🚦 in the chat, memory that survives, the API that guesses, the hands-on, the four questions, HW #7.",
+      "icon": "presentation",
+      "badge": "Slides",
+      "badgeType": "interactive",
+      "linkText": "Open slides"
+    },
+    {
+      "title": "Your Agent, On Your Phone — Colab Notebook (Meeting 1)",
       "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-05/ISOM260_Session5_Your_Agent_On_Your_Phone.ipynb",
-      "description": "Wednesday's agent loop becomes a personal Telegram bot: per-chat memory, a live job search (remote board, plus Adzuna local listings with an optional key), the trust layer, and a standalone bot.py for your laptop. Needs your Gemini key and a BotFather token in Colab Secrets.",
+      "description": "Session 4's loop as a personal Telegram bot: per-chat memory, a live job board, Adzuna local listings with an optional key and an honest fallback, the trust layer, and a standalone bot.py. Needs your Gemini key and a BotFather token in Colab Secrets.",
       "icon": "message-circle",
       "badge": "Hands-On",
       "badgeType": "interactive",
       "linkText": "Open in Colab"
     },
     {
-      "title": "Real-World Agent Notebook (Claude)",
-      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-05/ISOM260_Session5_Agents_Real_World.ipynb",
-      "description": "Build an agent with real APIs: Wikipedia search, web page fetcher, error handling, and conversation memory. Uses Claude/Anthropic SDK.",
-      "icon": "code",
+      "title": "Three Things Your Bot Can't Do Yet — Colab Notebook (Meeting 2)",
+      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-05/ISOM260_Session5_Three_Things_Your_Bot_Cant_Do_Yet.ipynb",
+      "description": "The same bot with an allow-list, an approval gate that asks you on Telegram before send_email runs, memory saved to disk with /forget, and a real weather API that returns a confident wrong place when you misspell the city.",
+      "icon": "shield",
       "badge": "Hands-On",
       "badgeType": "interactive",
       "linkText": "Open in Colab"
     },
     {
-      "title": "Real-World Agent Notebook (Gemini)",
-      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-05/ISOM260_Session5_Agents_Real_World_Gemini.ipynb",
-      "description": "Same real-world agent workshop using Google Gemini. Identical tools and structure — different LLM backend. Requires a Google API key.",
-      "icon": "code",
-      "badge": "Hands-On",
-      "badgeType": "interactive",
-      "linkText": "Open in Colab"
+      "title": "BotFather — make your bot",
+      "url": "https://t.me/BotFather",
+      "description": "Open in Telegram, send /newbot, pick a name and a username ending in 'bot', copy the token into Colab Secrets as TELEGRAM_BOT_TOKEN. Sixty seconds. The token is a password.",
+      "icon": "bot",
+      "badge": "Tool",
+      "badgeType": "tool",
+      "linkText": "Open BotFather"
+    },
+    {
+      "title": "Adzuna Developer API — optional",
+      "url": "https://developer.adzuna.com",
+      "description": "Free key, instant. Unlocks local job listings ('analyst jobs in Boston'). Without it the bot still works and labels remote results as a fallback.",
+      "icon": "briefcase",
+      "badge": "Optional",
+      "badgeType": "tool",
+      "linkText": "Get a key"
+    },
+    {
+      "title": "Telegram Bot API — Docs",
+      "url": "https://core.telegram.org/bots/api",
+      "description": "The three methods your bridge uses: getUpdates, sendMessage, sendChatAction. Everything else is optional.",
+      "icon": "book-open",
+      "badge": "Docs",
+      "badgeType": "code",
+      "linkText": "Read docs"
+    },
+    {
+      "title": "Open-Meteo — the weather API that guesses",
+      "url": "https://open-meteo.com/en/docs",
+      "description": "Free, no key. The geocoding endpoint fuzzy-matches place names, which is why 'Bostn' comes back as a village in Sweden. Read what your tool returns.",
+      "icon": "cloud",
+      "badge": "Docs",
+      "badgeType": "code",
+      "linkText": "Read docs"
     },
     {
       "title": "Agentic AI Deep-Dive",
       "url": "/session-04/agentic-ai-deep-dive.html",
-      "description": "Visual explainer from Session 4: Chatbot vs Agent, the Agent Loop, and the NanoClaw case study. Review before diving into real APIs.",
+      "description": "Review from Session 4: chatbot vs agent, the agent loop, the NanoClaw case study. The loop in your bot is the one on this page.",
       "icon": "bot",
       "badge": "Review",
-      "badgeType": "interactive",
+      "badgeType": "reference",
       "linkText": "View deep-dive"
-    },
-    {
-      "title": "Wikipedia REST API Docs",
-      "url": "https://en.wikipedia.org/api/rest_v1/",
-      "description": "Free, no-key API for page summaries, search, and more. The real API your agent uses in today's workshop.",
-      "icon": "book-open",
-      "badge": "Docs",
-      "badgeType": "code",
-      "linkText": "Read docs"
-    },
-    {
-      "title": "Beautiful Soup Documentation",
-      "url": "https://www.crummy.com/software/BeautifulSoup/bs4/doc/",
-      "description": "Python library for parsing HTML and extracting text from web pages. Powers the web fetcher tool in today's notebook.",
-      "icon": "file-code",
-      "badge": "Docs",
-      "badgeType": "code",
-      "linkText": "Read docs"
-    },
-    {
-      "title": "Anthropic Tool Use Docs",
-      "url": "https://docs.anthropic.com/en/docs/build-with-claude/tool-use",
-      "description": "Official documentation for giving Claude tools. The foundation of building AI agents with the Anthropic API.",
-      "icon": "book-open",
-      "badge": "Docs",
-      "badgeType": "code",
-      "linkText": "Read docs"
-    },
-    {
-      "title": "Google Colab",
-      "url": "https://colab.research.google.com",
-      "description": "Free cloud-based Python notebooks. No installation needed — just open and start coding.",
-      "icon": "cloud",
-      "badge": "Tool",
-      "badgeType": "tool",
-      "linkText": "Open Colab"
     }
   ],
   "activities": [
     {
       "number": 1,
-      "icon": "globe",
-      "title": "Real-World Agent Workshop",
-      "description": "Build an agent that connects to live APIs — real data, real errors, real power:",
+      "icon": "message-circle",
+      "title": "Put It On Your Phone (Wed Oct 7)",
+      "description": "Parts 1–6 of the Meeting 1 notebook, on your own keys:",
       "steps": [
         {
-          "title": "Bring Back the Foundation (10 min)",
-          "description": "Copy the calculator tool and run_agent() loop from Session 4. Verify everything works before adding new tools."
+          "title": "Make a bot",
+          "description": "BotFather → /newbot → copy the token into Colab Secrets. Your Gemini key from Session 3 is already there."
         },
         {
-          "title": "Wikipedia Search Tool (10 min)",
-          "description": "Build a tool that queries the Wikipedia API for any topic. Handle 404s for pages that don't exist. Test with 'Suffolk University' and 'artificial intelligence'."
+          "title": "Paste your HW #5 tool",
+          "description": "Part 2 has a marked slot. Register the declaration and the function. Now the bot is yours."
         },
         {
-          "title": "Web Page Fetcher (15 min)",
-          "description": "Build a tool that fetches any URL, extracts text with BeautifulSoup, and truncates to 3000 chars. Handle timeouts and connection errors."
+          "title": "Run the bridge",
+          "description": "Part 4 is the bot. While the cell runs, open your bot on your phone and say hi."
         },
         {
-          "title": "Multi-Tool Challenge (10 min)",
-          "description": "Ask questions that need all 3 tools: 'Look up Suffolk University on Wikipedia, then visit their website and calculate how many years they've been open.'"
+          "title": "Break it, then swap",
+          "description": "Math, jobs, 'which pays most', the Boston query. Then a neighbor's bot with your question — two phones, two memories."
+        },
+        {
+          "title": "Download bot.py",
+          "description": "Part 6 writes one standalone file. python bot.py on your laptop, no Colab."
         }
-      ],
-      "codeBlock": {
-        "language": "python",
-        "code": "import requests\n\ndef wikipedia_search(topic: str) -> str:\n    \"\"\"Search Wikipedia for a topic — REAL API!\"\"\"\n    url = f\"https://en.wikipedia.org/api/rest_v1/page/summary/{topic}\"\n    try:\n        response = requests.get(url, timeout=10)\n        if response.status_code == 404:\n            return f\"No Wikipedia page found for '{topic}'.\"\n        data = response.json()\n        return json.dumps({\n            \"title\": data.get(\"title\", \"\"),\n            \"summary\": data.get(\"extract\", \"\"),\n            \"url\": data.get(\"content_urls\", {}).get(\"desktop\", {}).get(\"page\", \"\")\n        })\n    except requests.exceptions.Timeout:\n        return \"Error: Request timed out.\""
-      }
+      ]
     },
     {
       "number": 2,
-      "icon": "brain",
-      "title": "Agent Memory Lab",
-      "description": "Give your agent the ability to remember — and understand why it matters:",
+      "icon": "shield",
+      "title": "Close the Three Holes (Wed Oct 14)",
+      "description": "Parts 1–5 of the Meeting 2 notebook:",
       "steps": [
         {
-          "title": "See the Problem (3 min)",
-          "description": "Ask 'Who founded Tesla?' then 'How old is he?' — watch the agent fail because it has no memory of the first question."
+          "title": "The door",
+          "description": "Text /whoami, put your id in ALLOWED, re-run. Your neighbor now gets '🔒 private assistant' and their own id."
         },
         {
-          "title": "Build Memory (7 min)",
-          "description": "Implement run_agent_with_memory() that maintains a conversation history list. Memory is just a list — that's the key insight."
+          "title": "The gate",
+          "description": "Ask it to email someone. 🚦 Reply no, then ask if it sent. Ask again, reply yes. Two audit rows: BLOCKED, SENT."
         },
         {
-          "title": "Multi-Turn Test (5 min)",
-          "description": "Chain 3+ questions: research a topic → ask follow-up → request a calculation based on previous answers."
+          "title": "Memory that survives",
+          "description": "Stop the cell. Run it again. Ask what you emailed earlier. Then /forget — in memory and on disk."
         },
         {
-          "title": "Memory Trade-offs (5 min)",
-          "description": "Discuss: More memory = more tokens = more cost. When should an agent forget? How does NanoClaw handle this?"
+          "title": "The API that guesses",
+          "description": "Weather in Boston, then in 'Bostn'. Does the agent notice it got Sweden? Then 'Xyzzyville' — an honest error."
         }
       ],
-      "codeBlock": {
-        "language": "python",
-        "code": "def run_agent_with_memory(user_message, tools, tool_functions,\n                         conversation_history=None):\n    \"\"\"\n    Agent with memory! Maintains conversation history\n    across multiple turns.\n    \"\"\"\n    if conversation_history is None:\n        conversation_history = []\n\n    # Add new user message to history\n    conversation_history.append(\n        {\"role\": \"user\", \"content\": user_message}\n    )\n\n    # Send FULL history to LLM (that's the memory!)\n    # ... same agent loop, but with conversation_history\n    # instead of a single message\n\n    return final_answer, conversation_history"
-      }
-    },
-    {
-      "number": 3,
-      "icon": "lightbulb",
-      "title": "Product Iteration Workshop",
-      "description": "Apply real-world concepts to upgrade your Session 4 product:",
-      "steps": [
-        {
-          "title": "Pick a Real API (5 min)",
-          "description": "What real data source would make your product actually useful? Weather, news, maps, stocks, recipes? Find one that's free and doesn't need a key."
-        },
-        {
-          "title": "Design Error Handling (5 min)",
-          "description": "List 3 things that could go wrong with your real API. How should your agent respond to each failure? Write the fallback messages."
-        },
-        {
-          "title": "Memory Strategy (5 min)",
-          "description": "Does your product need multi-turn conversation? What should it remember? What should it forget? Write a 3-sentence memory strategy."
-        },
-        {
-          "title": "60-Second Pitch (5 min)",
-          "description": "Tell a neighbor: 'My product now uses [real API] to [do what]. It handles [these errors] and remembers [this context].'"
-        }
-      ]
+      "discussionNote": "The loop is still 40 lines. Everything you added this week is the part a company actually pays for."
     }
   ],
   "takeaways": [
     {
-      "icon": "globe",
-      "text": "<strong>Real APIs change everything.</strong> Simulated tools are training wheels. Today you connected your agent to Wikipedia and the live web — real data, real value."
+      "icon": "message-circle",
+      "text": "<strong>The interface is not the agent.</strong> Phone, Slack, web form, Telegram — the loop can't tell the difference. The interface is the cheap part."
+    },
+    {
+      "icon": "briefcase",
+      "text": "<strong>Abstract the provider, and make the tool confess.</strong> Adzuna or the fallback board, the workflow never changed. The FALLBACK label is what stops the model from lying for you."
     },
     {
       "icon": "shield",
-      "text": "<strong>Errors are features, not bugs.</strong> Production agents don't crash on 404s — they adapt. You built agents that handle timeouts, missing pages, and bad input gracefully."
+      "text": "<strong>A door, a gate, a memory you can erase.</strong> Allow-list, approval inside the chat, memory on disk with /forget. The three things that turn a demo into something a company can run."
     },
     {
-      "icon": "brain",
-      "text": "<strong>Memory is just a list.</strong> Conversation history isn't magic — it's appending messages to a list and sending the full list each time. Simple concept, massive impact."
+      "icon": "cloud",
+      "text": "<strong>Real APIs don't fail. They guess.</strong> Return what the service actually matched, and tell the model to say so. Your agent's reputation is decided in that 1%."
     },
     {
-      "icon": "trending-up",
-      "text": "<strong>Session 4 → Session 5 → Session 6.</strong> Fake tools → real APIs → production patterns. Each session builds on the last. Next session adds ReAct reasoning, multi-agent, and MCP."
-    },
-    {
-      "icon": "lightbulb",
-      "text": "<strong>The business decision is which APIs to connect.</strong> The agent loop is ~50 lines. The value is in choosing the right data sources and designing how your agent handles the messy real world."
+      "icon": "target",
+      "text": "<strong>Ask the four questions.</strong> Who can use it, what can it do without asking, what does it remember and can it forget, what happens when the API is wrong."
     }
   ],
   "homework": [
     {
-      "label": "Build:",
-      "text": "Add a new real API tool to your notebook (weather, news, recipes, etc.). It must be a live API — no simulated data. Test it with 3 different queries."
+      "label": "HW #6 · due Thu Oct 15, 11:59 PM:",
+      "text": "Field Test. Let two people outside this class text your bot without coaching. Post in the Canvas Session 5 discussion: one screenshot of a conversation, the audit-log table, two sentences (the worst thing it did, the one line you'd change), and your bot's @username so classmates can text it."
     },
     {
-      "label": "Break:",
-      "text": "Deliberately trigger 3 different error conditions in your agent (bad URL, nonexistent page, timeout). Document how your agent handles each one."
+      "label": "HW #7 · due Thu Oct 22, 11:59 PM:",
+      "text": "The Four Questions, for real. Pick one AI product a real company sells and answer the four questions from its public documentation. Where the docs don't say, write 'not disclosed' — that is a finding. One paragraph: would you let it touch your company's email? Canvas post, 200 words max, with links."
     },
     {
-      "label": "Remember:",
-      "text": "Use run_agent_with_memory() to have a 5-turn conversation with your agent. Save the conversation and annotate where memory helped vs where it wasn't needed."
+      "label": "No class Mon Oct 12:",
+      "text": "October Break. Meeting 2 is Wed Oct 14. Bring the same phone and the same three secrets."
     },
     {
-      "label": "Design:",
-      "text": "Write a 1-page upgrade plan for your Session 4 product: which real APIs to add, what errors to handle, and your memory strategy."
+      "label": "Optional:",
+      "text": "Run bot.py on your laptop tonight. If it works, you have an agent that does not depend on Colab, and a very good question for office hours: how do I keep it up 24/7?"
     }
   ],
   "nextSession": {
-    "title": "Session 6: Agent Patterns & Production Intelligence",
-    "description": "ReAct reasoning, multi-agent architectures, and the patterns that separate demos from production systems.",
+    "title": "Session 6: Agent Patterns & When One Agent Becomes Two",
+    "description": "ReAct, pipelines, orchestrators, and MCP — plus the rule that more agents is not more intelligence. The midterm project is assigned Wed Oct 21.",
     "tags": [
       "ReAct Pattern",
-      "Multi-Agent Systems",
+      "Multi-Agent",
       "MCP",
-      "Business Automation"
+      "Midterm Project"
     ],
     "slug": "session-06"
   }

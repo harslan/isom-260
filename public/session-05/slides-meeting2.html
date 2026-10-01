@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISOM 260 · Session 5 · Meeting 2 — Three Things Your Bot Can't Do Yet</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #0f1424;
+            --bg-card: #141929;
+            --bg-elevated: #1a2035;
+
+            --cyan: #00e5ff;
+            --cyan-dim: #00b8d4;
+            --cyan-glow: rgba(0, 229, 255, 0.15);
+            --cyan-glow-strong: rgba(0, 229, 255, 0.3);
+
+            --magenta: #ff006e;
+            --magenta-glow: rgba(255, 0, 110, 0.15);
+
+            --yellow: #ffd600;
+            --yellow-glow: rgba(255, 214, 0, 0.15);
+
+            --green: #00e676;
+            --green-glow: rgba(0, 230, 118, 0.15);
+
+            --orange: #ff9100;
+            --purple: #b388ff;
+            --purple-glow: rgba(179, 136, 255, 0.15);
+
+            --text-primary: #e8ecf4;
+            --text-secondary: #8892a8;
+            --text-dim: #5a6478;
+
+            --border: rgba(0, 229, 255, 0.1);
+            --border-strong: rgba(0, 229, 255, 0.25);
+            --grid-line: rgba(0, 229, 255, 0.04);
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'DM Sans', sans-serif;
+            line-height: 1.6;
+            background-image:
+                linear-gradient(var(--grid-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+            background-size: 40px 40px;
+            cursor: default;
+        }
+
+        /* Glow orbs */
+        .glow-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.4;
+        }
+        .glow-orb-1 { width: 500px; height: 500px; background: rgba(0, 229, 255, 0.08); top: -100px; left: -100px; }
+        .glow-orb-2 { width: 400px; height: 400px; background: rgba(255, 0, 110, 0.06); top: 40%; right: -100px; }
+        .glow-orb-3 { width: 350px; height: 350px; background: rgba(0, 230, 118, 0.05); bottom: -50px; left: 30%; }
+
+        /* Deck progress bar */
+        .deck-progress {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: rgba(0, 229, 255, 0.08);
+            z-index: 1000;
+        }
+        .deck-progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--cyan), var(--magenta));
+            transition: width 0.3s ease-out;
+        }
+
+        /* Slide counter */
+        .slide-counter {
+            position: fixed;
+            bottom: 1.2rem;
+            right: 1.6rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            z-index: 1000;
+            letter-spacing: 0.08em;
+            user-select: none;
+        }
+
+        /* Slides */
+        .slide {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 4vh 6vw;
+            text-align: center;
+            z-index: 1;
+            opacity: 0;
+        }
+        .slide.active {
+            display: flex;
+            animation: slide-fade 250ms ease-out forwards;
+        }
+        @keyframes slide-fade {
+            from { opacity: 0; transform: translateY(8px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-inner {
+            max-width: 1400px;
+            width: 100%;
+        }
+
+        /* Type scale */
+        .slide-title {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(2.4rem, 4.5vw, 3.8rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.12;
+            margin-bottom: 1.5rem;
+        }
+        .slide-sub {
+            font-size: clamp(1.4rem, 2vw, 1.7rem);
+            color: var(--text-secondary);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, var(--cyan), var(--magenta));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .gradient-text-warm {
+            background: linear-gradient(135deg, var(--yellow), var(--magenta));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Label (kicker) */
+        .slide-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.85rem;
+            margin-bottom: 1.75rem;
+        }
+        .slide-label::before, .slide-label::after {
+            content: '';
+            width: 36px;
+            height: 2px;
+            background: currentColor;
+            opacity: 0.7;
+        }
+        .slide-label.cyan { color: var(--cyan); }
+        .slide-label.magenta { color: var(--magenta); }
+        .slide-label.green { color: var(--green); }
+        .slide-label.yellow { color: var(--yellow); }
+        .slide-label.purple { color: var(--purple); }
+
+        /* Badge */
+        .session-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.7rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-strong);
+            padding: 0.65rem 1.5rem;
+            border-radius: 100px;
+            margin-bottom: 2.5rem;
+            background: var(--bg-card);
+        }
+        .session-badge .dot {
+            width: 9px; height: 9px;
+            border-radius: 50%;
+            background: var(--cyan);
+            animation: pulse-dot 2s infinite;
+        }
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 var(--cyan-glow-strong); }
+            50% { opacity: 0.7; box-shadow: 0 0 0 7px transparent; }
+        }
+
+        /* Chips */
+        .chip-row {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 2.5rem;
+        }
+        .chip {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            letter-spacing: 0.05em;
+            padding: 0.6rem 1.4rem;
+            border-radius: 100px;
+            border: 1px solid;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .chip.cyan { color: var(--cyan); border-color: rgba(0,229,255,0.3); background: var(--cyan-glow); }
+        .chip.magenta { color: var(--magenta); border-color: rgba(255,0,110,0.3); background: var(--magenta-glow); }
+        .chip.yellow { color: var(--yellow); border-color: rgba(255,214,0,0.3); background: var(--yellow-glow); }
+        .chip.green { color: var(--green); border-color: rgba(0,230,118,0.3); background: var(--green-glow); }
+
+        /* Nav hint */
+        .nav-hint {
+            position: fixed;
+            bottom: 1.2rem;
+            left: 1.6rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            z-index: 1000;
+            letter-spacing: 0.05em;
+            user-select: none;
+        }
+
+        /* Big statement slides */
+        .big-statement {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(3rem, 6.5vw, 5.5rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.15;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .big-statement .hl { color: var(--cyan); text-shadow: 0 0 40px var(--cyan-glow-strong); }
+
+        /* Check list */
+        .check-list {
+            text-align: left;
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.4rem;
+        }
+        .check-item {
+            display: flex;
+            align-items: center;
+            gap: 1.4rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1.5rem 2rem;
+        }
+        .check-item .check-icon {
+            width: 56px; height: 56px;
+            min-width: 56px;
+            border-radius: 12px;
+            background: var(--green-glow);
+            color: var(--green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .check-item .check-icon svg { width: 30px; height: 30px; }
+        .check-item .check-text {
+            font-size: 1.55rem;
+            font-weight: 500;
+        }
+        .check-item .check-text span { color: var(--text-secondary); font-size: 1.2rem; display: block; margin-top: 0.15rem; }
+
+        .footer-note {
+            margin-top: 2.5rem;
+            font-size: 1.35rem;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        /* Stat grid */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.4rem;
+            max-width: 1250px;
+            margin: 0 auto;
+        }
+        .stat-grid.two { grid-template-columns: repeat(2, 1fr); max-width: 1150px; }
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem 1.5rem;
+        }
+        .stat-num {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(2.8rem, 4.5vw, 4rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1;
+            margin-bottom: 0.6rem;
+        }
+        .stat-num.cyan { color: var(--cyan); text-shadow: 0 0 30px var(--cyan-glow-strong); }
+        .stat-num.magenta { color: var(--magenta); text-shadow: 0 0 30px var(--magenta-glow); }
+        .stat-num.yellow { color: var(--yellow); text-shadow: 0 0 30px var(--yellow-glow); }
+        .stat-num.green { color: var(--green); text-shadow: 0 0 30px var(--green-glow); }
+        .stat-num.purple { color: var(--purple); text-shadow: 0 0 30px var(--purple-glow); }
+        .stat-num.orange { color: var(--orange); text-shadow: 0 0 30px rgba(255,145,0,0.3); }
+        .stat-desc {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+        .stat-card .stat-title {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.9rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+        }
+        .stat-card .stat-body {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+            line-height: 1.55;
+            text-align: left;
+        }
+        .stat-card .stat-body strong { color: var(--text-primary); }
+
+        /* Hands-on split */
+        .split {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 3rem;
+            align-items: center;
+            max-width: 1250px;
+            margin: 0 auto;
+            text-align: left;
+        }
+        .step-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.3rem;
+        }
+        .step-item {
+            display: flex;
+            gap: 1.3rem;
+            align-items: flex-start;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1.4rem 1.7rem;
+        }
+        .step-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--green);
+            background: var(--green-glow);
+            width: 48px; height: 48px;
+            min-width: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .step-text { font-size: 1.45rem; line-height: 1.45; }
+        .step-text code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.15rem;
+            color: var(--cyan);
+            background: rgba(0,229,255,0.08);
+            padding: 0.1rem 0.5rem;
+            border-radius: 6px;
+        }
+        .qr-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.2rem;
+        }
+        .qr-frame {
+            background: var(--bg-card);
+            border: 1px solid var(--border-strong);
+            border-radius: 18px;
+            padding: 1.5rem;
+            box-shadow: 0 0 50px var(--cyan-glow);
+        }
+        .qr-frame img { display: block; border-radius: 8px; }
+        .qr-caption {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            text-align: center;
+            line-height: 1.6;
+        }
+        .qr-caption .path { color: var(--cyan); }
+
+        /* Homework slide */
+        .hw-list {
+            text-align: left;
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.3rem;
+        }
+        .hw-item {
+            display: flex;
+            align-items: center;
+            gap: 1.3rem;
+            background: var(--bg-card);
+            border: 1px solid rgba(255,0,110,0.25);
+            border-radius: 14px;
+            padding: 1.4rem 1.8rem;
+            font-size: 1.5rem;
+        }
+        .hw-item .hw-icon {
+            color: var(--magenta);
+            background: var(--magenta-glow);
+            width: 52px; height: 52px;
+            min-width: 52px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .hw-item .hw-icon svg { width: 27px; height: 27px; }
+        .hw-item code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.15rem;
+            color: var(--magenta);
+            background: rgba(255,0,110,0.08);
+            padding: 0.1rem 0.5rem;
+            border-radius: 6px;
+        }
+        .hw-punch {
+            margin-top: 2.2rem;
+            font-family: 'Sora', sans-serif;
+            font-size: 1.7rem;
+            font-weight: 700;
+        }
+        .hw-punch .g { color: var(--green); }
+
+        /* Closer */
+        .closer-title {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(3.5rem, 7vw, 6rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 1.8rem;
+        }
+        .closer-brand {
+            margin-top: 3rem;
+            font-family: 'Sora', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: 0.25em;
+        }
+
+        /* Fullscreen tweaks */
+        :fullscreen body { background: var(--bg-primary); }
+
+        @media (max-width: 1000px) {
+            .stat-grid { grid-template-columns: repeat(2, 1fr); }
+            .stat-grid.two { grid-template-columns: 1fr; }
+            .split { grid-template-columns: 1fr; }
+        }
+
+        /* Compact mode for short viewports (720p projectors, small laptops) */
+        @media (max-height: 820px) {
+            .slide-title { font-size: clamp(1.9rem, 4.2vw, 3rem); margin-bottom: 1.2rem; }
+            .check-list { gap: 0.7rem; }
+            .check-item { padding: 0.85rem 1.4rem; }
+            .check-text { font-size: 1.25rem; }
+            .check-text span { font-size: 0.95rem; }
+            .stat-card { padding: 1.2rem 1rem; }
+            .stat-num { font-size: 2.6rem; }
+            .stat-card .stat-title { font-size: 1.5rem; }
+            .stat-card .stat-body { font-size: 1.15rem; }
+            .step-item { padding: 0.85rem 1.3rem; }
+            .step-text { font-size: 1.2rem; }
+            .footer-note { margin-top: 1.2rem; font-size: 1rem; }
+            .slide-label { margin-bottom: 0.8rem; }
+            .hw-item { padding: 0.9rem 1.4rem; font-size: 1.2rem; }
+            .hw-punch { margin-top: 1.3rem; font-size: 1.35rem; }
+            .qr-frame img { width: 210px; height: auto; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="glow-orb glow-orb-1"></div>
+    <div class="glow-orb glow-orb-2"></div>
+    <div class="glow-orb glow-orb-3"></div>
+
+    <div class="deck-progress"><div class="deck-progress-fill" id="progressFill"></div></div>
+    <div class="slide-counter" id="slideCounter">1 / 12</div>
+    <div class="nav-hint" id="navHint">→ to advance · F for fullscreen</div>
+
+    <!-- ═══════════════ SLIDE 1 · TITLE ═══════════════ -->
+    <section class="slide active">
+        <div class="slide-inner">
+            <div class="session-badge"><span class="dot"></span> ISOM 260 · Session 5 · Meeting 2 of 2</div>
+            <h1 class="slide-title" style="font-size: clamp(3rem, 6vw, 5.2rem);">
+                Three Things Your Bot<br>
+                <span class="gradient-text">Can't Do Yet</span>
+            </h1>
+            <p class="slide-sub">A door. A 🚦. A memory that survives — and can be erased.</p>
+            <div class="chip-row">
+                <span class="chip cyan"><i data-lucide="calendar"></i> Wed Oct 14</span>
+                <span class="chip magenta"><i data-lucide="file-check-2"></i> HW #6 due tomorrow · 11:59 PM</span>
+                <span class="chip yellow"><i data-lucide="map-pin"></i> 73 Tremont 5065</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SLIDE 2 · HW6 PULSE ═══════════════ -->
+    <section class="slide">
+        <div class="slide-inner">
+            <div class="slide-label green">Homework #6 · Field Test · due tomorrow 11:59 PM</div>
+            <h2 class="slide-title">Who texted <span class="gradient-text">your bot?</span></h2>
+            <div class="check-list">
+                <div class="check-item">
+                    <div class="check-icon"><i data-lucide="hand"></i></div>
+                    <div class="check-text">Hands up: a parent? a roommate? a classmate's bot you tried to break? <span>two screenshots from the Canvas thread on screen</span></div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon"><i data-lucide="bug"></i></div>
+                    <div class="check-text">The worst thing it did <span>three of you, one sentence each. Patterns?</span></div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon"><i data-lucide="flame"></i></div>
+                    <div class="check-text">Did anyone's quota get burned by a stranger? <span>that's hole number one</span></div>
+                </div>
+            </div>
+            <p class="footer-note">Not posted yet? Tomorrow, 11:59 PM. Twenty minutes.</p>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SLIDE 3 · BIG STATEMENT ═══════════════ -->
+    <section class="slide">
+        <div class="slide-inner">
+            <div class="big-statement" style="margin-bottom: 2rem;">Your bot works.<br><span class="gradient-text">Your bot is also wide open.</span></div>
+            <p class="slide-sub">Anyone can use it · it acts without asking · it forgets when the cell stops</p>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SLIDE 4 · THING 1 ═══════════════ -->
+    <section class="slide">
+        <div class="slide-inner">
+            <div class="slide-label cyan">Thing 1 · who are you?</div>
+            <h2 class="slide-title">A door with <span class="gradient-text">your name on it.</span></h2>
+            <div class="check-list">
+                <div class="check-item">
+                    <div class="check-icon" style="background: var(--cyan-glow); color: var(--cyan);"><i data-lucide="id-card"></i></div>
+                    <div class="check-text">Telegram already told you who's texting: <code style="font-family:'JetBrains Mono',monospace;color:var(--cyan)">chat_id</code> <span>you were using it as a memory key. Now use it as a key key</span></div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon" style="background: var(--cyan-glow); color: var(--cyan);"><i data-lucide="list-checks"></i></div>
+                    <div class="check-text"><code style="font-family:'JetBrains Mono',monospace;color:var(--cyan)">ALLOWED = {your id}</code> <span>empty set = open to all (last week). One id = yours. Add your friends by hand</span></div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon" style="background: var(--cyan-glow); color: var(--cyan);"><i data-lucide="door-closed"></i></div>
+                    <div class="check-text">Strangers get a polite door — and their own id <span>"🔒 private assistant. Your id is 5551234, in case the owner wants to add you." Deny, but leave a path in</span></div>
+                </div>
+            </div>
+            <p class="footer-note">Authentication is "who are you." Authorization is "what may you do." Today you build the first; the second is the next slide.</p>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SLIDE 5 · THING 2 ═══════════════ -->
+    <section class="slide">
+        <div class="slide-inner">
+            <div class="slide-label magenta">Thing 2 · ask before acting</div>
+            <h2 class="slide-title">The 🚦 moves <span class="gradient-text">into the chat.</span></h2>
+            <div class="check-list">
+                <div class="check-item">
+                    <div class="check-icon" style="background: var(--magenta-glow); color: var(--magenta);"><i data-lucide="mail"></i></div>
+                    <div class="check-text">A new tool: <code style="font-family:'JetBrains Mono',monospace;color:var(--cyan)">send_email</code> <span>simulated — but the agent doesn't know that. That's the point</span></div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon" style="background: var(--magenta-glow); color: var(--magenta);"><i data-lucide="pause"></i></div>
+                    <div class="check-text">The model reaches for it → the loop <strong>pauses</strong> <span>"🚦 I'd like to run send_email(to=cfo@…). Reply YES to approve." The call waits in PENDING</span></div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon" style="background: var(--magenta-glow); color: var(--magenta);"><i data-lucide="play"></i></div>
+                    <div class="check-text">YES → the tool runs and the loop resumes. Anything else → BLOCKED <span>and the model must say "not sent" — and never retry on its own</span></div>
+                </div>
+            </div>
+            <p class="footer-note">Session 4's HUMAN_IN_THE_LOOP was a Python input(). Same gate — now where the human actually is.</p>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SLIDE 6 · THING 3 ═══════════════ -->
+    <section class="slide">
+        <div class="slide-inner">
+            <div class="slide-label green">Thing 3 · memory that survives</div>
+            <h2 class="slide-title">Outlive <span class="gradient-text">the cell.</span></h2>
+            <div class="stat-grid">
+                <div class="stat-card">
+                    <div class="stat-num green">save</div>
+                    <div class="stat-title">After every answer</div>
+                    <div class="stat-body">All conversations → <strong>memory.json</strong>. Two functions, eight lines. Stop the cell, restart it, it remembers.</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-num yellow">cost</div>
+                    <div class="stat-title">Memory is a liability</div>
+                    <div class="stat-body">A file of what your friends told your bot. <strong>Who can read it? How long do you keep it?</strong> Every chatbot vendor has this file.</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-num magenta">/forget</div>
+                    <div class="stat-title">The right to be forgotten</div>
+                    <div class="stat-body">One command erases a chat <strong>in memory and on disk.</strong> GDPR Article 17, in one line of Python.</div>
+                </div>
+            </div>
+            <p class="footer-note">Persistence is not a feature you add. It's a responsibility you take on.</p>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SLIDE 7 · BONUS: REAL API ═══════════════ -->
+    <section class="slide">
+        <div class="slide-inner">
+            <div class="slide-label yellow">Bonus · a real-world API</div>
+            <h2 class="slide-title">Real APIs don't fail. <span class="gradient-text-warm">They guess.</span></h2>
+            <div class="check-list">
+                <div class="check-item">
+                    <div class="check-icon" style="background: var(--yellow-glow); color: var(--yellow);"><i data-lucide="cloud-sun"></i></div>
+                    <div class="check-text"><code style="font-family:'JetBrains Mono',monospace;color:var(--cyan)">get_weather("Boston")</code> → 59°F, Boston, Massachusetts <span>a free public weather API, no key, two calls: find the place, then the forecast</span></div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon" style="background: var(--yellow-glow); color: var(--yellow);"><i data-lucide="map-pin-off"></i></div>
+                    <div class="check-text"><code style="font-family:'JetBrains Mono',monospace;color:var(--cyan)">get_weather("Bostn")</code> → 48°F… <strong>Båstnäs, Sweden</strong> <span>no error. A confident answer about the wrong continent</span></div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon" style="background: var(--yellow-glow); color: var(--yellow);"><i data-lucide="search-check"></i></div>
+                    <div class="check-text">The fix is in the tool, not the model <span>return <em>matched_place</em>, and tell the model in the system prompt: if it's not the city asked for, say so first</span></div>
+                </div>
+            </div>
+            <p class="footer-note">Your agent's reputation is decided in the 1% of calls where the API was wrong, not down.</p>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SLIDE 8 · HANDS-ON ═══════════════ -->
+    <section class="slide">
+        <div class="slide-inner">
+            <div class="slide-label cyan">Hands-on · 35 min · stop at 1:22</div>
+            <h2 class="slide-title">Close the <span class="gradient-text">three holes.</span></h2>
+            <div class="split">
+                <div class="step-list">
+                    <div class="step-item">
+                        <div class="step-num">1</div>
+                        <div class="step-text">Open the notebook (QR) → Save a copy → run <strong>Parts 1–3</strong>. Read the <code>NEW</code> markers in Part 3</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-num">2</div>
+                        <div class="step-text">Run <strong>Part 4</strong>, text <code>/whoami</code>, stop, put your id in <code>ALLOWED</code>, re-run. <strong>Your neighbor is now a stranger</strong></div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-num">3</div>
+                        <div class="step-text"><strong>Part 5</strong>: decline an email, approve one, restart the cell and ask what you emailed, then <code>Bostn</code></div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-num">4</div>
+                        <div class="step-text">Stop. Read the audit table: <strong>one BLOCKED row, one SENT row.</strong> That's the slide for the CFO</div>
+                    </div>
+                </div>
+                <div class="qr-box">
+                    <div class="qr-frame">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=360x360&amp;qzone=2&amp;bgcolor=fdfdfd&amp;color=0a0e1a&amp;data=https%3A%2F%2Fcolab.research.google.com%2Fgithub%2Fharslan%2Fisom-260%2Fblob%2Fmaster%2Fpublic%2Fsession-05%2FISOM260_Session5_Three_Things_Your_Bot_Cant_Do_Yet.ipynb" width="280" alt="QR — Three Things Your Bot Can't Do Yet notebook">
+                    </div>
+                    <div class="qr-caption">or: course site → Sessions → <span class="path">Session 5</span> → Meeting 2 notebook<br>same three secrets as last week</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SLIDE 9 · THE FOUR QUESTIONS ═══════════════ -->
+    <section class="slide">
+        <div class="slide-inner">
+            <div class="slide-label yellow">AI for BUSINESS · the four questions</div>
+            <h2 class="slide-title">Ask these of <span class="gradient-text">any AI product.</span></h2>
+            <div class="check-list">
+                <div class="check-item">
+                    <div class="check-icon"><i data-lucide="lock"></i></div>
+                    <div class="check-text">"Who can use it?" <span>and who maintains the list — the door is only as good as its gatekeeper</span></div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon"><i data-lucide="traffic-cone"></i></div>
+                    <div class="check-text">"What can it do without asking?" <span>and who gets the 🚦 at 2 AM</span></div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon"><i data-lucide="database"></i></div>
+                    <div class="check-text">"What does it remember, and can it forget?" <span>persistence comes with a privacy bill. Ask to see the file</span></div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon"><i data-lucide="map-pin-off"></i></div>
+                    <div class="check-text">"What happens when the API is wrong?" <span>not down — wrong. Båstnäs, Sweden</span></div>
+                </div>
+            </div>
+            <p class="footer-note">A vendor who can't answer all four with a table hasn't built an agent. They've built a demo.</p>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SLIDE 10 · HOMEWORK #7 ═══════════════ -->
+    <section class="slide">
+        <div class="slide-inner">
+            <div class="slide-label magenta">Homework #7 · due Thu Oct 22 · 11:59 PM</div>
+            <h2 class="slide-title">The four questions, <span class="gradient-text">for real. 🔍</span></h2>
+            <div class="hw-list">
+                <div class="hw-item">
+                    <div class="hw-icon"><i data-lucide="search"></i></div>
+                    <div>Pick <strong>one AI product a real company sells</strong> — a support bot, a copilot, an "AI agent" from any vendor's homepage</div>
+                </div>
+                <div class="hw-item">
+                    <div class="hw-icon"><i data-lucide="list-checks"></i></div>
+                    <div>Answer the <strong>four questions</strong> from its public docs. Where the docs don't say, write <strong>"not disclosed"</strong> — that is a finding</div>
+                </div>
+                <div class="hw-item">
+                    <div class="hw-icon"><i data-lucide="scale"></i></div>
+                    <div>One paragraph: <strong>would you let it touch your company's email?</strong> Yes, no, or under what condition</div>
+                </div>
+                <div class="hw-item">
+                    <div class="hw-icon"><i data-lucide="upload"></i></div>
+                    <div>Canvas post, <strong>200 words max</strong>, with links · due <strong>Thu Oct 22, 11:59 PM</strong></div>
+                </div>
+            </div>
+            <p class="hw-punch">You've built every one of these pieces. Now grade someone who sells them.</p>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SLIDE 11 · NEXT SESSION ═══════════════ -->
+    <section class="slide">
+        <div class="slide-inner">
+            <div class="slide-label cyan">Session 6 · Mon Oct 19 + Wed Oct 21</div>
+            <h2 class="slide-title">When one agent <span class="gradient-text">should become two.</span></h2>
+            <div class="check-list">
+                <div class="check-item">
+                    <div class="check-icon" style="background: var(--cyan-glow); color: var(--cyan);"><i data-lucide="git-branch"></i></div>
+                    <div class="check-text">Agent patterns: ReAct, pipelines, orchestrators <span>and the rule: more agents ≠ more intelligence. Split only when you must</span></div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon" style="background: var(--cyan-glow); color: var(--cyan);"><i data-lucide="plug"></i></div>
+                    <div class="check-text">MCP — a standard plug for tools <span>and the sentence to remember: a protocol is not a permission</span></div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon" style="background: var(--cyan-glow); color: var(--cyan);"><i data-lucide="flag"></i></div>
+                    <div class="check-text">Wed Oct 21: the <strong>midterm project</strong> is assigned <span>your bot is a legal starting point. Due Mon Nov 2</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SLIDE 12 · CLOSER ═══════════════ -->
+    <section class="slide">
+        <div class="slide-inner">
+            <div class="closer-title">See you <span class="gradient-text">Monday.</span></div>
+            <p class="slide-sub">Session 6, Meeting 1 · Mon Oct 19 · 12:30 PM · 73 Tremont 5065 · Agent Patterns</p>
+            <div class="chip-row">
+                <span class="chip magenta"><i data-lucide="smartphone"></i> HW #6 due tomorrow</span>
+                <span class="chip magenta"><i data-lucide="search"></i> HW #7 due Thu Oct 22</span>
+                <span class="chip cyan"><i data-lucide="lock"></i> your bot has a door now</span>
+            </div>
+            <div class="closer-brand gradient-text">ISOM 260</div>
+        </div>
+    </section>
+
+
+    <script>
+        (function () {
+            const slides = Array.from(document.querySelectorAll('.slide'));
+            const total = slides.length;
+            const counter = document.getElementById('slideCounter');
+            const progressFill = document.getElementById('progressFill');
+            let current = 0;
+
+            function show(index) {
+                if (index < 0) index = 0;
+                if (index > total - 1) index = total - 1;
+                if (index === current && slides[index].classList.contains('active')) {
+                    // still update UI (first load)
+                } else {
+                    slides[current].classList.remove('active');
+                }
+                current = index;
+                slides[current].classList.add('active');
+                counter.textContent = (current + 1) + ' / ' + total;
+                progressFill.style.width = (total > 1 ? (current / (total - 1)) * 100 : 100) + '%';
+            }
+
+            function next() { show(current + 1); }
+            function prev() { show(current - 1); }
+
+            document.addEventListener('keydown', function (e) {
+                if (e.metaKey || e.ctrlKey || e.altKey) return;
+                switch (e.key) {
+                    case 'ArrowRight':
+                    case 'ArrowDown':
+                    case ' ':
+                    case 'PageDown':
+                        e.preventDefault();
+                        next();
+                        break;
+                    case 'ArrowLeft':
+                    case 'ArrowUp':
+                    case 'PageUp':
+                        e.preventDefault();
+                        prev();
+                        break;
+                    case 'Home':
+                        e.preventDefault();
+                        show(0);
+                        break;
+                    case 'End':
+                        e.preventDefault();
+                        show(total - 1);
+                        break;
+                    case 'f':
+                    case 'F':
+                        e.preventDefault();
+                        if (document.fullscreenElement) {
+                            document.exitFullscreen();
+                        } else if (document.documentElement.requestFullscreen) {
+                            document.documentElement.requestFullscreen();
+                        }
+                        break;
+                }
+            });
+
+            document.addEventListener('click', function (e) {
+                // Ignore clicks on links/images that might be interactive
+                if (e.target.closest('a')) return;
+                next();
+            });
+
+            // Initialize
+            show(0);
+            if (window.lucide) lucide.createIcons();
+        })();
+    </script>
+</body>
+</html>
