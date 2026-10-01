@@ -121,6 +121,15 @@
   ],
   "resources": [
     {
+      "title": "Your Agent, On Your Phone — Colab Notebook",
+      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-05/ISOM260_Session5_Your_Agent_On_Your_Phone.ipynb",
+      "description": "Wednesday's agent loop becomes a personal Telegram bot: per-chat memory, a live job search (remote board, plus Adzuna local listings with an optional key), the trust layer, and a standalone bot.py for your laptop. Needs your Gemini key and a BotFather token in Colab Secrets.",
+      "icon": "message-circle",
+      "badge": "Hands-On",
+      "badgeType": "interactive",
+      "linkText": "Open in Colab"
+    },
+    {
       "title": "Real-World Agent Notebook (Claude)",
       "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-05/ISOM260_Session5_Agents_Real_World.ipynb",
       "description": "Build an agent with real APIs: Wikipedia search, web page fetcher, error handling, and conversation memory. Uses Claude/Anthropic SDK.",
