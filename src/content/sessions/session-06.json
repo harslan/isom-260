@@ -52,11 +52,11 @@
       "time": "Mon Oct 19 · 12:43 PM",
       "title": "Live, Then Hands-On: Same Question, Three Times",
       "duration": "34 minutes",
-      "description": "'How is AI affecting employment?' at levels 0, 1, and 2 on the projector, then on your own key. Count the hops, read the thoughts, run the bill.",
+      "description": "'I graduate in May 2027. Is AI going to eliminate the analyst jobs I'm applying for?' at levels 0, 1, and 2 on the projector, then on your own key. Count the hops, read the thoughts, run the bill.",
       "bulletPoints": [
         "Only your Gemini key today — tools are calculator, the job board, and real Wikipedia",
         "The bill table: steps, tool calls, thinking tokens, dollars — how many times more did thinking cost?",
-        "Stop at Part 5; we break it together"
+        "Stop at Part 5; we break it together — then Part 6 is a question you actually have this month, plain vs ReAct, both bills"
       ],
       "isBreak": false
     },
@@ -263,7 +263,7 @@
         },
         {
           "title": "Level 0, 1, 2",
-          "description": "The model alone, the plain loop, the ReAct loop. Same question about AI and employment. Count the hops."
+          "description": "The model alone, the plain loop, the ReAct loop. Same question — about your own job search. Count the hops."
         },
         {
           "title": "Run the bill",
@@ -272,6 +272,10 @@
         {
           "title": "Break it, together",
           "description": "A fake company, an opinion question, a calculator question with ReAct on. Watch for the confident fake."
+        },
+        {
+          "title": "Ask your own",
+          "description": "Part 6: a decision you face this month, plain and ReAct, both answers and both bills. Take the better one home."
         }
       ]
     },
