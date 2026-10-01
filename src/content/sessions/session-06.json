@@ -160,6 +160,42 @@
       "linkText": "Read the brief"
     },
     {
+      "title": "Midterm Starter — Colab Notebook",
+      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-06/ISOM260_Midterm_Starter.ipynb",
+      "description": "The skeleton of a full-marks midterm: every rubric criterion has a cell. A toolbox of six working tools to keep or delete, the Session 5 agent with gate, audit, door and bill, five test cells, the memo outline, and optional Telegram. Fill in the TODOs.",
+      "icon": "code",
+      "badge": "Start Here",
+      "badgeType": "interactive",
+      "linkText": "Open in Colab"
+    },
+    {
+      "title": "The Midterm Memo — A Worked Example",
+      "url": "/session-06/midterm-memo-example.html",
+      "description": "One page on a problem small enough to be real: Umbrella & the 7 Bus. Read it for the tone: every claim points at a test, the failed test is in it, and the one-or-many question gets a reason.",
+      "icon": "file-text",
+      "badge": "Example",
+      "badgeType": "reference",
+      "linkText": "Read the example"
+    },
+    {
+      "title": "Kickoff Sheet — printable",
+      "url": "/session-06/kickoff-sheet.html",
+      "description": "The Wednesday paper canvas: problem, user, two tools, the risky action and who approves, five test queries, the neighbor's three questions. Print it or fill it on a phone, then photograph it.",
+      "icon": "clipboard",
+      "badge": "In Class",
+      "badgeType": "reference",
+      "linkText": "Open the sheet"
+    },
+    {
+      "title": "The Cost of Thinking — calculator",
+      "url": "/session-06/thinking-cost.html",
+      "description": "Paste your two bill rows from the Monday notebook, set the company size and the share of questions that need research, and see what the one-line router is worth per month.",
+      "icon": "bar-chart",
+      "badge": "Interactive",
+      "badgeType": "interactive",
+      "linkText": "Open the calculator"
+    },
+    {
       "title": "Make It Think — Colab Notebook (Meeting 1)",
       "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-06/ISOM260_Session6_Make_It_Think_Gemini.ipynb",
       "description": "One loop, two prompts. Levels 0, 1, 2 on the same research question with real Wikipedia, a bill table with thinking tokens, two failure tests, and the one-liner that puts ReAct in your phone bot. Needs only your Gemini key.",
@@ -259,7 +295,7 @@
         },
         {
           "title": "Photograph it",
-          "description": "The sheet is the first draft of your memo and the thing to bring to office hours."
+          "description": "The sheet is the first draft of your memo and the thing to bring to office hours. Then open the Midterm Starter notebook: every rubric criterion already has a cell."
         }
       ],
       "discussionNote": "The plan is where midterms are won. Code is the easy part now."
@@ -294,7 +330,7 @@
     },
     {
       "label": "Midterm Project · assigned Wed Oct 21 · due Mon Nov 2, 12:30 PM:",
-      "text": "Your Agent, For Real. One real problem and one named user, two or more tools with at least one real API, the trust layer (gate, audit log, door if on Telegram), five tests with two hostile ones, and a one-page memo. Individual. Notebook with outputs + memo PDF on Canvas before class. Full brief, rubric, timeline, and FAQ on this page. ISOM 900: add a one-page architecture proposal."
+      "text": "Your Agent, For Real. One real problem and one named user, two or more tools with at least one real API, the trust layer (gate, audit log, door if on Telegram), five tests with two hostile ones, and a one-page memo. Individual. Notebook with outputs + memo PDF on Canvas before class. Full brief, rubric, timeline, and FAQ on this page. ISOM 900: add a one-page architecture proposal. Start from the Midterm Starter notebook; read the worked-example memo before writing yours."
     },
     {
       "label": "No HW #8:",

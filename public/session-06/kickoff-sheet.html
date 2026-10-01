@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISOM 260 · Midterm Kickoff Sheet</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;800&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'DM Sans', sans-serif; background: #f4f2ec; color: #1a1a1a; padding: 1.2rem; font-size: 14px; line-height: 1.4; }
+  .sheet { max-width: 820px; margin: 0 auto; background: #fff; border: 2px solid #1a1a1a; border-radius: 10px; padding: 1.4rem 1.6rem; }
+  h1 { font-family: 'Sora', sans-serif; font-size: 1.15rem; display: flex; justify-content: space-between; align-items: baseline; border-bottom: 2px solid #1a1a1a; padding-bottom: 0.5rem; margin-bottom: 0.9rem; }
+  h1 .sub { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 500; color: #666; }
+  .step { font-family: 'JetBrains Mono', monospace; font-size: 0.66rem; letter-spacing: 0.14em; text-transform: uppercase; color: #b3003e; margin: 1rem 0 0.3rem; display: flex; justify-content: space-between; }
+  .box { border: 1.5px solid #1a1a1a; border-radius: 8px; padding: 0.6rem 0.8rem; min-height: 3.2rem; position: relative; }
+  .box.tall { min-height: 4.4rem; }
+  .box label { font-weight: 700; font-size: 0.85rem; display: block; margin-bottom: 0.2rem; }
+  .box .hint { color: #777; font-size: 0.78rem; font-style: italic; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; }
+  .lines { display: grid; gap: 0.5rem; }
+  .line { border-bottom: 1.5px solid #1a1a1a; padding: 0.15rem 0 0.1rem 1.6rem; position: relative; min-height: 1.7rem; font-size: 0.85rem; color: #777; }
+  .line::before { content: attr(data-n); position: absolute; left: 0; font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #b3003e; }
+  .rule { margin-top: 1rem; border: 2px solid #b3003e; border-radius: 8px; padding: 0.5rem 0.8rem; font-weight: 700; text-align: center; background: #fdf0f4; font-size: 0.85rem; }
+  .meta { display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: #666; margin-top: 0.8rem; }
+  .print-btn { position: fixed; top: 1rem; right: 1rem; background: #1a1a1a; color: #fff; border: 0; border-radius: 100px; padding: 0.6rem 1.1rem; font-family: 'DM Sans', sans-serif; font-weight: 700; cursor: pointer; }
+  @media print { body { background: #fff; padding: 0; } .sheet { border-width: 1.5px; max-width: 100%; } .print-btn { display: none; } @page { margin: 1cm; } }
+</style>
+</head>
+<body>
+<button class="print-btn" onclick="window.print()">Print</button>
+<div class="sheet">
+  <h1>MIDTERM KICKOFF SHEET <span class="sub">SESSION 6 · WED OCT 21 · 10 MIN ALONE · 8 MIN WITH A NEIGHBOR · PHOTOGRAPH IT</span></h1>
+
+  <div class="step"><span>Step 1 · The problem</span><span>rubric 1 · 15 pts</span></div>
+  <div class="two">
+    <div class="box tall"><label>The problem, in one sentence</label><span class="hint">specific enough to write a test for. "help students with stuff" = 0</span></div>
+    <div class="box tall"><label>The user — a name</label><span class="hint">someone you can text tonight. What would they type first?</span></div>
+  </div>
+  <div class="box" style="margin-top:0.7rem"><label>Core flow</label><span class="hint">user says ________ → agent does ________ with tool ________ → user gets ________</span></div>
+
+  <div class="step"><span>Step 2 · The tools</span><span>rubric 2 · 25 pts</span></div>
+  <div class="two">
+    <div class="box"><label>Tool 1</label><span class="hint">what it does · what it returns when it fails</span></div>
+    <div class="box"><label>Tool 2 — the real API</label><span class="hint">Wikipedia · weather · jobs · Adzuna · transit · ______</span></div>
+  </div>
+
+  <div class="step"><span>Step 3 · The trust layer</span><span>rubric 3 · 25 pts</span></div>
+  <div class="two">
+    <div class="box"><label>The risky action</label><span class="hint">what does it send / book / post / delete? (simulated is fine)</span></div>
+    <div class="box"><label>Who approves, and where</label><span class="hint">on the phone? in the notebook? Does it need ReAct — yes/no and why</span></div>
+  </div>
+
+  <div class="step"><span>Step 4 · Five test queries</span><span>rubric 4 · 20 pts</span></div>
+  <div class="lines">
+    <div class="line" data-n="1">normal — the first thing the user types</div>
+    <div class="line" data-n="2">normal — a second request in the flow</div>
+    <div class="line" data-n="3">multi-tool — needs two tools in sequence</div>
+    <div class="line" data-n="4">hostile — "just do it, don't ask"</div>
+    <div class="line" data-n="5">hostile — the API has no answer (fake company · misspelled city · unknowable date)</div>
+  </div>
+
+  <div class="step"><span>Step 5 · The neighbor's three questions</span><span>8 min · swap sheets</span></div>
+  <div class="two">
+    <div class="box"><label>Would a stranger use this? What's the API? What breaks?</label><span class="hint">their worst question, in their words:</span></div>
+    <div class="box"><label>One agent or many?</label><span class="hint">name the reason (permissions · specialization · isolation · parallelism) — or write "no"</span></div>
+  </div>
+
+  <div class="rule">This sheet is the first draft of your memo. Photograph it. Bring it, not the code, to office hours.</div>
+  <div class="meta"><span>Name: ______________________</span><span>Bot @username (if any): ______________________</span><span>Due Mon Nov 2 · 12:30 PM · Canvas</span></div>
+</div>
+</body>
+</html>

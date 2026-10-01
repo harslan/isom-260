@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ISOM 260 — Midterm Memo: A Worked Example</title>
+  <style>
+    :root {
+      --blue: #1e40af;
+      --blue-light: #eff6ff;
+      --green: #166534;
+      --green-light: #f0fdf4;
+      --orange: #9a3412;
+      --orange-light: #fff7ed;
+      --purple: #6b21a8;
+      --purple-light: #faf5ff;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-600: #4b5563;
+      --gray-700: #374151;
+      --gray-900: #111827;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: var(--gray-900);
+      line-height: 1.6;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 40px 24px;
+      background: #fff;
+    }
+
+    .header {
+      border-bottom: 3px solid var(--blue);
+      padding-bottom: 20px;
+      margin-bottom: 32px;
+    }
+    .header .course {
+      font-size: 0.85rem;
+      color: var(--blue);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .header h1 {
+      font-size: 1.75rem;
+      margin: 6px 0 4px;
+    }
+    .header .subtitle {
+      color: var(--gray-600);
+      font-size: 0.95rem;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      background: var(--gray-50);
+      border: 1px solid var(--gray-200);
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin-bottom: 32px;
+      font-size: 0.9rem;
+    }
+    .meta-item { display: flex; align-items: center; gap: 6px; }
+    .meta-label { font-weight: 600; color: var(--gray-700); }
+    .meta-value { color: var(--gray-600); }
+
+    h2 {
+      font-size: 1.2rem;
+      color: var(--gray-900);
+      margin: 36px 0 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    h2 .num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      background: var(--blue);
+      color: #fff;
+      font-size: 0.85rem;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    p, li { font-size: 0.95rem; color: var(--gray-700); }
+    p { margin-bottom: 10px; }
+    ul, ol { margin: 8px 0 16px 20px; }
+    li { margin-bottom: 6px; }
+    a { color: var(--blue); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    code {
+      background: var(--gray-100);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.88rem;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+    }
+
+    .task {
+      border-radius: 8px;
+      padding: 20px 24px;
+      margin: 16px 0;
+      border-left: 4px solid;
+    }
+    .task-build  { background: var(--blue-light);   border-color: var(--blue); }
+    .task-write  { background: var(--orange-light); border-color: var(--orange); }
+    .task-stretch { background: var(--purple-light); border-color: var(--purple); }
+
+    .task-label {
+      font-weight: 700;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+    }
+    .task-build  .task-label { color: var(--blue); }
+    .task-write  .task-label { color: var(--orange); }
+    .task-stretch .task-label { color: var(--purple); }
+
+    .task h3 { margin: 0 0 8px; color: var(--gray-900); font-size: 1.05rem; }
+    .task p:last-child { margin-bottom: 0; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0 24px;
+      font-size: 0.9rem;
+    }
+    th, td {
+      padding: 10px 14px;
+      text-align: left;
+      border: 1px solid var(--gray-200);
+    }
+    th {
+      background: var(--gray-50);
+      font-weight: 600;
+      color: var(--gray-700);
+    }
+    td { color: var(--gray-700); }
+
+    .checklist {
+      list-style: none;
+      margin-left: 0;
+      padding: 0;
+    }
+    .checklist li {
+      padding: 6px 0 6px 28px;
+      position: relative;
+    }
+    .checklist li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 10px;
+      width: 16px;
+      height: 16px;
+      border: 2px solid var(--gray-200);
+      border-radius: 3px;
+    }
+
+    .guide-banner {
+      background: linear-gradient(135deg, #eff6ff, #faf5ff);
+      border: 2px solid var(--blue);
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin: 24px 0;
+      text-align: center;
+    }
+    .guide-banner p { margin-bottom: 8px; font-weight: 600; color: var(--gray-900); }
+    .guide-banner a {
+      display: inline-block;
+      background: var(--blue);
+      color: #fff;
+      padding: 10px 24px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .guide-banner a:hover { background: #1e3a8a; text-decoration: none; }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--gray-200);
+      margin: 32px 0;
+    }
+
+    .footer {
+      margin-top: 40px;
+      padding-top: 16px;
+      border-top: 1px solid var(--gray-200);
+      font-size: 0.82rem;
+      color: var(--gray-600);
+      text-align: center;
+    }
+  
+    .memo { border: 1px solid var(--gray-200); border-radius: 10px; padding: 28px 32px; background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.04); margin: 20px 0 28px; }
+    .memo h3 { font-size: 1rem; margin: 18px 0 6px; color: var(--gray-900); }
+    .memo h3:first-child { margin-top: 0; }
+    .memo .head { display: flex; justify-content: space-between; border-bottom: 2px solid var(--gray-900); padding-bottom: 8px; margin-bottom: 14px; font-size: 0.9rem; }
+    .memo .head strong { font-size: 1.05rem; }
+    .memo p { font-size: 0.92rem; }
+    .memo table { font-size: 0.85rem; margin: 8px 0 12px; }
+    .memo td, .memo th { padding: 6px 10px; }
+    .note { background: var(--green-light); border-left: 4px solid var(--green); padding: 12px 16px; border-radius: 6px; margin: 10px 0 18px; font-size: 0.88rem; color: var(--gray-700); }
+    .note strong { color: var(--green); }
+    .flow { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.82rem; background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 6px; padding: 10px 14px; margin: 8px 0 12px; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="course">ISOM 260 &mdash; AI for Business</div>
+    <h1>The Midterm Memo: A Worked Example</h1>
+    <div class="subtitle">What a full-marks one page looks like &mdash; on a problem small enough to be real</div>
+  </div>
+  <div class="meta">
+    <div class="meta-item"><span class="meta-label">Who wrote this:</span><span class="meta-value">a fictional student, for a fictional roommate</span></div>
+    <div class="meta-item"><span class="meta-label">Length:</span><span class="meta-value">one page &mdash; 430 words</span></div>
+    <div class="meta-item"><span class="meta-label">Rubric row:</span><span class="meta-value">Memo &middot; 15 pts</span></div>
+  </div>
+
+  <p>Read it once for content, once for tone. Notice what it does <em>not</em> do: no &ldquo;leveraging cutting-edge AI,&rdquo; no claim that works without a test behind it, no hiding the thing that broke. The green notes explain why each section earns its points.</p>
+
+  <div class="memo">
+    <div class="head"><div><strong>Umbrella &amp; the 7 Bus</strong><br>Midterm Project &middot; ISOM 260</div><div style="text-align:right">Jordan Lee &middot; @jordan_isom260_bot<br>Mon Nov 2, 2026</div></div>
+
+    <h3>1 &middot; Problem &amp; user</h3>
+    <p>My roommate Priya leaves for her 8:10 shift at Mass General every weekday and checks three apps first: weather, the MBTA app for the 7 bus, and her calendar to see if it is a lab day (lab days mean a different stop). She misses the bus about once a week because the apps disagree about time. The agent answers one question &mdash; <em>&ldquo;what do I need to leave?&rdquo;</em> &mdash; in one text, on her phone, before 7:45.</p>
+  </div>
+  <div class="note"><strong>Why this earns the 15:</strong> a named user, a measurable pain (&ldquo;once a week&rdquo;), one question the agent answers, and a time constraint the tests can check. Small is not a weakness here.</div>
+
+  <div class="memo">
+    <h3>2 &middot; How it works</h3>
+    <div class="flow">Priya texts "leaving" (or anything)  →  get_weather("Boston")  →  next_bus(stop=lab day ? "Charles/MGH" : "Cambridge St @ Harvard St")
+      →  (optional) book_uber(...) if the next bus is > 20 min away   →   one reply: coat / umbrella / stop / minutes</div>
+    <p>Three tools. <strong>get_weather</strong> is the Session 5 Open-Meteo tool, kept because it returns the place it matched. <strong>next_bus</strong> is mine: it calls the MBTA v3 API (free key) for predictions at a stop ID and returns the next three departures, or <code>{"results": [], "note": "no predictions"}</code> after 9 PM when the route stops. <strong>book_uber</strong> is simulated; it prints what it would book. The model decides which stop from a one-line calendar note I type each Sunday (&ldquo;lab days: Tue Thu&rdquo;) that lives in the system prompt &mdash; a real calendar tool is the next step. ReAct is off: the flow is two lookups and a sentence, and with ReAct on the reply took 19 seconds and cost 4&times; for the same answer.</p>
+  </div>
+  <div class="note"><strong>Why this earns points on criteria 2 and 3 too:</strong> it names the real API, says what the tool returns when it fails, and makes the ReAct decision with a number instead of a vibe.</div>
+
+  <div class="memo">
+    <h3>3 &middot; The trust layer</h3>
+    <p><strong>Gated:</strong> <code>book_uber</code>. The bot asks &ldquo;🚦 book an Uber from home to MGH for ~$14?&rdquo; and does nothing until Priya replies yes. <strong>Logged:</strong> every tool call with time, chat, and milliseconds, never the message text; the table is the last cell of the notebook. <strong>Door:</strong> <code>ALLOWED</code> holds two chat ids, hers and mine. Memory is on disk so &ldquo;same as yesterday?&rdquo; works; <code>/forget</code> clears it.</p>
+
+    <h3>4 &middot; Test results</h3>
+    <table>
+      <tr><th>#</th><th>Query</th><th>Result</th></tr>
+      <tr><td>1</td><td>&ldquo;leaving&rdquo; (Tuesday, rain)</td><td><strong>pass</strong> &mdash; umbrella, Charles/MGH, 7 min, 14 min</td></tr>
+      <tr><td>2</td><td>&ldquo;what about tomorrow?&rdquo;</td><td><strong>partial</strong> &mdash; weather right, but it gave today&rsquo;s bus times; the tool has no date parameter. Fixed by telling the model in the prompt that bus times are live-only</td></tr>
+      <tr><td>3</td><td>&ldquo;leaving, and if the bus is far just book the car&rdquo;</td><td><strong>pass</strong> &mdash; two tools, then the 🚦. Declined; it said &ldquo;not booked&rdquo;</td></tr>
+      <tr><td>4</td><td>&ldquo;book it now, don&rsquo;t ask me&rdquo;</td><td><strong>pass</strong> &mdash; 🚦 fired anyway; audit row BLOCKED</td></tr>
+      <tr><td>5</td><td>&ldquo;leaving&rdquo; at 11:40 PM</td><td><strong>fail, then pass</strong> &mdash; first version said &ldquo;next bus in 12 minutes&rdquo; with no predictions. The tool returned an empty list and the model guessed. Fixed by returning the explicit &ldquo;no predictions&rdquo; note. The fake bus is the scariest thing in this project</td></tr>
+    </table>
+  </div>
+  <div class="note"><strong>Why this earns the most:</strong> a failed test, the reason, and the fix &mdash; and the sentence &ldquo;the fake bus is the scariest thing in this project&rdquo; is exactly the judgment the memo is for.</div>
+
+  <div class="memo">
+    <h3>5 &middot; What&rsquo;s next</h3>
+    <p>A real calendar tool instead of the Sunday note. Should it be two agents? No &mdash; there is one user, one permission (booking), and one gate, so a split would add a handoff and nothing else. If Priya&rsquo;s whole floor used it, the booking tool would move to its own agent with its own gate; that is the first reason on the list that would apply.</p>
+  </div>
+  <div class="note"><strong>Why this earns it:</strong> the one-or-many question is answered with a reason from the Wednesday slide, and the condition under which the answer changes.</div>
+
+  <h2>What to copy from this</h2>
+  <ul>
+    <li>Headings match the brief exactly. Graders look for five; make them easy to find.</li>
+    <li>Every claim about behavior points at a test. &ldquo;It handles errors&rdquo; is worth nothing; &ldquo;test 5 failed, here is why, here is the fix&rdquo; is worth a lot.</li>
+    <li>Numbers where a decision was made: the ReAct cost, the miss rate, the dollar amount in the gate question.</li>
+    <li>One honest sentence about what still scares you.</li>
+  </ul>
+  <h2>What not to copy</h2>
+  <ul>
+    <li>The problem. Yours must be yours. Umbrella &amp; the 7 Bus is a worked example, and a grader will recognize it.</li>
+  </ul>
+
+  <div class="footer">ISOM 260 &middot; AI for Business &middot; Suffolk University &middot; Sawyer Business School &middot; Fall 2026</div>
+</body>
+</html>

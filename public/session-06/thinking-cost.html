@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISOM 260 · The Cost of Thinking</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;800&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#0a0e1a; --card:#141929; --border:rgba(0,229,255,0.15); --cyan:#00e5ff; --magenta:#ff006e; --yellow:#ffd600; --green:#00e676; --text:#e8ecf4; --dim:#8892a8; }
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text); padding:2rem 1rem 3rem; line-height:1.5; }
+  .wrap { max-width:980px; margin:0 auto; }
+  h1 { font-family:'Sora',sans-serif; font-size:clamp(1.8rem,4vw,2.6rem); font-weight:800; letter-spacing:-0.02em; margin-bottom:0.4rem; }
+  h1 span { background:linear-gradient(135deg,var(--cyan),var(--magenta)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .sub { color:var(--dim); margin-bottom:1.8rem; font-size:1.05rem; }
+  .grid { display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; }
+  @media (max-width:760px) { .grid { grid-template-columns:1fr; } }
+  .card { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:1.3rem 1.4rem; }
+  .card h2 { font-family:'JetBrains Mono',monospace; font-size:0.75rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--cyan); margin-bottom:0.9rem; }
+  .card.react h2 { color:var(--magenta); }
+  label { display:block; font-size:0.9rem; color:var(--dim); margin:0.6rem 0 0.2rem; }
+  input[type=number] { width:100%; background:#0f1424; border:1px solid var(--border); color:var(--text); border-radius:8px; padding:0.5rem 0.7rem; font-family:'JetBrains Mono',monospace; font-size:1rem; }
+  input[type=range] { width:100%; accent-color:var(--cyan); }
+  .row { display:grid; grid-template-columns:1fr 1fr; gap:0.8rem; }
+  .result { margin-top:1.4rem; display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; }
+  @media (max-width:760px) { .result { grid-template-columns:1fr; } }
+  .stat { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:1.2rem; text-align:center; }
+  .stat .n { font-family:'Sora',sans-serif; font-size:2.2rem; font-weight:800; letter-spacing:-0.03em; }
+  .stat .n.c { color:var(--cyan); } .stat .n.m { color:var(--magenta); } .stat .n.y { color:var(--yellow); }
+  .stat .l { color:var(--dim); font-size:0.9rem; margin-top:0.2rem; }
+  .verdict { margin-top:1.2rem; background:rgba(255,214,0,0.08); border:1px solid rgba(255,214,0,0.3); border-radius:14px; padding:1.1rem 1.3rem; font-size:1.05rem; }
+  .verdict strong { color:var(--yellow); }
+  .fine { color:var(--dim); font-size:0.85rem; margin-top:1.4rem; }
+  code { font-family:'JetBrains Mono',monospace; color:var(--cyan); font-size:0.9em; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>The cost of <span>thinking.</span></h1>
+  <p class="sub">Paste the two rows from your bill table (Session 6, Part 4). Then decide which questions deserve ReAct — with a number, not a feeling.</p>
+
+  <div class="grid">
+    <div class="card">
+      <h2>Level 1 · plain loop (per question)</h2>
+      <div class="row">
+        <div><label>tokens in</label><input type="number" id="p_in" value="1800"></div>
+        <div><label>tokens out</label><input type="number" id="p_out" value="350"></div>
+      </div>
+      <label>thinking tokens</label><input type="number" id="p_th" value="400">
+    </div>
+    <div class="card react">
+      <h2>Level 2 · ReAct (per question)</h2>
+      <div class="row">
+        <div><label>tokens in</label><input type="number" id="r_in" value="9500"></div>
+        <div><label>tokens out</label><input type="number" id="r_out" value="1400"></div>
+      </div>
+      <label>thinking tokens</label><input type="number" id="r_th" value="2600">
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:1.2rem">
+    <h2>The company</h2>
+    <div class="row">
+      <div><label>employees using it</label><input type="number" id="emp" value="1000"></div>
+      <div><label>questions per person per day</label><input type="number" id="qpd" value="20"></div>
+    </div>
+    <label>share of questions that actually need research (the rest are lookups): <strong id="shareLbl">30%</strong></label>
+    <input type="range" id="share" min="0" max="100" value="30">
+    <div class="row">
+      <div><label>$ per 1M input tokens</label><input type="number" id="pin" value="0.30" step="0.01"></div>
+      <div><label>$ per 1M output + thinking tokens</label><input type="number" id="pout" value="2.50" step="0.01"></div>
+    </div>
+  </div>
+
+  <div class="result">
+    <div class="stat"><div class="n c" id="allPlain">$0</div><div class="l">per month · everything on the plain loop</div></div>
+    <div class="stat"><div class="n m" id="allReact">$0</div><div class="l">per month · everything on ReAct</div></div>
+    <div class="stat"><div class="n y" id="routed">$0</div><div class="l">per month · routed: ReAct only where it's needed</div></div>
+  </div>
+
+  <div class="verdict" id="verdict"></div>
+  <p class="fine">Prices default to Gemini 2.5 Flash paid tier as used in Session 3 (thinking tokens bill as output). 22 working days per month. One line of system prompt — <code>"for simple lookups and arithmetic, skip the thinking and answer directly"</code> — is the router. The savings number is what that line is worth.</p>
+</div>
+<script>
+  const $ = id => document.getElementById(id);
+  const ids = ['p_in','p_out','p_th','r_in','r_out','r_th','emp','qpd','share','pin','pout'];
+  function money(x){ return '$' + Math.round(x).toLocaleString(); }
+  function cost(i,o,t,pin,pout){ return (i*pin + (o+t)*pout)/1e6; }
+  function calc(){
+    const v = Object.fromEntries(ids.map(id => [id, parseFloat($(id).value)||0]));
+    $('shareLbl').textContent = v.share + '%';
+    const q = v.emp * v.qpd * 22;
+    const cp = cost(v.p_in,v.p_out,v.p_th,v.pin,v.pout), cr = cost(v.r_in,v.r_out,v.r_th,v.pin,v.pout);
+    const allP = q*cp, allR = q*cr, routed = q*(v.share/100)*cr + q*(1-v.share/100)*cp;
+    $('allPlain').textContent = money(allP); $('allReact').textContent = money(allR); $('routed').textContent = money(routed);
+    const ratio = cp>0 ? (cr/cp).toFixed(1) : '—';
+    $('verdict').innerHTML = `ReAct costs <strong>${ratio}×</strong> a plain answer on your numbers. Routing saves <strong>${money(allR-routed)}</strong> a month versus "think about everything" — and keeps the research quality where it matters. The question for the meeting is not "should the agent reason?" but <strong>"which ${v.share}% of questions deserve it?"</strong>`;
+  }
+  ids.forEach(id => $(id).addEventListener('input', calc)); calc();
+</script>
+</body>
+</html>
