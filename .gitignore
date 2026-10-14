@@ -7,3 +7,4 @@ dist/
 *.pdf
 *.textClipping
 .vercel
+smoke-out/

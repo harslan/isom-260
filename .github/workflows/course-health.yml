@@ -1,0 +1,43 @@
+name: course health
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  schedule:
+    - cron: "0 1 * * 1"        # Sunday 9 PM Boston (01:00 UTC Monday): notebooks run before the week starts
+  workflow_dispatch:
+
+jobs:
+  dates:
+    name: every stated date matches calendar.json
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: node scripts/check-dates.mjs
+
+  notebooks:
+    name: notebooks run with a real key
+    # pushes only re-check syntax (free); the weekly run and manual runs spend real tokens
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - run: pip install -q google-genai nbclient nbformat ipykernel pandas
+      - name: syntax + transform check (no key)
+        run: python scripts/smoke_notebooks.py --dry-run
+      - name: execute with GOOGLE_API_KEY
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        env:
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+        run: python scripts/smoke_notebooks.py
+      - name: keep the executed notebooks
+        if: always() && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
+        uses: actions/upload-artifact@v4
+        with:
+          name: executed-notebooks
+          path: smoke-out/
+          if-no-files-found: ignore

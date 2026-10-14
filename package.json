@@ -6,7 +6,11 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "check:dates": "node scripts/check-dates.mjs",
+    "fix:dates": "node scripts/check-dates.mjs --fix",
+    "smoke": "python3 scripts/smoke_notebooks.py",
+    "smoke:dry": "python3 scripts/smoke_notebooks.py --dry-run"
   },
   "dependencies": {
     "@astrojs/vercel": "^9.0.4",

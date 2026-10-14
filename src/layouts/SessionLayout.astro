@@ -9,6 +9,7 @@ import NeuralBackground from '../components/NeuralBackground.astro';
 import ProgressBar from '../components/ProgressBar.astro';
 import PresenterToggle from '../components/PresenterToggle.astro';
 import SessionHero from '../components/SessionHero.astro';
+import { meetingLabels, deliverablesForSession, fmtDue } from '../data/calendar';
 import SectionHeader from '../components/SectionHeader.astro';
 import ObjectiveCard from '../components/ObjectiveCard.astro';
 import Timeline from '../components/Timeline.astro';
@@ -111,8 +112,23 @@ for (const s of sortedSessions) {
     subtitle={data.subtitle}
     duration={data.duration}
     icon={data.icon}
-    meetings={data.meetings}
+    meetings={meetingLabels(data.number) ?? data.meetings}
   />
+
+  {deliverablesForSession(data.number).length > 0 && (
+    <section class="px-8 max-w-[1200px] mx-auto -mt-6 mb-6">
+      <div class="flex flex-wrap items-center gap-3 px-6 py-4 bg-bg-card border border-border-subtle rounded-2xl">
+        <span class="font-mono text-[0.7rem] tracking-[2px] uppercase text-text-secondary">On the calendar</span>
+        {deliverablesForSession(data.number).map((d) => (
+          <a href={d.canvas} target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-accent-cyan/30 bg-accent-cyan/10 text-sm no-underline hover:bg-accent-cyan/20 transition-colors">
+            <span class="font-semibold text-text-primary">{d.label}</span>
+            <span class="text-text-secondary">{d.title}</span>
+            <span class="font-mono text-accent-cyan">due {fmtDue(d.due!)}</span>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
 
   {data.objectives?.length > 0 && (
     <section id="objectives" class="py-24 px-8 max-w-[1200px] mx-auto">

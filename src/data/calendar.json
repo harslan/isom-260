@@ -1,0 +1,51 @@
+{
+  "semester": "Fall 2026",
+  "course": "ISOM 260 · AI for Business",
+  "timezone": "America/New_York",
+  "meetingTime": "12:30–1:45 PM",
+  "room": "73 Tremont 5065",
+  "canvasCourse": "https://canvas.suffolk.edu/courses/17673",
+  "homeworkDueTime": "11:59 PM",
+  "holidays": [
+    { "date": "2026-10-12", "label": "October Break" },
+    { "date": "2026-11-11", "label": "Veterans Day" },
+    { "date": "2026-11-25", "label": "Thanksgiving" }
+  ],
+  "sessions": [
+    { "number": 1,  "meetings": ["2026-09-09", "2026-09-14"] },
+    { "number": 2,  "meetings": ["2026-09-16", "2026-09-21"] },
+    { "number": 3,  "meetings": ["2026-09-23", "2026-09-28"] },
+    { "number": 4,  "meetings": ["2026-09-30", "2026-10-05"] },
+    { "number": 5,  "meetings": ["2026-10-07"] },
+    { "number": 6,  "meetings": ["2026-10-14", "2026-10-19", "2026-10-21"] },
+    { "number": 7,  "meetings": ["2026-10-26", "2026-10-28"] },
+    { "number": 8,  "meetings": ["2026-11-02", "2026-11-04"] },
+    { "number": 9,  "meetings": ["2026-11-09"] },
+    { "number": 10, "meetings": ["2026-11-16", "2026-11-18"] },
+    { "number": 11, "meetings": ["2026-11-23"] },
+    { "number": 12, "meetings": ["2026-11-30", "2026-12-02"] },
+    { "number": 13, "meetings": ["2026-12-07", "2026-12-09"] }
+  ],
+  "deliverables": [
+    { "id": "hw1",  "label": "HW #1",  "title": "Train Your Tiny LLM",            "session": 1, "due": "2026-09-17T23:59", "points": 10,  "canvas": "https://canvas.suffolk.edu/courses/17673/assignments/258749" },
+    { "id": "hw2",  "label": "HW #2",  "title": "The Most Surprising X-ray",       "session": 2, "status": "retired", "note": "folded into HW #8" },
+    { "id": "hw3",  "label": "HW #3",  "title": "Model-Picker Memo",               "session": 2, "status": "retired", "note": "folded into HW #8; unpublished on Canvas for possible extra credit" },
+    { "id": "hw4",  "label": "HW #4",  "title": "The Tokenizer Safari",            "session": 3, "status": "retired", "note": "folded into HW #8" },
+    { "id": "hw5",  "label": "HW #5",  "title": "Build a Tool",                    "session": 4, "status": "retired", "note": "covered by the midterm; unpublished on Canvas for possible extra credit" },
+    { "id": "hw7",  "label": "HW #7",  "title": "The Four Questions, For Real",    "session": 6, "assigned": "2026-10-14", "due": "2026-10-22T23:59", "points": 10,  "canvas": "https://canvas.suffolk.edu/courses/17673/assignments/261865" },
+    { "id": "hw6",  "label": "HW #6",  "title": "Field Test Your Bot",             "session": 5, "assigned": "2026-10-07", "due": "2026-10-29T23:59", "points": 10,  "canvas": "https://canvas.suffolk.edu/courses/17673/assignments/261869" },
+    { "id": "midterm", "label": "Midterm Project", "title": "Your Agent, For Real", "session": 6, "assigned": "2026-10-19", "due": "2026-11-02T12:30", "points": 100, "canvas": "https://canvas.suffolk.edu/courses/17673/assignments/261871" },
+    { "id": "hw8",  "label": "HW #8",  "title": "Catch-Up: Pick One of Three",     "session": 7, "assigned": "2026-10-14", "due": "2026-11-12T23:59", "points": 10,  "canvas": "https://canvas.suffolk.edu/courses/17673/assignments/261866" },
+    { "id": "hw9",  "label": "HW #9",  "title": "Final Project Pitch",             "session": 9, "due": "2026-11-19T23:59", "points": 10,  "canvas": "https://canvas.suffolk.edu/courses/17673/discussion_topics/202432" },
+    { "id": "hw10", "label": "HW #10", "title": "First Working Run",               "session": 10, "due": "2026-11-24T23:59", "points": 10,  "canvas": "https://canvas.suffolk.edu/courses/17673/discussion_topics/202433" },
+    { "id": "hw11", "label": "HW #11", "title": "Demo Dry Run",                    "session": 11, "due": "2026-12-03T23:59", "points": 10,  "canvas": "https://canvas.suffolk.edu/courses/17673/discussion_topics/202428" },
+    { "id": "final", "label": "Final Project", "title": "Build Your Agent",         "session": 13, "due": "2026-12-09T23:59", "points": 100, "canvas": "https://canvas.suffolk.edu/courses/17673/assignments/261872" }
+  ],
+  "keyDates": [
+    { "date": "2026-10-19", "what": "Midterm Project assigned",  "note": "In class, Session 6 — build your first complete agent (20% of grade)" },
+    { "date": "2026-10-21", "what": "Midterm Clinic",            "note": "The trust layer on your own agent — leave with a BLOCKED row" },
+    { "date": "2026-11-30", "what": "Final Project Workshop",    "note": "Scope locks, skeletons built — Session 12 (Mon Nov 30 & Wed Dec 2)" },
+    { "date": "2026-12-07", "what": "Demo Days",                 "note": "Live 5-minute demos + Q&A with peer voting — Session 13 (Mon Dec 7 & Wed Dec 9)" },
+    { "date": "2026-12-15", "what": "Final exam slot",           "note": "Reserved per the university schedule" }
+  ]
+}
