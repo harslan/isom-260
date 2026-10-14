@@ -32,21 +32,34 @@
         <h2>Timeline · slide #</h2>
         <table>
             <tr><td class="t">12:30</td><td>1–2 · HW6 pulse — <span class="hl">who texted your bot?</span> · two screenshots · three "worst thing it did" sentences · "did a stranger burn your quota?" (4 min)</td></tr>
-            <tr><td class="t">12:34</td><td>3 · "Your bot works. Your bot is also wide open." (1 min)</td></tr>
-            <tr><td class="t">12:35</td><td>4–6 · The three things: the door (chat_id as a key key) · the 🚦 in the chat (PENDING, YES, BLOCKED) · memory.json + /forget (9 min)</td></tr>
-            <tr><td class="t">12:44</td><td>7 · <span class="hl">LIVE</span>: get_weather("Boston") then get_weather("Bostn") on the projector → Båstnäs, Sweden. "Real APIs don't fail, they guess" — <span class="cut">CUT 12:47</span></td></tr>
-            <tr><td class="t">12:47</td><td>8 · <span class="hl">Hands-on</span> — Parts 1–3 → Part 4 /whoami → ALLOWED → re-run → neighbor is a stranger → Part 5: decline, approve, restart-and-remember, Bostn, /forget → audit table — <span class="cut">STOP 1:22</span></td></tr>
-            <tr><td class="t">1:22</td><td>9 · The four questions (5 min)</td></tr>
-            <tr><td class="t">1:27</td><td>10 · HW #7 Four Questions memo, <b>due Thu Oct 22, 11:59 PM</b> (3 min)</td></tr>
-            <tr><td class="t">1:30</td><td>11–12 · Session 6 teaser: when one agent becomes two · MCP "protocol ≠ permission" · <b>midterm assigned Wed Oct 21</b> → close. Buffer to 1:45</td></tr>
+            <tr><td class="t">12:34</td><td>3 · <span class="hl">NEWS</span>: Gemini 4 Argon, out yesterday · 1M out · $2/$10 → $4/$20 after Nov 30 · not on free tier · "one line swaps the brain; the wallet is a different story" (3 min)</td></tr>
+            <tr><td class="t">12:37</td><td>4 · "Your bot works. Your bot is also wide open." (1 min)</td></tr>
+            <tr><td class="t">12:38</td><td>5–7 · The three things: the door (chat_id as a key key) · the 🚦 in the chat (PENDING, YES, BLOCKED) · memory.json + /forget (9 min)</td></tr>
+            <tr><td class="t">12:47</td><td>8 · <span class="hl">LIVE</span>: get_weather("Boston") then get_weather("Bostn") on the projector → Båstnäs, Sweden. "Real APIs don't fail, they guess" — <span class="cut">CUT 12:50</span></td></tr>
+            <tr><td class="t">12:50</td><td>9 · <span class="hl">Hands-on</span> — Parts 1–3 → Part 4 /whoami → ALLOWED → re-run → neighbor is a stranger → Part 5: decline, approve, restart-and-remember, Bostn, /forget → audit table → Part 7 for finishers — <span class="cut">STOP 1:25</span></td></tr>
+            <tr><td class="t">1:25</td><td>10 · The four questions (4 min)</td></tr>
+            <tr><td class="t">1:29</td><td>11 · <span class="hl">Grade Google's model card</span> — Fairwind = door · reasoning monitor = their 🚦 · cached context = memory with a price list · "potential hallucinations" = Bostn (3 min)</td></tr>
+            <tr><td class="t">1:32</td><td>12 · HW #7 Four Questions memo, <b>due Thu Oct 22, 11:59 PM</b> — Argon counts as a product (3 min)</td></tr>
+            <tr><td class="t">1:35</td><td>13–14 · Session 6 teaser: when one agent becomes two · MCP "protocol ≠ permission" · <b>midterm assigned Wed Oct 21</b> → close. Buffer to 1:45</td></tr>
         </table>
+
+        <h2>Argon facts you can say out loud (verified Oct 14 AM)</h2>
+        <ul>
+            <li>Announced Sep 30 · <b>released to developers + businesses Oct 13</b> · API id <span class="hl">gemini-4-argon</span> · knowledge cutoff Mar 2026</li>
+            <li>1M combined context, <b>up to 1M output tokens</b> (was 64K). Intro price <b>$2 in / $10 out</b> per M through Nov 30, then $4 / $20. Cached input 95% off</li>
+            <li><b>Not on the free tier or AI Pro.</b> Gemini app: Pro + Ultra subscribers. Free keys: 2.5 models now limited to "users who have actively used them"</li>
+            <li>Google's claims: DeepSWE 77.9% (Opus 5.5 74.2, GPT-6 Astra 74.1) · AutomationBench #1 at 51.3% · CWE-bench tied 1st at 68% · leads Gray Swan indirect-prompt-injection benchmark</li>
+            <li>Safety: cyber-offense capability only to vetted defenders ("Fairwind Program") · chain-of-thought monitoring that can halt a run · model card: cyber CCL "cannot be ruled out"</li>
+            <li>Early customers: Deloitte, LexisNexis, Ambience Healthcare, Isomorphic Labs, Wiz. Context: shipped after delays and a DeepMind leadership shake-up; Gemini 3.5 Pro was cancelled</li>
+        </ul>
 
         <h2>Live demo cues (slide 7, then during hands-on)</h2>
         <div class="mono">Part 2 cell output:  get_weather('Boston') → Boston, Massachusetts, United States
                      get_weather('Bostn')  → Båstnäs, Värmland County, Sweden   ← no error
 phone: "Email my professor at prof@example.com that I'm late"  → 🚦 … Reply YES
 phone: "no"  → "Not sent."      phone: "did you send it?" → must say no
-stop cell · run cell · phone: "what did I ask you to email?" → it remembers</div>
+stop cell · run cell · phone: "what did I ask you to email?" → it remembers
+Part 7: 🔑 your key can see N models · gemini-4-argon: 🔒 not listed → 🚪 turned away → 🧾 receipt × 5 brains</div>
         <ul><li>Beat: "the fix for Bostn is in the TOOL — return matched_place — not in the model"</li></ul>
     </div>
     <div>
@@ -59,11 +72,13 @@ stop cell · run cell · phone: "what did I ask you to email?" → it remembers<
             <li>memory.json "forgot" after a runtime restart → Colab's disk resets with the runtime; the cell restart test is the one that works. Drive mount is the real fix (office hours)</li>
             <li>Weather tool error → Open-Meteo is keyless and rarely down; the error path is the lesson, let the agent report it</li>
             <li>409 Conflict → two copies polling one token; Interrupt everywhere, run once</li>
+            <li>gemini-2.5-flash "not found" on a <b>new</b> key → Google now limits 2.5 to prior users; set <span class="hl">MODEL = "gemini-3.8-flash"</span> (free tier), re-run Part 1 + 3</li>
+            <li>Part 7 Argon call returns 200 → someone has a paid key; fine, the receipt still prices it. Returns 429/403/404 → that IS the slide</li>
         </ul>
 
-        <h2>If behind at 1:22</h2>
+        <h2>If behind at 1:25</h2>
         <ul>
-            <li>Slide 9 becomes the one-line boardroom sentence; HW #7 and the midterm date are untouchable</li>
+            <li>Slide 10 becomes the one-line boardroom sentence, slide 11 (Argon graded) becomes one sentence: "paid door, their 🚦, memory with a price list, hallucinations admitted"; HW #7 and the midterm date are untouchable</li>
             <li>Students who didn't reach Part 5: it's the first ten minutes of HW #7 prep — tell them</li>
         </ul>
 
@@ -71,7 +86,7 @@ stop cell · run cell · phone: "what did I ask you to email?" → it remembers<
         <ul>
             <li>⚠️ <b>Smoke-test with YOUR phone</b>: the gate round-trip (ask → no → ask → yes), the restart-and-remember test, Bostn. Mock-tested only as of Sep 30</li>
             <li>Canvas: HW #6 closes tomorrow · post <b>HW #7</b> (due Thu Oct 22) · midterm brief must exist by Wed Oct 21 — nothing authored yet</li>
-            <li>Tabs: slides · notebook (bot running) · Telegram Desktop · the audit table cell ready to run</li>
+            <li>Tabs: slides · notebook (bot running) · Telegram Desktop · the audit table cell ready to run · <b>Part 7 run once before class</b> so the 🔒/🚪 lines are on screen if you want them</li>
             <li>After: note which of the three holes confused people most — that's the Session 6 opener</li>
         </ul>
     </div>

@@ -85,10 +85,11 @@
     },
     {
       "time": "Wed Oct 14 · 12:30 PM",
-      "title": "Meeting 2 · HW #6 Pulse + Three Things Your Bot Can't Do Yet",
-      "duration": "17 minutes",
-      "description": "Who texted your bot, and what was the worst thing it did? Then the three holes and a live demo of an API that guesses.",
+      "title": "Meeting 2 · HW #6 Pulse + This Week's News + Three Things Your Bot Can't Do Yet",
+      "duration": "20 minutes",
+      "description": "Who texted your bot, and what was the worst thing it did? Then Gemini 4 Argon, released yesterday, in one slide. Then the three holes and a live demo of an API that guesses.",
       "bulletPoints": [
+        "This week: Google released Gemini 4 Argon (Oct 13) — 1M-token output, $2/$10 per million, not on the free tier. Swapping your bot's brain is one line; the wallet is a different story",
         "A door with your name on it: chat_id was a memory key, now it's a key key",
         "The 🚦 moves into the chat: the loop pauses, asks on your phone, resumes on YES — Session 4's gate where the human actually is",
         "Memory that survives the cell — and /forget, because memory is a liability too",
@@ -97,23 +98,25 @@
       "isBreak": false
     },
     {
-      "time": "Wed Oct 14 · 12:47 PM",
+      "time": "Wed Oct 14 · 12:50 PM",
       "title": "Hands-On: Close the Three Holes",
       "duration": "35 minutes",
-      "description": "Parts 1–5 of the Meeting 2 notebook: /whoami, the allow-list, decline and approve an email, restart and remember, the Bostn test, /forget.",
+      "description": "Parts 1–5 of the Meeting 2 notebook: /whoami, the allow-list, decline and approve an email, restart and remember, the Bostn test, /forget. Part 7 if you finish: price today's bot on Argon.",
       "bulletPoints": [
         "Your neighbor is now a stranger — watch them hit the door",
         "One BLOCKED row and one SENT row in the audit table: that's the slide for the CFO",
-        "Stop the cell, run it again, ask what you emailed earlier"
+        "Stop the cell, run it again, ask what you emailed earlier",
+        "Part 7: list the models your key can see, knock on Argon's door, and price today's token receipt on five brains"
       ],
       "isBreak": false
     },
     {
-      "time": "Wed Oct 14 · 1:22 PM",
-      "title": "Wrap: The Four Questions + HW #7 + Session 6",
-      "duration": "23 minutes",
-      "description": "The four questions to ask any AI product, the homework that puts them to a real vendor, and what's next: when one agent should become two.",
+      "time": "Wed Oct 14 · 1:25 PM",
+      "title": "Wrap: The Four Questions, Applied to Argon + HW #7 + Session 6",
+      "duration": "20 minutes",
+      "description": "The four questions to ask any AI product, then applied live to Google's Gemini 4 Argon model card, the homework that puts them to a real vendor, and what's next: when one agent should become two.",
       "bulletPoints": [
+        "Grade the model card: the Fairwind allow-list is a door, reasoning-monitoring is a 🚦, cached context is memory with a price list, 'potential hallucinations' is Bostn",
         "HW #7: the four questions applied to one real AI product, 200 words, due Thu Oct 22, 11:59 PM",
         "Session 6 Mon Oct 19: agent patterns, MCP ('a protocol is not a permission'), and the midterm project assigned Wed Oct 21"
       ],
@@ -138,6 +141,15 @@
       "badge": "Slides",
       "badgeType": "interactive",
       "linkText": "Open slides"
+    },
+    {
+      "title": "Gemini 4 Argon — launch post + model card",
+      "url": "https://deepmind.google/models/model-cards/gemini-4-argon/",
+      "description": "Released to developers Oct 13, 2026. Read the model card with the four questions in hand: who can use it, what it can do without asking, what it remembers, what happens when it's wrong. The launch post is at blog.google. Pricing: ai.google.dev/gemini-api/docs/pricing.",
+      "icon": "sparkles",
+      "badge": "This Week",
+      "badgeType": "reference",
+      "linkText": "Read the model card"
     },
     {
       "title": "Your Agent, On Your Phone — Colab Notebook (Meeting 1)",
@@ -236,7 +248,7 @@
       "number": 2,
       "icon": "shield",
       "title": "Close the Three Holes (Wed Oct 14)",
-      "description": "Parts 1–5 of the Meeting 2 notebook:",
+      "description": "Parts 1–5 of the Meeting 2 notebook, Part 7 if you finish early:",
       "steps": [
         {
           "title": "The door",
@@ -253,6 +265,10 @@
         {
           "title": "The API that guesses",
           "description": "Weather in Boston, then in 'Bostn'. Does the agent notice it got Sweden? Then 'Xyzzyville' — an honest error."
+        },
+        {
+          "title": "Swap the brain? Price it first (optional)",
+          "description": "Part 7: which models can your key see? Knock on gemini-4-argon's door. Then price today's token receipt on Flash vs Argon, now and after Nov 30."
         }
       ],
       "discussionNote": "The loop is still 40 lines. Everything you added this week is the part a company actually pays for."
@@ -276,6 +292,10 @@
       "text": "<strong>Real APIs don't fail. They guess.</strong> Return what the service actually matched, and tell the model to say so. Your agent's reputation is decided in that 1%."
     },
     {
+      "icon": "sparkles",
+      "text": "<strong>The brain is a line item.</strong> Gemini 4 Argon is one line to switch to and 7–8× the price of Flash, with a door your free key can't open. The loop you own; the model you rent."
+    },
+    {
       "icon": "target",
       "text": "<strong>Ask the four questions.</strong> Who can use it, what can it do without asking, what does it remember and can it forget, what happens when the API is wrong."
     }
@@ -287,7 +307,7 @@
     },
     {
       "label": "HW #7 · due Thu Oct 22, 11:59 PM:",
-      "text": "The Four Questions, for real. Pick one AI product a real company sells and answer the four questions from its public documentation. Where the docs don't say, write 'not disclosed' — that is a finding. One paragraph: would you let it touch your company's email? Canvas post, 200 words max, with links."
+      "text": "The Four Questions, for real. Pick one AI product a real company sells and answer the four questions from its public documentation. Where the docs don't say, write 'not disclosed' — that is a finding. One paragraph: would you let it touch your company's email? Canvas post, 200 words max, with links. Gemini 4 Argon, released Oct 13, counts: its model card is the documentation."
     },
     {
       "label": "No class Mon Oct 12:",
