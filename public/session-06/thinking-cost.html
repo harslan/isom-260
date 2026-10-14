@@ -31,6 +31,9 @@
   .verdict { margin-top:1.2rem; background:rgba(255,214,0,0.08); border:1px solid rgba(255,214,0,0.3); border-radius:14px; padding:1.1rem 1.3rem; font-size:1.05rem; }
   .verdict strong { color:var(--yellow); }
   .fine { color:var(--dim); font-size:0.85rem; margin-top:1.4rem; }
+  .presets { display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:0.3rem; }
+  .preset { background:#0f1424; border:1px solid var(--border); color:var(--dim); border-radius:999px; padding:0.35rem 0.8rem; font-family:'JetBrains Mono',monospace; font-size:0.8rem; cursor:pointer; }
+  .preset.on, .preset:hover { border-color:var(--cyan); color:var(--cyan); }
   code { font-family:'JetBrains Mono',monospace; color:var(--cyan); font-size:0.9em; }
 </style>
 </head>
@@ -70,6 +73,13 @@
       <div><label>$ per 1M input tokens</label><input type="number" id="pin" value="0.30" step="0.01"></div>
       <div><label>$ per 1M output + thinking tokens</label><input type="number" id="pout" value="2.50" step="0.01"></div>
     </div>
+    <label>which brain (sets the two prices · Gemini API list prices, Oct 14 2026)</label>
+    <div class="presets">
+      <button type="button" class="preset on" data-pin="0.30" data-pout="2.50">2.5 Flash · $0.30 / $2.50</button>
+      <button type="button" class="preset" data-pin="0.75" data-pout="3.75">3.8 Flash · $0.75 / $3.75</button>
+      <button type="button" class="preset" data-pin="2.00" data-pout="10.00">4 Argon · $2 / $10 (to Nov 30)</button>
+      <button type="button" class="preset" data-pin="4.00" data-pout="20.00">4 Argon · $4 / $20 (after)</button>
+    </div>
   </div>
 
   <div class="result">
@@ -79,7 +89,7 @@
   </div>
 
   <div class="verdict" id="verdict"></div>
-  <p class="fine">Prices default to Gemini 2.5 Flash paid tier as used in Session 3 (thinking tokens bill as output). 22 working days per month. One line of system prompt — <code>"for simple lookups and arithmetic, skip the thinking and answer directly"</code> — is the router. The savings number is what that line is worth.</p>
+  <p class="fine">Prices default to Gemini 2.5 Flash paid tier as used in Session 3 (thinking tokens bill as output); the buttons switch to Gemini 3.8 Flash or Gemini 4 Argon, released Oct 13, 2026. 22 working days per month. One line of system prompt — <code>"for simple lookups and arithmetic, skip the thinking and answer directly"</code> — is the router. The savings number is what that line is worth.</p>
 </div>
 <script>
   const $ = id => document.getElementById(id);
@@ -96,7 +106,12 @@
     const ratio = cp>0 ? (cr/cp).toFixed(1) : '—';
     $('verdict').innerHTML = `ReAct costs <strong>${ratio}×</strong> a plain answer on your numbers. Routing saves <strong>${money(allR-routed)}</strong> a month versus "think about everything" — and keeps the research quality where it matters. The question for the meeting is not "should the agent reason?" but <strong>"which ${v.share}% of questions deserve it?"</strong>`;
   }
-  ids.forEach(id => $(id).addEventListener('input', calc)); calc();
+  ids.forEach(id => $(id).addEventListener('input', calc));
+  document.querySelectorAll('.preset').forEach(b => b.addEventListener('click', () => {
+    $('pin').value = b.dataset.pin; $('pout').value = b.dataset.pout;
+    document.querySelectorAll('.preset').forEach(x => x.classList.toggle('on', x === b)); calc();
+  }));
+  calc();
 </script>
 </body>
 </html>

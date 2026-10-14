@@ -2,12 +2,12 @@
   "number": 6,
   "slug": "session-06",
   "title": "Make It Think + Your Midterm",
-  "subtitle": "Monday: the same loop, the same tools, one paragraph — and your agent plans before it acts. Wednesday: one agent or many, what MCP actually is, and the midterm project assigned with a plan on paper before you leave.",
+  "subtitle": "Wednesday: the same loop, the same tools, one paragraph — and your agent plans before it acts. Monday: one agent or many, what MCP actually is, and the midterm project assigned with a plan on paper before you leave.",
   "heroTitle": "Make It <span class=\"bg-gradient-to-br from-accent-cyan to-accent-purple bg-clip-text text-transparent\">Think</span>",
   "duration": "2 meetings · 75 min",
   "meetings": [
-    "Mon Oct 19",
-    "Wed Oct 21"
+    "Wed Oct 14",
+    "Mon Oct 19"
   ],
   "icon": "brain",
   "tags": [
@@ -37,31 +37,32 @@
   ],
   "agenda": [
     {
-      "time": "Mon Oct 19 · 12:30 PM",
-      "title": "Meeting 1 · HW #7 Pulse + The Pattern Gap",
-      "duration": "13 minutes",
-      "description": "Which vendor said 'not disclosed'? Then: your bot answers the first thing it can, and a researcher plans first.",
+      "time": "Wed Oct 14 · 12:30 PM",
+      "title": "Meeting 1 · HW #6 Pulse + This Week's News + The Pattern Gap",
+      "duration": "16 minutes",
+      "description": "Who texted your bot, and did it ever go looking before it answered? Then Gemini 4 Argon, released yesterday, as a Level 2 somebody else trained. Then: your bot answers the first thing it can, and a researcher plans first.",
       "bulletPoints": [
         "Three levels of the same agent: the model alone, your Session 4 loop, ReAct",
+        "This week: Gemini 4 Argon (Oct 13) — 1M output tokens of room to think, $2/$10 per million, not on the free tier. One line swaps the brain; the paragraph is still yours",
         "The paragraph: THINK before every call, OBSERVE after, and never invent when a tool says 'no results'",
         "Nobody touched the loop. The loop can't tell the difference. The model can"
       ],
       "isBreak": false
     },
     {
-      "time": "Mon Oct 19 · 12:43 PM",
+      "time": "Wed Oct 14 · 12:46 PM",
       "title": "Live, Then Hands-On: Same Question, Three Times",
       "duration": "34 minutes",
       "description": "'I graduate in May 2027. Is AI going to eliminate the analyst jobs I'm applying for?' at levels 0, 1, and 2 on the projector, then on your own key. Count the hops, read the thoughts, run the bill.",
       "bulletPoints": [
         "Only your Gemini key today — tools are calculator, the job board, and real Wikipedia",
-        "The bill table: steps, tool calls, thinking tokens, dollars — how many times more did thinking cost?",
+        "The bill table: steps, tool calls, thinking tokens, dollars on Flash and on Argon — how many times more did thinking cost, and on which brain?",
         "Stop at Part 5; we break it together — then Part 6 is a question you actually have this month, plain vs ReAct, both bills"
       ],
       "isBreak": false
     },
     {
-      "time": "Mon Oct 19 · 1:17 PM",
+      "time": "Wed Oct 14 · 1:20 PM",
       "title": "Part 5 Together: When Does It Fail?",
       "duration": "8 minutes",
       "description": "A company that does not exist, an opinion dressed as research, and a calculator question with ReAct on.",
@@ -73,18 +74,18 @@
       "isBreak": false
     },
     {
-      "time": "Mon Oct 19 · 1:25 PM",
-      "title": "Wrap: Boardroom + Wednesday",
+      "time": "Wed Oct 14 · 1:28 PM",
+      "title": "Wrap: Boardroom + HW #7 + Monday",
       "duration": "20 minutes",
-      "description": "Why the vendor's agent takes 20 seconds, whether it can show its work, and what to bring Wednesday.",
+      "description": "Why the vendor's agent takes 20 seconds, whether it can show its work, HW #7 assigned, and what to bring Monday.",
       "bulletPoints": [
-        "HW #7 due Thu Oct 22, 11:59 PM",
-        "Wednesday: one agent or many, MCP, and the midterm assigned — bring one real problem and the name of one person who has it"
+        "HW #6 due Thu Oct 15, 11:59 PM · HW #7 (the four questions, for real) posted tonight, due Thu Oct 22, 11:59 PM",
+        "Monday Oct 19: one agent or many, MCP, and the midterm assigned — bring one real problem and the name of one person who has it"
       ],
       "isBreak": false
     },
     {
-      "time": "Wed Oct 21 · 12:30 PM",
+      "time": "Mon Oct 19 · 12:30 PM",
       "title": "Meeting 2 · One Agent or Many?",
       "duration": "23 minutes",
       "description": "Three patterns on paper, the rule for splitting, your phone bot as the case, and MCP in one slide.",
@@ -97,7 +98,7 @@
       "isBreak": false
     },
     {
-      "time": "Wed Oct 21 · 12:53 PM",
+      "time": "Mon Oct 19 · 12:53 PM",
       "title": "The Midterm Project, Assigned",
       "duration": "8 minutes",
       "description": "Your bot, for a real problem. Four requirements, the rubric, the bonuses, the grad addendum. Due Mon Nov 2, 12:30 PM.",
@@ -108,7 +109,7 @@
       "isBreak": false
     },
     {
-      "time": "Wed Oct 21 · 1:01 PM",
+      "time": "Mon Oct 19 · 1:01 PM",
       "title": "Kickoff: Leave with a Plan",
       "duration": "25 minutes",
       "description": "Ten minutes alone on paper, eight minutes of a neighbor trying to break it, three volunteers and a room vote.",
@@ -120,7 +121,7 @@
       "isBreak": false
     },
     {
-      "time": "Wed Oct 21 · 1:26 PM",
+      "time": "Mon Oct 19 · 1:26 PM",
       "title": "Wrap: Session 7 + Logistics",
       "duration": "19 minutes",
       "description": "Your agent doesn't know your business yet. No HW #8 while the midterm is open. Office hours: bring the sheet, not the code.",
@@ -149,6 +150,15 @@
       "badge": "Slides",
       "badgeType": "interactive",
       "linkText": "Open slides"
+    },
+    {
+      "title": "Gemini 4 Argon — launch post + model card",
+      "url": "https://deepmind.google/models/model-cards/gemini-4-argon/",
+      "description": "Released to developers Oct 13, 2026: 1M-token context, up to 1M output tokens, $2 in / $10 out per million until Nov 30. Google's pitch is 'deep reasoning across long-horizon workflows' — Level 2 of today's notebook, at scale. Not on the free tier. Pricing: ai.google.dev/gemini-api/docs/pricing.",
+      "icon": "sparkles",
+      "badge": "This Week",
+      "badgeType": "reference",
+      "linkText": "Read the model card"
     },
     {
       "title": "Midterm Project Brief — Your Agent, For Real",
@@ -254,7 +264,7 @@
     {
       "number": 1,
       "icon": "brain",
-      "title": "Same Question, Three Times (Mon Oct 19)",
+      "title": "Same Question, Three Times (Wed Oct 14)",
       "description": "Parts 1–4 of the notebook, on your own key:",
       "steps": [
         {
@@ -267,7 +277,7 @@
         },
         {
           "title": "Run the bill",
-          "description": "Steps, tool calls, thinking tokens, dollars. How many times more expensive was thinking? Was it worth it for this question?"
+          "description": "Steps, tool calls, thinking tokens, dollars — cost on Flash and cost_argon on Gemini 4 Argon. How many times more expensive was thinking? Was it worth it for this question, on either brain?"
         },
         {
           "title": "Break it, together",
@@ -282,7 +292,7 @@
     {
       "number": 2,
       "icon": "target",
-      "title": "Midterm Kickoff (Wed Oct 21)",
+      "title": "Midterm Kickoff (Mon Oct 19)",
       "description": "Paper first. Twenty-five minutes:",
       "steps": [
         {
@@ -312,7 +322,7 @@
     },
     {
       "icon": "bar-chart",
-      "text": "<strong>Thinking has a price.</strong> ReAct costs several times a plain loop. Route research to it and lookups around it. That routing is a business decision."
+      "text": "<strong>Thinking has a price — and a brain is a line item.</strong> ReAct costs several times a plain loop; the same run on Gemini 4 Argon costs several times more again. Route research to it and lookups around it. That routing is a business decision."
     },
     {
       "icon": "shield-alert",
@@ -329,11 +339,15 @@
   ],
   "homework": [
     {
+      "label": "HW #6 · due Thu Oct 15, 11:59 PM:",
+      "text": "Field Test (from Session 5): two people outside this class text your bot. Screenshot, audit table, two sentences, your bot's @username, in the Canvas Session 5 discussion."
+    },
+    {
       "label": "HW #7 · due Thu Oct 22, 11:59 PM:",
       "text": "The Four Questions, for real. One AI product a real company sells, the four questions answered from its public docs ('not disclosed' is a finding), and one paragraph on whether you would let it touch your company's email. Canvas post, 200 words max, with links."
     },
     {
-      "label": "Midterm Project · assigned Wed Oct 21 · due Mon Nov 2, 12:30 PM:",
+      "label": "Midterm Project · assigned Mon Oct 19 · due Mon Nov 2, 12:30 PM:",
       "text": "Your Agent, For Real. One real problem and one named user, two or more tools with at least one real API, the trust layer (gate, audit log, door if on Telegram), five tests with two hostile ones, and a one-page memo. Individual. Notebook with outputs + memo PDF on Canvas before class. Full brief, rubric, timeline, and FAQ on this page. ISOM 900: add a one-page architecture proposal. Start from the Midterm Starter notebook; read the worked-example memo before writing yours."
     },
     {
