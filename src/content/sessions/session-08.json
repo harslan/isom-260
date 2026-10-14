@@ -1,280 +1,287 @@
 {
   "number": 8,
   "slug": "session-08",
-  "title": "Multi-Agent Systems in Practice",
-  "subtitle": "One agent is useful. A team of agents is powerful. Build pipelines, coordinate handoffs, and manage agent teams.",
-  "heroTitle": "Multi-Agent Systems <span class=\"bg-gradient-to-br from-accent-cyan to-accent-purple bg-clip-text text-transparent\">in Practice</span>",
+  "title": "When One Agent Becomes Two",
+  "subtitle": "Monday, the morning your midterm is in: one agent handles a bike shop's inbox, then a researcher → writer → critic pipeline handles the same email, and you read the handoff and the bill. Wednesday: the one-agent test on your own agent, an org chart, and a critic in ten lines.",
+  "heroTitle": "When One Agent <span class=\"bg-gradient-to-br from-accent-cyan to-accent-purple bg-clip-text text-transparent\">Becomes Two</span>",
   "duration": "2 meetings · 75 min",
   "meetings": [
     "Mon Nov 2",
     "Wed Nov 4"
   ],
-  "icon": "users",
+  "icon": "git-branch",
   "tags": [
     "Multi-Agent",
     "Pipelines",
-    "Agent Coordination",
-    "Handoffs",
-    "Specialization"
+    "Router",
+    "Critic",
+    "Midterm Debrief"
   ],
   "objectives": [
     {
-      "title": "Build a Multi-Agent Pipeline",
-      "description": "Go from Session 6's design exercise to a working system: build a Researcher agent that feeds into an Analyst agent, then add an Editor for quality control."
+      "title": "Split for a Reason · Hand Off with a Contract · Check Before You Send",
+      "description": "The one outcome: you can say in one sentence why an agent should be two (permissions, specialization, isolation, parallelism) or why it should stay one, and you can show the document that passes between them."
     },
     {
-      "title": "Master Agent Coordination Patterns",
-      "description": "Implement handoffs, shared context, and orchestration. Learn when pipeline, debate, and orchestrator patterns are the right choice."
+      "title": "Run the Same Email Two Ways",
+      "description": "A solo agent reads, drafts and sends; a researcher → writer → critic pipeline does it with a JSON brief, a verdict and a human gate. Bet on the call count, then read the bill on Flash and on Argon."
     },
     {
-      "title": "Handle Information Distortion",
-      "description": "The 'telephone game' problem: information degrades as it passes between agents. Build safeguards against compounding errors."
+      "title": "Break a Team Four Ways",
+      "description": "The telephone game at the handoff, a customer email that gives the agent orders, four calls to say you're welcome, and two agents that never agree. Then fix one."
     },
     {
-      "title": "Apply the Org Chart Analogy",
-      "description": "Multi-agent systems mirror organizational design: division of labor, specialization, coordination costs. Map business structures to agent architectures."
+      "title": "Apply It to Your Own Agent",
+      "description": "The one-agent test on your midterm, an org chart with four boxes, and a critic in ten lines that reviews every answer against the tool outputs it came from."
     }
   ],
   "agenda": [
     {
-      "time": "5:00 PM - 5:15 PM",
-      "title": "Part 1: From Design to Build",
+      "time": "Mon Nov 2 · 12:30 PM",
+      "title": "Meeting 1 · Midterm Pulse + The Telephone Game",
       "duration": "15 minutes",
-      "description": "In Session 6 you designed multi-agent systems on paper. Today you build one.",
+      "description": "Three 'what it refused' sentences from your memos. Then you run a pipeline by hand: a reader whispers the returns policy, a writer replies to Maya, a checker with the page stops the first wrong promise.",
       "bulletPoints": [
-        "Recap: Three architectures from Session 6 — Pipeline, Debate, Orchestrator",
-        "Today's build: A 2-agent pipeline (Researcher → Analyst), then extend to 3 agents (+ Editor)",
-        "The org chart analogy: Why companies have departments. Why agent systems need specialization.",
-        "Key question: When does adding another agent help vs. adding complexity?"
-      ]
+        "One agent did everything. That is usually right — today is about the exceptions, and the only honest rule for them: name the reason",
+        "Three ways to split: pipeline, router, critic. Permissions, specialization, isolation, parallelism",
+        "The handoff must be a document, not a whisper; the checker must never write what it checks"
+      ],
+      "isBreak": false
     },
     {
-      "time": "5:15 PM - 5:40 PM",
-      "title": "Part 2: Agent Communication Patterns",
-      "duration": "25 minutes",
-      "description": "How agents talk to each other — message passing, shared context, and orchestration.",
+      "time": "Mon Nov 2 · 12:45 PM",
+      "title": "Live, Then Hands-On: Maya Wants Her Money Back",
+      "duration": "33 minutes",
+      "description": "A helmet, 45 days, seal intact. The solo agent on the projector, then the pipeline — bet on the model calls first. Then on your own key, answering the 🚦 yourself.",
       "bulletPoints": [
-        "Message passing: Agent A's output becomes Agent B's input. The simplest coordination pattern.",
-        "Shared context: All agents read from and write to a shared workspace. More flexible but harder to debug.",
-        "Orchestration: A manager agent decides who works on what. The pattern behind Claude Code's team feature.",
-        "Live demo: See how a simple pipeline actually works in code — it's just function calls with structured outputs."
-      ]
+        "Did the solo agent search before it wrote, and what did it promise?",
+        "Read the brief: JSON with sources. The writer saw nothing else",
+        "The bill: solo versus pipeline, Flash versus Argon. Then: for which emails?"
+      ],
+      "isBreak": false
     },
     {
-      "time": "5:40 PM - 6:25 PM",
-      "title": "Part 3: Hands-On — Build a 2-Agent Pipeline",
-      "duration": "45 minutes",
-      "description": "Build a Researcher → Analyst pipeline, then extend it with an Editor agent.",
-      "bulletPoints": [
-        "Phase 1 (15 min): Build the Researcher agent — searches for information, returns structured findings",
-        "Phase 2 (15 min): Build the Analyst agent — receives research, identifies patterns, generates insights and recommendations",
-        "Phase 3 (15 min): Add the Editor agent — fact-checks, improves clarity, scores quality. Run the full pipeline end-to-end."
-      ]
-    },
-    {
-      "time": "6:25 PM - 6:35 PM",
-      "title": "Break",
+      "time": "Mon Nov 2 · 1:18 PM",
+      "title": "Part 5 Together: When Does a Team Fail?",
       "duration": "10 minutes",
-      "description": "You now have a team of AI agents that collaborate. Next: what can go wrong?",
-      "isBreak": true
-    },
-    {
-      "time": "6:35 PM - 7:05 PM",
-      "title": "Part 5: The Telephone Game — Information Distortion",
-      "duration": "30 minutes",
-      "description": "The ethics of multi-agent systems: who's accountable when information degrades across agents?",
+      "description": "A fact lost at the handoff, Derek's P.S. aimed at the agent, Priya's thank-you costing four calls, and a writer and critic that never agree.",
       "bulletPoints": [
-        "Ethics moment: The 'telephone game' — each agent subtly changes information. After 3 agents, is the output still accurate?",
-        "Live experiment: Run the same question through your pipeline 3 times. Do you get the same answer? Why not?",
-        "Accountability: If Agent C gives a wrong answer based on Agent A's research, who's responsible?",
-        "Safeguards: Citation chains, confidence propagation, and human review gates at critical handoffs.",
-        "Business value: Division of labor works in companies AND in agent systems — but coordination has a cost."
-      ]
+        "The router is one call; the circuit breaker is one number",
+        "Fix the one that bothered you most. Never a fourth agent"
+      ],
+      "isBreak": false
     },
     {
-      "time": "7:05 PM - 7:20 PM",
-      "title": "Part 6: When Multi-Agent is Worth It",
-      "duration": "15 minutes",
-      "description": "Multi-agent isn't always better. Learn the decision framework.",
+      "time": "Mon Nov 2 · 1:28 PM",
+      "title": "Wrap: Boardroom + Wednesday",
+      "duration": "17 minutes",
+      "description": "Why is the vendor's product five agents, what passes between them, who checks and did they write it, what does one email cost.",
       "bulletPoints": [
-        "The complexity tax: Each agent adds latency, cost, and potential failure points",
-        "Decision framework: Use multi-agent when tasks require different expertise, when quality review is critical, or when you need adversarial checking",
-        "Stick with single-agent when the task is straightforward, speed matters more than thoroughness, or the pipeline is linear and simple",
-        "Real examples: Content creation (multi-agent wins), simple Q&A (single-agent wins), code review (debate pattern wins)"
-      ]
+        "Wednesday: bring your midterm notebook — the one-agent test is on yours",
+        "HW #8 Catch-Up is open, due Thu Nov 12"
+      ],
+      "isBreak": false
     },
     {
-      "time": "7:20 PM - 7:30 PM",
-      "title": "Part 7: Wrap-Up + Homework",
+      "time": "Wed Nov 4 · 12:30 PM",
+      "title": "Meeting 2 · Midterm Debrief + Monday in One Slide",
+      "duration": "9 minutes",
+      "description": "Three memo sentences, anonymous: what it refused, what it cost, one agent or two. Then the three rules in one slide.",
+      "bulletPoints": [
+        "The memo line most of you lost points on is the one we fix today"
+      ],
+      "isBreak": false
+    },
+    {
+      "time": "Wed Nov 4 · 12:39 PM",
+      "title": "Hands-On: The One-Agent Test, On Yours",
+      "duration": "38 minutes",
+      "description": "Write the sentence 'my agent should be two because ___' or leave it one. Paste the critic under your agent and run your five tests through it. Then pairs draw the org chart and trade.",
+      "bulletPoints": [
+        "Find one FAIL and decide whether the critic was right — that row goes in the final memo",
+        "Four boxes: reads, decides, acts, checks. Circle the one that reads untrusted text. Does it hold the keys?"
+      ],
+      "isBreak": false
+    },
+    {
+      "time": "Wed Nov 4 · 1:17 PM",
+      "title": "The Bill + From Midterm to Final",
       "duration": "10 minutes",
-      "description": "You've built single agents, knowledge agents, and now agent teams. Next: apply them to YOUR industry.",
+      "description": "Solo versus pipeline versus Argon in the Cost of Thinking calculator, the price of one wrong promise, and the road to the final: HW #8, HW #9 pitch, your midterm as the starting point.",
       "bulletPoints": [
-        "The stack: Tools (S4) → Real APIs (S5) → ReAct (S6) → RAG (S7) → Multi-Agent (TODAY)",
-        "Next session: Agents for Your Industry — pick your department, build your agent",
-        "Homework preview: Extend your pipeline, analyze information distortion, design a domain-specific multi-agent system"
-      ]
+        "HW #8 Catch-Up due Thu Nov 12 · HW #9 Final Project Pitch due Thu Nov 19",
+        "Monday: Session 9, agents for your industry — bring the industry you want to work in"
+      ],
+      "isBreak": false
+    },
+    {
+      "time": "Wed Nov 4 · 1:27 PM",
+      "title": "Wrap",
+      "duration": "18 minutes",
+      "description": "Close, with the buffer kept for midterm questions.",
+      "bulletPoints": [],
+      "isBreak": false
     }
   ],
   "resources": [
     {
-      "title": "Multi-Agent Workshop Notebook",
-      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-08/ISOM260_Session8_Multi_Agent_Systems.ipynb",
-      "description": "Build a Researcher → Analyst → Editor pipeline. Learn agent communication, handoffs, and quality control in a multi-agent system.",
-      "icon": "code",
+      "title": "Meeting 1 Slide Deck — When One Agent Becomes Two",
+      "url": "/session-08/slides-meeting1.html",
+      "description": "Monday Nov 2: midterm pulse, the telephone game, three ways to split, name the reason, the live demo with a bet on calls, hands-on with QR, four failures, boardroom.",
+      "icon": "presentation",
+      "badge": "Slides",
+      "badgeType": "interactive",
+      "linkText": "Open slides"
+    },
+    {
+      "title": "Meeting 2 Slide Deck — The One-Agent Test",
+      "url": "/session-08/slides-meeting2.html",
+      "description": "Wednesday Nov 4: midterm debrief, Monday in one slide, the test on your own agent, org charts in pairs, the bill, from midterm to final.",
+      "icon": "presentation",
+      "badge": "Slides",
+      "badgeType": "interactive",
+      "linkText": "Open slides"
+    },
+    {
+      "title": "When One Agent Becomes Two — Colab Notebook",
+      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-08/ISOM260_Session8_When_One_Agent_Becomes_Two.ipynb",
+      "description": "Beacon Hill Bikes: four policies, three emails (one gives the agent orders), Session 7's search tool and Session 5's gated send_email. A solo agent, then a researcher → writer → critic pipeline with a JSON brief and a circuit breaker, a router, four failure tests, and a ten-line critic for your own agent. Needs only your Gemini key.",
+      "icon": "git-branch",
       "badge": "Hands-On",
       "badgeType": "interactive",
       "linkText": "Open in Colab"
     },
     {
-      "title": "Advanced Agent Patterns",
-      "url": "/session-06/advanced-agent-patterns.html",
-      "description": "Review the visual explainer from Session 6: Pipeline, Debate, and Orchestrator architectures. Today you build what you designed.",
-      "icon": "bot",
-      "badge": "Review",
-      "badgeType": "interactive",
-      "linkText": "View patterns"
-    },
-    {
-      "title": "Anthropic Multi-Agent Guide",
-      "url": "https://docs.anthropic.com/en/docs/build-with-claude/agentic",
-      "description": "Official documentation on building multi-agent systems with Claude. Covers orchestration, handoffs, and coordination patterns.",
-      "icon": "book-open",
-      "badge": "Docs",
-      "badgeType": "code",
-      "linkText": "Read docs"
-    },
-    {
       "title": "Building Effective Agents (Anthropic)",
       "url": "https://www.anthropic.com/engineering/building-effective-agents",
-      "description": "Anthropic's guide on when to use multi-agent vs. single-agent approaches. Includes decision frameworks and real-world examples.",
-      "icon": "bot",
-      "badge": "Guide",
-      "badgeType": "interactive",
-      "linkText": "Read guide"
-    },
-    {
-      "title": "Speaker Notes",
-      "url": "/session-08/speaker-notes.html",
-      "description": "Professor's command center with talking points, demo cues, discussion prompts, and section timers for the full 2.5-hour session.",
-      "icon": "presentation",
-      "badge": "Instructor",
-      "badgeType": "code",
-      "linkText": "Open notes"
-    },
-    {
-      "title": "Workshop Timer",
-      "url": "/session-08/workshop-timer.html",
-      "description": "45-minute projectable countdown with 3 phases: Build Researcher (15 min), Build Analyst (15 min), Add Editor + Run Pipeline (15 min).",
-      "icon": "timer",
-      "badge": "Timer",
-      "badgeType": "interactive",
-      "linkText": "Start timer"
-    },
-    {
-      "title": "Pipeline Demo — Live Trace",
-      "url": "/session-08/pipeline-demo.html",
-      "description": "Interactive step-by-step visualization of a Researcher → Analyst → Editor pipeline. Watch data transform at each handoff with play/pause controls.",
-      "icon": "play-circle",
-      "badge": "Demo",
-      "badgeType": "interactive",
-      "linkText": "Launch demo"
-    },
-    {
-      "title": "Homework Guide",
-      "url": "/session-08/homework-guide.html",
-      "description": "Step-by-step walkthrough for all 4 homework tasks: extend your pipeline, analyze distortion, design for your industry, and read about orchestration.",
+      "description": "The essay behind today: start simple, add orchestration only when a single call demonstrably fails. Its five patterns map onto the pipeline, router and critic you ran.",
       "icon": "book-open",
-      "badge": "Homework",
-      "badgeType": "code",
-      "linkText": "View guide"
+      "badge": "Reading",
+      "badgeType": "reference",
+      "linkText": "Read the essay"
+    },
+    {
+      "title": "Multi-Agent Pipeline Trace (review)",
+      "url": "/session-08/pipeline-demo.html",
+      "description": "An animated handoff from the Spring version of this session. The shape is the same as today's researcher → writer → critic.",
+      "icon": "play",
+      "badge": "Review",
+      "badgeType": "reference",
+      "linkText": "Open the trace"
+    },
+    {
+      "title": "The Cost of Thinking — calculator",
+      "url": "/session-06/thinking-cost.html",
+      "description": "For Wednesday: put the pipeline's tokens in, pick the brain, decide which emails get three agents.",
+      "icon": "calculator",
+      "badge": "Interactive",
+      "badgeType": "interactive",
+      "linkText": "Open calculator"
+    },
+    {
+      "title": "Midterm Project Brief",
+      "url": "/session-06/midterm-project.html",
+      "description": "Was due Mon Nov 2, 12:30 PM. The memo's last section — one agent or two, with the reason — is what this session grades against.",
+      "icon": "flag",
+      "badge": "Midterm",
+      "badgeType": "reference",
+      "linkText": "Open the brief"
     }
   ],
   "activities": [
     {
       "number": 1,
-      "icon": "users",
-      "title": "Build a Multi-Agent Pipeline",
-      "description": "45 minutes in Google Colab. Build a team of specialized agents:",
+      "icon": "git-branch",
+      "title": "The Same Email, Two Ways (Mon Nov 2)",
+      "description": "Parts 1–5 of the notebook, on your own key:",
       "steps": [
         {
-          "title": "Build the Researcher Agent (15 min)",
-          "description": "An agent that searches for information on a topic and returns structured findings: key facts, sources, and confidence levels."
+          "title": "Read email 2 to the end",
+          "description": "Derek's P.S. was not written for a human."
         },
         {
-          "title": "Build the Analyst Agent (15 min)",
-          "description": "Receives the Researcher's output, identifies patterns, generates insights, and writes recommendations. Tests: Does it add value beyond summarizing?"
+          "title": "The solo agent on Maya",
+          "description": "Answer the 🚦 yourself. Did it search before it wrote? Refund or store credit? Note the bill."
         },
         {
-          "title": "Add the Editor Agent (15 min)",
-          "description": "Fact-checks the Analyst's report, improves clarity, and scores overall quality 1-10. Run the full 3-agent pipeline end-to-end."
+          "title": "Bet, then the pipeline",
+          "description": "How many model calls? Run it, read the brief, read the critic's verdict, compare the bills on Flash and Argon."
+        },
+        {
+          "title": "Break it, together",
+          "description": "Telephone, Derek's orders, Priya's four calls, the ping-pong. Fix one."
         }
       ]
     },
     {
       "number": 2,
-      "icon": "alert-triangle",
-      "title": "Telephone Game Experiment",
-      "description": "Test information distortion across your agent pipeline:",
+      "icon": "badge-check",
+      "title": "The One-Agent Test, On Yours (Wed Nov 4)",
+      "description": "Part 6, on your midterm notebook:",
       "steps": [
         {
-          "title": "Run 3 Times (10 min)",
-          "description": "Send the same question through your pipeline 3 times. Compare the final outputs. How much do they differ?"
+          "title": "Write the sentence",
+          "description": "'My agent should be two because ___.' Permissions, specialization, isolation, or parallelism. Can't finish it? It stays one."
         },
         {
-          "title": "Trace the Distortion (10 min)",
-          "description": "Read each agent's intermediate output. Where did information change? Was it the Researcher, Analyst, or Editor?"
+          "title": "Add the critic",
+          "description": "Paste check() under your agent, run your five tests through it, find one FAIL and decide whether the critic was right."
         },
         {
-          "title": "Add Safeguards (10 min)",
-          "description": "Implement citation chains: each agent must cite where it got each fact. Re-run and compare accuracy."
+          "title": "Draw the org chart",
+          "description": "Reads, decides, acts, checks. Trade with a neighbor. Circle the box that reads untrusted text."
         }
-      ]
+      ],
+      "discussionNote": "Most midterms are right to stay one agent. The critic is the exception worth making every time: one call, nothing to defend."
     }
   ],
   "takeaways": [
     {
-      "icon": "users",
-      "text": "<strong>Agent teams mirror org charts.</strong> Division of labor, specialization, and coordination costs apply to AI agents just like human teams. Design your agent system like you'd design a department."
+      "icon": "git-branch",
+      "text": "<strong>Name the reason or don't split.</strong> Permissions, specialization, isolation, parallelism. 'It felt complicated' is not on the list."
     },
     {
-      "icon": "alert-triangle",
-      "text": "<strong>Watch for the telephone game.</strong> Information degrades across agents. Citation chains and confidence propagation are your safeguards against compounding errors."
+      "icon": "file-json",
+      "text": "<strong>The handoff is a document.</strong> A whisper loses facts; a brief with sources does not. If what passes between agents is 'a prompt,' you have the telephone game."
     },
     {
-      "icon": "brain",
-      "text": "<strong>Multi-agent isn't always better.</strong> Each agent adds latency, cost, and complexity. Use the decision framework: multi-agent for complex, multi-expertise tasks. Single-agent for everything else."
+      "icon": "badge-check",
+      "text": "<strong>The critic never writes.</strong> One call that checks the answer against the tool outputs. The cheapest second agent, and the one Air Canada needed."
     },
     {
-      "icon": "trending-up",
-      "text": "<strong>The pipeline pattern is your workhorse.</strong> Research → Analysis → Review is the most common multi-agent pattern. Master it and you can adapt it to any domain."
+      "icon": "shield-off",
+      "text": "<strong>Isolate the part that reads strangers.</strong> Emails, pages and documents can give orders. The box that reads them must not hold the keys."
+    },
+    {
+      "icon": "receipt",
+      "text": "<strong>More agents, more bill, not more intelligence.</strong> Route the thank-you notes around the pipeline. Price one wrong promise before you decide."
     }
   ],
   "homework": [
     {
-      "label": "Extend:",
-      "text": "Add a 4th agent to your pipeline (e.g., a Fact-Checker, Summarizer, or Domain Expert). Test the full pipeline with 3 business questions."
+      "label": "Midterm Project · was due Mon Nov 2, 12:30 PM:",
+      "text": "Late is 10% a day for three days, then zero. Grades by Mon Nov 9."
     },
     {
-      "label": "Analyze:",
-      "text": "Run your pipeline 5 times on the same question. Document how outputs differ, where distortion occurs, and what safeguards would help."
+      "label": "HW #8 · due Thu Nov 12, 11:59 PM:",
+      "text": "Catch-Up: pick one of three on Canvas — the X-ray paragraph, the model-picker memo for your final (Flash vs Argon with the cost math), or the tokenizer safari. Pass/fail, 10 points."
     },
     {
-      "label": "Design:",
-      "text": "Propose a multi-agent system for your target industry (the one you'll use for your final project). Include: agent roles, handoff logic, human gates, and cost estimate."
+      "label": "HW #9 · due Thu Nov 19, 11:59 PM:",
+      "text": "Final Project Pitch, on Canvas: four sentences — the problem, the person, the one tool, the one guardrail — and two replies to classmates as their user."
     },
     {
-      "label": "Read:",
-      "text": "Read about Claude Code's multi-agent 'team' feature. Write a paragraph on how it applies the orchestrator pattern from Session 6."
+      "label": "Optional:",
+      "text": "Read 'Building Effective Agents'. Then rewrite the last section of your midterm memo in one sentence using one of the four reasons, or the word 'one'."
     }
   ],
   "nextSession": {
     "title": "Session 9: Agents for Your Industry",
-    "description": "Pick your department. Build your agent. Marketing, finance, HR, or operations — apply everything you've learned to YOUR career.",
+    "description": "Marketing, finance, operations, healthcare, law: what an agent is allowed to touch in each, and what it must never do. Bring the industry you want to work in.",
     "tags": [
       "Industry Agents",
-      "Domain-Specific",
-      "Career Application",
-      "Vertical AI"
+      "Domain Risk",
+      "Final Project"
     ],
     "slug": "session-09"
   }

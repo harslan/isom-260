@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flight Card · Session 6, Meeting 1 | ISOM 260</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Sora:wght@600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'DM Sans', sans-serif; background: #f4f2ec; color: #1a1a1a; padding: 1.2rem; font-size: 13px; line-height: 1.45; }
+    .card { max-width: 820px; margin: 0 auto; background: #fff; border: 2px solid #1a1a1a; border-radius: 10px; padding: 1.4rem 1.6rem; }
+    h1 { font-family: 'Sora', sans-serif; font-size: 1.1rem; display: flex; justify-content: space-between; align-items: baseline; border-bottom: 2px solid #1a1a1a; padding-bottom: 0.5rem; margin-bottom: 0.8rem; }
+    h1 .sub { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 400; color: #666; }
+    h2 { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: #b3003e; margin: 0.9rem 0 0.35rem; }
+    table { width: 100%; border-collapse: collapse; }
+    td { padding: 0.18rem 0.5rem 0.18rem 0; vertical-align: top; }
+    td.t { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 0.78rem; white-space: nowrap; width: 4.2rem; }
+    .cut { color: #b3003e; font-weight: 700; }
+    .hl { background: #fff3b8; padding: 0 0.25rem; font-weight: 700; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1.6rem; }
+    .mono { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; background: #f4f2ec; border: 1px solid #ccc; border-radius: 6px; padding: 0.5rem 0.65rem; white-space: pre-wrap; margin: 0.25rem 0; }
+    ul { list-style: none; }
+    li { padding-left: 1rem; position: relative; margin-bottom: 0.22rem; }
+    li::before { content: "▸"; position: absolute; left: 0; color: #b3003e; }
+</head>
+<body>
+<div class="card">
+    <h1>SESSION 8 · MEETING 1 · "WHEN ONE AGENT BECOMES TWO" <span class="sub">MON NOV 2 · 12:30–1:45 · MIDTERM DUE 12:30 · HW8 DUE THU NOV 12 · HARD STOP 1:45</span></h1>
+
+    <div class="grid">
+    <div>
+        <h2>Timeline · slide #</h2>
+        <table>
+            <tr><td class="t">12:30</td><td>1–2 · Midterm pulse — <span class="hl">three "what it refused" sentences</span> · two users' reactions · "who wrote two agents and could name why?" (4 min)</td></tr>
+            <tr><td class="t">12:34</td><td>3 · "One agent did everything. That is usually right." + <span class="hl">outcome out loud: split for a reason · hand off with a contract · check before you send</span> (1 min)</td></tr>
+            <tr><td class="t">12:35</td><td>4 · <span class="hl">TELEPHONE GAME</span>: reader (policy, silent) whispers → writer replies to Maya aloud → checker with the page stops the first wrong promise. "What got lost?" (4 min)</td></tr>
+            <tr><td class="t">12:39</td><td>5–6 · Three ways to split · name the reason (6 min)</td></tr>
+            <tr><td class="t">12:45</td><td>7 · <span class="hl">LIVE</span> from YOUR pre-run notebook — solo on Maya (📎? promise?) → <b>BET on calls</b> → pipeline: brief on screen → critic verdict → 🚦 → the bill solo vs pipeline, Flash + Argon — <span class="cut">CUT 12:52</span></td></tr>
+            <tr><td class="t">12:52</td><td>8 · <span class="hl">Hands-on Parts 1–4</span> — walk: "what did you bet? what did the solo agent promise Maya?" — <span class="cut">STOP 1:18</span></td></tr>
+            <tr><td class="t">1:18</td><td>9 · <span class="hl">Part 5 together</span> — telephone (brief facts) · Derek's P.S. · Priya ×4 calls → router · ping-pong → max_rounds. Fix one (10 min)</td></tr>
+            <tr><td class="t">1:28</td><td>10 · Boardroom (4 min)</td></tr>
+            <tr><td class="t">1:32</td><td>11 · Wednesday: the one-agent test on YOUR agent · HW #8 opens (3 min)</td></tr>
+            <tr><td class="t">1:35</td><td>12 · Close. Buffer to 1:45</td></tr>
+        </table>
+
+        <h2>Live demo cues (slide 7)</h2>
+        <div class="mono">Part 3 solo on Maya → 🚦 appears → say "no" (BLOCKED row) → read what it WOULD have sent: refund or store credit?
+Part 4 pipeline → 📋 BRIEF on the projector: is "31–60 days store credit" in facts? → DRAFT → CRITIC PASS/FAIL → 🚦 say "yes"
+bill → "N calls vs 3 · N× the solo bill · on Argon: …"  → "for which emails?"</div>
+        <ul><li>Beat: "the handoff is a document, not a whisper — the writer saw NOTHING but the brief"</li><li>Beat: "the critic never wrote it, so it has nothing to defend"</li></ul>
+
+        <h2>Facts you can say out loud</h2>
+        <ul>
+            <li>Anthropic's "Building Effective Agents" (Dec 2024): start with the simplest thing; add orchestration only when a single call demonstrably fails. Patterns: prompt chaining, routing, parallelization, orchestrator-workers, evaluator-optimizer — today's pipeline, router, critic</li>
+            <li>Derek's P.S. is indirect prompt injection through content; the isolation reason exists because of it. Argon's launch post claims the top score on the Gray Swan IPI benchmark — resistance, not immunity</li>
+            <li>The midterm memo's last section asked "one agent or two, with the reason" — today is the grading key for it</li>
+        </ul>
+    </div>
+    <div>
+        <h2>Fix-its (the scramble)</h2>
+        <ul>
+            <li>🚦 in Colab blocks the cell waiting for input → that's the gate; type yes/no in the box. In the smoke test input() answers "no"</li>
+            <li>Brief isn't JSON → the researcher wrapped it in prose; the code strips ``` fences; if still raw, re-run — or add "Return ONLY JSON" louder</li>
+            <li>Critic PASSes a wrong promise → that IS Failure 1/2; show the brief: the fact was missing, so the critic had nothing to check against</li>
+            <li>Pipeline hits 429 → 4–6 calls per email on the free tier (~10/min); one email at a time, no re-runs in a row</li>
+            <li>Solo agent sends without searching → it happens; that's the slide-7 beat. "Did it search before it wrote?"</li>
+            <li>gemini-2.5-flash "not found" on a new key → MODEL = "gemini-3.8-flash"</li>
+        </ul>
+
+        <h2>If behind at 1:18</h2>
+        <ul>
+            <li>Part 5 becomes "watch me": Derek's P.S. only (4 min); the router and ping-pong move to Wednesday's opener</li>
+            <li>Skip slide 10; slide 11 (bring the midterm notebook Wednesday, HW #8) is untouchable</li>
+        </ul>
+
+        <h2>Before / after</h2>
+        <ul>
+            <li>⚠️ <b>Run the notebook with YOUR key before class</b>, answering the 🚦 prompts (no on solo, yes on pipeline), outputs visible. Note the solo promise, the pipeline call count and the bill ratio — those are the live beats</li>
+            <li>Midterms arrive on Canvas at 12:30 — pick three "what it refused" sentences during the first minutes or ask volunteers</li>
+            <li>Tabs: slides · notebook (run) · Canvas midterm submissions · Building Effective Agents (anthropic.com/engineering/building-effective-agents)</li>
+            <li>Canvas: nothing to post — HW #8 is already up for Nov 12</li>
+            <li>After: which failure the room argued about — reuse Wednesday's debrief slide</li>
+        </ul>
+    </div>
+    </div>
+
+    <div class="rule">The day's one job: every student sees the same email handled by one agent and by three, reads the handoff, and can say what the second agent cost and why it existed. Everything else is negotiable.</div>
+</div>
+</body>
+</html>

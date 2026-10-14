@@ -56,8 +56,8 @@ for (const f of files.filter((x) => x.endsWith('.json'))) {
 
 // ── 2. "… due <Day Mon D>" mentions ──
 const DAY = '(Mon|Tue|Wed|Thu|Fri|Sat|Sun)\\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\\s+(\\d{1,2})';
-const HEAD = '(?:(HW|Homework)\\s*#?\\s*(\\d+)(?:\\s*[–-]\\s*\\d+)?|(Midterm)(?:\\s+Project)?|(Final)\\s+Project)';
-const NOHEAD = '(?:(?!HW\\s*#?\\s*\\d|Homework\\s*#|Midterm|Final\\s+Project)[^.\\n]){0,80}?';
+const HEAD = '(?:(HW|Homework)\\s*#?\\s*(\\d+)(?:\\s*[–-]\\s*\\d+)?|(Midterm)(?:\\s+Project)?(?!\\s+Clinic)|(Final)\\s+Project(?!\\s+(?:Pitch|Workshop|Brief)))';
+const NOHEAD = '(?:(?!HW\\s*#?\\s*\\d|Homework\\s*#|Midterm(?!\\s+Clinic)|Final\\s+Project(?!\\s+(?:Pitch|Workshop|Brief)))[^.\\n]){0,80}?';
 const mention = new RegExp(`${HEAD}(?<gap>${NOHEAD})\\b(due|DUE)\\b\\s*(?:<[^>]+>\\s*)*(?:\\s*(?:on|by)\\s+)?(?<date>${DAY})`, 'gi');
 const relative = new RegExp(`${HEAD}${NOHEAD}\\b(due|closes)\\s+(?:<[^>]+>\\s*)*(tomorrow|tonight|today|Monday|Tuesday|Wednesday|Thursday|Friday)\\b`, 'gi');
 
