@@ -117,7 +117,7 @@
       "description": "The four questions to ask any AI product, then applied live to Google's Gemini 4 Argon model card, the homework that puts them to a real vendor, and what's next: when one agent should become two.",
       "bulletPoints": [
         "Grade the model card: the Fairwind allow-list is a door, reasoning-monitoring is a 🚦, cached context is memory with a price list, 'potential hallucinations' is Bostn",
-        "HW #7: the four questions applied to one real AI product, 200 words, due Thu Oct 29, 11:59 PM",
+        "HW #7: the four questions applied to one real AI product, 200 words, due Thu Oct 22, 11:59 PM",
         "Session 6 Mon Oct 19: agent patterns, MCP ('a protocol is not a permission'), and the midterm project assigned Wed Oct 21"
       ],
       "isBreak": false
@@ -306,7 +306,7 @@
       "text": "Field Test. Let two people outside this class text your bot without coaching. Post in the Canvas Session 5 discussion: one screenshot of a conversation, the audit-log table, two sentences (the worst thing it did, the one line you'd change), and your bot's @username so classmates can text it."
     },
     {
-      "label": "HW #7 · due Thu Oct 29, 11:59 PM:",
+      "label": "HW #7 · due Thu Oct 22, 11:59 PM:",
       "text": "The Four Questions, for real. Pick one AI product a real company sells and answer the four questions from its public documentation. Where the docs don't say, write 'not disclosed' — that is a finding. One paragraph: would you let it touch your company's email? Canvas post, 200 words max, with links. Gemini 4 Argon, released Oct 13, counts: its model card is the documentation."
     },
     {

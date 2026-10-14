@@ -85,7 +85,7 @@
       "duration": "16 minutes",
       "description": "Why the vendor's agent takes 20 seconds, whether it can show its work, HW #7 assigned, and what to bring Monday.",
       "bulletPoints": [
-        "HW #6 due Thu Oct 29, 11:59 PM · HW #7 (the four questions, for real) posted tonight, due Thu Oct 29, 11:59 PM",
+        "HW #6 due Thu Oct 29, 11:59 PM · HW #7 (the four questions, for real) on Canvas, due Thu Oct 22, 11:59 PM",
         "Monday Oct 19: one agent or many, MCP, and the midterm assigned — bring one real problem and the name of one person who has it"
       ],
       "isBreak": false
@@ -346,14 +346,14 @@
   "homework": [
     {
       "label": "Canvas catch-up · posted Oct 14:",
-      "text": "Every homework now has a Canvas submission. HW #2 (Most Surprising X-ray), HW #3 (Model-Picker Memo) and HW #4 (Tokenizer Safari) are due Thu Oct 22, 11:59 PM. HW #5 (Build a Tool, upload your .ipynb), HW #6 (Field Test) and HW #7 (Four Questions) are due Thu Oct 29, 11:59 PM. Pass/fail, 10 points each."
+      "text": "Every homework now has a Canvas submission, and no two are due in the same week. HW #7 (Four Questions) Thu Oct 22 · HW #6 (Field Test) Thu Oct 29 · Midterm Mon Nov 2 · HW #5 (Build a Tool, upload your .ipynb) Thu Nov 12 · HW #2 (Most Surprising X-ray) Thu Nov 19 · HW #3 (Model-Picker Memo) Tue Nov 24 · HW #4 (Tokenizer Safari) Thu Dec 3 · Final Wed Dec 9. Homeworks are pass/fail, 10 points each."
     },
     {
       "label": "HW #6 · due Thu Oct 29, 11:59 PM:",
       "text": "Field Test (from Session 5): two people outside this class text your bot. Screenshot, audit table, two sentences, your bot's @username, in the Canvas Session 5 discussion."
     },
     {
-      "label": "HW #7 · due Thu Oct 29, 11:59 PM:",
+      "label": "HW #7 · due Thu Oct 22, 11:59 PM:",
       "text": "The Four Questions, for real. One AI product a real company sells, the four questions answered from its public docs ('not disclosed' is a finding), and one paragraph on whether you would let it touch your company's email. Canvas post, 200 words max, with links."
     },
     {
