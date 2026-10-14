@@ -19,6 +19,10 @@
   ],
   "objectives": [
     {
+      "title": "Make It Think · Read Its Thinking · Price Its Thinking",
+      "description": "The one outcome of Wednesday: turn any tool-using agent into one that reasons before it acts with a single paragraph, read its THOUGHT trace as an audit, and put a dollar figure on the reasoning so you can say which questions deserve it, and on which brain."
+    },
+    {
       "title": "Turn a Lookup Bot into a Researcher",
       "description": "ReAct: think, act, observe, repeat. One paragraph of system prompt, zero changes to the loop. Run the same question at three levels and read the agent's thoughts."
     },
@@ -39,9 +43,10 @@
     {
       "time": "Wed Oct 14 · 12:30 PM",
       "title": "Meeting 1 · HW #6 Pulse + This Week's News + The Pattern Gap",
-      "duration": "16 minutes",
+      "duration": "14 minutes",
       "description": "Who texted your bot, and did it ever go looking before it answered? Then Gemini 4 Argon, released yesterday, as a Level 2 somebody else trained. Then: your bot answers the first thing it can, and a researcher plans first.",
       "bulletPoints": [
+        "You first: a volunteer answers the job question in five seconds, then the room says how they would actually find out. That list is a THINK line. You already do this",
         "Three levels of the same agent: the model alone, your Session 4 loop, ReAct",
         "This week: Gemini 4 Argon (Oct 13) — 1M output tokens of room to think, $2/$10 per million, not on the free tier. One line swaps the brain; the paragraph is still yours",
         "The paragraph: THINK before every call, OBSERVE after, and never invent when a tool says 'no results'",
@@ -50,21 +55,22 @@
       "isBreak": false
     },
     {
-      "time": "Wed Oct 14 · 12:46 PM",
+      "time": "Wed Oct 14 · 12:44 PM",
       "title": "Live, Then Hands-On: Same Question, Three Times",
-      "duration": "34 minutes",
+      "duration": "38 minutes",
       "description": "'I graduate in May 2027. Is AI going to eliminate the analyst jobs I'm applying for?' at levels 0, 1, and 2 on the projector, then on your own key. Count the hops, read the thoughts, run the bill.",
       "bulletPoints": [
         "Only your Gemini key today — tools are calculator, the job board, and real Wikipedia",
+        "Bet before Level 2 runs: how many hops, how many times the cost. The bill cell prints your guess vs reality",
         "The bill table: steps, tool calls, thinking tokens, dollars on Flash and on Argon — how many times more did thinking cost, and on which brain?",
         "Stop at Part 5; we break it together — then Part 6 is a question you actually have this month, plain vs ReAct, both bills"
       ],
       "isBreak": false
     },
     {
-      "time": "Wed Oct 14 · 1:20 PM",
+      "time": "Wed Oct 14 · 1:22 PM",
       "title": "Part 5 Together: When Does It Fail?",
-      "duration": "8 minutes",
+      "duration": "7 minutes",
       "description": "A company that does not exist, an opinion dressed as research, and a calculator question with ReAct on.",
       "bulletPoints": [
         "QuantumLeaf Technologies: does it admit there is no data, or produce a revenue figure?",
@@ -74,9 +80,9 @@
       "isBreak": false
     },
     {
-      "time": "Wed Oct 14 · 1:28 PM",
+      "time": "Wed Oct 14 · 1:29 PM",
       "title": "Wrap: Boardroom + HW #7 + Monday",
-      "duration": "20 minutes",
+      "duration": "16 minutes",
       "description": "Why the vendor's agent takes 20 seconds, whether it can show its work, HW #7 assigned, and what to bring Monday.",
       "bulletPoints": [
         "HW #6 due Thu Oct 15, 11:59 PM · HW #7 (the four questions, for real) posted tonight, due Thu Oct 22, 11:59 PM",
@@ -273,7 +279,7 @@
         },
         {
           "title": "Level 0, 1, 2",
-          "description": "The model alone, the plain loop, the ReAct loop. Same question — about your own job search. Count the hops."
+          "description": "The model alone, the plain loop, the ReAct loop. Same question — about your own job search. Bet on hops and cost before Level 2, then count."
         },
         {
           "title": "Run the bill",

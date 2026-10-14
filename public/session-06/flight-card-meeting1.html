@@ -32,15 +32,17 @@
         <h2>Timeline · slide #</h2>
         <table>
             <tr><td class="t">12:30</td><td>1–2 · HW6 pulse — <span class="hl">who texted your bot? worst thing it did?</span> · "did it ever go looking before it answered?" (4 min)</td></tr>
-            <tr><td class="t">12:34</td><td>3–4 · "Your bot answers the first thing it can; a researcher plans first" · three levels of the same agent (5 min)</td></tr>
-            <tr><td class="t">12:39</td><td>5 · <span class="hl">NEWS</span>: Gemini 4 Argon, out yesterday — "Google built a Level 2 and priced it" · 1M output = room to think · $10/M out, thinking bills as output · not on free tier (3 min)</td></tr>
-            <tr><td class="t">12:42</td><td>6 · The paragraph — THINK / ACT / OBSERVE / the guardrail sentence. "Nobody touched the loop" (4 min)</td></tr>
-            <tr><td class="t">12:46</td><td>7 · <span class="hl">LIVE: same question, three levels</span> from YOUR pre-run notebook — Level 0 "trust it?" → Level 1 step counter → Level 2 read the 💭 lines → the bill table, Flash + Argon columns — <span class="cut">CUT 12:52</span></td></tr>
-            <tr><td class="t">12:52</td><td>8 · <span class="hl">Hands-on Parts 1–4</span> — walk the room: "how many hops did Level 2 take? how many times the cost? what would it be on Argon?" — <span class="cut">STOP 1:20</span></td></tr>
-            <tr><td class="t">1:20</td><td>9 · <span class="hl">Part 5 together</span> — QuantumLeaf (admit or invent?) · "Is AI good or bad?" · the 15% question with ReAct on (waste) · Part 6 "a question you actually have" · Part 7 one-liner for the phone bot (8 min)</td></tr>
-            <tr><td class="t">1:28</td><td>10 · Boardroom (4 min)</td></tr>
-            <tr><td class="t">1:32</td><td>11 · Monday: one agent or many + <b>midterm assigned</b>. "Bring one real problem and one person who has it" · <b>HW #7 posted tonight, due Thu Oct 22</b> (4 min)</td></tr>
-            <tr><td class="t">1:36</td><td>12 · Close. Buffer to 1:45</td></tr>
+            <tr><td class="t">12:34</td><td>3 · "A researcher plans first" + <span class="hl">the outcome, out loud: make it think · read its thinking · price its thinking</span> (1 min)</td></tr>
+            <tr><td class="t">12:35</td><td>4 · <span class="hl">YOU FIRST</span>: volunteer answers the job question in 5 s (Level 0) → "how would you actually find out?" (THINK) → "first source has nothing, now what?" ("try another" = OBSERVE + guardrail). "You just did ReAct" (3 min)</td></tr>
+            <tr><td class="t">12:38</td><td>5 · Three levels of the same agent (3 min)</td></tr>
+            <tr><td class="t">12:41</td><td>6 · <span class="hl">NEWS</span>: Gemini 4 Argon — "Google built a Level 2 and priced it" · 1M output = room to think · $10/M out · not on free tier (3 min)</td></tr>
+            <tr><td class="t">12:44</td><td>7 · The paragraph — THINK / ACT / OBSERVE / the guardrail sentence. "Nobody touched the loop" (4 min)</td></tr>
+            <tr><td class="t">12:48</td><td>8 · <span class="hl">LIVE</span> from YOUR pre-run notebook — Level 0 "trust it?" → Level 1 step counter → <b>BET: everyone writes hops + cost×</b> → Level 2 read the 💭 lines, count → bill: guess vs reality, Flash + Argon — <span class="cut">CUT 12:55</span></td></tr>
+            <tr><td class="t">12:55</td><td>9 · <span class="hl">Hands-on Parts 1–4</span> — walk the room: "what did you bet? what happened?" — <span class="cut">STOP 1:22</span></td></tr>
+            <tr><td class="t">1:22</td><td>10 · <span class="hl">Part 5 together</span> — QuantumLeaf (admit or invent?) · "Is AI good or bad?" · 15% with ReAct on (waste) · Part 6 own question · Part 7 phone-bot one-liner (7 min)</td></tr>
+            <tr><td class="t">1:29</td><td>11 · Boardroom → close on the triad (3 min)</td></tr>
+            <tr><td class="t">1:32</td><td>12 · Monday: one agent or many + <b>midterm assigned</b>. "Bring one real problem and one person who has it" · <b>HW #7 posted tonight, due Thu Oct 22</b> (4 min)</td></tr>
+            <tr><td class="t">1:36</td><td>13 · Close. Buffer to 1:45</td></tr>
         </table>
 
         <h2>Argon facts you can say out loud (verified Oct 14 AM)</h2>
@@ -62,7 +64,7 @@ bill     → thinking tokens column · cost (Flash) and cost_argon; "ReAct cost 
     <div>
         <h2>Fix-its (the scramble)</h2>
         <ul>
-            <li>Level 2 answers in 1 step with no 💭 lines → the model skipped the format; re-run, or add "You MUST write a THINK line before every tool call" to REACT_PROMPT. It's probabilistic</li>
+            <li>Level 2 answers in 1 step with no 💭 lines → the prompt now says the THINK line MUST be written as text; still probabilistic — re-run once, or point at YOUR pre-run output</li>
             <li>Wikipedia 403/429 → the User-Agent header is in the tool; if the room hammers it, pair up and share one run</li>
             <li>Gemini 429 → free tier ~10 calls/min per key; Level 2 burns 3–5 calls per question. Tell the room to run Level 2 once, not five times</li>
             <li>thoughts_token_count is None → older SDK; the code already treats None as 0</li>
@@ -71,16 +73,16 @@ bill     → thinking tokens column · cost (Flash) and cost_argon; "ReAct cost 
             <li>gemini-2.5-flash "not found" on a <b>new</b> key → Google now limits 2.5 to prior users; set <span class="hl">MODEL = "gemini-3.8-flash"</span> (free tier), re-run Part 1</li>
         </ul>
 
-        <h2>If behind at 1:20</h2>
+        <h2>If behind at 1:22</h2>
         <ul>
             <li>Part 5 becomes "watch me": QuantumLeaf only, on the projector (4 min)</li>
-            <li>Skip slide 10; slide 11 (midterm Monday, bring a problem, HW #7) is untouchable</li>
+            <li>Skip slide 11; slide 12 (midterm Monday, bring a problem, HW #7) is untouchable</li>
         </ul>
 
         <h2>Before / after</h2>
         <ul>
             <li>⚠️ <b>Run the whole notebook with YOUR key before class</b> and leave outputs visible — Level 2 takes 20–40 s live; you scroll instead of waiting. Mock-tested only as of Sep 30</li>
-            <li>Note how many hops and what cost ratio YOUR run produced; say those numbers on slide 6</li>
+            <li>Note how many hops and what cost ratio YOUR run produced — that is the answer to the bet on slide 8; don't reveal it before the room writes theirs</li>
             <li>Canvas: HW #6 closes tomorrow · <b>post HW #7 tonight</b> (Four Questions memo, due Thu Oct 22 — text is on the Session 5 page) · the <b>midterm brief</b> (session-06/midterm-project.html) goes up Monday — read it this weekend, adjust the rubric if needed · <b>decide what Wed Oct 21 is</b> (now unscheduled)</li>
             <li>Tabs: slides · notebook (run) · Canvas HW6 thread</li>
             <li>After: which failure test surprised the room — reuse Monday as the "why trust layer" opener</li>
