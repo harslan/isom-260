@@ -2,12 +2,13 @@
   "number": 6,
   "slug": "session-06",
   "title": "Make It Think + Your Midterm",
-  "subtitle": "Wednesday: the same loop, the same tools, one paragraph — and your agent plans before it acts. Monday: one agent or many, what MCP actually is, and the midterm project assigned with a plan on paper before you leave.",
+  "subtitle": "Wednesday: the same loop, the same tools, one paragraph — and your agent plans before it acts. Monday: one agent or many, what MCP actually is, and the midterm project assigned with a plan on paper before you leave. Wednesday Oct 21: a clinic — your midterm agent gets its door, its gate, and its first BLOCKED row.",
   "heroTitle": "Make It <span class=\"bg-gradient-to-br from-accent-cyan to-accent-purple bg-clip-text text-transparent\">Think</span>",
-  "duration": "2 meetings · 75 min",
+  "duration": "3 meetings · 75 min",
   "meetings": [
     "Wed Oct 14",
-    "Mon Oct 19"
+    "Mon Oct 19",
+    "Wed Oct 21"
   ],
   "icon": "brain",
   "tags": [
@@ -136,6 +137,41 @@
         "Midterm due Mon Nov 2, 12:30 PM, before class"
       ],
       "isBreak": false
+    },
+    {
+      "time": "Wed Oct 21 · 12:30 PM",
+      "title": "Midterm Clinic · The Trust Layer",
+      "duration": "15 minutes",
+      "description": "Hands up on where you are, the three things your agent can't do yet (a door, a 🚦, a memory you can erase), and a live NO becoming a BLOCKED row in the audit table.",
+      "bulletPoints": [
+        "All three are already in the Midterm Starter — today they fire on your tools, with your user's inputs",
+        "Live: 'email the landlord' → 🚦 → no → 'did you send it?' → the audit row says BLOCKED. Then 'Bostn' → Sweden",
+        "The gate is a dozen lines around the tool call. The model never knows it is there"
+      ],
+      "isBreak": false
+    },
+    {
+      "time": "Wed Oct 21 · 12:45 PM",
+      "title": "Clinic: Three Checkpoints, Get Stamped",
+      "duration": "50 minutes",
+      "description": "Work on your own midterm with the professor walking the room. Finished students become helpers.",
+      "bulletPoints": [
+        "① each tool called directly with a real input from your user",
+        "② your risky tool gated: ask, say no, see BLOCKED",
+        "③ one hostile input the agent notices instead of guessing"
+      ],
+      "isBreak": false
+    },
+    {
+      "time": "Wed Oct 21 · 1:35 PM",
+      "title": "Exit Ticket + Session 7",
+      "duration": "10 minutes",
+      "description": "Screenshot the BLOCKED row for your memo, tell a neighbor what you build Thursday, and the midterm timeline.",
+      "bulletPoints": [
+        "By Mon Oct 26 tools working · by Wed Oct 28 trust layer in · Mon Nov 2, 12:30 PM submit",
+        "Monday: Session 7, your agent reads your documents"
+      ],
+      "isBreak": false
     }
   ],
   "resources": [
@@ -152,6 +188,15 @@
       "title": "Meeting 2 Slide Deck — One Agent or Many? + Your Midterm",
       "url": "/session-06/slides-meeting2.html",
       "description": "Wednesday Oct 21: three patterns, when to split, your bot as the case, MCP, the midterm requirements and rubric, the kickoff workshop.",
+      "icon": "presentation",
+      "badge": "Slides",
+      "badgeType": "interactive",
+      "linkText": "Open slides"
+    },
+    {
+      "title": "Midterm Clinic Slide Deck — The Trust Layer",
+      "url": "/session-06/slides-clinic.html",
+      "description": "Wednesday Oct 21: where you should be, the three things your agent can't do yet, a live NO becoming a BLOCKED row, the three-checkpoint clinic board with the Starter QR, exit ticket.",
       "icon": "presentation",
       "badge": "Slides",
       "badgeType": "interactive",
@@ -319,6 +364,31 @@
         }
       ],
       "discussionNote": "The plan is where midterms are won. Code is the easy part now."
+    },
+    {
+      "number": 3,
+      "icon": "shield",
+      "title": "Midterm Clinic (Wed Oct 21)",
+      "description": "On your own midterm notebook, in class:",
+      "steps": [
+        {
+          "title": "Direct calls",
+          "description": "Each tool answers a real input from your user in its own cell, outputs visible."
+        },
+        {
+          "title": "The gate fires",
+          "description": "Your risky tool is in RISKY. Ask for it, say no, and the audit table shows BLOCKED. Screenshot it for the memo."
+        },
+        {
+          "title": "One hostile test",
+          "description": "A wrong, empty, or sneaky input. The agent says so instead of guessing."
+        },
+        {
+          "title": "Then help",
+          "description": "Stamped on all three? Sit with someone stuck on checkpoint 2."
+        }
+      ],
+      "discussionNote": "Session 5's 'Three Things Your Bot Can't Do Yet' notebook is the long version of today, on a Telegram bot. Optional, and the door only matters if your agent lives on a phone."
     }
   ],
   "takeaways": [
