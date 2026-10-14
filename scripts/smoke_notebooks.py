@@ -23,6 +23,7 @@ NOTEBOOKS = {
     "public/session-04/ISOM260_Session4_Build_Your_First_Agent_Gemini.ipynb": {},
     "public/session-06/ISOM260_Session6_Make_It_Think_Gemini.ipynb": {"skip": [r'MY_QUESTION = "TODO']},
     "public/session-06/ISOM260_Midterm_Starter.ipynb": {"skip": [r'ask\("TODO', r'OPTIONAL — Telegram'], "optional": True},
+    "public/session-07/ISOM260_Session7_Your_Agent_Reads_Your_Documents.ipynb": {"skip": [r'MY_DOC_NAME = "TODO']},
 }
 GLOBAL_SKIP = [r"^\s*!pip", r"run_bot\(\)", r"files\.download\(", r"^\s*!"]
 

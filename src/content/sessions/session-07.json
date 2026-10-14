@@ -1,314 +1,301 @@
 {
   "number": 7,
   "slug": "session-07",
-  "title": "Knowledge Agents — RAG",
-  "subtitle": "Your agent is smart but doesn't know YOUR business — add company knowledge with Retrieval-Augmented Generation",
-  "heroTitle": "Knowledge Agents — <span class=\"bg-gradient-to-br from-accent-cyan to-accent-purple bg-clip-text text-transparent\">RAG</span>",
+  "title": "Your Agent Reads Your Documents",
+  "subtitle": "Monday your agent answers questions about this course from its own documents — syllabus, briefs, schedule — and cites the passage. Wednesday it reads the document that matters to you, goes into your midterm agent, and you get thirty minutes of midterm time.",
+  "heroTitle": "Your Agent Reads <span class=\"bg-gradient-to-br from-accent-cyan to-accent-purple bg-clip-text text-transparent\">Your Documents</span>",
   "duration": "2 meetings · 75 min",
   "meetings": [
     "Mon Oct 26",
     "Wed Oct 28"
   ],
-  "icon": "database",
+  "icon": "file-search",
   "tags": [
     "RAG",
-    "Knowledge Agents",
-    "Document Search",
-    "Long Context",
-    "Business Data"
+    "Citations",
+    "Your Documents",
+    "Prompt Injection",
+    "Midterm"
   ],
   "objectives": [
     {
-      "title": "Understand the Knowledge Gap",
-      "description": "See why general-purpose LLMs fail on company-specific questions and how Retrieval-Augmented Generation (RAG) solves this by grounding agents in your own data."
+      "title": "Ground It · Cite It · Catch It Lying",
+      "description": "The one outcome: an agent that answers only from your documents, cites the passage for every fact, says 'not found' instead of guessing, and treats documents as data rather than instructions."
     },
     {
-      "title": "Build a Company Knowledge Agent",
-      "description": "Load real documents, build a search tool that finds relevant passages, and wire it into your agent loop so Claude answers from YOUR data."
+      "title": "See the Three Levels",
+      "description": "The model alone invents a policy. Pasting everything in is correct and expensive. A thirty-line search tool retrieves three passages, cites them, and costs a fraction. Same loop as Session 6."
     },
     {
-      "title": "Handle RAG Failure Modes",
-      "description": "Learn what happens when documents contradict each other, data is outdated, or the retriever returns irrelevant results. Build agents that say 'I don't know' when they should."
+      "title": "Break It Four Ways",
+      "description": "A cross-document question, a question the documents never answer, an outdated syllabus in the same folder, and a document that gives the agent orders. Then fix one in one place."
     },
     {
-      "title": "Evaluate Retrieval Quality",
-      "description": "Measure whether your agent finds the right documents and gives accurate answers. Introduction to retrieval metrics that matter for business deployment."
+      "title": "Put It in Your Agent",
+      "description": "Your own document on Wednesday, ten lines into your midterm notebook, and the business questions: does it cite, what happens when the document is old, who can edit what it reads."
     }
   ],
   "agenda": [
     {
-      "time": "5:00 PM - 5:15 PM",
-      "title": "Part 1: The Knowledge Problem",
-      "duration": "15 minutes",
-      "description": "Claude knows the internet. It doesn't know your company's SOPs, product catalog, or HR policies. That's a problem — and RAG is the solution.",
+      "time": "Mon Oct 26 · 12:30 PM",
+      "title": "Meeting 1 · HW #7 Pulse + The Knowledge Gap",
+      "duration": "14 minutes",
+      "description": "Which vendor said 'not disclosed'? Then: your agent knows the internet and nothing about you, the three levels, and the Air Canada case.",
       "bulletPoints": [
-        "Demo: Ask Claude about your company's refund policy. It hallucinates confidently. This is the problem RAG solves.",
-        "RAG = Retrieval-Augmented Generation: search your documents first, then generate an answer grounded in real data",
-        "The pattern: User question → Search documents → Insert relevant passages into prompt → Claude answers from YOUR data",
-        "Why this matters: Every enterprise AI deployment needs RAG. This is the #1 pattern in production AI."
-      ]
+        "You first: 'midterm two days late — what happens?' from memory, then 'how would you check?' and 'which paragraph?' That pointing is a citation",
+        "Three levels: guess · paste everything in and pay · a search tool that retrieves and cites",
+        "Feb 2024: Air Canada's chatbot invented a refund policy and the tribunal made the airline honor it. The citation is the audit"
+      ],
+      "isBreak": false
     },
     {
-      "time": "5:15 PM - 5:40 PM",
-      "title": "Part 2: RAG Architecture Deep Dive",
+      "time": "Mon Oct 26 · 12:44 PM",
+      "title": "Live, Then Hands-On: One Question, Three Levels",
+      "duration": "33 minutes",
+      "description": "'If I submit the midterm two days late, what happens?' at levels 0, 1 and 2 on the projector, then on your own key. Bet on the passages before Level 2 runs.",
+      "bulletPoints": [
+        "Only your Gemini key today; the documents are this course — syllabus, schedule, briefs, plus two traps",
+        "Write down the Level 1 token count, then watch Level 2 read three passages instead of six documents",
+        "Read the 📎 lines: the retrieval trace is the audit a stakeholder can check"
+      ],
+      "isBreak": false
+    },
+    {
+      "time": "Mon Oct 26 · 1:17 PM",
+      "title": "Part 5 Together: When Does It Fail?",
+      "duration": "10 minutes",
+      "description": "Cross-document, not-in-the-documents, the outdated Spring syllabus, and the campus FAQ that gives the agent orders. Fix one in one place.",
+      "bulletPoints": [
+        "Did it say 'not in the documents' or invent a number?",
+        "Did it notice OUTDATED, or average two semesters?",
+        "Did it obey a sentence inside a document? That is prompt injection through documents — the attack Argon advertises resistance to"
+      ],
+      "isBreak": false
+    },
+    {
+      "time": "Mon Oct 26 · 1:27 PM",
+      "title": "Wrap: Boardroom + Wednesday",
+      "duration": "18 minutes",
+      "description": "Does it cite, what happens when the document is old, can a document give it orders, what does a question cost. Bring a document Wednesday.",
+      "bulletPoints": [
+        "HW #6 Field Test due Thu Oct 29, 11:59 PM",
+        "Wednesday: your own document, ten lines into your midterm agent, thirty minutes of midterm time"
+      ],
+      "isBreak": false
+    },
+    {
+      "time": "Wed Oct 28 · 12:30 PM",
+      "title": "Meeting 2 · Where the Midterm Is + Monday in One Slide",
+      "duration": "7 minutes",
+      "description": "Hands up on the midterm checkpoints, then ground it, cite it, catch it lying in one slide.",
+      "bulletPoints": [
+        "Tools working (Oct 26 checkpoint)? Trust layer in (Oct 28 checkpoint)? Document brought?"
+      ],
+      "isBreak": false
+    },
+    {
+      "time": "Wed Oct 28 · 12:37 PM",
+      "title": "Hands-On: Your Document, Then Your Agent",
+      "duration": "38 minutes",
+      "description": "Part 7: paste the document that matters to you, three questions, one planted sentence that gives orders, fix what broke. Part 8: ten lines put search_documents into your midterm notebook.",
+      "bulletPoints": [
+        "A lease, an offer letter, a handbook, a product's terms — plain text, a few pages",
+        "Screenshot the 📎 trace for your memo",
+        "Optional for the midterm, central to the final"
+      ],
+      "isBreak": false
+    },
+    {
+      "time": "Wed Oct 28 · 1:15 PM",
+      "title": "What Google Sells + Midterm Time",
       "duration": "25 minutes",
-      "description": "How RAG works under the hood — from document loading to retrieval to generation.",
+      "description": "File Search is this week's notebook in a box; the four questions still apply. Then thirty minutes on your midterm with the professor in the room.",
       "bulletPoints": [
-        "Three approaches: Simple keyword search, Claude's long context window (200K tokens), and vector embeddings",
-        "Our approach today: Long context + smart chunking. No vector DB needed — Claude can read 200K tokens at once.",
-        "Document processing: Loading, chunking, and creating a searchable index. Why chunk size matters.",
-        "The retrieval tool: A search function your agent calls to find relevant document passages before answering."
-      ]
+        "Checkpoint ②: a NO becomes a BLOCKED row. Checkpoint ③: one hostile test",
+        "Start the memo today; the worked example is on the Session 6 page"
+      ],
+      "isBreak": false
     },
     {
-      "time": "5:40 PM - 6:25 PM",
-      "title": "Part 3: Hands-On — Build a Knowledge Agent",
-      "duration": "45 minutes",
-      "description": "Build an agent that answers questions about a company using its own documents.",
+      "time": "Wed Oct 28 · 1:40 PM",
+      "title": "Wrap: Monday",
+      "duration": "5 minutes",
+      "description": "Session 8: when one agent becomes two. The midterm is due Mon Nov 2 at 12:30, before class.",
       "bulletPoints": [
-        "Phase 1 (15 min): Load sample company documents (policies, FAQs, product info). Build a search_documents tool.",
-        "Phase 2 (15 min): Wire the search tool into your agent loop. Ask company-specific questions — watch it retrieve and answer.",
-        "Phase 3 (15 min): Test edge cases — contradicting documents, outdated info, questions with no answer. Does your agent handle them gracefully?"
-      ]
-    },
-    {
-      "time": "6:25 PM - 6:35 PM",
-      "title": "Break",
-      "duration": "10 minutes",
-      "description": "Your agent now knows YOUR business. Next: what happens when the data is wrong?",
-      "isBreak": true
-    },
-    {
-      "time": "6:35 PM - 7:05 PM",
-      "title": "Part 5: RAG Failure Modes & Trust",
-      "duration": "30 minutes",
-      "description": "Your agent is only as trustworthy as its data. What happens when documents are wrong, outdated, or contradictory?",
-      "bulletPoints": [
-        "Ethics moment: The Air Canada chatbot case — held legally liable for answers based on outdated policy documents",
-        "Failure mode 1: Outdated data. Your agent confidently quotes last year's pricing.",
-        "Failure mode 2: Contradicting documents. Two SOPs say different things. What does your agent do?",
-        "Failure mode 3: No relevant data. The agent should say 'I don't have information on that' — not hallucinate.",
-        "Building trust: Citation, confidence scores, and 'I don't know' as a feature, not a bug."
-      ]
-    },
-    {
-      "time": "7:05 PM - 7:20 PM",
-      "title": "Part 6: RAG in the Real World",
-      "duration": "15 minutes",
-      "description": "How companies actually deploy RAG — from customer support to internal knowledge bases to compliance.",
-      "bulletPoints": [
-        "Case studies: Customer support bots, internal wikis, legal document search, medical information retrieval",
-        "The build-vs-buy decision: When to build your own RAG vs. use platforms like Glean, Notion AI, or Perplexity Enterprise",
-        "Scaling: From 10 documents to 10 million. When long context isn't enough and you need vector search."
-      ]
-    },
-    {
-      "time": "7:20 PM - 7:30 PM",
-      "title": "Part 7: Wrap-Up + Homework",
-      "duration": "10 minutes",
-      "description": "Your agents now have memory (Session 5), reasoning (Session 6), and knowledge (today). Next: make them work in teams.",
-      "bulletPoints": [
-        "The stack so far: Tools (S4) → Real APIs + Memory (S5) → ReAct Patterns (S6) → Knowledge/RAG (TODAY)",
-        "Next session: Multi-Agent Systems in Practice — build a team of agents that collaborate",
-        "Homework preview: Build a RAG agent for a domain you care about, test with edge cases, evaluate retrieval quality"
-      ]
+        "Two files on Canvas: notebook with outputs, memo PDF",
+        "HW #6 closes Thu Oct 29; HW #8 Catch-Up opens for Thu Nov 12"
+      ],
+      "isBreak": false
     }
   ],
   "resources": [
     {
-      "title": "RAG Agent: Live Walkthrough",
-      "url": "/session-07/rag-trace-demo.html",
-      "description": "Watch a RAG agent search company documents, rank results, detect outdated data, and generate a cited answer. Interactive animated trace with real CloudSync data.",
-      "icon": "play-circle",
-      "badge": "Start Here",
-      "badgeType": "interactive",
-      "linkText": "Watch the agent"
-    },
-    {
-      "title": "Session 7 Lecture Guide",
-      "url": "/session-07/lecture-guide.html",
-      "description": "Projectable lecture companion — visual slides for the full Session 7 lecture with RAG architecture diagrams, failure mode analysis, and interactive navigation.",
+      "title": "Meeting 1 Slide Deck — Your Agent Reads Your Documents",
+      "url": "/session-07/slides-meeting1.html",
+      "description": "Monday Oct 26: the knowledge gap, you-first, three levels, Air Canada, the live demo with a bet, hands-on with QR, four failures, boardroom.",
       "icon": "presentation",
-      "badge": "Lecture",
+      "badge": "Slides",
       "badgeType": "interactive",
-      "linkText": "Open lecture guide"
+      "linkText": "Open slides"
     },
     {
-      "title": "Knowledge Agent Workshop Notebook",
-      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-07/ISOM260_Session7_Knowledge_Agents_RAG.ipynb",
-      "description": "Build a company knowledge agent with document loading, search, and RAG. Uses Claude's long context window — no vector DB needed.",
-      "icon": "code",
+      "title": "Meeting 2 Slide Deck — Your Documents, Your Agent",
+      "url": "/session-07/slides-meeting2.html",
+      "description": "Wednesday Oct 28: midterm checkpoints, Monday in one slide, your own document, ten lines into your agent, what Google sells, midterm time.",
+      "icon": "presentation",
+      "badge": "Slides",
+      "badgeType": "interactive",
+      "linkText": "Open slides"
+    },
+    {
+      "title": "Your Agent Reads Your Documents — Colab Notebook",
+      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-07/ISOM260_Session7_Your_Agent_Reads_Your_Documents.ipynb",
+      "description": "Six course documents (two of them traps), Level 0 / 1 / 2 on the same question, a thirty-line keyword search tool, the Session 6 loop with a retrieval trace, four failure tests, optional semantic search with embeddings, and a slot for your own document. Needs only your Gemini key.",
+      "icon": "file-search",
       "badge": "Hands-On",
       "badgeType": "interactive",
       "linkText": "Open in Colab"
     },
     {
-      "title": "Anthropic RAG Documentation",
-      "url": "https://docs.anthropic.com/en/docs/build-with-claude/retrieval-augmented-generation",
-      "description": "Official guide to building RAG systems with Claude. Covers chunking strategies, retrieval patterns, and best practices.",
-      "icon": "book-open",
+      "title": "Moffatt v. Air Canada (2024 BCCRT 149)",
+      "url": "https://www.canlii.org/en/bc/bccrt/doc/2024/2024bccrt149/2024bccrt149.html",
+      "description": "The tribunal decision. Air Canada argued its chatbot was 'a separate legal entity responsible for its own actions.' Read paragraphs 27–32 before the midterm memo's 'what it refused' section.",
+      "icon": "scale",
+      "badge": "Reading",
+      "badgeType": "reference",
+      "linkText": "Read the decision"
+    },
+    {
+      "title": "Gemini File Search — the managed version",
+      "url": "https://ai.google.dev/gemini-api/docs/file-search",
+      "description": "What you built, as a product: upload files, the API chunks and embeds them, answers come back with citations. Storage is free; indexing is billed at embedding rates. Read it with the four questions in hand.",
+      "icon": "upload",
       "badge": "Docs",
       "badgeType": "code",
       "linkText": "Read docs"
     },
     {
-      "title": "Claude's Long Context Window",
-      "url": "https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching",
-      "description": "Claude can process 200K tokens at once. Learn how to use long context as a simpler alternative to traditional vector search for smaller document sets.",
-      "icon": "file-text",
+      "title": "Gemini Embeddings",
+      "url": "https://ai.google.dev/gemini-api/docs/embeddings",
+      "description": "For Part 6: search by meaning instead of by word. One call per chunk, once.",
+      "icon": "brain",
       "badge": "Docs",
       "badgeType": "code",
       "linkText": "Read docs"
     },
     {
-      "title": "Building Effective Agents (Anthropic)",
-      "url": "https://www.anthropic.com/engineering/building-effective-agents",
-      "description": "Anthropic's guide to agent patterns — including RAG as a core capability for grounding agents in real data.",
-      "icon": "bot",
-      "badge": "Guide",
-      "badgeType": "interactive",
-      "linkText": "Read guide"
+      "title": "RAG Agent: Live Trace (review)",
+      "url": "/session-07/rag-trace-demo.html",
+      "description": "An animated walkthrough of retrieve → ground → cite from the Spring version of this session. The mechanism is the same.",
+      "icon": "play",
+      "badge": "Review",
+      "badgeType": "reference",
+      "linkText": "Open the trace"
     },
     {
-      "title": "Speaker Notes — Professor's Command Center",
-      "url": "/session-07/speaker-notes.html",
-      "description": "Private dashboard with talking points, demo cues, discussion prompts, and live timers for each lecture section. Open on your laptop while projecting the lecture guide.",
-      "icon": "mic",
-      "badge": "Instructor",
-      "badgeType": "interactive",
-      "linkText": "Open speaker notes"
-    },
-    {
-      "title": "Workshop Timer",
-      "url": "/session-07/workshop-timer.html",
-      "description": "Full-screen projectable 45-minute countdown with 3 phases, auto-transitions, audio chimes, and troubleshooting tips for the hands-on Colab session.",
-      "icon": "timer",
-      "badge": "Workshop",
-      "badgeType": "interactive",
-      "linkText": "Start timer"
-    },
-    {
-      "title": "RAG Failure Modes Demo",
-      "url": "/session-07/failure-modes-demo.html",
-      "description": "Interactive demo of three RAG failure scenarios — outdated documents, contradictions, and unanswerable questions. Toggle between broken and fixed agent behaviors.",
-      "icon": "shield-alert",
-      "badge": "Demo",
-      "badgeType": "interactive",
-      "linkText": "Explore failures"
-    },
-    {
-      "title": "Homework Guide — Build Your Knowledge Agent",
-      "url": "/session-07/homework-guide.html",
-      "description": "Step-by-step walkthrough for the Session 7 homework: build a RAG agent, stress-test it, evaluate accuracy, and design a real-world proposal. Includes starter code and rubrics.",
-      "icon": "book-check",
-      "badge": "Homework",
-      "badgeType": "interactive",
-      "linkText": "Start homework"
-    },
-    {
-      "title": "Homework Notebook — Build Your Own Knowledge Agent",
-      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-07/ISOM260_S7_Homework.ipynb",
-      "description": "Colab notebook for the Session 7 homework. All RAG infrastructure is pre-built — pick your domain, load your documents, test your agent, break it, and evaluate it.",
-      "icon": "notebook",
-      "badge": "Homework",
-      "badgeType": "interactive",
-      "linkText": "Open in Colab"
+      "title": "Midterm Project Brief",
+      "url": "/session-06/midterm-project.html",
+      "description": "Due Mon Nov 2, 12:30 PM. Wednesday's last thirty minutes are for this.",
+      "icon": "flag",
+      "badge": "Midterm",
+      "badgeType": "reference",
+      "linkText": "Open the brief"
     }
   ],
   "activities": [
     {
       "number": 1,
-      "icon": "database",
-      "title": "Build a Company Knowledge Agent",
-      "description": "45 minutes in Google Colab. Build an agent grounded in company documents:",
+      "icon": "file-search",
+      "title": "One Question, Three Levels (Mon Oct 26)",
+      "description": "Parts 1–5 of the notebook, on your own key:",
       "steps": [
         {
-          "title": "Load Documents (10 min)",
-          "description": "Load sample company documents — policies, FAQs, product catalogs. Process them into searchable chunks."
+          "title": "Read the six titles",
+          "description": "Two are traps: a Spring 2026 syllabus marked OUTDATED and a campus FAQ with a sentence written for the agent."
         },
         {
-          "title": "Build the Search Tool (10 min)",
-          "description": "Create a search_documents tool that finds relevant passages for any query. Wire it into your agent loop."
+          "title": "Level 0, Level 1",
+          "description": "The model invents a late policy; paste everything in and it is right. Write down the token count."
         },
         {
-          "title": "Test with Real Questions (15 min)",
-          "description": "Ask company-specific questions. Compare: does the agent answer from documents or hallucinate? Test edge cases."
+          "title": "Bet, then Level 2",
+          "description": "How many passages will it need? Run it, read the 📎 lines, compare to your bet and to Level 1."
         },
         {
-          "title": "Handle Failures Gracefully (10 min)",
-          "description": "Test with contradicting docs, outdated info, and unanswerable questions. Make your agent say 'I don't know' when appropriate."
+          "title": "Break it, together",
+          "description": "Cross-document, not-in-docs, outdated, injected. Fix one in one place and re-run."
         }
       ]
     },
     {
       "number": 2,
-      "icon": "shield",
-      "title": "RAG Trust Assessment",
-      "description": "Evaluate your knowledge agent's trustworthiness:",
+      "icon": "file-text",
+      "title": "Your Document, Your Agent (Wed Oct 28)",
+      "description": "Parts 7–8, then midterm time:",
       "steps": [
         {
-          "title": "Create 10 Test Questions",
-          "description": "Write 10 questions: 5 answerable from the documents, 3 partially answerable, 2 unanswerable. Run all through your agent."
+          "title": "Paste your document",
+          "description": "Three questions: one it can answer, one it cannot, one about a number. Then plant a sentence that gives orders and see if it obeys."
         },
         {
-          "title": "Score Accuracy",
-          "description": "For each answer: Did it use the right document? Is the answer correct? Did it hallucinate? Did it cite sources?"
+          "title": "Ten lines into your midterm agent",
+          "description": "search_documents plus its declaration, DOCS = your user's documents, two prompt rules, one 'not found' test for the memo."
         },
         {
-          "title": "Identify Failure Patterns",
-          "description": "Where does your agent fail? Wrong retrieval? Right retrieval but wrong answer? No retrieval when it should have searched?"
-        },
-        {
-          "title": "Propose Improvements",
-          "description": "List 3 specific improvements: better chunking, better search queries, better system prompt instructions, or additional guardrails."
+          "title": "Midterm checkpoints",
+          "description": "A NO becomes a BLOCKED row; one hostile test; start the memo. Due Mon Nov 2 at 12:30."
         }
-      ]
+      ],
+      "discussionNote": "Every 'chat with your documents' product is this notebook with a login page. Buying one is fine. Being sold one without the four questions is not."
     }
   ],
   "takeaways": [
     {
-      "icon": "database",
-      "text": "<strong>RAG grounds agents in reality.</strong> Without RAG, your agent hallucinates about your company. With RAG, it answers from real documents. This is the #1 pattern in enterprise AI."
+      "icon": "file-search",
+      "text": "<strong>Ground it.</strong> A tool that returns passages with their source, and a prompt that answers only from them. The model's memory is not a document."
     },
     {
-      "icon": "shield",
-      "text": "<strong>Your agent is only as trustworthy as its data.</strong> Outdated documents, contradictions, and gaps are the real-world challenges. Building trust means handling these gracefully."
+      "icon": "quote",
+      "text": "<strong>The citation is the audit.</strong> Level 0 had none, Level 1 buried it, Level 2 points at it. Air Canada paid for not having one."
     },
     {
-      "icon": "brain",
-      "text": "<strong>Long context is the accessible RAG.</strong> Claude's 200K token window means business students can build RAG without vector databases. Start simple, scale later."
+      "icon": "shield-alert",
+      "text": "<strong>Documents are data, not instructions.</strong> A sentence inside a file can try to give your agent orders. Who can edit what it reads is the new attack surface."
     },
     {
-      "icon": "trending-up",
-      "text": "<strong>'I don't know' is a feature.</strong> The best knowledge agents know the limits of their data. An agent that refuses to answer is more trustworthy than one that hallucinates."
+      "icon": "history",
+      "text": "<strong>Every shared drive has a Spring syllabus in it.</strong> 'Not found' and 'outdated' are answers. Averaging two semesters is not."
+    },
+    {
+      "icon": "receipt",
+      "text": "<strong>Retrieval is the cheap part.</strong> Thirty lines, no key. What you pay for is the reading, and retrieval makes the reading small."
     }
   ],
   "homework": [
     {
-      "label": "Build:",
-      "text": "Create a RAG agent for a domain you care about — load 5+ documents (articles, policies, product pages) and build a search tool. Test with 10 questions."
+      "label": "HW #6 · due Thu Oct 29, 11:59 PM:",
+      "text": "Field Test Your Bot. Two people outside this class text your bot; screenshot, audit table, two sentences, your bot's @username. On Canvas."
     },
     {
-      "label": "Break:",
-      "text": "Deliberately feed your agent contradicting documents and outdated data. Document 3 failure modes and how you'd fix each one."
+      "label": "Midterm Project · due Mon Nov 2, 12:30 PM:",
+      "text": "Before class, on Canvas: the notebook with outputs and the one-page memo PDF. Wednesday's last thirty minutes are yours for this. search_documents is optional for the midterm and central to the final."
     },
     {
-      "label": "Evaluate:",
-      "text": "Score your agent's accuracy: For 10 test questions, record whether it retrieved the right document, gave a correct answer, and cited sources properly."
+      "label": "Before Wednesday:",
+      "text": "Bring one document that matters to you as plain text: a lease, an offer letter, your employer's handbook, a product's terms. A few pages at most."
     },
     {
-      "label": "Design:",
-      "text": "Write a 1-page proposal for a knowledge agent at a real company. What documents would it need? Who would use it? What's the risk if it's wrong?"
+      "label": "Optional:",
+      "text": "Read Moffatt v. Air Canada, paragraphs 27–32. Then write the sentence your midterm memo will use when it explains what your agent refuses to do."
     }
   ],
   "nextSession": {
-    "title": "Session 8: Multi-Agent Systems in Practice",
-    "description": "One agent is useful. A team of agents is powerful. Build a researcher→analyst pipeline and learn coordination patterns.",
+    "title": "Session 8: When One Agent Becomes Two",
+    "description": "Pipelines, orchestrators, and the rule for splitting — on your midterm agents, the morning they are due.",
     "tags": [
       "Multi-Agent",
       "Pipelines",
-      "Coordination",
-      "Specialization"
+      "Midterm Debrief"
     ],
     "slug": "session-08"
   }

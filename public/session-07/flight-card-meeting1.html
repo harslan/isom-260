@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flight Card · Session 6, Meeting 1 | ISOM 260</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Sora:wght@600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'DM Sans', sans-serif; background: #f4f2ec; color: #1a1a1a; padding: 1.2rem; font-size: 13px; line-height: 1.45; }
+    .card { max-width: 820px; margin: 0 auto; background: #fff; border: 2px solid #1a1a1a; border-radius: 10px; padding: 1.4rem 1.6rem; }
+    h1 { font-family: 'Sora', sans-serif; font-size: 1.1rem; display: flex; justify-content: space-between; align-items: baseline; border-bottom: 2px solid #1a1a1a; padding-bottom: 0.5rem; margin-bottom: 0.8rem; }
+    h1 .sub { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 400; color: #666; }
+    h2 { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: #b3003e; margin: 0.9rem 0 0.35rem; }
+    table { width: 100%; border-collapse: collapse; }
+    td { padding: 0.18rem 0.5rem 0.18rem 0; vertical-align: top; }
+    td.t { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 0.78rem; white-space: nowrap; width: 4.2rem; }
+    .cut { color: #b3003e; font-weight: 700; }
+    .hl { background: #fff3b8; padding: 0 0.25rem; font-weight: 700; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1.6rem; }
+    .mono { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; background: #f4f2ec; border: 1px solid #ccc; border-radius: 6px; padding: 0.5rem 0.65rem; white-space: pre-wrap; margin: 0.25rem 0; }
+    ul { list-style: none; }
+    li { padding-left: 1rem; position: relative; margin-bottom: 0.22rem; }
+    li::before { content: "▸"; position: absolute; left: 0; color: #b3003e; }
+</head>
+<body>
+<div class="card">
+    <h1>SESSION 7 · MEETING 1 · "YOUR AGENT READS YOUR DOCUMENTS" <span class="sub">MON OCT 26 · 12:30–1:45 · HW6 DUE THU OCT 29 · MIDTERM DUE MON NOV 2 · HARD STOP 1:45</span></h1>
+
+    <div class="grid">
+    <div>
+        <h2>Timeline · slide #</h2>
+        <table>
+            <tr><td class="t">12:30</td><td>1–2 · HW7 pulse — <span class="hl">which vendor said "not disclosed"?</span> · two "would you let it touch your email" sentences (4 min)</td></tr>
+            <tr><td class="t">12:34</td><td>3 · "Your agent knows the internet. It knows nothing about you." + <span class="hl">the outcome out loud: ground it · cite it · catch it lying</span> (1 min)</td></tr>
+            <tr><td class="t">12:35</td><td>4 · <span class="hl">YOU FIRST</span>: "midterm two days late — what happens?" from memory (Level 0) → "how would you check?" (retrieve) → "which paragraph?" (cite). "You just did RAG" (3 min)</td></tr>
+            <tr><td class="t">12:38</td><td>5 · Three levels: guess · paste everything · search tool (3 min)</td></tr>
+            <tr><td class="t">12:41</td><td>6 · Air Canada, Feb 2024 — "a confident wrong answer about a policy is a contract" (3 min)</td></tr>
+            <tr><td class="t">12:44</td><td>7 · <span class="hl">LIVE</span> from YOUR pre-run notebook — Level 0 invents a policy → Level 1 token count → <b>BET on passages</b> → Level 2 📎 lines → "when is the final due?" with the Spring syllabus — <span class="cut">CUT 12:50</span></td></tr>
+            <tr><td class="t">12:50</td><td>8 · <span class="hl">Hands-on Parts 1–4</span> — walk the room: "what did Level 1 cost? how many passages did you bet?" — <span class="cut">STOP 1:17</span></td></tr>
+            <tr><td class="t">1:17</td><td>9 · <span class="hl">Part 5 together</span> — cross-document · not in docs · OUTDATED syllabus · the FAQ that gives orders → each student fixes ONE (10 min)</td></tr>
+            <tr><td class="t">1:27</td><td>10 · Boardroom (4 min)</td></tr>
+            <tr><td class="t">1:31</td><td>11 · Wednesday: bring a document · ten lines into your midterm agent · 30 min midterm time. HW #6 Thu, midterm Mon (3 min)</td></tr>
+            <tr><td class="t">1:34</td><td>12 · Close. Buffer to 1:45</td></tr>
+        </table>
+
+        <h2>Live demo cues (slide 7)</h2>
+        <div class="mono">QUESTION = "If I submit the midterm two days late, what happens to my grade?"
+Level 0  → a policy from nowhere (often "contact your instructor" or an invented %). Ask: "plan your week on it?"
+Level 1  → correct (20%), ~2,000 tokens in → "× 1,000 employees × 20 questions × 22 days"
+Level 2  → 💭 → 🎯 SEARCH: late penalty → 📎 Fall 2026 Syllabus §5 (+2 more) → cited answer · "N× fewer tokens read"
+"When is the final due?" → does it flag the Spring syllabus as OUTDATED or give April?</div>
+        <ul><li>Beat: "the citation is the audit — Level 0 had none, Level 1 buried it, Level 2 points at it"</li></ul>
+
+        <h2>Facts you can say out loud</h2>
+        <ul>
+            <li>Moffatt v. Air Canada, BC Civil Resolution Tribunal, Feb 14 2024: chatbot invented a retroactive bereavement-fare refund; airline argued the bot was "a separate legal entity"; tribunal ordered damages (~C$812)</li>
+            <li>RAG = retrieval-augmented generation (Lewis et al., 2020). Gemini sells it as <b>File Search</b>: upload → chunk → embed → cite; storage free, indexing billed at embedding rates, retrieved tokens billed as context</li>
+            <li>Gemini 4 Argon's launch post claims the top score on Gray Swan's indirect-prompt-injection benchmark — that is exactly Test 4, the FAQ that gives orders. Resistance, not immunity</li>
+        </ul>
+    </div>
+    <div>
+        <h2>Fix-its (the scramble)</h2>
+        <ul>
+            <li>Level 2 never calls the tool → the question didn't sound like "the course"; RAG_PROMPT says call search_documents FIRST — re-run once, it's probabilistic</li>
+            <li>📎 lines show the Spring syllabus for a dates question → that's Test 3 arriving early; let it, it's the best moment of the day</li>
+            <li>Keyword search returns nothing → their words don't overlap the doc ("after the deadline" vs "late"); Part 6 semantic search is the answer, or rephrase</li>
+            <li>Embeddings error in Part 6 → wrapped in try/except, keyword search stays; the lesson holds</li>
+            <li>Gemini 429 → free tier ~10 calls/min; Level 2 is 2–3 calls per question; one test at a time</li>
+            <li>gemini-2.5-flash "not found" on a new key → MODEL = "gemini-3.8-flash"</li>
+            <li>Key not found → 🔑 Secrets, GOOGLE_API_KEY, Notebook access ON</li>
+        </ul>
+
+        <h2>If behind at 1:17</h2>
+        <ul>
+            <li>Part 5 becomes "watch me": Test 3 (OUTDATED) and Test 4 (the FAQ) only, on the projector (5 min)</li>
+            <li>Skip slide 10; slide 11 (bring a document Wednesday, midterm Monday) is untouchable</li>
+        </ul>
+
+        <h2>Before / after</h2>
+        <ul>
+            <li>⚠️ <b>Run the notebook with YOUR key before class</b>, outputs visible. Or run the weekly smoke test (Actions → course health → Run workflow) and read smoke-out/. Note YOUR Level 1 token count and Level 2 search count — that's the answer to the bet</li>
+            <li>Tabs: slides · notebook (run) · the Air Canada decision (search "Moffatt v. Air Canada 2024 BCCRT 149")</li>
+            <li>Canvas: nothing to post — HW #6 closes Thu, HW #8 is already up for Nov 12</li>
+            <li>After: which failure surprised the room — reuse Wednesday's slide 3</li>
+        </ul>
+    </div>
+    </div>
+
+    <div class="rule">The day's one job: every student sees the SAME question answered three ways and can point at the passage the right answer came from. Everything else is negotiable.</div>
+</div>
+</body>
+</html>
