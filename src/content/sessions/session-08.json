@@ -116,9 +116,21 @@
     },
     {
       "time": "Wed Nov 4 · 1:27 PM",
+      "title": "Same Model, Different Harness",
+      "duration": "17 minutes",
+      "description": "One photo, one model, three harnesses. Bet how many of Level 0's objects a 3D pipeline would reject, watch the rules from a real open-source product cut the count, then run it on a photo of your own desk.",
+      "bulletPoints": [
+        "Level 0 just asks · Level 1 adds four rules · Level 2 adds a check in code and one fix — Monday's critic in a new costume",
+        "Rules make it likely; code makes it checked. Every rejected line is a paid 3D generation thrown away",
+        "For your HW #9 pitch: one rule written down, one check in code, one human gate"
+      ],
+      "isBreak": false
+    },
+    {
+      "time": "Wed Nov 4 · 1:44 PM",
       "title": "Wrap",
-      "duration": "18 minutes",
-      "description": "Close, with the buffer kept for midterm questions.",
+      "duration": "1 minute",
+      "description": "Close. Midterm questions after class or by email.",
       "bulletPoints": [],
       "isBreak": false
     }
@@ -143,10 +155,28 @@
       "linkText": "Open slides"
     },
     {
+      "title": "Same Model, Different Harness — Slides",
+      "url": "/session-08/slides-harness.html",
+      "description": "Wednesday Nov 4, last 17 minutes: the bet, Level 0 → 1 → 2 on one photo, your own photo, the bill, and the three things your final agent needs.",
+      "icon": "presentation",
+      "badge": "Slides",
+      "badgeType": "interactive",
+      "linkText": "Open slides"
+    },
+    {
       "title": "When One Agent Becomes Two — Colab Notebook",
       "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-08/ISOM260_Session8_When_One_Agent_Becomes_Two.ipynb",
       "description": "Beacon Hill Bikes: four policies, three emails (one gives the agent orders), Session 7's search tool and Session 5's gated send_email. A solo agent, then a researcher → writer → critic pipeline with a JSON brief and a circuit breaker, a router, four failure tests, and a ten-line critic for your own agent. Needs only your Gemini key.",
       "icon": "git-branch",
+      "badge": "Hands-On",
+      "badgeType": "interactive",
+      "linkText": "Open in Colab"
+    },
+    {
+      "title": "Same Model, Different Harness — Colab Notebook",
+      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-08/ISOM260_Session8_Same_Model_Different_Harness.ipynb",
+      "description": "One photo, three harnesses: just ask, add the four rules image-blaster uses, then a check in code with one fix. Counts the rejects and prints the bill per 1,000 photos. Use the class photo or your own. Needs only your Gemini key.",
+      "icon": "layers",
       "badge": "Hands-On",
       "badgeType": "interactive",
       "linkText": "Open in Colab"

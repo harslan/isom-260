@@ -22,9 +22,11 @@ NOTEBOOKS = {
     "public/session-03/ISOM260_Session3_First_API_Call.ipynb": {},
     "public/session-04/ISOM260_Session4_Build_Your_First_Agent_Gemini.ipynb": {},
     "public/session-06/ISOM260_Session6_Make_It_Think_Gemini.ipynb": {"skip": [r'MY_QUESTION = "TODO']},
+    "public/session-06/ISOM260_Session6_MCP_Live_Demo.ipynb": {},
     "public/session-06/ISOM260_Midterm_Starter.ipynb": {"skip": [r'ask\("TODO', r'OPTIONAL — Telegram'], "optional": True},
     "public/session-07/ISOM260_Session7_Your_Agent_Reads_Your_Documents.ipynb": {"skip": [r'MY_DOC_NAME = "TODO']},
     "public/session-08/ISOM260_Session8_When_One_Agent_Becomes_Two.ipynb": {},
+    "public/session-08/ISOM260_Session8_Same_Model_Different_Harness.ipynb": {"optional": True},   # needs public/session-08/harness-test.jpg live
 }
 GLOBAL_SKIP = [r"^\s*!pip", r"run_bot\(\)", r"files\.download\(", r"^\s*!"]
 
