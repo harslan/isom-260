@@ -203,6 +203,15 @@
       "linkText": "Open slides"
     },
     {
+      "title": "The Cover Letter That Lies For You — Colab Notebook",
+      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-09/ISOM260_The_Cover_Letter_That_Lies.ipynb",
+      "description": "Today's 'one more thing.' Jordan's five true facts plus one internship posting: count what the agent invents, then fifteen lines of code that won't let the model type a fact about you. A critic, a user who asks for the lie, and a gated send. Optional, about 45 minutes. Needs only your Gemini key.",
+      "icon": "file-text",
+      "badge": "Bonus",
+      "badgeType": "interactive",
+      "linkText": "Open in Colab"
+    },
+    {
       "title": "Gemini 4 Argon — launch post + model card",
       "url": "https://deepmind.google/models/model-cards/gemini-4-argon/",
       "description": "Released to developers Oct 13, 2026: 1M-token context, up to 1M output tokens, $2 in / $10 out per million until Nov 30. Google's pitch is 'deep reasoning across long-horizon workflows' — Level 2 of today's notebook, at scale. Not on the free tier. Pricing: ai.google.dev/gemini-api/docs/pricing.",
