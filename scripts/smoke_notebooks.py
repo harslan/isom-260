@@ -27,6 +27,7 @@ NOTEBOOKS = {
     "public/session-07/ISOM260_Session7_Your_Agent_Reads_Your_Documents.ipynb": {"skip": [r'MY_DOC_NAME = "TODO']},
     "public/session-08/ISOM260_Session8_When_One_Agent_Becomes_Two.ipynb": {},
     "public/session-08/ISOM260_Session8_Same_Model_Different_Harness.ipynb": {"optional": True},   # class photo is fetched from Unsplash
+    "public/session-09/ISOM260_The_Cover_Letter_That_Lies.ipynb": {},
 }
 GLOBAL_SKIP = [r"^\s*!pip", r"run_bot\(\)", r"files\.download\(", r"^\s*!"]
 
