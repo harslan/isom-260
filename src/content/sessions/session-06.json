@@ -178,7 +178,7 @@
     {
       "title": "Meeting 1 Slide Deck — Make It Think",
       "url": "/session-06/slides-meeting1.html",
-      "description": "Monday Oct 19: the pattern gap, three levels of the same agent, the ReAct paragraph, the live three-level demo, hands-on, when it fails, boardroom.",
+      "description": "Wednesday Oct 14: the pattern gap, three levels of the same agent, the ReAct paragraph, the live three-level demo, hands-on, when it fails, boardroom.",
       "icon": "presentation",
       "badge": "Slides",
       "badgeType": "interactive",
@@ -187,7 +187,7 @@
     {
       "title": "Meeting 2 Slide Deck — One Agent or Many? + Your Midterm",
       "url": "/session-06/slides-meeting2.html",
-      "description": "Wednesday Oct 21: three patterns, when to split, your bot as the case, MCP, the midterm requirements and rubric, the kickoff workshop.",
+      "description": "Monday Oct 19: three patterns, when to split, your bot as the case, MCP, the midterm requirements and rubric, the kickoff workshop.",
       "icon": "presentation",
       "badge": "Slides",
       "badgeType": "interactive",
@@ -241,7 +241,7 @@
     {
       "title": "Kickoff Sheet — printable",
       "url": "/session-06/kickoff-sheet.html",
-      "description": "The Wednesday paper canvas: problem, user, two tools, the risky action and who approves, five test queries, the neighbor's three questions. Print it or fill it on a phone, then photograph it.",
+      "description": "The Monday paper canvas: problem, user, two tools, the risky action and who approves, five test queries, the neighbor's three questions. Print it or fill it on a phone, then photograph it.",
       "icon": "clipboard",
       "badge": "In Class",
       "badgeType": "reference",
@@ -250,7 +250,7 @@
     {
       "title": "The Cost of Thinking — calculator",
       "url": "/session-06/thinking-cost.html",
-      "description": "Paste your two bill rows from the Monday notebook, set the company size and the share of questions that need research, and see what the one-line router is worth per month.",
+      "description": "Paste your two bill rows from the Make It Think notebook, set the company size and the share of questions that need research, and see what the one-line router is worth per month.",
       "icon": "bar-chart",
       "badge": "Interactive",
       "badgeType": "interactive",
@@ -268,7 +268,7 @@
     {
       "title": "ReAct Agent: Live Walkthrough",
       "url": "/session-06/react-agent-example.html",
-      "description": "An animated trace of a ReAct agent searching, judging sources, and synthesizing. Watch it before Monday if you want the pattern in your head first.",
+      "description": "An animated trace of a ReAct agent searching, judging sources, and synthesizing. Watch it if you want the pattern back in your head before you write your agent's prompt.",
       "icon": "play-circle",
       "badge": "Review",
       "badgeType": "interactive",
@@ -277,7 +277,7 @@
     {
       "title": "Advanced Agent Patterns — Visual Explainer",
       "url": "/session-06/advanced-agent-patterns.html",
-      "description": "Pipeline, orchestrator, debate, and MCP, with diagrams. The vocabulary for Wednesday and the code for Session 8.",
+      "description": "Pipeline, orchestrator, debate, and MCP, with diagrams. The vocabulary from Monday Oct 19 and the code for Session 8.",
       "icon": "network",
       "badge": "Review",
       "badgeType": "interactive",
@@ -286,7 +286,7 @@
     {
       "title": "ReAct: Synergizing Reasoning and Acting",
       "url": "https://arxiv.org/abs/2210.03629",
-      "description": "The 2022 paper. You do not need to read it; you need to know that the paragraph you ran on Monday has a citation.",
+      "description": "The 2022 paper. You do not need to read it; you need to know that the paragraph you ran on Wednesday Oct 14 has a citation.",
       "icon": "book-open",
       "badge": "Docs",
       "badgeType": "reference",
