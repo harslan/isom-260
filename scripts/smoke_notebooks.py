@@ -25,6 +25,7 @@ NOTEBOOKS = {
     "public/session-06/ISOM260_Session6_MCP_Live_Demo.ipynb": {},
     "public/session-06/ISOM260_Midterm_Starter.ipynb": {"skip": [r'ask\("TODO', r'OPTIONAL — Telegram'], "optional": True},
     "public/session-07/ISOM260_Session7_Your_Agent_Reads_Your_Documents.ipynb": {"skip": [r'MY_DOC_NAME = "TODO']},
+    "public/session-07/ISOM260_Session7_The_Post_That_Cant_Lie.ipynb": {},
     "public/session-08/ISOM260_Session8_When_One_Agent_Becomes_Two.ipynb": {},
     "public/session-08/ISOM260_Session8_Same_Model_Different_Harness.ipynb": {"optional": True},   # class photo is fetched from Unsplash
     "public/session-09/ISOM260_The_Cover_Letter_That_Lies.ipynb": {},

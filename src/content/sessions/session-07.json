@@ -2,7 +2,7 @@
   "number": 7,
   "slug": "session-07",
   "title": "Your Agent Reads Your Documents",
-  "subtitle": "Monday your agent answers questions about this course from its own documents — syllabus, briefs, schedule — and cites the passage. Wednesday it reads the document that matters to you, goes into your midterm agent, and you get thirty minutes of midterm time.",
+  "subtitle": "Monday a crew of AI agents reads your own project notes and writes a LinkedIn post about your midterm agent, where every fact has a source. That is RAG, plus your first harness. Wednesday it reads the document that matters to you, goes into your midterm agent, and you get thirty minutes of midterm time.",
   "heroTitle": "Your Agent Reads <span class=\"bg-gradient-to-br from-accent-cyan to-accent-purple bg-clip-text text-transparent\">Your Documents</span>",
   "duration": "2 meetings · 75 min",
   "meetings": [
@@ -12,71 +12,72 @@
   "icon": "file-search",
   "tags": [
     "RAG",
+    "Harness",
     "Citations",
-    "Your Documents",
     "Prompt Injection",
     "Midterm"
   ],
   "objectives": [
     {
       "title": "Ground It · Cite It · Catch It Lying",
-      "description": "The one outcome: an agent that answers only from your documents, cites the passage for every fact, says 'not found' instead of guessing, and treats documents as data rather than instructions."
+      "description": "The one outcome: an agent that answers only from your documents, cites the source for every fact, says 'not found' instead of guessing, and treats documents as information, not orders."
     },
     {
-      "title": "See the Three Levels",
-      "description": "The model alone invents a policy. Pasting everything in is correct and expensive. A thirty-line search tool retrieves three passages, cites them, and costs a fraction. Same loop as Session 6."
+      "title": "Same AI, Three Workplaces",
+      "description": "One prompt writes LinkedIn cringe and invents users. Pasting every file in gets better facts but believes the junk in the folder. A crew that searches, cites and checks writes a post you would sign. The AI never changes; the workplace does."
     },
     {
-      "title": "Break It Four Ways",
-      "description": "A cross-document question, a question the documents never answer, an outdated syllabus in the same folder, and a document that gives the agent orders. Then fix one in one place."
+      "title": "Nova's Six Pieces",
+      "description": "Job description, the right files, sign-off, notes, reviewer, paper trail. Together they are the harness. Find each one in the crew, and the one that is missing."
     },
     {
       "title": "Put It in Your Agent",
-      "description": "Your own document on Wednesday, ten lines into your midterm notebook, and the business questions: does it cite, what happens when the document is old, who can edit what it reads."
+      "description": "Wednesday: your own document, ten lines into your midterm notebook, and the business questions: does it cite, what happens when the document is old, who can edit what it reads."
     }
   ],
   "agenda": [
     {
       "time": "Mon Oct 26 · 12:30 PM",
-      "title": "Meeting 1 · HW #7 Pulse + The Knowledge Gap",
-      "duration": "14 minutes",
-      "description": "Which vendor said 'not disclosed'? Then: your agent knows the internet and nothing about you, the three levels, and the Air Canada case.",
-      "bulletPoints": [
-        "You first: 'midterm two days late — what happens?' from memory, then 'how would you check?' and 'which paragraph?' That pointing is a citation",
-        "Three levels: guess · paste everything in and pay · a search tool that retrieves and cites",
-        "Feb 2024: Air Canada's chatbot invented a refund policy and the tribunal made the airline honor it. The citation is the audit"
-      ],
-      "isBreak": false
-    },
-    {
-      "time": "Mon Oct 26 · 12:44 PM",
-      "title": "Live, Then Hands-On: One Question, Three Levels",
-      "duration": "33 minutes",
-      "description": "'If I submit the midterm two days late, what happens?' at levels 0, 1 and 2 on the projector, then on your own key. Bet on the passages before Level 2 runs.",
-      "bulletPoints": [
-        "Only your Gemini key today; the documents are this course — syllabus, schedule, briefs, plus two traps",
-        "Write down the Level 1 token count, then watch Level 2 read three passages instead of six documents",
-        "Read the 📎 lines: the retrieval trace is the audit a stakeholder can check"
-      ],
-      "isBreak": false
-    },
-    {
-      "time": "Mon Oct 26 · 1:17 PM",
-      "title": "Part 5 Together: When Does It Fail?",
+      "title": "Meeting 1 · Nova's First Day",
       "duration": "10 minutes",
-      "description": "Cross-document, not-in-the-documents, the outdated Spring syllabus, and the campus FAQ that gives the agent orders. Fix one in one place.",
+      "description": "A brilliant AI new hire has a terrible first morning. Is Nova the problem?",
       "bulletPoints": [
-        "Did it say 'not in the documents' or invent a number?",
-        "Did it notice OUTDATED, or average two semesters?",
-        "Did it obey a sentence inside a document? That is prompt injection through documents — the attack Argon advertises resistance to"
+        "9:40 promised a cash refund · 11:15 emailed 3,000 customers · 12:30 forgot what the manager said",
+        "Quick poll, then the verdict: Nova isn't the problem. Nova's workplace is",
+        "Air Canada, Feb 2024: a chatbot invented a refund policy and the airline had to honor it"
       ],
       "isBreak": false
     },
     {
-      "time": "Mon Oct 26 · 1:27 PM",
-      "title": "Wrap: Boardroom + Wednesday",
-      "duration": "18 minutes",
-      "description": "Does it cite, what happens when the document is old, can a document give it orders, what does a question cost. Bring a document Wednesday.",
+      "time": "Mon Oct 26 · 12:40 PM",
+      "title": "The Idea: Six Things Every AI Worker Needs",
+      "duration": "10 minutes",
+      "description": "Prompt, context, harness. Then the six pieces: job description, the right files, sign-off, notes, reviewer, paper trail.",
+      "bulletPoints": [
+        "RAG lives in 'the right files': look it up, then answer, and show where you found it",
+        "Rewind the morning: which piece would have saved Nova? Not one fix is a better prompt",
+        "Two rules: don't grade your own homework · every loop needs a way out"
+      ],
+      "isBreak": false
+    },
+    {
+      "time": "Mon Oct 26 · 12:50 PM",
+      "title": "Build It: The Post That Can't Lie",
+      "duration": "50 minutes",
+      "description": "A crew of AI agents writes a LinkedIn post about your midterm agent from your own notes. Any sentence without a source gets cut. You sign off.",
+      "bulletPoints": [
+        "Bet first: what does one AI answer cost?",
+        "Set up your class pass, write five plain lines about your midterm agent",
+        "Level 0, Level 1, then the crew: Scout → Writer → Critic → Guardrail → you",
+        "Team game: sneak a lie past the Guardrail, then fix it in one place"
+      ],
+      "isBreak": false
+    },
+    {
+      "time": "Mon Oct 26 · 1:40 PM",
+      "title": "Exit Ticket + Wednesday",
+      "duration": "5 minutes",
+      "description": "The crew is missing one of Nova's six pieces. Which one, and how would you add it? Bring a document Wednesday.",
       "bulletPoints": [
         "HW #6 Field Test due Thu Oct 29, 11:59 PM",
         "Wednesday: your own document, ten lines into your midterm agent, thirty minutes of midterm time"
@@ -130,13 +131,22 @@
   ],
   "resources": [
     {
-      "title": "Meeting 1 Slide Deck — Your Agent Reads Your Documents",
-      "url": "/session-07/slides-meeting1.html",
-      "description": "Monday Oct 26: the knowledge gap, you-first, three levels, Air Canada, the live demo with a bet, hands-on with QR, four failures, boardroom.",
-      "icon": "presentation",
-      "badge": "Slides",
+      "title": "The Post That Can't Lie — Colab Notebook (Monday)",
+      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-07/ISOM260_Session7_The_Post_That_Cant_Lie.ipynb",
+      "description": "Monday's hands-on. A crew of AI agents (Scout, Writer, Critic, Guardrail, and you) writes a LinkedIn post about your midterm agent from your own notes, citing every fact. Then the team game: sneak a lie past the Guardrail. Needs only your class pass in Colab Secrets.",
+      "icon": "notebook",
+      "badge": "Hands-On",
       "badgeType": "interactive",
-      "linkText": "Open slides"
+      "linkText": "Open in Colab"
+    },
+    {
+      "title": "The Post That Can't Lie — Browser Lab (no Colab)",
+      "url": "https://sawyer-ai-sandbox.vercel.app/lab/post",
+      "description": "The same crew in a web page. No setup, no code to fix: type your class pass and go. Use it if Colab gives you trouble, or on your phone.",
+      "icon": "globe",
+      "badge": "Lab",
+      "badgeType": "interactive",
+      "linkText": "Open the lab"
     },
     {
       "title": "Meeting 2 Slide Deck — Your Documents, Your Agent",
@@ -148,13 +158,22 @@
       "linkText": "Open slides"
     },
     {
-      "title": "Your Agent Reads Your Documents — Colab Notebook",
+      "title": "Your Agent Reads Your Documents — Colab Notebook (Wednesday)",
       "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-07/ISOM260_Session7_Your_Agent_Reads_Your_Documents.ipynb",
-      "description": "Six course documents (two of them traps), Level 0 / 1 / 2 on the same question, a thirty-line keyword search tool, the Session 6 loop with a retrieval trace, four failure tests, optional semantic search with embeddings, and a slot for your own document. Needs only your Gemini key.",
+      "description": "Wednesday's notebook: six course documents (two of them traps), Level 0 / 1 / 2 on the same question, a thirty-line search tool, four failure tests, and Parts 7–8: your own document, then ten lines into your midterm agent. Needs only your class pass.",
       "icon": "file-search",
       "badge": "Hands-On",
       "badgeType": "interactive",
       "linkText": "Open in Colab"
+    },
+    {
+      "title": "RAG Step by Step — Slides (reference)",
+      "url": "/session-07/slides-meeting1.html",
+      "description": "The knowledge gap, three levels on one question, Air Canada, four ways RAG fails. Useful review before Wednesday.",
+      "icon": "presentation",
+      "badge": "Slides",
+      "badgeType": "interactive",
+      "linkText": "Open slides"
     },
     {
       "title": "Moffatt v. Air Canada (2024 BCCRT 149)",
@@ -205,25 +224,25 @@
   "activities": [
     {
       "number": 1,
-      "icon": "file-search",
-      "title": "One Question, Three Levels (Mon Oct 26)",
-      "description": "Parts 1–5 of the notebook, on your own key:",
+      "icon": "users",
+      "title": "The Post That Can't Lie (Mon Oct 26)",
+      "description": "The notebook or the browser lab, on your class pass:",
       "steps": [
         {
-          "title": "Read the six titles",
-          "description": "Two are traps: a Spring 2026 syllabus marked OUTDATED and a campus FAQ with a sentence written for the agent."
+          "title": "Five plain lines",
+          "description": "Your midterm agent: its name, the problem, the real user, the tools, what it refused, one test, one cost. Facts, not adjectives. No notes yet? Use Sam's sample."
         },
         {
-          "title": "Level 0, Level 1",
-          "description": "The model invents a late policy; paste everything in and it is right. Write down the token count."
+          "title": "Same AI, three workplaces",
+          "description": "Level 0 (one prompt), Level 1 (every file pasted in), Level 2 (the crew). Bet before each run: how much cringe, will it invent a number, will it fall for the traps?"
         },
         {
-          "title": "Bet, then Level 2",
-          "description": "How many passages will it need? Run it, read the 📎 lines, compare to your bet and to Level 1."
+          "title": "Read the crew like Nova's workplace",
+          "description": "The Scout is RAG: it searches, cites, and ignores the outdated plan and the group chat's order. The Critic and Guardrail review; the code decides when to stop; you sign off."
         },
         {
-          "title": "Break it, together",
-          "description": "Cross-document, not-in-docs, outdated, injected. Fix one in one place and re-run."
+          "title": "Sneak a lie past the Guardrail",
+          "description": "Your team adds one sentence to the group chat anyone can edit. Point if the lie reaches the post unflagged. Then fix it in one place."
         }
       ]
     },
@@ -250,6 +269,10 @@
     }
   ],
   "takeaways": [
+    {
+      "icon": "briefcase",
+      "text": "<strong>Same AI, different workplace.</strong> Nova failed because nobody set up her workplace, not because she wasn't smart. The harness (job description, the right files, sign-off, notes, reviewer, paper trail) is the part you build and keep."
+    },
     {
       "icon": "file-search",
       "text": "<strong>Ground it.</strong> A tool that returns passages with their source, and a prompt that answers only from them. The model's memory is not a document."
