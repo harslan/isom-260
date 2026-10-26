@@ -26,7 +26,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: { python-version: "3.11" }
-      - run: pip install -q google-genai nbclient nbformat ipykernel pandas
+      - run: pip install -q google-genai fastmcp nbclient nbformat ipykernel pandas
       - name: syntax + transform check (no key)
         run: python scripts/smoke_notebooks.py --dry-run
       - name: execute with GOOGLE_API_KEY

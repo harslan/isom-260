@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MCP Server Cards · Session 6, Meeting 2 | ISOM 260</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Sora:wght@600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'DM Sans', sans-serif; background: #f4f2ec; color: #1a1a1a; padding: 1.2rem; line-height: 1.4; }
+    .intro { max-width: 820px; margin: 0 auto 1rem; font-size: 13px; color: #555; }
+    .intro b { color: #1a1a1a; }
+    .card { max-width: 820px; min-height: 4.9in; margin: 0 auto 1.2rem; background: #fff; border: 3px solid #1a1a1a; border-radius: 16px; padding: 1.6rem 2rem; display: flex; flex-direction: column; page-break-inside: avoid; break-inside: avoid; }
+    .card:nth-of-type(2n) { page-break-after: always; break-after: page; }
+    .top { display: flex; align-items: center; gap: 1.1rem; border-bottom: 2px solid #1a1a1a; padding-bottom: 0.8rem; margin-bottom: 1rem; }
+    .emoji { font-size: 3.4rem; line-height: 1; }
+    h1 { font-family: 'Sora', sans-serif; font-size: 2rem; font-weight: 800; letter-spacing: -0.02em; }
+    .tag { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase; color: #6d28d9; }
+    h2 { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase; color: #b3003e; margin: 0.6rem 0 0.35rem; }
+    .say { font-size: 1.45rem; font-weight: 500; }
+    .say code { font-family: 'JetBrains Mono', monospace; font-size: 1.2rem; background: #f3efff; color: #6d28d9; padding: 0 0.35rem; border-radius: 5px; }
+    .twist { margin-top: auto; padding-top: 0.8rem; font-size: 1rem; color: #555; border-top: 1px dashed #bbb; }
+    .twist b { color: #b3003e; }
+    .agent { border-color: #0e7490; }
+    .agent .tag { color: #0e7490; }
+    .agent ol { padding-left: 1.4rem; font-size: 1.05rem; }
+    .agent li { margin-bottom: 0.45rem; }
+    .agent li span { color: #555; font-size: 0.95rem; }
+    @media print {
+        body { background: #fff; padding: 0; }
+        .intro { display: none; }
+        .card { margin: 0 0 0.35in; }
+    }
+</style>
+</head>
+<body>
+<p class="intro"><b>Print this page</b> (two cards per sheet). Hand one server card to each of four volunteers; the last card is your script as the agent. The role-play takes three minutes and comes right after slide 8, "The whole protocol, in three sentences."</p>
+
+<div class="card">
+    <div class="top"><div class="emoji">🌦️</div><div><div class="tag">You are an MCP server</div><h1>Weather</h1></div></div>
+    <h2>When the agent asks "What can you do?"</h2>
+    <p class="say">"I have <code>get_weather</code>. Give me a city, I give you the forecast."</p>
+    <h2>When the agent says "get_weather, Boston"</h2>
+    <p class="say">Open the weather app on your phone and read <b>today's real Boston forecast</b> out loud: "Boston: <i>high</i>, <i>low</i>, <i>chance of rain</i>."</p>
+    <h2>When the agent says "get_weather, Bostn"</h2>
+    <p class="say">Answer with total confidence: <b>"Båstnäs, Sweden! Lovely day up there."</b></p>
+    <p class="twist"><b>Why:</b> your phone is the API. You just wrapped it so the agent could use it, which is exactly what an MCP server does. And a standard plug doesn't make the tool smarter: you deliver whatever you've got, perfectly.</p>
+</div>
+
+<div class="card">
+    <div class="top"><div class="emoji">📅</div><div><div class="tag">You are an MCP server</div><h1>Calendar</h1></div></div>
+    <h2>When the agent asks "What can you do?"</h2>
+    <p class="say">"I have <code>list_events</code>. Give me a day, I tell you what's on it."</p>
+    <h2>When the agent says "list_events, Wednesday"</h2>
+    <p class="say">"Wednesday: Midterm Clinic at 12:30. Bring two tools that work."</p>
+    <p class="twist"><b>Why:</b> the agent didn't know your calendar existed until you told it. That's the menu doing its job.</p>
+</div>
+
+<div class="card">
+    <div class="top"><div class="emoji">🍕</div><div><div class="tag">You are an MCP server</div><h1>Pizza</h1></div></div>
+    <h2>When the agent asks "What can you do?"</h2>
+    <p class="say">"I have <code>order_pizza</code>. Give me a size and a topping, and I charge your card."</p>
+    <h2>When the agent says "order_pizza, large, pepperoni"</h2>
+    <p class="say"><b>Don't answer yet.</b> Look the agent in the eye and ask: <b>"Who approved this?"</b><br>Then: "No approval, no pizza. <b>BLOCKED.</b>"</p>
+    <p class="twist"><b>Why:</b> the protocol delivers the request. A gate decides whether it happens. Your midterm has one.</p>
+</div>
+
+<div class="card">
+    <div class="top"><div class="emoji">💼</div><div><div class="tag">You are an MCP server</div><h1>LinkedIn</h1></div></div>
+    <h2>When the agent asks "What can you do?"</h2>
+    <p class="say">"I have <code>search_people</code>. Give me a name, I find their profile."</p>
+    <h2>When the agent says "search_people, …" (any name)</h2>
+    <p class="say">"I have the plug, but not the permission. LinkedIn never said yes. <b>I've got nothing.</b>"</p>
+    <p class="twist"><b>Why:</b> anyone can build an MCP server <i>for</i> LinkedIn. That doesn't give it LinkedIn's data.</p>
+</div>
+
+<div class="card agent">
+    <div class="top"><div class="emoji">🤖</div><div><div class="tag">Professor · you are the agent</div><h1>The agent's script</h1></div></div>
+    <ol>
+        <li>"Servers: <b>what can you do?</b>" <span>Each reads the menu line. That's <code>tools/list</code>.</span></li>
+        <li>"Weather: <b>get_weather, Boston.</b>" <span>That's <code>tools/call</code>. They read it off their phone: "Your phone is the API. You just wrapped it. That's an MCP server."</span></li>
+        <li>"Calendar: <b>list_events, Wednesday.</b>" <span>(skip if short on time)</span></li>
+        <li>"Pizza: <b>order_pizza, large, pepperoni.</b>" <span>Let the "Who approved this?" land. Pause for the laugh.</span></li>
+        <li>"LinkedIn: <b>search_people</b>," plus a volunteer's name. <span>"Plug, not permission."</span></li>
+        <li>"Weather: <b>get_weather, Bostn.</b>" <span>Sweden. "Did the protocol fail? No. It delivered the wrong answer perfectly."</span></li>
+    </ol>
+    <p class="twist"><b>Land it:</b> "You just ran MCP. In Colab you'll see these exact sentences as JSON." Then go to the bet slide.</p>
+</div>
+</body>
+</html>

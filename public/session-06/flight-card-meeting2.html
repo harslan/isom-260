@@ -22,6 +22,7 @@
     ul { list-style: none; }
     li { padding-left: 1rem; position: relative; margin-bottom: 0.22rem; }
     li::before { content: "▸"; position: absolute; left: 0; color: #b3003e; }
+</style>
 </head>
 <body>
 <div class="card">
@@ -35,14 +36,20 @@
             <tr><td class="t">12:33</td><td>3 · Three patterns: pipeline / orchestrator / debate — "every box is the Session 4 loop; multi-agent is an org chart" (5 min)</td></tr>
             <tr><td class="t">12:38</td><td>4 · When to split: permissions · specialization · context isolation · parallelism. "No reason on the list? One agent" (4 min)</td></tr>
             <tr><td class="t">12:42</td><td>5 · <span class="hl">Pair exercise</span>: should your phone bot become two? 3 min pairs + 3 pairs report. Land on "permissions is the first legit split" — <span class="cut">CUT 12:49</span></td></tr>
-            <tr><td class="t">12:49</td><td>6 · MCP — USB-C for tools; <span class="hl">"a protocol is not a permission"</span> (4 min)</td></tr>
-            <tr><td class="t">12:53</td><td>7–8 · <span class="hl">MIDTERM assigned</span>: the four requirements, the rubric, bonuses, grad addendum. Due <b>Mon Nov 2, 12:30 PM</b>, Canvas (8 min)</td></tr>
-            <tr><td class="t">1:01</td><td>9 · <span class="hl">Kickoff</span>: 10 min solo on paper → 8 min neighbor's three questions → 7 min three volunteers + room vote "one or many?" — <span class="cut">STOP 1:26</span></td></tr>
-            <tr><td class="t">1:26</td><td>10 · Session 7 RAG teaser · no HW #8 · office hours: bring the sheet (3 min)</td></tr>
-            <tr><td class="t">1:29</td><td>11 · Close. Buffer to 1:45 · say it: "Wednesday is a clinic — bring two working tools and your user's name" — use it for kickoff questions</td></tr>
+            <tr><td class="t">12:49</td><td>6 · <span class="hl">MCP: the wiring nightmare</span>. 16 custom connectors vs 8 standard plugs. "Remember when every phone had its own charger?" (2 min)</td></tr>
+            <tr><td class="t">12:51</td><td>7 · <span class="hl">API vs MCP</span>. Punchline: "MCP doesn't replace APIs. It wraps them, so any AI can use them" (2 min)</td></tr>
+            <tr><td class="t">12:53</td><td>8 · The whole protocol in three sentences. Bubbles animate in; read them aloud (1 min)</td></tr>
+            <tr><td class="t">12:54</td><td>9 · <span class="hl">🎭 Be the server</span>: four volunteers, printed cards, you play the agent. Follow the script card (3 min)</td></tr>
+            <tr><td class="t">12:57</td><td>10 · <span class="hl">🎲 The bet</span>: hands up for A/B/C, then click to reveal "one line per tool" (1 min)</td></tr>
+            <tr><td class="t">12:58</td><td>11 · <span class="hl">LIVE DEMO in Colab</span>: see the runbook (5 min)</td></tr>
+            <tr><td class="t">1:03</td><td>12 · "A protocol is not a permission": call back to Pizza and LinkedIn — <span class="cut">CUT 1:04</span></td></tr>
+            <tr><td class="t">1:04</td><td>13–14 · <span class="hl">MIDTERM assigned</span>: the four requirements, the rubric, bonuses, grad addendum. Due <b>Mon Nov 2, 12:30 PM</b>, Canvas (8 min)</td></tr>
+            <tr><td class="t">1:12</td><td>15 · <span class="hl">Kickoff</span>: 10 min solo on paper → 8 min neighbor's three questions → 7 min three volunteers + room vote "one or many?" — <span class="cut">STOP 1:37</span></td></tr>
+            <tr><td class="t">1:37</td><td>16 · Session 7 RAG teaser · no HW #8 · office hours: bring the sheet (3 min)</td></tr>
+            <tr><td class="t">1:40</td><td>17 · Close. Buffer to 1:45 · say it: "Wednesday is a clinic — bring two working tools and your user's name"</td></tr>
         </table>
 
-        <h2>Kickoff sheet (slide 9) — write on the board</h2>
+        <h2>Kickoff sheet (slide 15) — write on the board</h2>
         <div class="mono">PROBLEM:  ___________________________   USER (a name): ___________
 TOOL 1: ____________  TOOL 2 (real API): ____________
 RISKY ACTION: ____________   WHO APPROVES: ____________
@@ -62,18 +69,34 @@ NEIGHBOR'S WORST QUESTION: _______________________________</div>
             <li>Grad students → the one-page architecture proposal is on the brief: tools, flow, trade-offs incl. one-vs-many and build-vs-buy</li>
         </ul>
 
-        <h2>If behind at 1:01</h2>
+        <h2>MCP live demo (slide 11) · the runbook</h2>
         <ul>
+            <li><b>12:20, before students arrive:</b> open <b>ISOM260_Session6_MCP_Live_Demo.ipynb</b> in Colab, check the GOOGLE_API_KEY secret, and Run all once (the pip install takes ~30 s). Leave the tab open</li>
+            <li><b>Live, re-run these cells:</b> 🔨 server ("find the one new line") → 📡 X-ray → ① menu ("nobody typed this JSON") → 🤖 <code>ask("umbrella…")</code>, then narrate the bubbles: blue asks, purple answers, green is Gemini → ➕ <code>days_until</code> and the midterm question → 🇸🇪 Bostn</li>
+            <li>Beat: "These are the sentences our volunteers just said. Same three, in JSON"</li>
+            <li>The 🔒 gate cell is a bonus for tonight. Run it live only if you're ahead: ⛔ BLOCKED in red is the Pizza card in code</li>
+            <li><b>Fallback:</b> if Gemini errors, the ①, ② and 🇸🇪 cells need no AI and still draw bubbles. If Colab is down, the role-play was the demo</li>
+        </ul>
+
+        <h2>Role-play (slide 9) · printed cards</h2>
+        <ul>
+            <li>Print <b>session-06/mcp-server-cards.html</b> (two cards per page). Four server cards plus your agent script</li>
+            <li>Volunteers stand at the front holding their card. They read the bold lines; Pizza and LinkedIn get the laughs</li>
+        </ul>
+
+        <h2>If behind at 12:49</h2>
+        <ul>
+            <li>Keep slides 6, 7, 9 (role-play), 12. Skip the bet and the demo: "the notebook is on the site, try it tonight"</li>
             <li>Kickoff shrinks to 10 min solo + 5 min neighbor; skip the volunteers</li>
-            <li>Slides 7–8 are untouchable; MCP (slide 6) can become one sentence</li>
+            <li>Slides 13–14 (the midterm) are untouchable</li>
         </ul>
 
         <h2>Before / after</h2>
         <ul>
             <li>⚠️ <b>Read the brief tonight</b> (session-06/midterm-project.html) — the rubric weights and bonuses are Claude's proposal; adjust before students see it</li>
             <li>Canvas: create the <b>Midterm Project assignment</b> (due Mon Nov 2, 12:30 PM, two files: .ipynb + memo PDF) · HW #7 closes Thu Oct 22 · no HW #8</li>
-            <li>Print or project the kickoff sheet; bring blank paper — phones stay down for the 10 solo minutes</li>
-            <li>Tabs: slides · the brief · Canvas assignment</li>
+            <li>Print the kickoff sheet <b>and the MCP server cards</b>; bring blank paper — phones stay down for the 10 solo minutes</li>
+            <li>Tabs: slides · <b>MCP demo notebook in Colab (already run once)</b> · the brief · Canvas assignment</li>
             <li>After: collect the three volunteers' problems — they're your examples for Session 7's "what would RAG add?"</li>
         </ul>
     </div>

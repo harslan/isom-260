@@ -478,6 +478,91 @@
             letter-spacing: 0.25em;
         }
 
+        /* MCP: wiring diagrams */
+        .wire-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; max-width: 1250px; margin: 0 auto; }
+        .wire-panel { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 1.2rem 1.4rem 1.1rem; }
+        .wire-panel.mess { border-color: rgba(255,0,110,0.3); }
+        .wire-panel.clean { border-color: rgba(179,136,255,0.4); box-shadow: 0 0 40px var(--purple-glow); }
+        .wire-head { font-family: 'JetBrains Mono', monospace; font-size: 1rem; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 0.6rem; }
+        .mess .wire-head { color: var(--magenta); }
+        .clean .wire-head { color: var(--purple); }
+        .wire-panel svg { width: 100%; height: auto; display: block; }
+        .wire-count { font-family: 'Sora', sans-serif; font-size: 1.5rem; margin-top: 0.5rem; color: var(--text-secondary); }
+        .mess .wire-count b { color: var(--magenta); font-size: 2rem; }
+        .clean .wire-count b { color: var(--purple); font-size: 2rem; }
+        .node-agent { fill: var(--bg-elevated); stroke: var(--cyan); stroke-width: 1.5; }
+        .node-tool { fill: var(--bg-elevated); stroke: var(--yellow); stroke-width: 1.5; }
+        .node-label { fill: var(--text-primary); font-family: 'DM Sans', sans-serif; font-size: 17px; font-weight: 600; text-anchor: middle; }
+        .hub { fill: rgba(179,136,255,0.18); stroke: var(--purple); stroke-width: 2.5; }
+        .hub-label { fill: var(--purple); font-family: 'Sora', sans-serif; font-size: 22px; font-weight: 800; text-anchor: middle; }
+        .wire { stroke-width: 2; stroke-dasharray: 400; stroke-dashoffset: 400; }
+        .wire-mess { stroke: var(--magenta); opacity: 0.55; }
+        .wire-clean { stroke: var(--purple); stroke-width: 2.5; }
+        .slide.active .wire { animation: draw-wire 600ms ease-out forwards; }
+        @keyframes draw-wire { to { stroke-dashoffset: 0; } }
+
+        /* MCP: API vs MCP table */
+        .vs-table { display: grid; grid-template-columns: 0.8fr 1fr 1fr; max-width: 1150px; margin: 0 auto; text-align: left; border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+        .vs-cell { padding: 1rem 1.4rem; font-size: 1.4rem; color: var(--text-secondary); border-top: 1px solid var(--border); }
+        .vs-cell b { color: var(--text-primary); font-weight: 600; }
+        .vs-cell:nth-child(3n) { background: rgba(179,136,255,0.07); }
+        .vs-corner, .vs-head { border-top: none; }
+        .vs-head { font-family: 'Sora', sans-serif; font-size: 1.8rem; font-weight: 800; display: flex; align-items: center; gap: 0.7rem; }
+        .vs-head svg { width: 30px; height: 30px; }
+        .vs-head.api { color: var(--yellow); }
+        .vs-head.mcp { color: var(--purple); }
+        .vs-row { font-family: 'JetBrains Mono', monospace; font-size: 1rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); display: flex; align-items: center; }
+        .vs-punch { margin-top: 2rem; font-family: 'Sora', sans-serif; font-size: 1.8rem; font-weight: 700; }
+
+        /* MCP: the three-sentence chat */
+        .chat { max-width: 1000px; margin: 0 auto; display: flex; flex-direction: column; gap: 1rem; }
+        .bubble { max-width: 70%; padding: 1rem 1.5rem; border-radius: 18px; font-size: 1.6rem; text-align: left; opacity: 0; }
+        .slide.active .bubble { animation: bubble-in 400ms ease-out forwards; }
+        @keyframes bubble-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+        .bubble .who { display: block; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.3rem; }
+        .bubble .num { color: var(--yellow); font-weight: 700; margin-right: 0.3rem; }
+        .bubble code { font-family: 'JetBrains Mono', monospace; font-size: 1.25rem; }
+        .bubble.agent { align-self: flex-start; background: var(--cyan-glow); border: 1px solid rgba(0,229,255,0.35); border-bottom-left-radius: 4px; }
+        .bubble.agent .who { color: var(--cyan); }
+        .bubble.server { align-self: flex-end; background: var(--purple-glow); border: 1px solid rgba(179,136,255,0.4); border-bottom-right-radius: 4px; }
+        .bubble.server .who { color: var(--purple); }
+
+        /* MCP: live demo */
+        .demo-steps { gap: 0.7rem; }
+        .demo-steps .step-item { padding: 0.75rem 1.2rem; align-items: center; }
+        .demo-steps .step-num { width: 40px; height: 40px; min-width: 40px; font-size: 1.1rem; }
+        .demo-steps .step-text { font-size: 1.3rem; }
+        .live-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--magenta); animation: pulse-live 1.4s infinite; }
+        @keyframes pulse-live { 0%, 100% { box-shadow: 0 0 0 0 rgba(255,0,110,0.6); } 50% { box-shadow: 0 0 0 8px transparent; } }
+        .code-card { background: #070a13; border: 1px solid var(--border-strong); border-radius: 16px; padding: 1.6rem 1.8rem; font-family: 'JetBrains Mono', monospace; font-size: 1.25rem; line-height: 1.7; text-align: left; color: var(--text-primary); white-space: pre; overflow-x: auto; box-shadow: 0 0 50px var(--cyan-glow); }
+        .c-k { color: var(--purple); }
+        .c-s { color: var(--green); }
+        .c-f { color: var(--cyan); }
+        .c-c { color: var(--text-dim); }
+        .c-hl { color: var(--yellow); background: rgba(255,214,0,0.12); border-radius: 4px; padding: 0 0.25rem; font-weight: 700; }
+        .c-note { color: var(--yellow); font-style: italic; }
+
+        /* MCP: role-play server cards */
+        .server-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.2rem; max-width: 1250px; margin: 0 auto; }
+        .server-card { background: var(--bg-card); border: 1px solid rgba(179,136,255,0.4); border-radius: 18px; padding: 1.8rem 1rem 1.5rem; box-shadow: 0 0 30px var(--purple-glow); }
+        .sc-emoji { font-size: 3.6rem; line-height: 1; margin-bottom: 0.8rem; }
+        .sc-name { font-family: 'Sora', sans-serif; font-size: 1.7rem; font-weight: 800; margin-bottom: 0.7rem; }
+        .server-card code { font-family: 'JetBrains Mono', monospace; font-size: 0.95rem; color: var(--purple); }
+
+        /* MCP: the bet (click reveals) */
+        .title-code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; color: var(--cyan); }
+        .bet-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.6rem; max-width: 900px; margin: 0 auto; }
+        .bet-card { position: relative; background: var(--bg-card); border: 2px solid var(--border-strong); border-radius: 20px; padding: 1.6rem 1rem 1.3rem; transition: all 500ms ease-out; }
+        .bet-letter { position: absolute; top: 0.8rem; left: 1rem; font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; color: var(--text-dim); }
+        .bet-num { font-family: 'Sora', sans-serif; font-size: clamp(3.5rem, 7vw, 5.5rem); font-weight: 800; line-height: 1; color: var(--yellow); }
+        .bet-unit { font-size: 1.3rem; color: var(--text-secondary); margin-top: 0.3rem; }
+        .bet-answer { margin-top: 2.2rem; font-family: 'Sora', sans-serif; font-size: 2rem; font-weight: 700; color: var(--green); opacity: 0; transform: translateY(10px); transition: all 500ms ease-out; }
+        .bet-answer code { font-family: 'JetBrains Mono', monospace; color: var(--yellow); background: rgba(255,214,0,0.12); padding: 0.1rem 0.6rem; border-radius: 8px; }
+        .slide.revealed .bet-answer { opacity: 1; transform: none; }
+        .slide.revealed .bet-card { opacity: 0.3; }
+        .slide.revealed .bet-card.bet-win { opacity: 1; border-color: var(--green); box-shadow: 0 0 60px var(--green-glow); transform: scale(1.08); }
+        .slide.revealed .bet-win .bet-num { color: var(--green); }
+
         /* Fullscreen tweaks */
         :fullscreen body { background: var(--bg-primary); }
 
@@ -485,6 +570,8 @@
             .stat-grid { grid-template-columns: repeat(2, 1fr); }
             .stat-grid.two { grid-template-columns: 1fr; }
             .split { grid-template-columns: 1fr; }
+            .wire-grid { grid-template-columns: 1fr; }
+            .server-cards { grid-template-columns: repeat(2, 1fr); }
         }
 
         /* Compact mode for short viewports (720p projectors, small laptops) */
@@ -505,6 +592,21 @@
             .hw-item { padding: 0.9rem 1.4rem; font-size: 1.2rem; }
             .hw-punch { margin-top: 1.3rem; font-size: 1.35rem; }
             .qr-frame img { width: 210px; height: auto; }
+            .wire-count { font-size: 1.15rem; }
+            .vs-cell { padding: 0.65rem 1.1rem; font-size: 1.15rem; }
+            .vs-head { font-size: 1.45rem; }
+            .vs-punch { margin-top: 1.2rem; font-size: 1.4rem; }
+            .bubble { font-size: 1.3rem; padding: 0.7rem 1.2rem; }
+            .chat { gap: 0.7rem; }
+            .code-card { font-size: 1.05rem; padding: 1.1rem 1.3rem; }
+            .demo-steps { gap: 0.5rem; }
+            .demo-steps .step-item { padding: 0.55rem 1rem; }
+            .demo-steps .step-text { font-size: 1.1rem; }
+            .wire-grid { max-width: 1000px; }
+            .server-card { padding: 1.2rem 0.8rem 1rem; }
+            .sc-emoji { font-size: 2.8rem; }
+            .sc-name { font-size: 1.4rem; }
+            .bet-answer { margin-top: 1.4rem; font-size: 1.6rem; }
         }
     </style>
 </head>
@@ -515,7 +617,7 @@
     <div class="glow-orb glow-orb-3"></div>
 
     <div class="deck-progress"><div class="deck-progress-fill" id="progressFill"></div></div>
-    <div class="slide-counter" id="slideCounter">1 / 11</div>
+    <div class="slide-counter" id="slideCounter">1 / 17</div>
     <div class="nav-hint" id="navHint">→ to advance · F for fullscreen</div>
 
     <!-- ═══════════════ SLIDE 1 · TITLE ═══════════════ -->
@@ -618,30 +720,194 @@
         </div>
     </section>
 
-    <!-- ═══════════════ SLIDE 6 · MCP ═══════════════ -->
+    <!-- ═══════════════ SLIDE 6 · MCP ① THE WIRING PROBLEM ═══════════════ -->
     <section class="slide">
         <div class="slide-inner">
-            <div class="slide-label purple">One acronym you'll hear in every vendor pitch</div>
-            <h2 class="slide-title">MCP: a standard <span class="gradient-text">plug for tools.</span></h2>
-            <div class="check-list">
-                <div class="check-item">
-                    <div class="check-icon" style="background: var(--purple-glow); color: var(--purple);"><i data-lucide="wrench"></i></div>
-                    <div class="check-text">Until now, you wrote every tool by hand <span>a job description plus a Python function, registered in your loop</span></div>
+            <div class="slide-label purple">MCP · the acronym in every vendor pitch</div>
+            <h2 class="slide-title">Every AI × every app = <span class="gradient-text">a wiring nightmare.</span></h2>
+            <div class="wire-grid">
+                <div class="wire-panel mess">
+                    <div class="wire-head">Without MCP</div>
+                    <svg viewBox="0 0 520 324" role="img" aria-label="Without MCP: 4 × 4 = <b>16</b> custom connectors">
+<line class="wire wire-mess" style="animation-delay:0ms" x1="130" y1="42" x2="390" y2="42"/>
+<line class="wire wire-mess" style="animation-delay:45ms" x1="130" y1="42" x2="390" y2="122"/>
+<line class="wire wire-mess" style="animation-delay:90ms" x1="130" y1="42" x2="390" y2="202"/>
+<line class="wire wire-mess" style="animation-delay:135ms" x1="130" y1="42" x2="390" y2="282"/>
+<line class="wire wire-mess" style="animation-delay:180ms" x1="130" y1="122" x2="390" y2="42"/>
+<line class="wire wire-mess" style="animation-delay:225ms" x1="130" y1="122" x2="390" y2="122"/>
+<line class="wire wire-mess" style="animation-delay:270ms" x1="130" y1="122" x2="390" y2="202"/>
+<line class="wire wire-mess" style="animation-delay:315ms" x1="130" y1="122" x2="390" y2="282"/>
+<line class="wire wire-mess" style="animation-delay:360ms" x1="130" y1="202" x2="390" y2="42"/>
+<line class="wire wire-mess" style="animation-delay:405ms" x1="130" y1="202" x2="390" y2="122"/>
+<line class="wire wire-mess" style="animation-delay:450ms" x1="130" y1="202" x2="390" y2="202"/>
+<line class="wire wire-mess" style="animation-delay:495ms" x1="130" y1="202" x2="390" y2="282"/>
+<line class="wire wire-mess" style="animation-delay:540ms" x1="130" y1="282" x2="390" y2="42"/>
+<line class="wire wire-mess" style="animation-delay:585ms" x1="130" y1="282" x2="390" y2="122"/>
+<line class="wire wire-mess" style="animation-delay:630ms" x1="130" y1="282" x2="390" y2="202"/>
+<line class="wire wire-mess" style="animation-delay:675ms" x1="130" y1="282" x2="390" y2="282"/>
+
+<rect class="node-agent" x="10" y="20" width="120" height="44" rx="10"/><text class="node-label" x="70" y="48">ChatGPT</text>
+<rect class="node-agent" x="10" y="100" width="120" height="44" rx="10"/><text class="node-label" x="70" y="128">Claude</text>
+<rect class="node-agent" x="10" y="180" width="120" height="44" rx="10"/><text class="node-label" x="70" y="208">Gemini</text>
+<rect class="node-agent" x="10" y="260" width="120" height="44" rx="10"/><text class="node-label" x="70" y="288">Your bot</text>
+<rect class="node-tool" x="390" y="20" width="120" height="44" rx="10"/><text class="node-label" x="450" y="48">Gmail</text>
+<rect class="node-tool" x="390" y="100" width="120" height="44" rx="10"/><text class="node-label" x="450" y="128">Calendar</text>
+<rect class="node-tool" x="390" y="180" width="120" height="44" rx="10"/><text class="node-label" x="450" y="208">Slack</text>
+<rect class="node-tool" x="390" y="260" width="120" height="44" rx="10"/><text class="node-label" x="450" y="288">Weather</text>
+                    </svg>
+                    <div class="wire-count">4 × 4 = <b>16</b> custom connectors</div>
                 </div>
-                <div class="check-item">
-                    <div class="check-icon" style="background: var(--purple-glow); color: var(--purple);"><i data-lucide="plug"></i></div>
-                    <div class="check-text">Model Context Protocol <span>a server publishes its tools in a standard format; any agent can plug in. USB-C for tools. Thousands of servers exist</span></div>
-                </div>
-                <div class="check-item">
-                    <div class="check-icon" style="background: var(--purple-glow); color: var(--purple);"><i data-lucide="lock"></i></div>
-                    <div class="check-text"><strong>A protocol is not a permission</strong> <span>an MCP server for LinkedIn does not give you LinkedIn's data. Authorization is a separate conversation — usually with a lawyer</span></div>
+                <div class="wire-panel clean">
+                    <div class="wire-head">With MCP</div>
+                    <svg viewBox="0 0 520 324" role="img" aria-label="With MCP: 4 + 4 = <b>8</b> standard plugs">
+<line class="wire wire-clean" style="animation-delay:0ms" x1="130" y1="42" x2="214" y2="170"/>
+<line class="wire wire-clean" style="animation-delay:90ms" x1="130" y1="122" x2="214" y2="170"/>
+<line class="wire wire-clean" style="animation-delay:180ms" x1="130" y1="202" x2="214" y2="170"/>
+<line class="wire wire-clean" style="animation-delay:270ms" x1="130" y1="282" x2="214" y2="170"/>
+<line class="wire wire-clean" style="animation-delay:360ms" x1="306" y1="170" x2="390" y2="42"/>
+<line class="wire wire-clean" style="animation-delay:450ms" x1="306" y1="170" x2="390" y2="122"/>
+<line class="wire wire-clean" style="animation-delay:540ms" x1="306" y1="170" x2="390" y2="202"/>
+<line class="wire wire-clean" style="animation-delay:630ms" x1="306" y1="170" x2="390" y2="282"/>
+<circle class="hub" cx="260" cy="170" r="46"/><text class="hub-label" x="260" y="177">MCP</text>
+<rect class="node-agent" x="10" y="20" width="120" height="44" rx="10"/><text class="node-label" x="70" y="48">ChatGPT</text>
+<rect class="node-agent" x="10" y="100" width="120" height="44" rx="10"/><text class="node-label" x="70" y="128">Claude</text>
+<rect class="node-agent" x="10" y="180" width="120" height="44" rx="10"/><text class="node-label" x="70" y="208">Gemini</text>
+<rect class="node-agent" x="10" y="260" width="120" height="44" rx="10"/><text class="node-label" x="70" y="288">Your bot</text>
+<rect class="node-tool" x="390" y="20" width="120" height="44" rx="10"/><text class="node-label" x="450" y="48">Gmail</text>
+<rect class="node-tool" x="390" y="100" width="120" height="44" rx="10"/><text class="node-label" x="450" y="128">Calendar</text>
+<rect class="node-tool" x="390" y="180" width="120" height="44" rx="10"/><text class="node-label" x="450" y="208">Slack</text>
+<rect class="node-tool" x="390" y="260" width="120" height="44" rx="10"/><text class="node-label" x="450" y="288">Weather</text>
+                    </svg>
+                    <div class="wire-count">4 + 4 = <b>8</b> standard plugs</div>
                 </div>
             </div>
-            <p class="footer-note">When a vendor says "it's MCP-compatible," your question is: compatible with what, and who said yes?</p>
+            <p class="footer-note">Remember when every phone had its own charger? <strong style="color: var(--purple); font-style: normal;">MCP is USB-C for AI.</strong></p>
         </div>
     </section>
 
-    <!-- ═══════════════ SLIDE 7 · THE MIDTERM ═══════════════ -->
+    <!-- ═══════════════ SLIDE 7 · MCP ② API VS MCP ═══════════════ -->
+    <section class="slide">
+        <div class="slide-inner">
+            <div class="slide-label purple">Open standard · Anthropic, Nov 2024 · now OpenAI, Google, Microsoft</div>
+            <h2 class="slide-title">API vs MCP: <span class="gradient-text">what's the difference?</span></h2>
+            <div class="vs-table">
+                <div class="vs-cell vs-corner"></div>
+                <div class="vs-cell vs-head api"><i data-lucide="book-open"></i> API</div>
+                <div class="vs-cell vs-head mcp"><i data-lucide="plug"></i> MCP</div>
+
+                <div class="vs-cell vs-row">Built for</div>
+                <div class="vs-cell">a <b>developer</b> who reads the docs</div>
+                <div class="vs-cell">an <b>AI agent</b>, while it's running</div>
+
+                <div class="vs-cell vs-row">How it explains itself</div>
+                <div class="vs-cell">a documentation website</div>
+                <div class="vs-cell">the agent asks <b>"What can you do?"</b></div>
+
+                <div class="vs-cell vs-row">Every new app</div>
+                <div class="vs-cell">new custom code</div>
+                <div class="vs-cell"><b>plug it in</b>, same code</div>
+
+                <div class="vs-cell vs-row">Format</div>
+                <div class="vs-cell">each company's own</div>
+                <div class="vs-cell"><b>one standard</b> for everyone</div>
+            </div>
+            <p class="vs-punch">MCP doesn't replace APIs. <span class="gradient-text">It wraps them, so any AI can use them.</span></p>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SLIDE 8 · MCP ③ THREE SENTENCES ═══════════════ -->
+    <section class="slide">
+        <div class="slide-inner">
+            <div class="slide-label purple">How it works</div>
+            <h2 class="slide-title">The whole protocol, <span class="gradient-text">in three sentences.</span></h2>
+            <div class="chat">
+                <div class="bubble agent" style="animation-delay: 150ms"><span class="who">🤖 Agent</span><span class="num">①</span> "What can you do?"</div>
+                <div class="bubble server" style="animation-delay: 750ms"><span class="who">🔌 MCP server</span>"I have <code>get_weather(city)</code>: a forecast for any city."</div>
+                <div class="bubble agent" style="animation-delay: 1350ms"><span class="who">🤖 Agent</span><span class="num">②</span> "Do this: <code>get_weather("Boston")</code>"</div>
+                <div class="bubble server" style="animation-delay: 1950ms"><span class="who">🔌 MCP server</span><span class="num">③</span> "Here's the result: 57°F, 0% chance of rain."</div>
+            </div>
+            <p class="footer-note">That's it. Everything else is details. <strong style="color: var(--magenta); font-style: normal;">Now let's run it with humans.</strong></p>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SLIDE 9 · MCP · BE THE SERVER (ROLE-PLAY) ═══════════════ -->
+    <section class="slide">
+        <div class="slide-inner">
+            <div class="slide-label magenta">🎭 Role-play · 3 min · four volunteers</div>
+            <h2 class="slide-title">You are <span class="gradient-text">the MCP server.</span></h2>
+            <div class="server-cards">
+                <div class="server-card"><div class="sc-emoji">🌦️</div><div class="sc-name">Weather</div><code>get_weather(city)</code></div>
+                <div class="server-card"><div class="sc-emoji">📅</div><div class="sc-name">Calendar</div><code>list_events(day)</code></div>
+                <div class="server-card"><div class="sc-emoji">🍕</div><div class="sc-name">Pizza</div><code>order_pizza(size, topping)</code></div>
+                <div class="server-card"><div class="sc-emoji">💼</div><div class="sc-name">LinkedIn</div><code>search_people(name)</code></div>
+            </div>
+            <p class="footer-note">I'm the agent. I only know what you tell me. When I ask <b style="color: var(--cyan); font-style: normal;">"What can you do?"</b>, read your card, then do exactly what it says.</p>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SLIDE 10 · MCP · THE BET (click reveals) ═══════════════ -->
+    <section class="slide" data-reveal>
+        <div class="slide-inner">
+            <div class="slide-label yellow">🎲 Place your bet · hands up</div>
+            <h2 class="slide-title" style="max-width: 1150px; margin-left: auto; margin-right: auto;">How many new lines turn <code class="title-code">get_weather</code> into a server <span class="gradient-text">every AI can use?</span></h2>
+            <div class="bet-grid">
+                <div class="bet-card bet-win"><div class="bet-letter">A</div><div class="bet-num">1</div><div class="bet-unit">line</div></div>
+                <div class="bet-card"><div class="bet-letter">B</div><div class="bet-num">15</div><div class="bet-unit">lines</div></div>
+                <div class="bet-card"><div class="bet-letter">C</div><div class="bet-num">150</div><div class="bet-unit">lines</div></div>
+            </div>
+            <p class="bet-answer">One line per tool: <code>@mcp.tool</code>. Let me show you.</p>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SLIDE 11 · MCP ④ LIVE DEMO ═══════════════ -->
+    <section class="slide">
+        <div class="slide-inner">
+            <div class="slide-label magenta"><span class="live-dot"></span> Live demo · 5 min</div>
+            <h2 class="slide-title">Your weather tool, <span class="gradient-text">now an MCP server.</span></h2>
+            <div class="split" style="grid-template-columns: 1.05fr 1fr;">
+                <pre class="code-card"><span class="c-k">from</span> fastmcp <span class="c-k">import</span> FastMCP
+mcp = FastMCP(<span class="c-s">"Weather"</span>)
+
+<span class="c-hl">@mcp.tool</span>   <span class="c-note">← the only new line</span>
+<span class="c-k">def</span> <span class="c-f">get_weather</span>(city: str) -> str:
+    <span class="c-s">"""Weather forecast for any city."""</span>
+    <span class="c-c">...  # Session 5's Open-Meteo code</span></pre>
+                <div class="step-list demo-steps">
+                    <div class="step-item"><div class="step-num">1</div><div class="step-text"><b>Build it</b>: your function plus one line</div></div>
+                    <div class="step-item"><div class="step-num">2</div><div class="step-text"><b>📡 X-ray on</b>: watch every message cross the wire</div></div>
+                    <div class="step-item"><div class="step-num">3</div><div class="step-text"><b>"What can you do?"</b> A menu nobody wrote</div></div>
+                    <div class="step-item"><div class="step-num">4</div><div class="step-text"><b>Plug in Gemini</b> with the same Session 4 loop</div></div>
+                    <div class="step-item"><div class="step-num">5</div><div class="step-text"><b>Add a tool</b> in 4 lines, then ask about "Bostn" 🇸🇪</div></div>
+                </div>
+            </div>
+            <p class="footer-note" style="font-style: normal; font-family: 'JetBrains Mono', monospace; font-size: 1rem;">course site → Session 6 → <span style="color: var(--cyan);">ISOM260_Session6_MCP_Live_Demo.ipynb</span> · try it tonight</p>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SLIDE 12 · MCP ⑤ PROTOCOL ≠ PERMISSION ═══════════════ -->
+    <section class="slide">
+        <div class="slide-inner">
+            <div class="slide-label purple">The one thing to remember</div>
+            <h2 class="slide-title">A protocol is <span class="gradient-text">not a permission.</span></h2>
+            <div class="check-list">
+                <div class="check-item">
+                    <div class="check-icon" style="background: var(--purple-glow); color: var(--purple); font-size: 1.8rem;">🍕</div>
+                    <div class="check-text">The Pizza server asked: "Who approved this?" <span>the protocol delivers the request; a gate decides. Your midterm already has one</span></div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon" style="background: var(--purple-glow); color: var(--purple); font-size: 1.8rem;">💼</div>
+                    <div class="check-text">The LinkedIn server had the plug, not the data <span>an MCP server for LinkedIn doesn't give you LinkedIn's data. Authorization is a separate conversation, usually with a lawyer</span></div>
+                </div>
+                <div class="check-item">
+                    <div class="check-icon" style="background: var(--purple-glow); color: var(--purple); font-size: 1.8rem;">🔑</div>
+                    <div class="check-text">A server is code that runs with your keys <span>installing a stranger's MCP server is like hiring a stranger and handing them your passwords</span></div>
+                </div>
+            </div>
+            <p class="footer-note">When a vendor says "it's MCP-compatible," ask: compatible with what, and who said yes?</p>
+        </div>
+    </section>
+
+    <!-- ═══════════════ SLIDE 13 · THE MIDTERM ═══════════════ -->
     <section class="slide">
         <div class="slide-inner">
             <div class="slide-label yellow">Midterm Project · assigned today · due Mon Nov 2 · 12:30 PM · 20% (grad 15%)</div>
@@ -668,7 +934,7 @@
         </div>
     </section>
 
-    <!-- ═══════════════ SLIDE 8 · RUBRIC ═══════════════ -->
+    <!-- ═══════════════ SLIDE 14 · RUBRIC ═══════════════ -->
     <section class="slide">
         <div class="slide-inner">
             <div class="slide-label yellow">How it's graded · 100 points</div>
@@ -699,7 +965,7 @@
         </div>
     </section>
 
-    <!-- ═══════════════ SLIDE 9 · KICKOFF ═══════════════ -->
+    <!-- ═══════════════ SLIDE 15 · KICKOFF ═══════════════ -->
     <section class="slide">
         <div class="slide-inner">
             <div class="slide-label cyan">Kickoff · 25 min · paper first</div>
@@ -733,7 +999,7 @@
         </div>
     </section>
 
-    <!-- ═══════════════ SLIDE 10 · NEXT + LOGISTICS ═══════════════ -->
+    <!-- ═══════════════ SLIDE 16 · NEXT + LOGISTICS ═══════════════ -->
     <section class="slide">
         <div class="slide-inner">
             <div class="slide-label cyan">Session 7 · Mon Oct 26 + Wed Oct 28</div>
@@ -755,7 +1021,7 @@
         </div>
     </section>
 
-    <!-- ═══════════════ SLIDE 11 · CLOSER ═══════════════ -->
+    <!-- ═══════════════ SLIDE 17 · CLOSER ═══════════════ -->
     <section class="slide">
         <div class="slide-inner">
             <div class="closer-title">See you <span class="gradient-text">Wednesday.</span></div>
@@ -792,7 +1058,11 @@
                 progressFill.style.width = (total > 1 ? (current / (total - 1)) * 100 : 100) + '%';
             }
 
-            function next() { show(current + 1); }
+            function next() {
+                const s = slides[current];
+                if (s.hasAttribute('data-reveal') && !s.classList.contains('revealed')) { s.classList.add('revealed'); return; }
+                show(current + 1);
+            }
             function prev() { show(current - 1); }
 
             document.addEventListener('keydown', function (e) {

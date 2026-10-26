@@ -94,18 +94,20 @@
     {
       "time": "Mon Oct 19 · 12:30 PM",
       "title": "Meeting 2 · One Agent or Many?",
-      "duration": "23 minutes",
-      "description": "Three patterns on paper, the rule for splitting, your phone bot as the case, and MCP in one slide.",
+      "duration": "34 minutes",
+      "description": "Three patterns on paper, the rule for splitting, your phone bot as the case. Then MCP: API vs MCP, the whole protocol in three sentences, a role-play where four of you are the servers, and a live demo where the Session 5 weather tool becomes an MCP server.",
       "bulletPoints": [
         "Pipeline, orchestrator, debate — every box is the Session 4 loop; multi-agent is an org chart",
         "Split only when you can name the reason: permissions, specialization, context isolation, parallelism",
         "Pair exercise: should your phone bot become two? The first legitimate split is permissions, the day send_email talks to a real inbox",
-        "MCP: a standard plug for tools. A protocol is not a permission"
+        "MCP: USB-C for AI. It doesn't replace APIs, it wraps them so any AI can use them",
+        "Be the server: Weather, Calendar, Pizza ('who approved this?'), and LinkedIn ('the plug, not the permission')",
+        "Live demo with an X-ray: every MCP message drawn as it crosses the wire. @mcp.tool turns a function into a server, and 'Bostn' still lands in Sweden"
       ],
       "isBreak": false
     },
     {
-      "time": "Mon Oct 19 · 12:53 PM",
+      "time": "Mon Oct 19 · 1:04 PM",
       "title": "The Midterm Project, Assigned",
       "duration": "8 minutes",
       "description": "Your bot, for a real problem. Four requirements, the rubric, the bonuses, the grad addendum. Due Mon Nov 2, 12:30 PM.",
@@ -116,7 +118,7 @@
       "isBreak": false
     },
     {
-      "time": "Mon Oct 19 · 1:01 PM",
+      "time": "Mon Oct 19 · 1:12 PM",
       "title": "Kickoff: Leave with a Plan",
       "duration": "25 minutes",
       "description": "Ten minutes alone on paper, eight minutes of a neighbor trying to break it, three volunteers and a room vote.",
@@ -128,9 +130,9 @@
       "isBreak": false
     },
     {
-      "time": "Mon Oct 19 · 1:26 PM",
+      "time": "Mon Oct 19 · 1:37 PM",
       "title": "Wrap: Session 7 + Logistics",
-      "duration": "19 minutes",
+      "duration": "8 minutes",
       "description": "Your agent doesn't know your business yet. No HW #8 while the midterm is open. Office hours: bring the sheet, not the code.",
       "bulletPoints": [
         "Session 7 Mon Oct 26: RAG — a search tool over your own documents",
@@ -300,6 +302,15 @@
       "badge": "Docs",
       "badgeType": "reference",
       "linkText": "Read the paper"
+    },
+    {
+      "title": "Your Tool, Plugged In — MCP Live Demo (Meeting 2)",
+      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-06/ISOM260_Session6_MCP_Live_Demo.ipynb",
+      "description": "The Monday demo, yours to run: the weather tool becomes an MCP server, an X-ray draws every message on the wire, and a gate in the server says BLOCKED. Five minutes, one GOOGLE_API_KEY.",
+      "icon": "plug-zap",
+      "badge": "Hands-On",
+      "badgeType": "interactive",
+      "linkText": "Open in Colab"
     },
     {
       "title": "Model Context Protocol",
