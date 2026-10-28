@@ -254,11 +254,11 @@
       "steps": [
         {
           "title": "Paste your document",
-          "description": "Three questions: one it can answer, one it cannot, one about a number. Then plant a sentence that gives orders and see if it obeys."
+          "description": "Three questions: one it can answer, one it cannot, one about a number. Then set ADD_ORDER = True and see if it obeys a planted sentence. No document with you? USE_SAMPLE = True gives you a sample lease."
         },
         {
           "title": "Ten lines into your midterm agent",
-          "description": "search_documents plus its declaration, DOCS = your user's documents, two prompt rules, one 'not found' test for the memo."
+          "description": "Copy the Part 8 cell whole under your TOOLBOX cell: your user's documents in DOCS, the two prompt rules it prints, one 'not found' test for the memo."
         },
         {
           "title": "Midterm checkpoints",

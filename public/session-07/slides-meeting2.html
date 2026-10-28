@@ -552,7 +552,7 @@
                     <div class="check-text">And you brought a document <span>lease · offer letter · handbook · terms of service · a syllabus from another class</span></div>
                 </div>
             </div>
-            <p class="footer-note">No document? Pick any PDF on your laptop you have signed. Everyone has one.</p>
+            <p class="footer-note">No document with you? No problem: the notebook has a sample apartment lease ready. One switch.</p>
         </div>
     </section>
 
@@ -593,11 +593,11 @@
                     </div>
                     <div class="step-item">
                         <div class="step-num">2</div>
-                        <div class="step-text">Part 7: paste it into <code>MY_DOC_TEXT</code>, write <strong>three questions</strong> in <code>MY_QUESTIONS</code> (one it can answer, one it cannot, one about a number). Run</div>
+                        <div class="step-text">Part 7: paste it into <code>MY_DOC_TEXT</code>, write <strong>three questions</strong> (one it can answer, one it cannot, one about a number). Run. <span style="color:var(--text-secondary)">No document? <code>USE_SAMPLE = True</code></span></div>
                     </div>
                     <div class="step-item">
                         <div class="step-num">3</div>
-                        <div class="step-text">Add one sentence to your document that <strong>gives the agent an order</strong>. Ask again. Did it obey?</div>
+                        <div class="step-text">Set <code>ADD_ORDER = True</code> and run again: a sentence that <strong>gives the agent an order</strong> joins your document. Did it obey?</div>
                     </div>
                     <div class="step-item">
                         <div class="step-num">4</div>
@@ -636,7 +636,7 @@
                     <div class="check-text">One test for the memo <span>a question the documents don't answer — "not found" is the right answer</span></div>
                 </div>
             </div>
-            <p class="footer-note">No personal key in your midterm notebook? Change one line: <code>client = genai.Client(api_key=GOOGLE_API_KEY, http_options={"base_url": "https://sawyer-ai-sandbox.vercel.app/api/gemini"})</code> and put your class pass in Secrets.</p>
+            <p class="footer-note">Midterm notebook asks for a personal key? Copy the setup cell from the new Midterm Starter (Session 6 page), then put your class pass in 🔑 Secrets.</p>
             <p class="footer-note">Optional for the midterm. Central to the final. Ten lines either way.</p>
         </div>
     </section>
@@ -660,6 +660,7 @@
                 </div>
             </div>
             <p class="footer-note">Every "chat with your documents" vendor is selling this week's notebooks with a nicer login page.</p>
+            <p class="footer-note" style="margin-top:.8rem;">Monday: Gemini holds a million tokens, so is search dead? <strong style="color:var(--text-primary)">You'll find out by playing the AI.</strong></p>
         </div>
     </section>
 
