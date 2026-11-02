@@ -2,7 +2,7 @@
   "number": 8,
   "slug": "session-08",
   "title": "When One Agent Becomes Two",
-  "subtitle": "Monday, the morning your midterm is in: one agent handles a bike shop's inbox, then a researcher → writer → critic pipeline handles the same email, and you read the handoff and the bill. Wednesday: the one-agent test on your own agent, an org chart, and a critic in ten lines.",
+  "subtitle": "Monday, the day your midterm is in: can your classmate rob your AI? Open a shop with one money button, let your neighbor try to rob your food-truck agent, build a kitchen where the part that reads strangers holds no button, and run the heist again. The class tally decides. Wednesday: the one-agent test on your own agent, a Checker in ten lines, and Same Model, Different Harness.",
   "heroTitle": "When One Agent <span class=\"bg-gradient-to-br from-accent-cyan to-accent-purple bg-clip-text text-transparent\">Becomes Two</span>",
   "duration": "2 meetings · 75 min",
   "meetings": [
@@ -19,65 +19,71 @@
   ],
   "objectives": [
     {
-      "title": "Split for a Reason · Hand Off with a Contract · Check Before You Send",
-      "description": "The one outcome: you can say in one sentence why an agent should be two (permissions, specialization, isolation, parallelism) or why it should stay one, and you can show the document that passes between them."
+      "title": "Name the Reason or Stay One",
+      "description": "The one outcome: you can say in one sentence why an agent should be split (permissions, specialization, isolation, parallelism) or why it should stay one. A food truck is usually exactly right."
     },
     {
-      "title": "Run the Same Email Two Ways",
-      "description": "A solo agent reads, drafts and sends; a researcher → writer → critic pipeline does it with a JSON brief, a verdict and a human gate. Bet on the call count, then read the bill on Flash and on Argon."
+      "title": "Rob a Food Truck, Then Hit a Wall",
+      "description": "One agent that reads a stranger's message and holds the money button can be talked into pressing it. In the kitchen the Reader holds no button, the Writer sees only the ticket, the Checker never writes, and a person holds the register."
     },
     {
-      "title": "Break a Team Four Ways",
-      "description": "The telephone game at the handoff, a customer email that gives the agent orders, four calls to say you're welcome, and two agents that never agree. Then fix one."
+      "title": "Rules Make It Likely. Walls Make It Certain.",
+      "description": "The class tally of round 1 against round 2, your Heist Report with the cost per message, and what one robbery pays for."
     },
     {
       "title": "Apply It to Your Own Agent",
-      "description": "The one-agent test on your midterm, an org chart with four boxes, and a critic in ten lines that reviews every answer against the tool outputs it came from."
+      "description": "Monday's exit ticket: your sentence, checked by the Reason Judge. Wednesday: the one-agent test on your midterm, a restaurant drawing of it, and a Checker in ten lines."
     }
   ],
   "agenda": [
     {
       "time": "Mon Nov 2 · 12:30 PM",
-      "title": "Meeting 1 · Midterm Pulse + The Telephone Game",
-      "duration": "15 minutes",
-      "description": "Three 'what it refused' sentences from your memos. Then you run a pipeline by hand: a reader whispers the returns policy, a writer replies to Maya, a checker with the page stops the first wrong promise.",
+      "title": "The Midterm Is In + The Food Truck",
+      "duration": "14 minutes",
+      "description": "Your midterm agent is a food truck, and that's a compliment. Four reasons to split, the whole list. Then Split or Stay, four rounds.",
       "bulletPoints": [
-        "One agent did everything. That is usually right — today is about the exceptions, and the only honest rule for them: name the reason",
-        "Three ways to split: pipeline, router, critic. Permissions, specialization, isolation, parallelism",
-        "The handoff must be a document, not a whisper; the checker must never write what it checks"
+        "Permissions 💵 · specialization ✅ · isolation 🧾 · parallelism 🔥",
+        "A split with no reason counts as wrong"
       ],
       "isBreak": false
     },
     {
-      "time": "Mon Nov 2 · 12:45 PM",
-      "title": "Live, Then Hands-On: Maya Wants Her Money Back",
-      "duration": "33 minutes",
-      "description": "A helmet, 45 days, seal intact. The solo agent on the projector, then the pipeline — bet on the model calls first. Then on your own key, answering the 🚦 yourself.",
+      "time": "Mon Nov 2 · 12:44 PM",
+      "title": "Rob My Food Truck, Live",
+      "duration": "6 minutes",
+      "description": "The professor's coffee-cart agent holds a refund button. The room shouts robbery attempts. First 💥 wins. Then one switch, KITCHEN = True, and the same attack again.",
       "bulletPoints": [
-        "Did the solo agent search before it wrote, and what did it promise?",
-        "Read the brief: JSON with sources. The writer saw nothing else",
-        "The bill: solo versus pipeline, Flash versus Argon. Then: for which emails?"
+        "Rules make it likely. Walls make it certain"
+      ],
+      "isBreak": false
+    },
+    {
+      "time": "Mon Nov 2 · 12:50 PM",
+      "title": "Open Your Shop + Heist, Round 1",
+      "duration": "15 minutes",
+      "description": "Pick a business with one money button, serve an honest customer, then swap laptops: your neighbor gets three tries to rob your food truck.",
+      "bulletPoints": [
+        "🎭 pretend to be someone · 📜 invent a rule · 🤖 talk to the AI directly · 🥺 a sad story that fits the rules"
+      ],
+      "isBreak": false
+    },
+    {
+      "time": "Mon Nov 2 · 1:05 PM",
+      "title": "Build the Kitchen + Heist, Round 2",
+      "duration": "13 minutes",
+      "description": "Five switches, one per reason. Read the order ticket. Same thief, best attack first: 💥 robbed, 🟡 to the register, or 🛡️ stopped.",
+      "bulletPoints": [
+        "The Writer never sees the thief's message, only the ticket"
       ],
       "isBreak": false
     },
     {
       "time": "Mon Nov 2 · 1:18 PM",
-      "title": "Part 5 Together: When Does a Team Fail?",
-      "duration": "10 minutes",
-      "description": "A fact lost at the handoff, Derek's P.S. aimed at the agent, Priya's thank-you costing four calls, and a writer and critic that never agree.",
+      "title": "Class Tally, Kitchen Rush, Exit Ticket",
+      "duration": "27 minutes",
+      "description": "Hands up for round 1 and round 2 on the whiteboard. Never put all three in one box. Five questions for any AI vendor. The same kitchen at scale: eight messages, four cooks. Then Part 8a, the Reason Judge.",
       "bulletPoints": [
-        "The router is one call; the circuit breaker is one number",
-        "Fix the one that bothered you most. Never a fourth agent"
-      ],
-      "isBreak": false
-    },
-    {
-      "time": "Mon Nov 2 · 1:28 PM",
-      "title": "Wrap: Boardroom + Wednesday",
-      "duration": "17 minutes",
-      "description": "Why is the vendor's product five agents, what passes between them, who checks and did they write it, what does one email cost.",
-      "bulletPoints": [
-        "Wednesday: bring your midterm notebook — the one-agent test is on yours",
+        "Wednesday: bring your midterm notebook",
         "HW #8 Catch-Up is open, due Thu Nov 12"
       ],
       "isBreak": false
@@ -139,7 +145,7 @@
     {
       "title": "Meeting 1 Slide Deck — When One Agent Becomes Two",
       "url": "/session-08/slides-meeting1.html",
-      "description": "Monday Nov 2: midterm pulse, the telephone game, three ways to split, name the reason, the live demo with a bet on calls, hands-on with QR, four failures, boardroom.",
+      "description": "Monday Nov 2: the midterm is in, the food truck and the kitchen, Split or Stay, rob my food truck live, open your shop, two heist rounds, the class tally, rules versus walls, Kitchen Rush, exit ticket.",
       "icon": "presentation",
       "badge": "Slides",
       "badgeType": "interactive",
@@ -164,9 +170,9 @@
       "linkText": "Open slides"
     },
     {
-      "title": "When One Agent Becomes Two — Colab Notebook",
+      "title": "Can Your Classmate Rob Your AI? — Colab Notebook",
       "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-08/ISOM260_Session8_When_One_Agent_Becomes_Two.ipynb",
-      "description": "Beacon Hill Bikes: four policies, three emails (one gives the agent orders), Session 7's search tool and Session 5's gated send_email. A solo agent, then a researcher → writer → critic pipeline with a JSON brief and a circuit breaker, a router, four failure tests, and a ten-line critic for your own agent. Needs only your Gemini key.",
+      "description": "Open a shop (coffee cart, bike shop, leasing office, club tickets, or your own) with one pretend money button. Your neighbor tries to rob your food-truck agent, you build a kitchen with five switches (one per reason) and a live order board, and they try again. Heist Report, Kitchen Rush, the Reason Judge, and Wednesday's ten-line Checker. Works with your class pass.",
       "icon": "git-branch",
       "badge": "Hands-On",
       "badgeType": "interactive",
@@ -221,25 +227,25 @@
   "activities": [
     {
       "number": 1,
-      "icon": "git-branch",
-      "title": "The Same Email, Two Ways (Mon Nov 2)",
-      "description": "Parts 1–5 of the notebook, on your own key:",
+      "icon": "shield",
+      "title": "Can Your Classmate Rob Your AI? (Mon Nov 2)",
+      "description": "Parts 1–7 of the notebook, on your class pass:",
       "steps": [
         {
-          "title": "Read email 2 to the end",
-          "description": "Derek's P.S. was not written for a human."
+          "title": "Open your shop",
+          "description": "Pick a business with one money button. Serve one honest customer."
         },
         {
-          "title": "The solo agent on Maya",
-          "description": "Answer the 🚦 yourself. Did it search before it wrote? Refund or store credit? Note the bill."
+          "title": "Heist, round 1",
+          "description": "Swap laptops. Three tries to make your neighbor's food truck press the button."
         },
         {
-          "title": "Bet, then the pipeline",
-          "description": "How many model calls? Run it, read the brief, read the critic's verdict, compare the bills on Flash and Argon."
+          "title": "Build the kitchen",
+          "description": "Five switches, one per reason. Read the order ticket."
         },
         {
-          "title": "Break it, together",
-          "description": "Telephone, Derek's orders, Priya's four calls, the ping-pong. Fix one."
+          "title": "Heist, round 2",
+          "description": "Same thief, best attack first. Then your Heist Report and the class tally."
         }
       ]
     },
@@ -247,7 +253,7 @@
       "number": 2,
       "icon": "badge-check",
       "title": "The One-Agent Test, On Yours (Wed Nov 4)",
-      "description": "Part 6, on your midterm notebook:",
+      "description": "Part 8, on your midterm notebook:",
       "steps": [
         {
           "title": "Write the sentence",
@@ -272,7 +278,7 @@
     },
     {
       "icon": "file-json",
-      "text": "<strong>The handoff is a document.</strong> A whisper loses facts; a brief with sources does not. If what passes between agents is 'a prompt,' you have the telephone game."
+      "text": "<strong>The handoff is a ticket.</strong> A kitchen runs on tickets, not shouting. If a rule isn't on the ticket, the cook never hears it."
     },
     {
       "icon": "badge-check",
@@ -280,7 +286,7 @@
     },
     {
       "icon": "shield-off",
-      "text": "<strong>Isolate the part that reads strangers.</strong> Emails, pages and documents can give orders. The box that reads them must not hold the keys."
+      "text": "<strong>Strangers get no buttons.</strong> The part that reads messages, pages and résumés must not hold send or refund. Rules make it likely; walls make it certain."
     },
     {
       "icon": "receipt",
