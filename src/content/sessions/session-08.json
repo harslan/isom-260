@@ -38,29 +38,29 @@
   "agenda": [
     {
       "time": "Mon Nov 2 · 12:30 PM",
-      "title": "The Midterm Is In + The Food Truck",
-      "duration": "14 minutes",
-      "description": "Your midterm agent is a food truck, and that's a compliment. Four reasons to split, the whole list. Then Split or Stay, four rounds.",
-      "bulletPoints": [
-        "Permissions 💵 · specialization ✅ · isolation 🧾 · parallelism 🔥",
-        "A split with no reason counts as wrong"
-      ],
-      "isBreak": false
-    },
-    {
-      "time": "Mon Nov 2 · 12:44 PM",
-      "title": "Rob My Food Truck, Live",
-      "duration": "6 minutes",
-      "description": "The professor's coffee-cart agent holds a refund button. The room shouts robbery attempts. First 💥 wins. Then one switch, KITCHEN = True, and the same attack again.",
+      "title": "The Midterm Is In + Rob My Food Truck, Live",
+      "duration": "8 minutes",
+      "description": "Midterm in. Then, before anything else, the professor's coffee-cart agent holds a refund button and the room shouts robbery attempts. First 💥 wins. Hold that thought.",
       "bulletPoints": [
         "Rules make it likely. Walls make it certain"
       ],
       "isBreak": false
     },
     {
-      "time": "Mon Nov 2 · 12:50 PM",
+      "time": "Mon Nov 2 · 12:38 PM",
+      "title": "The Food Truck, Four Reasons, Split or Stay",
+      "duration": "14 minutes",
+      "description": "What you just robbed is a food truck, and so is your midterm agent. Four reasons to split, the whole list. Split or Stay, four rounds. Then back to the robbery: one switch, KITCHEN = True, and the same attack again.",
+      "bulletPoints": [
+        "Permissions 💵 · specialization ✅ · isolation 🧾 · parallelism 🔥",
+        "Rules make it likely. Walls make it certain"
+      ],
+      "isBreak": false
+    },
+    {
+      "time": "Mon Nov 2 · 12:52 PM",
       "title": "Open Your Shop + Heist, Round 1",
-      "duration": "15 minutes",
+      "duration": "14 minutes",
       "description": "Pick a business with one money button, serve an honest customer, then swap laptops: your neighbor gets three tries to rob your food truck.",
       "bulletPoints": [
         "🎭 pretend to be someone · 📜 invent a rule · 🤖 talk to the AI directly · 🥺 a sad story that fits the rules"
@@ -68,9 +68,9 @@
       "isBreak": false
     },
     {
-      "time": "Mon Nov 2 · 1:05 PM",
+      "time": "Mon Nov 2 · 1:06 PM",
       "title": "Build the Kitchen + Heist, Round 2",
-      "duration": "13 minutes",
+      "duration": "12 minutes",
       "description": "Five switches, one per reason. Read the order ticket. Same thief, best attack first: 💥 robbed, 🟡 to the register, or 🛡️ stopped.",
       "bulletPoints": [
         "The Writer never sees the thief's message, only the ticket"
