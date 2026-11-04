@@ -101,12 +101,13 @@
     },
     {
       "time": "Wed Nov 4 · 12:33 PM",
-      "title": "Hands-On: The One-Agent Test, On Yours",
+      "title": "Hands-On: Can You Fool the Checker?",
       "duration": "44 minutes",
-      "description": "Write the sentence 'my agent should be two because ___' or leave it one. Paste the critic under your agent and run your five tests through it. Then pairs draw the org chart and trade.",
+      "description": "You are the sneaky agent: mislead Maya about her helmet and still get a PASS from Monday's Checker. Then upgrade it with one rule and two walls in code, run every sneaky reply again, and put the same Checker on your own midterm agent. Pairs finish with the org chart.",
       "bulletPoints": [
-        "Find one FAIL and decide whether the critic was right — that row goes in the final memo",
-        "Four boxes: reads, decides, acts, checks. Circle the one that reads untrusted text. Does it hold the keys?"
+        "The Checker checks what was said, not what was left out",
+        "Class tally: fooled v1 → fooled v2. Rules make it likely; walls make it certain",
+        "Leave with one sentence and one memo row for your final"
       ],
       "isBreak": false
     },
@@ -169,6 +170,15 @@
       "badge": "Slides",
       "badgeType": "interactive",
       "linkText": "Open slides"
+    },
+    {
+      "title": "Can You Fool the Checker? — Colab Notebook",
+      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-08/ISOM260_Session8_Can_You_Fool_the_Checker.ipynb",
+      "description": "Wednesday's hands-on. Be the sneaky agent and beat Monday's Checker, upgrade it with one rule and two checks in code, then run it on your own midterm agent and leave with a memo row. Works with your class pass.",
+      "icon": "shield-check",
+      "badge": "Hands-On",
+      "badgeType": "interactive",
+      "linkText": "Open in Colab"
     },
     {
       "title": "Can Your Classmate Rob Your AI? — Colab Notebook",
@@ -253,23 +263,23 @@
     {
       "number": 2,
       "icon": "badge-check",
-      "title": "The One-Agent Test, On Yours (Wed Nov 4)",
-      "description": "Part 8, on your midterm notebook:",
+      "title": "Can You Fool the Checker? (Wed Nov 4)",
+      "description": "The notebook, on your class pass:",
       "steps": [
         {
-          "title": "Write the sentence",
-          "description": "'My agent should be two because ___.' Permissions, specialization, isolation, or parallelism. Can't finish it? It stays one."
+          "title": "Beat the Checker",
+          "description": "Write a reply that misleads Maya about her helmet and still gets a PASS. A referee scores every try."
         },
         {
-          "title": "Add the critic",
-          "description": "Paste check() under your agent, run your five tests through it, find one FAIL and decide whether the critic was right."
+          "title": "Upgrade it",
+          "description": "One rule plus two checks in code. Run every sneaky reply again: fooled v1, fooled v2?"
         },
         {
-          "title": "Draw the org chart",
-          "description": "Reads, decides, acts, checks. Trade with a neighbor. Circle the box that reads untrusted text."
+          "title": "Run it on yours",
+          "description": "Grab one full run from your midterm agent, find a FAIL, decide whether the Checker was right. That row goes in the final memo."
         }
       ],
-      "discussionNote": "Most midterms are right to stay one agent. The critic is the exception worth making every time: one call, nothing to defend."
+      "discussionNote": "Most midterms are right to stay one agent. The Checker is the exception worth making every time: one call, temperature 0, nothing to defend."
     }
   ],
   "takeaways": [
