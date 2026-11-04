@@ -217,9 +217,9 @@
       "linkText": "Open in Colab"
     },
     {
-      "title": "Build Your Own HackerTube — Colab Notebook (bonus)",
+      "title": "Build Your Own HackerTube — Colab Notebook",
       "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-08/ISOM260_Session8_Build_Your_Own_HackerTube.ipynb",
-      "description": "Karpathy filtered 43M Hacker News comments down to 6,454 videos people keep recommending. Rebuild it in 30 minutes: free code sieves the river, four Gemini cooks judge only what's left, a Checker in code verifies every quote, and you download your own HackerTube site. Pick a topic to make it yours. Works with your class pass.",
+      "description": "Karpathy had Claude sift 43M Hacker News comments down to 6,454 videos people keep recommending. You rebuild it in three acts: free code sieves the river (plus one rule you write), four Gemini cooks answer the question you write while a Checker in code verifies every quote, then a small agent gets only a goal and drives the same toolbox. You leave with your own site and the bill. Pick a topic to make it yours. Works with your class pass.",
       "icon": "play-circle",
       "badge": "Hands-On",
       "badgeType": "interactive",
