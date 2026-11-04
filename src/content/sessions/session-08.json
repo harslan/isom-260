@@ -217,6 +217,15 @@
       "linkText": "Open in Colab"
     },
     {
+      "title": "Build Your Own HackerTube — Colab Notebook (bonus)",
+      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-08/ISOM260_Session8_Build_Your_Own_HackerTube.ipynb",
+      "description": "Karpathy filtered 43M Hacker News comments down to 6,454 videos people keep recommending. Rebuild it in 30 minutes: free code sieves the river, four Gemini cooks judge only what's left, a Checker in code verifies every quote, and you download your own HackerTube site. Pick a topic to make it yours. Works with your class pass.",
+      "icon": "play-circle",
+      "badge": "Hands-On",
+      "badgeType": "interactive",
+      "linkText": "Open in Colab"
+    },
+    {
       "title": "Building Effective Agents (Anthropic)",
       "url": "https://www.anthropic.com/engineering/building-effective-agents",
       "description": "The essay behind today: start simple, add orchestration only when a single call demonstrably fails. Its five patterns map onto the pipeline, router and critic you ran.",
