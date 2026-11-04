@@ -37,6 +37,16 @@
   ],
   "agenda": [
     {
+      "time": "Mon Nov 9 · 12:30 PM",
+      "title": "Opener · Midterm Debrief",
+      "duration": "6 minutes",
+      "description": "Grades are out. Three memo sentences, anonymous: what it refused, what it cost, one agent or two. Then your industry.",
+      "bulletPoints": [
+        "The memo line most of you lost points on is the one-agent sentence. Put Wednesday's version in your final memo"
+      ],
+      "isBreak": false
+    },
+    {
       "time": "5:00 PM - 5:15 PM",
       "title": "Part 1: The Industry Pivot",
       "duration": "15 minutes",
@@ -116,6 +126,15 @@
     }
   ],
   "resources": [
+    {
+      "title": "Midterm Debrief — Slides",
+      "url": "/session-09/slides-midterm-debrief.html",
+      "description": "Monday Nov 9 opener: three memo sentences, anonymous — what it refused, what it cost, one agent or two.",
+      "icon": "presentation",
+      "badge": "Slides",
+      "badgeType": "interactive",
+      "linkText": "Open slides"
+    },
     {
       "title": "Industry Agent Starter Notebook",
       "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-09/ISOM260_Session9_Industry_Agents.ipynb",

@@ -90,18 +90,19 @@
     },
     {
       "time": "Wed Nov 4 · 12:30 PM",
-      "title": "Meeting 2 · Midterm Debrief + Monday in One Slide",
-      "duration": "9 minutes",
-      "description": "Three memo sentences, anonymous: what it refused, what it cost, one agent or two. Then the three rules in one slide.",
+      "title": "Meeting 2 · Monday in One Slide",
+      "duration": "3 minutes",
+      "description": "The three rules from Monday in one slide: name the reason, the handoff is a ticket, strangers get no buttons.",
       "bulletPoints": [
-        "The memo line most of you lost points on is the one we fix today"
+        "Rules make it likely. Walls make it certain",
+        "The midterm debrief moves to Monday, Session 9"
       ],
       "isBreak": false
     },
     {
-      "time": "Wed Nov 4 · 12:39 PM",
+      "time": "Wed Nov 4 · 12:33 PM",
       "title": "Hands-On: The One-Agent Test, On Yours",
-      "duration": "38 minutes",
+      "duration": "44 minutes",
       "description": "Write the sentence 'my agent should be two because ___' or leave it one. Paste the critic under your agent and run your five tests through it. Then pairs draw the org chart and trade.",
       "bulletPoints": [
         "Find one FAIL and decide whether the critic was right — that row goes in the final memo",
@@ -113,7 +114,7 @@
       "time": "Wed Nov 4 · 1:17 PM",
       "title": "The Bill + From Midterm to Final",
       "duration": "10 minutes",
-      "description": "Solo versus pipeline versus Argon in the Cost of Thinking calculator, the price of one wrong promise, and the road to the final: HW #8, HW #9 pitch, your midterm as the starting point.",
+      "description": "Food truck versus kitchen versus Argon in the Cost of Thinking calculator, the price of one wrong promise, and the road to the final: HW #8, HW #9 pitch, your midterm as the starting point.",
       "bulletPoints": [
         "HW #8 Catch-Up due Thu Nov 12 · HW #9 Final Project Pitch due Thu Nov 19",
         "Monday: Session 9, agents for your industry — bring the industry you want to work in"
@@ -154,7 +155,7 @@
     {
       "title": "Meeting 2 Slide Deck — The One-Agent Test",
       "url": "/session-08/slides-meeting2.html",
-      "description": "Wednesday Nov 4: midterm debrief, Monday in one slide, the test on your own agent, org charts in pairs, the bill, from midterm to final.",
+      "description": "Wednesday Nov 4: Monday in one slide, the test on your own agent, org charts in pairs, the bill, from midterm to final.",
       "icon": "presentation",
       "badge": "Slides",
       "badgeType": "interactive",
