@@ -136,6 +136,15 @@
       "linkText": "Open slides"
     },
     {
+      "title": "Dailies Jr. Studio — your team builds the video harness",
+      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-08/ISOM260_Dailies_Jr_Studio.ipynb",
+      "description": "Monday: Teams of 2–3, on your class pass. Pick an industry and an idea, run Wednesday's video harness, then make it yours: your own rule in code, a Brand Guardian, a Narrator with a timing wall, your industry's red lines. Approve it, print your Premiere ticket, and the best plans get rendered as real AI video in class.",
+      "icon": "clapperboard",
+      "badge": "Hands-On",
+      "badgeType": "interactive",
+      "linkText": "Open in Colab"
+    },
+    {
       "title": "Industry Agent Starter Notebook",
       "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-09/ISOM260_Session9_Industry_Agents.ipynb",
       "description": "Starter templates for Marketing, Finance, HR, and Operations agents. Pick your track and build.",

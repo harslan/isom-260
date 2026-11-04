@@ -199,6 +199,15 @@
       "linkText": "Open in Colab"
     },
     {
+      "title": "Dailies Jr. Studio — your team builds the video harness",
+      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-08/ISOM260_Dailies_Jr_Studio.ipynb",
+      "description": "Teams of 2–3, on your class pass. Pick an industry and an idea, run Wednesday's video harness, then make it yours: your own rule in code, a Brand Guardian, a Narrator with a timing wall, your industry's red lines. Approve it, print your Premiere ticket, and the best plans get rendered as real AI video in class.",
+      "icon": "clapperboard",
+      "badge": "Hands-On",
+      "badgeType": "interactive",
+      "linkText": "Open in Colab"
+    },
+    {
       "title": "Same Model, Different Harness — Colab Notebook",
       "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-08/ISOM260_Session8_Same_Model_Different_Harness.ipynb",
       "description": "One photo, three harnesses: just ask, add the four rules image-blaster uses, then a check in code with one fix. Counts the rejects and prints the bill per 1,000 photos. Use the class photo or your own. Works with your class pass.",
