@@ -181,7 +181,7 @@
     {
       "title": "Same Model, Different Harness — Colab Notebook",
       "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-08/ISOM260_Session8_Same_Model_Different_Harness.ipynb",
-      "description": "One photo, three harnesses: just ask, add the four rules image-blaster uses, then a check in code with one fix. Counts the rejects and prints the bill per 1,000 photos. Use the class photo or your own. Needs only your Gemini key.",
+      "description": "One photo, three harnesses: just ask, add the four rules image-blaster uses, then a check in code with one fix. Counts the rejects and prints the bill per 1,000 photos. Use the class photo or your own. Works with your class pass.",
       "icon": "layers",
       "badge": "Hands-On",
       "badgeType": "interactive",
