@@ -190,6 +190,15 @@
       "linkText": "Open in Colab"
     },
     {
+      "title": "Dailies Jr. — a harness that makes a 20-second AI video (demo)",
+      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-08/ISOM260_Demo_Dailies_Jr_AI_Video_Harness.ipynb",
+      "description": "Professor demo. One idea in, a 20-second video out. Level 0 just asks four times; the harness adds a Director, one character sheet, a Continuity Checker in code, a reference frame, and an ffmpeg editor. Same model, different harness. Needs a personal Gemini key (not the class pass).",
+      "icon": "clapperboard",
+      "badge": "Demo",
+      "badgeType": "interactive",
+      "linkText": "Open in Colab"
+    },
+    {
       "title": "Same Model, Different Harness — Colab Notebook",
       "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-08/ISOM260_Session8_Same_Model_Different_Harness.ipynb",
       "description": "One photo, three harnesses: just ask, add the four rules image-blaster uses, then a check in code with one fix. Counts the rejects and prints the bill per 1,000 photos. Use the class photo or your own. Works with your class pass.",
