@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#0a0e1a">
+<title>Badge Paddle · ISOM 260</title>
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; background: #0a0e1a; color: #fff; font-family: -apple-system, 'Segoe UI', Roboto, Arial, sans-serif; overflow: hidden; touch-action: manipulation; user-select: none; -webkit-user-select: none; }
+  .picker { height: 100%; display: flex; flex-direction: column; gap: 12px; padding: max(14px, env(safe-area-inset-top)) 14px max(14px, env(safe-area-inset-bottom)); }
+  .top { text-align: center; padding: 6px 0 2px; }
+  .top b { font-size: 15px; letter-spacing: .14em; color: #8892a8; font-weight: 700; }
+  .top div { font-size: 13px; color: #5c6680; margin-top: 3px; }
+  button.pick { flex: 1; border: none; border-radius: 22px; color: #0a0e1a; display: flex; align-items: center; gap: 16px; padding: 0 22px; text-align: left; cursor: pointer; font: inherit; transition: transform .08s; }
+  button.pick:active { transform: scale(.97); }
+  button.pick .e { font-size: 54px; line-height: 1; }
+  button.pick .t { font-size: 30px; font-weight: 900; letter-spacing: -.01em; }
+  button.pick .s { font-size: 16px; font-weight: 600; opacity: .75; margin-top: 2px; }
+  .g { background: #00e676; } .y { background: #ffd600; } .r { background: #ff1a6e; color: #fff !important; }
+  .full { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 24px; cursor: pointer; }
+  .full.on { display: flex; animation: pop .18s ease-out; }
+  @keyframes pop { from { transform: scale(.94); opacity: .4; } to { transform: none; opacity: 1; } }
+  .full .e { font-size: 34vw; line-height: 1; }
+  .full .t { font-size: 15vw; font-weight: 900; letter-spacing: -.02em; margin-top: 2vh; color: #0a0e1a; }
+  .full .s { font-size: 5.6vw; font-weight: 700; color: #0a0e1a; opacity: .75; margin-top: 1vh; }
+  .full.r .t, .full.r .s { color: #fff; }
+  .full .back { position: absolute; bottom: max(18px, env(safe-area-inset-bottom)); font-size: 14px; font-weight: 600; color: rgba(10,14,26,.55); }
+  .full.r .back { color: rgba(255,255,255,.7); }
+  @media (orientation: landscape) { .full .e { font-size: 22vh; } .full .t { font-size: 14vh; } .full .s { font-size: 5vh; } button.pick .e { font-size: 38px; } button.pick .t { font-size: 24px; } }
+</style>
+</head>
+<body>
+  <div class="picker" id="picker">
+    <div class="top"><b>🪪 BADGE PADDLE</b><div>Tap a color. Hold your phone up when you hear "paddles up!"</div></div>
+    <button class="pick g" data-c="g"><span class="e">🟢</span><span><div class="t">GREEN</div><div class="s">it does it on its own</div></span></button>
+    <button class="pick y" data-c="y"><span class="e">🟡</span><span><div class="t">YELLOW</div><div class="s">it drafts, a person approves</div></span></button>
+    <button class="pick r" data-c="r"><span class="e">🔴</span><span><div class="t">RED</div><div class="s">locked. A person only</div></span></button>
+  </div>
+  <div class="full g" id="g"><div class="e">🟢</div><div class="t">GREEN</div><div class="s">it does it on its own</div><div class="back">tap to change</div></div>
+  <div class="full y" id="y"><div class="e">🟡</div><div class="t">YELLOW</div><div class="s">it drafts, a person approves</div><div class="back">tap to change</div></div>
+  <div class="full r" id="r"><div class="e">🔴</div><div class="t">RED</div><div class="s">locked. A person only</div><div class="back">tap to change</div></div>
+<script>
+  const picker = document.getElementById('picker');
+  let lock = null;
+  async function keepAwake() { try { if ('wakeLock' in navigator && !lock) { lock = await navigator.wakeLock.request('screen'); lock.addEventListener('release', () => lock = null); } } catch (e) {} }
+  function show(c) {
+    ['g', 'y', 'r'].forEach(k => document.getElementById(k).classList.toggle('on', k === c));
+    picker.style.visibility = c ? 'hidden' : 'visible';
+    const col = { g: '#00e676', y: '#ffd600', r: '#ff1a6e' }[c] || '#0a0e1a';
+    document.querySelector('meta[name=theme-color]').setAttribute('content', col);
+    document.body.style.background = col;
+    if (c && navigator.vibrate) { try { navigator.vibrate(25); } catch (e) {} }
+    keepAwake();
+  }
+  document.querySelectorAll('button.pick').forEach(b => b.addEventListener('click', () => show(b.dataset.c)));
+  document.querySelectorAll('.full').forEach(f => f.addEventListener('click', () => show(null)));
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') lock = null; });
+</script>
+</body>
+</html>

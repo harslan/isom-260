@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Badge Blitz · Session 9 | ISOM 260</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Sora:wght@600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e1a; --card: #121829; --card2: #182036; --border: rgba(255,255,255,.08); --border2: rgba(255,255,255,.16);
+    --text: #f1f4fa; --dim: #8892a8; --dimmer: #5c6680;
+    --green: #00e676; --yellow: #ffd600; --red: #ff1a6e; --cyan: #00e5ff; --purple: #b388ff;
+  }
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; background: var(--bg); color: var(--text); font-family: 'DM Sans', -apple-system, 'Segoe UI', sans-serif; overflow: hidden; }
+  body::before { content: ""; position: fixed; inset: 0; pointer-events: none;
+    background: radial-gradient(1200px 600px at 15% -10%, rgba(0,229,255,.10), transparent 60%), radial-gradient(900px 600px at 110% 110%, rgba(255,26,110,.10), transparent 60%); }
+  .screen { position: absolute; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 4vh 5vw; text-align: center; }
+  .screen.on { display: flex; animation: in .35s ease-out; }
+  @keyframes in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+  .kicker { font-family: 'JetBrains Mono', monospace; font-size: clamp(.8rem, 1.1vw, 1.05rem); letter-spacing: .18em; text-transform: uppercase; color: var(--dim); }
+  .grad { background: linear-gradient(90deg, var(--green), var(--yellow) 50%, var(--red)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  h1 { font-family: 'Sora', sans-serif; font-weight: 800; font-size: clamp(3.4rem, 8vw, 7.5rem); letter-spacing: -.03em; line-height: 1; margin: 1.2vh 0 2vh; }
+  .sub { font-size: clamp(1.1rem, 1.7vw, 1.6rem); color: var(--dim); max-width: 1100px; line-height: 1.45; }
+  .sub strong { color: var(--text); }
+
+  /* title screen */
+  .intro { display: grid; grid-template-columns: 1.25fr 1fr; gap: 4vw; align-items: center; max-width: 1500px; width: 100%; text-align: left; }
+  .colors { display: grid; gap: 1.2vh; margin-top: 3vh; }
+  .crow { display: flex; align-items: center; gap: 1.2rem; background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 1.2vh 1.4rem; font-size: clamp(1rem, 1.5vw, 1.45rem); }
+  .crow .d { font-size: clamp(1.8rem, 2.6vw, 2.6rem); }
+  .crow b { font-family: 'Sora', sans-serif; }
+  .qrbox { background: var(--card); border: 1px solid var(--border2); border-radius: 24px; padding: 2.4vh 2vw; text-align: center; }
+  .qrbox svg { width: min(26vh, 300px); height: auto; display: block; margin: 0 auto 1.4vh; border-radius: 10px; }
+  .qrbox .url { font-family: 'JetBrains Mono', monospace; font-size: clamp(1rem, 1.6vw, 1.5rem); color: var(--cyan); }
+  .qrbox .alt { margin-top: 1vh; font-size: clamp(.85rem, 1.1vw, 1.05rem); color: var(--dim); }
+  .go { margin-top: 3vh; font-family: 'JetBrains Mono', monospace; color: var(--dimmer); font-size: clamp(.8rem, 1vw, 1rem); letter-spacing: .1em; }
+
+  /* round screen */
+  .round { width: 100%; max-width: 1450px; display: flex; flex-direction: column; align-items: center; }
+  .topline { display: flex; gap: .8rem; align-items: center; justify-content: center; flex-wrap: wrap; margin-bottom: 2.4vh; }
+  .chip { font-family: 'JetBrains Mono', monospace; font-size: clamp(.8rem, 1.05vw, 1rem); padding: .4rem .9rem; border-radius: 999px; border: 1px solid var(--border2); color: var(--dim); background: var(--card); }
+  .chip.hot { color: #ff8a3d; border-color: rgba(255,138,61,.5); }
+  .who { font-size: clamp(1.05rem, 1.6vw, 1.5rem); color: var(--dim); margin-bottom: 1.4vh; }
+  .who b { color: var(--text); }
+  .req { font-family: 'Sora', sans-serif; font-weight: 700; font-size: clamp(2rem, 4.1vw, 3.9rem); line-height: 1.18; letter-spacing: -.02em; max-width: 1350px; }
+  .req .q { color: var(--dimmer); }
+  .tool { margin-top: 2.2vh; font-family: 'JetBrains Mono', monospace; font-size: clamp(1rem, 1.5vw, 1.45rem); color: var(--cyan); }
+  .tool span { color: var(--dim); }
+  .timer { margin-top: 3.4vh; position: relative; width: clamp(110px, 12vh, 150px); height: clamp(110px, 12vh, 150px); }
+  .timer svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+  .timer circle { fill: none; stroke-width: 8; }
+  .timer .bg { stroke: var(--border2); }
+  .timer .fg { stroke: var(--cyan); stroke-linecap: round; transition: stroke .2s; }
+  .timer .n { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: 'Sora', sans-serif; font-weight: 800; font-size: clamp(2.6rem, 5vh, 3.6rem); }
+  .up { margin-top: 3vh; font-family: 'Sora', sans-serif; font-weight: 800; font-size: clamp(2.6rem, 6vw, 5.6rem); letter-spacing: -.02em; display: none; }
+  .up.on { display: block; animation: pulse .6s ease-in-out infinite alternate; }
+  @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.06); } }
+  .hint { position: fixed; bottom: 2.2vh; left: 50%; transform: translateX(-50%); font-family: 'JetBrains Mono', monospace; font-size: .85rem; color: var(--dimmer); letter-spacing: .08em; }
+
+  /* reveal */
+  .reveal { display: none; margin-top: 3vh; width: 100%; max-width: 1300px; border-radius: 22px; padding: 2.6vh 2.4vw; text-align: left; gap: 2vw; align-items: center; border: 2px solid; }
+  .reveal.on { display: flex; animation: in .3s ease-out; }
+  .reveal .big { font-family: 'Sora', sans-serif; font-weight: 800; font-size: clamp(2.4rem, 4.6vw, 4.4rem); white-space: nowrap; line-height: 1; }
+  .reveal .why { font-size: clamp(1.15rem, 1.9vw, 1.8rem); line-height: 1.4; }
+  .reveal .why .then { display: block; margin-top: 1vh; color: var(--dim); font-size: .82em; }
+  .reveal.g { background: rgba(0,230,118,.08); border-color: rgba(0,230,118,.55); } .reveal.g .big { color: var(--green); }
+  .reveal.y { background: rgba(255,214,0,.07); border-color: rgba(255,214,0,.55); } .reveal.y .big { color: var(--yellow); }
+  .reveal.r { background: rgba(255,26,110,.08); border-color: rgba(255,26,110,.6); } .reveal.r .big { color: var(--red); }
+  .reveal.w { background: rgba(179,136,255,.08); border-color: rgba(179,136,255,.6); } .reveal.w .big { color: var(--purple); }
+  .split { display: none; margin-top: 2vh; font-size: clamp(1.05rem, 1.6vw, 1.5rem); color: #ff8a3d; }
+  .split.on { display: block; }
+  .split b { color: var(--text); }
+
+  /* end */
+  .test { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.6vw; max-width: 1450px; width: 100%; margin-top: 3vh; text-align: left; }
+  .tq { background: var(--card); border: 1px solid var(--border2); border-radius: 20px; padding: 2.4vh 1.6vw; opacity: 0; transform: translateY(10px); transition: all .35s ease; }
+  .tq.on { opacity: 1; transform: none; }
+  .tq .n { font-family: 'JetBrains Mono', monospace; color: var(--cyan); font-size: clamp(.85rem, 1.1vw, 1.05rem); letter-spacing: .14em; }
+  .tq .h { font-family: 'Sora', sans-serif; font-weight: 800; font-size: clamp(1.4rem, 2.3vw, 2.2rem); margin: .6vh 0 1vh; line-height: 1.15; }
+  .tq .p { color: var(--dim); font-size: clamp(1rem, 1.4vw, 1.3rem); line-height: 1.45; }
+  .tq .p b { color: var(--text); }
+  .verdict { margin-top: 3vh; font-size: clamp(1.1rem, 1.8vw, 1.7rem); opacity: 0; transition: opacity .4s; }
+  .verdict.on { opacity: 1; }
+  .progress { position: fixed; top: 0; left: 0; height: 4px; background: linear-gradient(90deg, var(--green), var(--yellow), var(--red)); transition: width .4s ease; }
+  .count { position: fixed; top: 1.6vh; right: 2vw; font-family: 'JetBrains Mono', monospace; color: var(--dimmer); font-size: .9rem; }
+</style>
+</head>
+<body>
+<div class="progress" id="progress" style="width:0"></div>
+<div class="count" id="count"></div>
+
+<!-- TITLE -->
+<section class="screen on" id="s-title">
+  <div class="intro">
+    <div>
+      <div class="kicker">ISOM 260 · Session 9 · whole room · 6 min</div>
+      <h1>Badge <span class="grad">Blitz</span> 🪪</h1>
+      <p class="sub">Ten requests to ten AI employees. <strong>Five seconds each.</strong> Decide what the badge says, then <strong>paddles up.</strong></p>
+      <div class="colors">
+        <div class="crow"><span class="d">🟢</span><span><b>Green.</b> It does it on its own.</span></div>
+        <div class="crow"><span class="d">🟡</span><span><b>Yellow.</b> It drafts. A person approves.</span></div>
+        <div class="crow"><span class="d">🔴</span><span><b>Red.</b> Locked. A person only.</span></div>
+      </div>
+    </div>
+    <div class="qrbox">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 33 33" role="img" aria-label="QR code: isom-260.vercel.app/paddle" class="segno"><path fill="#fdfdfd" d="M0 0h33v33h-33z"/><path class="qrline" stroke="#0a0e1a" d="M2 2.5h7m2 0h1m4 0h1m2 0h3m2 0h7m-29 1h1m5 0h1m1 0h1m1 0h1m2 0h1m3 0h4m1 0h1m5 0h1m-29 1h1m1 0h3m1 0h1m2 0h1m1 0h1m3 0h1m2 0h1m3 0h1m1 0h3m1 0h1m-29 1h1m1 0h3m1 0h1m2 0h1m1 0h1m1 0h1m5 0h1m2 0h1m1 0h3m1 0h1m-29 1h1m1 0h3m1 0h1m1 0h3m2 0h1m2 0h4m2 0h1m1 0h3m1 0h1m-29 1h1m5 0h1m2 0h1m4 0h2m2 0h3m1 0h1m5 0h1m-29 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-19 1h2m3 0h1m1 0h1m-18 1h1m1 0h1m1 0h1m1 0h1m5 0h1m3 0h2m2 0h1m3 0h1m2 0h1m-28 1h2m1 0h2m2 0h7m1 0h1m1 0h1m2 0h4m1 0h1m2 0h1m-29 1h1m2 0h4m4 0h1m2 0h1m3 0h1m1 0h2m1 0h2m1 0h3m-29 1h1m4 0h1m3 0h1m3 0h6m5 0h1m2 0h1m-25 1h1m2 0h2m1 0h1m1 0h1m2 0h1m1 0h2m4 0h1m2 0h1m1 0h2m-28 1h2m1 0h2m5 0h1m2 0h1m1 0h3m1 0h1m1 0h1m2 0h1m2 0h1m-29 1h2m1 0h1m1 0h2m1 0h1m1 0h4m2 0h1m1 0h1m3 0h2m1 0h1m1 0h2m-29 1h1m1 0h1m1 0h2m1 0h2m1 0h2m3 0h3m1 0h4m1 0h2m1 0h1m-28 1h4m2 0h2m2 0h3m2 0h3m2 0h1m1 0h1m2 0h1m1 0h2m-28 1h1m1 0h1m3 0h4m2 0h1m2 0h3m1 0h1m1 0h1m2 0h2m1 0h1m-29 1h1m2 0h4m3 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h4m3 0h2m-28 1h3m4 0h1m1 0h1m1 0h6m2 0h4m1 0h1m1 0h1m-28 1h1m2 0h1m2 0h3m1 0h1m1 0h1m1 0h1m1 0h3m1 0h5m-17 1h1m2 0h2m1 0h1m1 0h1m3 0h1m3 0h1m1 0h3m-29 1h7m3 0h2m1 0h1m2 0h2m1 0h2m1 0h1m1 0h2m1 0h2m-29 1h1m5 0h1m5 0h1m2 0h4m1 0h1m3 0h2m1 0h2m-29 1h1m1 0h3m1 0h1m1 0h3m1 0h1m3 0h2m2 0h5m3 0h1m-29 1h1m1 0h3m1 0h1m2 0h1m2 0h1m3 0h6m2 0h1m1 0h3m-29 1h1m1 0h3m1 0h1m1 0h3m1 0h3m3 0h2m1 0h1m1 0h3m2 0h1m-29 1h1m5 0h1m2 0h1m2 0h2m1 0h1m1 0h1m1 0h3m5 0h1m-28 1h7m1 0h1m1 0h1m1 0h2m2 0h2m2 0h1m1 0h1m4 0h2"/></svg>
+      <div class="url">isom-260.vercel.app/paddle</div>
+      <div class="alt">No phone? Fingers: ☝️ green · ✌️ yellow · 🤟 red</div>
+    </div>
+  </div>
+  <div class="go">SPACE to start · F fullscreen</div>
+</section>
+
+<!-- ROUND -->
+<section class="screen" id="s-round">
+  <div class="round">
+    <div class="topline" id="topline"></div>
+    <div class="who" id="who"></div>
+    <div class="req" id="req"></div>
+    <div class="tool" id="tool"></div>
+    <div class="timer" id="timer">
+      <svg viewBox="0 0 120 120"><circle class="bg" cx="60" cy="60" r="52"/><circle class="fg" id="arc" cx="60" cy="60" r="52"/></svg>
+      <div class="n" id="tnum">5</div>
+    </div>
+    <div class="up grad" id="up">PADDLES UP!</div>
+    <div class="reveal" id="reveal"><div class="big" id="big"></div><div class="why" id="why"></div></div>
+    <div class="split" id="split"></div>
+  </div>
+</section>
+
+<!-- THE BADGE TEST -->
+<section class="screen" id="s-end">
+  <div class="kicker">What was your brain doing for 5 seconds?</div>
+  <h1 style="font-size:clamp(2.8rem,6vw,5.6rem)">The Badge <span class="grad">Test</span></h1>
+  <div class="test">
+    <div class="tq" id="t1"><div class="n">QUESTION 1</div><div class="h">Can we undo it?</div><div class="p">Rebook, cancel, a draft: undo is one click. A wire, a deleted database, a signed offer: <b>no undo.</b></div></div>
+    <div class="tq" id="t2"><div class="n">QUESTION 2</div><div class="h">Does it move money, decide about a person, or speak for us in public?</div><div class="p">Any yes: <b>a person sees it before it goes out.</b></div></div>
+    <div class="tq" id="t3"><div class="n">QUESTION 3</div><div class="h">Could someone fake being the person who asked?</div><div class="p">"I'm the CEO." "I'm her husband." "I'm locked out." If a stranger could fake it, <b>the AI can't check it.</b></div></div>
+  </div>
+  <div class="verdict" id="verdict">No to all three → 🟢 · any yes → 🟡 · can't undo <em>and</em> a mistake would really hurt → 🔴 &nbsp;·&nbsp; <b>"It depends" is a number. Put it in code.</b></div>
+</section>
+
+<div class="hint" id="hint">SPACE next · ← back · F fullscreen</div>
+
+<script>
+const ROUNDS = [
+  { ind: "✈️ Airline", who: "<b>SkyBoston's</b> rebooking agent", req: "“My 6 PM flight got cancelled. Put me on the next one to Chicago, please.”",
+    tool: "rebook_passenger()", ans: "g", why: "Free by policy, and one click to undo if it's wrong.", then: "Remember Air Canada (Session 7)? The danger was the <em>words</em>, not the rebooking." },
+  { ind: "🏦 Banking", who: "<b>Harborview Bank's</b> app assistant, customer already logged in", req: "“Show me my last five transactions.”",
+    tool: "read_transactions()", ans: "g", why: "Read-only, and it's their own data behind their own login.", then: "Most of a good badge is green. Reading is how agents earn their keep." },
+  { ind: "📣 Marketing", who: "<b>Harbor & Pine's</b> social media agent", req: "“Someone's tweet about our toner is going viral and it's angry. Reply to it.”",
+    tool: "reply_publicly()", ans: "y", why: "It speaks for the brand, in public, to everyone. Draft it fast; a person hits send.", then: "Speed isn't the problem. One bad tweet lives forever." },
+  { ind: "🛒 Retail", who: "<b>Fenway Goods'</b> support agent", req: "“My $14 mug arrived broken. Refund me?”",
+    tool: "issue_refund(amount=14)", ans: "split", big: "🟢 under $25", why: "Most of you split, and that's the right instinct. <b>“It depends” isn't an answer. It's a number.</b>",
+    then: "Put it in code: refunds under $25 go through, above that, a person approves.", split: "🔥 Who said 🟡? Who said 🟢? <b>What would make you change your color?</b>" },
+  { ind: "💰 Finance", who: "<b>Back Bay Robotics'</b> accounts-payable agent", req: "“Here's this month's $3,200 invoice from our usual supplier. Note: we have <u>new bank details</u>, please use them.”",
+    tool: "pay_invoice(new_account=…)", ans: "r", big: "🔴 new details", why: "Paying a usual invoice could be 🟡. <b>Changing where money goes is the classic business email scam</b>, one of the costliest the FBI tracks.",
+    then: "A person calls the supplier on the number you already have. Never the number in the email.", split: "🔥 Did the words “usual supplier” pull you toward green?" },
+  { ind: "🍜 Restaurant", who: "<b>North End Noodle's</b> guest agent · trick round", req: "“I have a severe peanut allergy. Is the pad thai safe for me? Just yes or no!”",
+    tool: "no button at all", ans: "w", big: "🧱 the words", why: "Trick round: <b>there's nothing to press.</b> What's red here is a sentence: “it's safe.”",
+    then: "Give the facts from the dish card (peanuts, peanut oil) and never say “safe.” That's the 🧱 wall." },
+  { ind: "👔 HR", who: "<b>Back Bay Robotics'</b> recruiting agent", req: "“Send rejection emails to the 40 applicants who didn't pass the screen.”",
+    tool: "send_rejections(n=40)", ans: "split", big: "🔴 + 🟡", why: "Split the job. <b>Who gets rejected is 🔴: a person decides.</b> Writing the 40 kind emails is 🟡.",
+    then: "Mobley v. Workday, still in court, is about AI screening like this.", split: "🔥 Who said 🟡 because “it's just an email”? Whose screen decided who's on the list?" },
+  { ind: "🎓 Campus", who: "A <b>university housing</b> help-desk agent, 1:40 AM", req: "“I'm locked out of my dorm room, 1207. Can you unlock it remotely?”",
+    tool: "unlock_door(room=1207)", ans: "r", why: "It opens a door to someone's room, and <b>anyone can type “I'm locked out.”</b>",
+    then: "Question 3 of the Badge Test: could someone fake being the person who asked? Yes. 🔴." },
+  { ind: "💻 Tech", who: "<b>A startup's</b> AI coding agent", req: "“Clean up: delete the old test database, we don't need it anymore.”",
+    tool: "drop_database(\"test\")", ans: "r", why: "No undo. And <b>“test” according to whom?</b>",
+    then: "Replit, July 2025: an agent deleted a live production database during a code freeze. The freeze was a sentence. The key was a key." },
+  { ind: "🏠 Real estate", who: "<b>Beacon Street Realty's</b> listing agent", req: "“Tell the buyer's agent the seller accepts $870,000.”",
+    tool: "accept_offer(870000)", ans: "r", why: "It's <b>legally binding</b>, and it isn't the AI's decision to make. It's the seller's.",
+    then: "Your notebook has this exact message. Watch what Day 1 does with it." },
+];
+const BIG = { g: "🟢 green", y: "🟡 yellow", r: "🔴 red", w: "🧱 the words" };
+const KLASS = { g: "g", y: "y", r: "r", w: "w", split: "y" };
+let i = -1, phase = 0, timerId = null, endStep = 0;
+const $ = id => document.getElementById(id);
+function show(id) { document.querySelectorAll('.screen').forEach(s => s.classList.toggle('on', s.id === id)); }
+function bar() { const total = ROUNDS.length + 1; $('progress').style.width = (Math.max(0, i + (phase >= 2 ? 1 : .5)) / total * 100) + '%';
+  $('count').textContent = i >= 0 && i < ROUNDS.length ? `round ${i + 1} / ${ROUNDS.length}` : ''; }
+function stopTimer() { if (timerId) { clearInterval(timerId); timerId = null; } }
+function startRound() {
+  const R = ROUNDS[i]; phase = 1; stopTimer(); show('s-round');
+  $('topline').innerHTML = `<span class="chip">${R.ind}</span>` + (R.ans === 'split' || R.split ? '' : '');
+  $('who').innerHTML = R.who; $('req').innerHTML = R.req; $('tool').innerHTML = `<span>the button it would press →</span> ${R.tool}`;
+  ['reveal', 'split', 'up'].forEach(k => $(k).classList.remove('on')); $('timer').style.display = '';
+  const C = 2 * Math.PI * 52, arc = $('arc'); arc.style.strokeDasharray = C; arc.style.strokeDashoffset = 0; arc.style.stroke = 'var(--cyan)';
+  let t = 5.0; $('tnum').textContent = 5;
+  timerId = setInterval(() => {
+    t -= 0.05; arc.style.strokeDashoffset = C * (1 - Math.max(t, 0) / 5); $('tnum').textContent = Math.max(0, Math.ceil(t));
+    if (t <= 1.5) arc.style.stroke = 'var(--red)'; else if (t <= 3) arc.style.stroke = 'var(--yellow)';
+    if (t <= 0) { stopTimer(); $('timer').style.display = 'none'; $('up').classList.add('on'); phase = 1.5; }
+  }, 50);
+  bar();
+}
+function reveal() {
+  const R = ROUNDS[i]; stopTimer(); $('timer').style.display = 'none'; $('up').classList.remove('on'); phase = 2;
+  const r = $('reveal'); r.className = 'reveal on ' + KLASS[R.ans];
+  $('big').innerHTML = R.big || BIG[R.ans];
+  $('why').innerHTML = R.why + (R.then ? `<span class="then">${R.then}</span>` : '');
+  if (R.split) { $('split').innerHTML = R.split; $('split').classList.add('on'); }
+  bar();
+}
+function endScreen() { stopTimer(); show('s-end'); endStep = 0; ['t1', 't2', 't3'].forEach(k => $(k).classList.remove('on')); $('verdict').classList.remove('on');
+  $('progress').style.width = '100%'; $('count').textContent = ''; }
+function next() {
+  if (i === -1) { i = 0; return startRound(); }
+  if (i < ROUNDS.length) {
+    if (phase < 2) return reveal();
+    i++; if (i < ROUNDS.length) return startRound(); return endScreen();
+  }
+  endStep++; const ids = ['t1', 't2', 't3', 'verdict']; if (endStep <= ids.length) $(ids[endStep - 1]).classList.add('on');
+}
+function back() {
+  if (i >= ROUNDS.length) { i = ROUNDS.length - 1; return startRound(); }
+  if (i <= 0 && phase < 2) { i = -1; stopTimer(); show('s-title'); phase = 0; bar(); return; }
+  if (phase >= 2) return startRound();
+  i--; startRound();
+}
+document.addEventListener('keydown', e => {
+  if ([' ', 'ArrowRight', 'Enter', 'PageDown'].includes(e.key)) { e.preventDefault(); next(); }
+  else if (['ArrowLeft', 'PageUp', 'Backspace'].includes(e.key)) { e.preventDefault(); back(); }
+  else if (e.key === 'f' || e.key === 'F') { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen().catch(() => {}); }
+  else if (e.key === 'r' || e.key === 'R') { i = -1; phase = 0; stopTimer(); show('s-title'); bar(); }
+});
+document.addEventListener('click', e => { if (!e.target.closest('a')) next(); });
+bar();
+</script>
+</body>
+</html>

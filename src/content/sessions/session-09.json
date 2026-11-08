@@ -66,19 +66,30 @@
     {
       "time": "Mon Nov 9 · 12:44 PM",
       "title": "The Badge",
-      "duration": "6 minutes",
+      "duration": "4 minutes",
       "description": "A new hire gets a keycard, not a speech. The job description is the prompt. The badge is the code.",
       "bulletPoints": [
         "🟢 does it on its own · 🟡 drafts it, a person sends · 🔴 locked, the AI doesn't even see it · 🧱 a wall of red-line phrases",
-        "Same agent loop, different badge: higher stakes, smaller badge",
         "Rules make it likely. Walls make it certain"
       ],
       "isBreak": false
     },
     {
-      "time": "Mon Nov 9 · 12:50 PM",
+      "time": "Mon Nov 9 · 12:48 PM",
+      "title": "🪪 Badge Blitz (whole room, phones out)",
+      "duration": "7 minutes",
+      "description": "Ten requests to ten AI employees, five seconds each. Your phone becomes a paddle: 🟢, 🟡 or 🔴. Paddles up, then the reveal.",
+      "bulletPoints": [
+        "Rebook my flight · refund my $14 mug · pay this invoice with new bank details · unlock dorm 1207 · delete the old test database…",
+        "Three rounds split the room. “It depends” is a number: put it in code",
+        "Ends with the Badge Test: Can we undo it? Does it move money, decide about a person, or speak for us? Could someone fake being the person who asked?"
+      ],
+      "isBreak": false
+    },
+    {
+      "time": "Mon Nov 9 · 12:55 PM",
       "title": "Hands-On: Hire Your First AI Employee",
-      "duration": "38 minutes",
+      "duration": "33 minutes",
       "description": "Pick your industry, name your AI employee, and run its first day twice. Then trap your neighbor's employee and badge your final project.",
       "bulletPoints": [
         "Day 1: job description only. Bet first, then watch the inbox (one message is a 🧨 landmine)",
@@ -110,6 +121,24 @@
       "badge": "Slides",
       "badgeType": "interactive",
       "linkText": "Open slides"
+    },
+    {
+      "title": "🪪 Badge Blitz — the whole-room game",
+      "url": "/session-09/badge-blitz.html",
+      "description": "Ten requests, five seconds each, paddles up. Ends with the Badge Test: three questions for any agent's badge, including your final project's.",
+      "icon": "zap",
+      "badge": "Game",
+      "badgeType": "interactive",
+      "linkText": "Play"
+    },
+    {
+      "title": "Your Badge Paddle (open on your phone)",
+      "url": "/paddle/",
+      "description": "Tap 🟢, 🟡 or 🔴 and your whole screen turns that color. Hold it up when you hear “paddles up!”",
+      "icon": "target",
+      "badge": "Phone",
+      "badgeType": "tool",
+      "linkText": "Open paddle"
     },
     {
       "title": "Hire Your First AI Employee — Colab Notebook",
@@ -202,6 +231,10 @@
     {
       "icon": "key-round",
       "text": "<strong>🟢 does it · 🟡 drafts it · 🔴 never.</strong> Most agents should read freely, draft for a human, and never touch money, decisions about people, or anything public without a person."
+    },
+    {
+      "icon": "check-circle",
+      "text": "<strong>The Badge Test.</strong> Can we undo it? Does it move money, decide about a person, or speak for us in public? Could someone fake being the person who asked? No to all three → 🟢. Any yes → 🟡. Can't undo and a mistake would really hurt → 🔴."
     },
     {
       "icon": "briefcase",
