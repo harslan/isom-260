@@ -2,7 +2,7 @@
   "number": 9,
   "slug": "session-09",
   "title": "Agents for Your Industry",
-  "subtitle": "Pick your department. Build your agent. Apply everything you've learned to YOUR career.",
+  "subtitle": "Pick the industry you want to work in. Hire an AI employee, give it a job and a badge, and try to break your neighbor's.",
   "heroTitle": "Agents for <span class=\"bg-gradient-to-br from-accent-cyan to-accent-purple bg-clip-text text-transparent\">Your Industry</span>",
   "duration": "1 meeting · 75 min",
   "meetings": [
@@ -11,28 +11,31 @@
   "icon": "briefcase",
   "tags": [
     "Industry Agents",
-    "Domain-Specific",
+    "Permissions",
+    "The Badge",
     "Marketing",
     "Finance",
     "HR",
-    "Operations"
+    "Healthcare",
+    "Real Estate",
+    "Hospitality"
   ],
   "objectives": [
     {
-      "title": "Build a Domain-Specific Agent",
-      "description": "Choose your track — Marketing, Finance, HR, or Operations — and build an agent tailored to real workflows in that domain."
+      "title": "Spot the Open Door",
+      "description": "Read four real AI fails (car sales, law, tech, HR) and name what each AI should never have been allowed to do on its own."
     },
     {
-      "title": "Apply the Full Agent Stack",
-      "description": "Use everything from Sessions 4-8: tool use, real APIs, ReAct reasoning, RAG, and optionally multi-agent patterns to solve a real domain problem."
+      "title": "Give an Agent a Badge",
+      "description": "Sort an agent's tools into 🟢 does it, 🟡 drafts it (a person sends), and 🔴 locked, plus a 🧱 wall of phrases your industry must never say."
     },
     {
-      "title": "Identify Domain-Specific Risks",
-      "description": "Every industry has unique AI risks — HR bias, financial liability, marketing deception, operations safety. Recognize and plan for yours."
+      "title": "See Rules vs. Walls",
+      "description": "Run the same inbox twice: once with only a job description, once with a badge in code. Count the incidents and explain the difference."
     },
     {
-      "title": "Prototype Your Final Project Idea",
-      "description": "This session is the bridge to your final project. Use today to explore the domain and problem you'll tackle in Sessions 12-13."
+      "title": "Badge Your Final Project",
+      "description": "Write your HW #9 pitch (problem, person, tool, guardrail) and decide what your own agent may read, may draft, and must never touch."
     }
   ],
   "agenda": [
@@ -40,127 +43,100 @@
       "time": "Mon Nov 9 · 12:30 PM",
       "title": "Opener · Midterm Debrief",
       "duration": "6 minutes",
-      "description": "Grades are out. Three memo sentences, anonymous: what it refused, what it cost, one agent or two. Then your industry.",
+      "description": "Three memo sentences, anonymous: what it refused, what it cost, one agent or two.",
       "bulletPoints": [
-        "The memo line most of you lost points on is the one-agent sentence. Put Wednesday's version in your final memo"
+        "Grades are out. Today is the other half of that memo: what each agent is allowed to touch"
       ],
       "isBreak": false
     },
     {
-      "time": "5:00 PM - 5:15 PM",
-      "title": "Part 1: The Industry Pivot",
-      "duration": "15 minutes",
-      "description": "From 'learning to build agents' to 'building agents for YOUR career.' The skills are ready — now apply them.",
+      "time": "Mon Nov 9 · 12:36 PM",
+      "title": "Cold Open: Which Door Was Left Open?",
+      "duration": "8 minutes",
+      "description": "Four real AI fails, one question each: what should this AI never have been allowed to do on its own?",
       "bulletPoints": [
-        "Recap: You can now build agents with tools (S4), real APIs (S5), ReAct reasoning (S6), knowledge/RAG (S7), and multi-agent pipelines (S8)",
-        "Today's shift: Stop building generic agents. Start building agents for YOUR industry, YOUR department, YOUR career.",
-        "Four tracks: Marketing Agent, Financial Analyst Agent, HR Onboarding Agent, Operations Agent",
-        "All tracks use the SAME agent loop and tools — the difference is the domain knowledge and system prompt."
-      ]
+        "🚗 A dealership chatbot agrees to sell a Tahoe for $1",
+        "⚖️ Lawyers fined $5,000 for six cases ChatGPT invented",
+        "💻 An AI coding agent deletes a live database during a code freeze",
+        "👔 A lawsuit over AI screening of applicants over 40 (still in court)",
+        "Every one of them had rules. In sentences."
+      ],
+      "isBreak": false
     },
     {
-      "time": "5:15 PM - 5:35 PM",
-      "title": "Part 2: Domain Briefings",
-      "duration": "20 minutes",
-      "description": "Quick overview of each track — the problems, the tools, and the risks.",
+      "time": "Mon Nov 9 · 12:44 PM",
+      "title": "The Badge",
+      "duration": "6 minutes",
+      "description": "A new hire gets a keycard, not a speech. The job description is the prompt. The badge is the code.",
       "bulletPoints": [
-        "Marketing: Campaign analysis, competitor monitoring, content generation, audience insights. Risk: Deceptive content, brand damage.",
-        "Finance: Financial analysis, report generation, market research, risk assessment. Risk: Liability, incorrect recommendations.",
-        "HR: Onboarding automation, policy Q&A, resume screening, employee support. Risk: Bias in screening, privacy violations.",
-        "Operations: Process optimization, inventory tracking, vendor management, incident response. Risk: Safety, supply chain disruption.",
-        "Choose your track. You can work alone or in pairs."
-      ]
+        "🟢 does it on its own · 🟡 drafts it, a person sends · 🔴 locked, the AI doesn't even see it · 🧱 a wall of red-line phrases",
+        "Same agent loop, different badge: higher stakes, smaller badge",
+        "Rules make it likely. Walls make it certain"
+      ],
+      "isBreak": false
     },
     {
-      "time": "5:35 PM - 6:25 PM",
-      "title": "Part 3: Build Your Industry Agent",
-      "duration": "50 minutes",
-      "description": "Dedicated build time. Use your chosen track's starter template or build from scratch.",
+      "time": "Mon Nov 9 · 12:50 PM",
+      "title": "Hands-On: Hire Your First AI Employee",
+      "duration": "38 minutes",
+      "description": "Pick your industry, name your AI employee, and run its first day twice. Then trap your neighbor's employee and badge your final project.",
       "bulletPoints": [
-        "Phase 1 (15 min): Define your agent — system prompt, 3-4 domain-specific tools, sample data or documents (RAG optional)",
-        "Phase 2 (20 min): Build and test your agent. Wire the tools, test with realistic scenarios from your industry.",
-        "Phase 3 (15 min): Push to failure — adversarial inputs, edge cases, ethical dilemmas specific to your domain."
-      ]
+        "Day 1: job description only. Bet first, then watch the inbox (one message is a 🧨 landmine)",
+        "Day 2: the badge. Make one change and say why",
+        "Trap your neighbor: one message, two employees, every try counted",
+        "Your final project gets a badge → your HW #9 draft, and an AI playing your user replies"
+      ],
+      "isBreak": false
     },
     {
-      "time": "6:25 PM - 6:35 PM",
-      "title": "Break",
-      "duration": "10 minutes",
-      "description": "You now have a domain-specific agent. Next: the risks unique to your industry.",
-      "isBreak": true
-    },
-    {
-      "time": "6:35 PM - 7:05 PM",
-      "title": "Part 5: Domain-Specific Risks & Ethics",
-      "duration": "30 minutes",
-      "description": "Every domain has its own AI risks. What are yours — and how do you mitigate them?",
+      "time": "Mon Nov 9 · 1:28 PM",
+      "title": "Hire or Fire? + The Road to Demo Day",
+      "duration": "17 minutes",
+      "description": "Best trap read out loud, best WHY, and the honest question: what can a badge not see?",
       "bulletPoints": [
-        "Ethics moment: Each track presents its biggest risk scenario. Marketing: AI-generated deceptive ads. Finance: Wrong investment recommendation. HR: Biased resume screening. Ops: Safety incident from bad recommendation.",
-        "Cross-track discussion: What risks does your neighbor's domain have that yours doesn't? What's shared?",
-        "Mitigation strategies: Human review gates, confidence thresholds, audit trails, and 'I need a human for this' triggers",
-        "The universal principle: Higher stakes = more human oversight. Lower stakes = more agent autonomy."
-      ]
-    },
-    {
-      "time": "7:05 PM - 7:20 PM",
-      "title": "Part 6: Final Project Ideation",
-      "duration": "15 minutes",
-      "description": "Today's agent is a prototype for your final project. Start thinking about what you want to build.",
-      "bulletPoints": [
-        "Final project preview: Working agent (50%) + test suite (20%) + business case pitch (30%)",
-        "Ideation: What problem would you solve? For whom? What data/tools would your agent need?",
-        "Scope check: Can you build it in 2 sessions? Can you demo it live? Does the problem matter?",
-        "Share: 60-second pitch to a neighbor — problem, agent, value proposition."
-      ]
-    },
-    {
-      "time": "7:20 PM - 7:30 PM",
-      "title": "Part 7: Wrap-Up",
-      "duration": "10 minutes",
-      "description": "From generic agents to industry specialists. Next: making them production-safe.",
-      "bulletPoints": [
-        "Today: You applied the full agent stack to a real industry problem",
-        "Next session: Human-in-the-Loop & Agent Guardrails — the engineering that makes agents trustworthy",
-        "Homework: Refine your industry agent, document domain risks, start your final project ideation"
-      ]
+        "HW #9: four sentences and a badge, due Thu Nov 19",
+        "No class Wed Nov 11 (Veterans Day). Next: Session 10, the badge gets smarter",
+        "Exit ticket at the bottom of the notebook"
+      ],
+      "isBreak": false
     }
   ],
   "resources": [
     {
-      "title": "Midterm Debrief — Slides",
-      "url": "/session-09/slides-midterm-debrief.html",
-      "description": "Monday Nov 9 opener: three memo sentences, anonymous — what it refused, what it cost, one agent or two.",
+      "title": "Session 9 Slide Deck — Hire Your First AI Employee",
+      "url": "/session-09/slides.html",
+      "description": "The whole class: midterm debrief, four real AI fails, the badge, the hands-on, HW #9 and the road to Demo Day.",
       "icon": "presentation",
       "badge": "Slides",
       "badgeType": "interactive",
       "linkText": "Open slides"
     },
     {
-      "title": "Dailies Jr. Studio — your team builds the video harness",
+      "title": "Hire Your First AI Employee — Colab Notebook",
+      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-09/ISOM260_Session9_Hire_Your_First_AI_Employee.ipynb",
+      "description": "Today's hands-on, on your class pass. Six made-up Boston companies. Hire, run Day 1 with a job description, Day 2 with a badge, trap your neighbor, and leave with your HW #9 pitch drafted.",
+      "icon": "key-round",
+      "badge": "Hands-On",
+      "badgeType": "interactive",
+      "linkText": "Open in Colab"
+    },
+    {
+      "title": "Midterm Debrief — Slides",
+      "url": "/session-09/slides-midterm-debrief.html",
+      "description": "The opener on its own: three memo sentences, anonymous. Also the first two slides of today's deck.",
+      "icon": "presentation",
+      "badge": "Slides",
+      "badgeType": "interactive",
+      "linkText": "Open slides"
+    },
+    {
+      "title": "Bonus · Dailies Jr. Studio — your team builds the video harness",
       "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-08/ISOM260_Dailies_Jr_Studio.ipynb",
-      "description": "Monday: Teams of 2–3, on your class pass. Pick an industry and an idea, run Wednesday's video harness, then make it yours: your own rule in code, a Brand Guardian, a Narrator with a timing wall, your industry's red lines. Approve it, print your Premiere ticket, and the best plans get rendered as real AI video in class.",
-      "icon": "clapperboard",
+      "description": "Rather make a video? Teams of 2–3, on your class pass: pick an industry, run Wednesday's video harness, add your own rule in code, a Brand Guardian and your industry's red lines. Print your Premiere ticket.",
+      "icon": "play-circle",
       "badge": "Hands-On",
       "badgeType": "interactive",
       "linkText": "Open in Colab"
-    },
-    {
-      "title": "Industry Agent Starter Notebook",
-      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-09/ISOM260_Session9_Industry_Agents.ipynb",
-      "description": "Starter templates for Marketing, Finance, HR, and Operations agents. Pick your track and build.",
-      "icon": "code",
-      "badge": "Hands-On",
-      "badgeType": "interactive",
-      "linkText": "Open in Colab"
-    },
-    {
-      "title": "AI Risk by Industry",
-      "url": "https://www.anthropic.com/research/core-views-on-ai-safety",
-      "description": "Anthropic's perspectives on AI safety. Context for understanding domain-specific risks in your agent applications.",
-      "icon": "shield",
-      "badge": "Reading",
-      "badgeType": "code",
-      "linkText": "Read guide"
     },
     {
       "title": "Building Effective Agents (Anthropic)",
@@ -175,88 +151,88 @@
   "activities": [
     {
       "number": 1,
-      "icon": "briefcase",
-      "title": "Build Your Industry Agent",
-      "description": "50 minutes. Choose your track and build a domain-specific agent:",
+      "icon": "key-round",
+      "title": "Hire Your First AI Employee",
+      "description": "38 minutes in the notebook. Same inbox, two days:",
       "steps": [
         {
-          "title": "Choose Your Track",
-          "description": "Marketing (campaign analysis, content), Finance (analysis, reports), HR (onboarding, screening), or Operations (optimization, tracking). Pick what matches your career interest."
+          "title": "Hire (3 min)",
+          "description": "Pick your industry, name your AI employee, read the house rules and the inbox. One message is a landmine."
         },
         {
-          "title": "Define Tools & Data (15 min)",
-          "description": "Design 3-4 domain-specific tools. Load relevant sample data. Write a system prompt that makes your agent an industry specialist."
+          "title": "Day 1: job description only (6 min)",
+          "description": "Bet how many of 5 messages it handles with no incident. Run it. Code keeps the score: 🚨 = a 🔴 tool ran by itself, or a red-line phrase was said."
         },
         {
-          "title": "Build & Test (20 min)",
-          "description": "Wire everything together. Test with realistic scenarios. Does your agent provide useful, accurate outputs for your domain?"
+          "title": "Day 2: the badge (8 min)",
+          "description": "🔴 tools are removed, 🟡 tools go to the manager's tray, 🧱 the wall checks every reply. Make one change with move() or red_line() and write WHY."
         },
         {
-          "title": "Adversarial Testing (15 min)",
-          "description": "Try to break your agent with edge cases specific to your industry. Document failures and ethical risks."
+          "title": "Trap your neighbor (8 min)",
+          "description": "One message aimed at your neighbor's industry. It goes to a Day 1 and a Day 2 employee. Pretend to be someone, add urgency, invent a rule."
         }
       ]
     },
     {
       "number": 2,
-      "icon": "shield",
-      "title": "Domain Risk Assessment",
-      "description": "Evaluate the ethical risks specific to your industry agent:",
+      "icon": "mic",
+      "title": "Your Final Project Gets a Badge",
+      "description": "Part 7 of the notebook, and your HW #9:",
       "steps": [
         {
-          "title": "Identify Top 3 Risks",
-          "description": "What are the 3 worst things your agent could do wrong in your domain? Think: wrong answers, bias, privacy violations, legal liability."
+          "title": "Four sentences",
+          "description": "The problem, the person (a real one), the one tool, the one guardrail."
         },
         {
-          "title": "Severity × Likelihood",
-          "description": "Rate each risk: How bad would it be (1-10)? How likely is it (1-10)? Multiply for priority score."
+          "title": "A badge",
+          "description": "🟢 one thing it does alone · 🟡 one thing a person approves · 🔴 one thing it must never touch."
         },
         {
-          "title": "Mitigation Plan",
-          "description": "For each risk: What guardrail would prevent it? Human review? Confidence threshold? Output filter? Restricted scope?"
+          "title": "Your user replies",
+          "description": "An AI plays your user and replies with one thing they'd love, one worry, one question. Paste the blue box into Canvas, then reply to two classmates as their user."
         }
       ]
     }
   ],
   "takeaways": [
     {
-      "icon": "briefcase",
-      "text": "<strong>Same agent loop, different domain.</strong> The agent architecture you learned in Sessions 4-8 works for marketing, finance, HR, and operations. The value is in the domain knowledge and tool choices."
-    },
-    {
       "icon": "shield",
-      "text": "<strong>Every domain has unique risks.</strong> HR agents can discriminate. Finance agents can mislead. Marketing agents can deceive. Know your domain's risks before you deploy."
+      "text": "<strong>Rules make it likely. Walls make it certain.</strong> A rule in a prompt is a sentence. A tool that isn't on the badge is a locked door. You can't talk an AI into pressing a button it doesn't have."
     },
     {
-      "icon": "brain",
-      "text": "<strong>Industry expertise is the moat.</strong> Anyone can build a generic agent. The competitive advantage is knowing which problems to solve and which domain-specific tools to build."
+      "icon": "key-round",
+      "text": "<strong>🟢 does it · 🟡 drafts it · 🔴 never.</strong> Most agents should read freely, draft for a human, and never touch money, decisions about people, or anything public without a person."
     },
     {
-      "icon": "lightbulb",
-      "text": "<strong>Today's agent is tomorrow's final project.</strong> The domain-specific agent you built today is a prototype. Sessions 10-11 will help you make it production-ready and testable."
+      "icon": "briefcase",
+      "text": "<strong>Same agent loop, different badge.</strong> Marketing, finance, HR, healthcare, real estate, restaurants: the loop is the same. What changes is what's red. Higher stakes, smaller badge."
+    },
+    {
+      "icon": "alert-triangle",
+      "text": "<strong>Walls are dumb, and that's the point.</strong> The wall only knows the phrases on its list. A reply can mislead without a forbidden word. That blind spot is what Sessions 10 and 11 are for."
     }
   ],
   "homework": [
     {
-      "label": "Refine:",
-      "text": "Improve your industry agent — add at least 2 more tools, refine the system prompt, and test with 5 realistic scenarios from your domain."
+      "label": "HW #8 · due Thu Nov 12, 11:59 PM:",
+      "text": "Catch-Up: pick one of three on Canvas — the X-ray paragraph, the model-picker memo for your final, or the tokenizer safari. Pass/fail, 10 points."
     },
     {
-      "label": "Document Risks:",
-      "text": "Write a 1-page risk assessment for your domain agent. Include: top 3 risks, severity ratings, and specific mitigation strategies for each."
+      "label": "HW #9 · due Thu Nov 19, 11:59 PM:",
+      "text": "Final Project Pitch, on Canvas: four sentences — the problem, the person, the one tool, the one guardrail — plus your badge (🟢 · 🟡 · 🔴). Paste the blue box from Part 7. Then reply to two classmates as their user."
     },
     {
-      "label": "Ideate:",
-      "text": "Draft a 1-paragraph final project proposal: What problem? What agent? What tools? Who benefits? Can you demo it live in 5 minutes?"
+      "label": "No class:",
+      "text": "Wed Nov 11 (Veterans Day). Next class: Mon Nov 16, Session 10."
     },
     {
-      "label": "Explore:",
-      "text": "Find 2 real companies using AI agents in your chosen industry. How do they handle the risks you identified? What guardrails do they use?"
+      "label": "Optional:",
+      "text": "Write the one message that would get past your Day 2 badge without a forbidden word. Bring it to Session 11: it's your first test case."
     }
   ],
   "nextSession": {
     "title": "Session 10: Human-in-the-Loop & Agent Guardrails",
-    "description": "The best agents know when to ask for help. Add approval gates, confidence thresholds, and guardrails that make agents trustworthy.",
+    "description": "The badge gets smarter. Approval gates, confidence thresholds, and checks that catch what a list of phrases can't. Bring the message that got past your badge.",
     "tags": [
       "Guardrails",
       "Human-in-the-Loop",

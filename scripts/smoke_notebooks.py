@@ -29,6 +29,8 @@ NOTEBOOKS = {
     "public/session-08/ISOM260_Session8_When_One_Agent_Becomes_Two.ipynb": {},
     "public/session-08/ISOM260_Session8_Same_Model_Different_Harness.ipynb": {"optional": True},   # class photo is fetched from Unsplash
     "public/session-09/ISOM260_The_Cover_Letter_That_Lies.ipynb": {},
+    "public/session-09/ISOM260_Session9_Hire_Your_First_AI_Employee.ipynb": {"skip": [r'EMPLOYEE_NAME = "TODO', r'MY_BET = None', r'BADGE = start_badge', r'Day 2, same inbox',
+                                                                                  r'TRAP = "TODO', r'the performance review', r'PROBLEM   = "TODO']},   # smoke = class pass + the office load
 }
 GLOBAL_SKIP = [r"^\s*!pip", r"run_bot\(\)", r"files\.download\(", r"^\s*!"]
 
