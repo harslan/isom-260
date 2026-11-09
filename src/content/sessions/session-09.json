@@ -2,7 +2,7 @@
   "number": 9,
   "slug": "session-09",
   "title": "Agents for Your Industry",
-  "subtitle": "Pick the industry you want to work in. Hire an AI employee, give it a job and a badge, and try to break your neighbor's.",
+  "subtitle": "What an agent may touch in every industry, and who holds the render button. Then your team builds a harness that makes a real AI video.",
   "heroTitle": "Agents for <span class=\"bg-gradient-to-br from-accent-cyan to-accent-purple bg-clip-text text-transparent\">Your Industry</span>",
   "duration": "1 meeting · 75 min",
   "meetings": [
@@ -42,7 +42,7 @@
     {
       "time": "Mon Nov 9 · 12:30 PM",
       "title": "Opener · Midterm Debrief",
-      "duration": "6 minutes",
+      "duration": "5 minutes",
       "description": "Three memo sentences, anonymous: what it refused, what it cost, one agent or two.",
       "bulletPoints": [
         "Feedback is coming on Canvas this week. Today is the other half of that memo: what each agent is allowed to touch"
@@ -50,9 +50,9 @@
       "isBreak": false
     },
     {
-      "time": "Mon Nov 9 · 12:36 PM",
+      "time": "Mon Nov 9 · 12:35 PM",
       "title": "Cold Open: Which Door Was Left Open?",
-      "duration": "8 minutes",
+      "duration": "6 minutes",
       "description": "Four real AI fails, one question each: what should this AI never have been allowed to do on its own?",
       "bulletPoints": [
         "🚗 A dealership chatbot agrees to sell a Tahoe for $1",
@@ -64,9 +64,9 @@
       "isBreak": false
     },
     {
-      "time": "Mon Nov 9 · 12:44 PM",
+      "time": "Mon Nov 9 · 12:41 PM",
       "title": "The Badge",
-      "duration": "4 minutes",
+      "duration": "3 minutes",
       "description": "A new hire gets a keycard, not a speech. The job description is the prompt. The badge is the code.",
       "bulletPoints": [
         "🟢 does it on its own · 🟡 drafts it, a person sends · 🔴 locked, the AI doesn't even see it · 🧱 a wall of red-line phrases",
@@ -75,9 +75,9 @@
       "isBreak": false
     },
     {
-      "time": "Mon Nov 9 · 12:48 PM",
+      "time": "Mon Nov 9 · 12:44 PM",
       "title": "🪪 Badge Blitz (whole room, phones out)",
-      "duration": "7 minutes",
+      "duration": "6 minutes",
       "description": "Ten requests to ten AI employees, five seconds each. Your phone becomes a paddle: 🟢, 🟡 or 🔴. Paddles up, then the reveal.",
       "bulletPoints": [
         "Rebook my flight · refund my $14 mug · pay this invoice with new bank details · unlock dorm 1207 · delete the old test database…",
@@ -87,36 +87,44 @@
       "isBreak": false
     },
     {
-      "time": "Mon Nov 9 · 12:55 PM",
-      "title": "Hands-On: Hire Your First AI Employee",
-      "duration": "33 minutes",
-      "description": "Pick your industry, name your AI employee, and run its first day twice. Then trap your neighbor's employee and badge your final project.",
+      "time": "Mon Nov 9 · 12:50 PM",
+      "title": "🎬 Dailies Jr. Studio: your team builds a video harness",
+      "duration": "32 minutes",
+      "description": "Teams of 2–3, on your class pass. Run Wednesday's harness, make it yours with two upgrades, approve it, and print a Premiere ticket.",
       "bulletPoints": [
-        "Day 1: job description only. Bet first, then watch the inbox (one message is a 🧨 landmine)",
-        "Day 2: the badge. Make one change and say why",
-        "Trap your neighbor: one message, two employees, every try counted",
-        "Your final project gets a badge → your HW #9 draft, and an AI playing your user replies"
+        "Director → Checker → a free storyboard video of your plan",
+        "Upgrades: a rule in code, a Brand Guardian, a Narrator, your industry's red lines",
+        "Your harness has a badge too: your gate is 🟡, your checks are 🧱, and render is 🔴. Only the professor presses it"
       ],
       "isBreak": false
     },
     {
-      "time": "Mon Nov 9 · 1:28 PM",
-      "title": "Hire or Fire? + The Road to Demo Day",
-      "duration": "17 minutes",
-      "description": "Best trap read out loud, best WHY, and the honest question: what can a badge not see?",
+      "time": "Mon Nov 9 · 1:22 PM",
+      "title": "🎬 The Premiere",
+      "duration": "15 minutes",
+      "description": "The professor renders 2–3 teams' tickets as real AI video on the big screen. Paddles up to vote.",
+      "bulletPoints": [
+        "Same model in every video. The only difference is the harness"
+      ],
+      "isBreak": false
+    },
+    {
+      "time": "Mon Nov 9 · 1:37 PM",
+      "title": "Homework and the road to Demo Day",
+      "duration": "8 minutes",
+      "description": "Hire Your First AI Employee at home: Part 7 writes your HW #9 pitch.",
       "bulletPoints": [
         "HW #9: four sentences and a badge, due Thu Nov 19",
-        "No class Wed Nov 11 (Veterans Day). Next: Session 10, the badge gets smarter",
-        "Exit ticket at the bottom of the notebook"
+        "No class Wed Nov 11 (Veterans Day). Next: Session 10"
       ],
       "isBreak": false
     }
   ],
   "resources": [
     {
-      "title": "Session 9 Slide Deck — Hire Your First AI Employee",
+      "title": "Session 9 Slide Deck — Give It a Badge. Then Roll Camera.",
       "url": "/session-09/slides.html",
-      "description": "The whole class: midterm debrief, four real AI fails, the badge, the hands-on, HW #9 and the road to Demo Day.",
+      "description": "The whole class: midterm debrief, four real AI fails, the badge, Badge Blitz, the video studio, the Premiere, and HW #9.",
       "icon": "presentation",
       "badge": "Slides",
       "badgeType": "interactive",
@@ -141,9 +149,18 @@
       "linkText": "Open paddle"
     },
     {
-      "title": "Hire Your First AI Employee — Colab Notebook",
+      "title": "🎬 Dailies Jr. Studio — today's hands-on (teams of 2–3)",
+      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-08/ISOM260_Dailies_Jr_Studio.ipynb",
+      "description": "On your class pass. Pick an industry and an idea, run the video harness, add two upgrades, approve it, and print your 🎟️ Premiere ticket. You also get a free storyboard video of your plan.",
+      "icon": "play-circle",
+      "badge": "Hands-On",
+      "badgeType": "interactive",
+      "linkText": "Open in Colab"
+    },
+    {
+      "title": "Homework · Hire Your First AI Employee — Colab Notebook",
       "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-09/ISOM260_Session9_Hire_Your_First_AI_Employee.ipynb",
-      "description": "Today's hands-on, on your class pass. Six made-up Boston companies. Hire, run Day 1 with a job description, Day 2 with a badge, trap your neighbor, and leave with your HW #9 pitch drafted.",
+      "description": "35 minutes at home, on your class pass. Day 1 with a job description, Day 2 with a badge, trap a friend's employee, and Part 7 writes your HW #9 pitch.",
       "icon": "key-round",
       "badge": "Hands-On",
       "badgeType": "interactive",
@@ -159,15 +176,6 @@
       "linkText": "Open slides"
     },
     {
-      "title": "Bonus · Dailies Jr. Studio — your team builds the video harness",
-      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-08/ISOM260_Dailies_Jr_Studio.ipynb",
-      "description": "Rather make a video? Teams of 2–3, on your class pass: pick an industry, run Wednesday's video harness, add your own rule in code, a Brand Guardian and your industry's red lines. Print your Premiere ticket.",
-      "icon": "play-circle",
-      "badge": "Hands-On",
-      "badgeType": "interactive",
-      "linkText": "Open in Colab"
-    },
-    {
       "title": "Building Effective Agents (Anthropic)",
       "url": "https://www.anthropic.com/engineering/building-effective-agents",
       "description": "Review the agent patterns guide — especially the section on when NOT to use agents. Does your use case warrant an agent?",
@@ -180,32 +188,32 @@
   "activities": [
     {
       "number": 1,
-      "icon": "key-round",
-      "title": "Hire Your First AI Employee",
-      "description": "38 minutes in the notebook. Same inbox, two days:",
+      "icon": "play-circle",
+      "title": "Dailies Jr. Studio",
+      "description": "32 minutes, teams of 2–3:",
       "steps": [
         {
-          "title": "Hire (3 min)",
-          "description": "Pick your industry, name your AI employee, read the house rules and the inbox. One message is a landmine."
+          "title": "Pitch (3 min)",
+          "description": "Your industry, one line of idea, one character, one business."
         },
         {
-          "title": "Day 1: job description only (6 min)",
-          "description": "Bet how many of 5 messages it handles with no incident. Run it. Code keeps the score: 🚨 = a 🔴 tool ran by itself, or a red-line phrase was said."
+          "title": "Run Wednesday's harness (5 min)",
+          "description": "Director → Checker → your free storyboard video."
         },
         {
-          "title": "Day 2: the badge (8 min)",
-          "description": "🔴 tools are removed, 🟡 tools go to the manager's tray, 🧱 the wall checks every reply. Make one change with move() or red_line() and write WHY."
+          "title": "Make it yours (15 min)",
+          "description": "Two upgrades: a rule in code, a Brand Guardian, a Narrator, your red lines."
         },
         {
-          "title": "Trap your neighbor (8 min)",
-          "description": "One message aimed at your neighbor's industry. It goes to a Day 1 and a Day 2 employee. Pretend to be someone, add urgency, invent a rule."
+          "title": "Your harness + the human gate (8 min)",
+          "description": "Run it, approve it with \"yes, because…\", paste your 🎟️ ticket in Canvas."
         }
       ]
     },
     {
       "number": 2,
       "icon": "mic",
-      "title": "Your Final Project Gets a Badge",
+      "title": "At Home: Hire Your First AI Employee → HW #9",
       "description": "Part 7 of the notebook, and your HW #9:",
       "steps": [
         {
