@@ -31,7 +31,7 @@ NOTEBOOKS = {
     "public/session-09/ISOM260_The_Cover_Letter_That_Lies.ipynb": {},
     "public/session-09/ISOM260_Session9_Hire_Your_First_AI_Employee.ipynb": {"skip": [r'EMPLOYEE_NAME = "TODO', r'MY_BET = None', r'BADGE = start_badge', r'Day 2, same inbox',
                                                                                   r'TRAP = "TODO', r'the performance review', r'PROBLEM   = "TODO']},   # smoke = class pass + the office load
-    "public/session-10/ISOM260_Session10_The_Dial.ipynb": {"skip": [r'EMPLOYEE_NAME = "TODO', r'the second reader scores all 8', r'BAR = 70', r'TRAP = "TODO', r'AGENT        = "TODO']},   # smoke = class pass + the office + Week 2 load
+    "public/session-10/ISOM260_Session10_The_Dial.ipynb": {"skip": [r'EMPLOYEE_NAME = "TODO', r'the second reader scores all 8', r'the live dial \(drag it', r'BAR = 70', r'TRAP = "TODO', r'AGENT        = "TODO']},   # smoke = class pass + the office + Week 2 load
 }
 GLOBAL_SKIP = [r"^\s*!pip", r"run_bot\(\)", r"files\.download\(", r"^\s*!"]
 

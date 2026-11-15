@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Rubber Stamp · Session 10 | ISOM 260</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Sora:wght@600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root { --bg:#0a0e1a; --card:#141929; --line:rgba(0,229,255,.18); --cyan:#00e5ff; --magenta:#ff006e; --yellow:#ffd600; --green:#00e676; --purple:#b388ff; --text:#e8ecf4; --dim:#8892a8; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.45; -webkit-tap-highlight-color: transparent;
+  background-image: linear-gradient(rgba(0,229,255,.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,255,.04) 1px, transparent 1px); background-size: 36px 36px; }
+.wrap { max-width: 560px; margin: 0 auto; min-height: 100%; padding: 14px 16px calc(18px + env(safe-area-inset-bottom)); display: flex; flex-direction: column; }
+.mono { font-family: 'JetBrains Mono', monospace; }
+h1 { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 2rem; letter-spacing: -.02em; line-height: 1.15; }
+h2 { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 1.45rem; letter-spacing: -.01em; line-height: 1.2; }
+.grad { background: linear-gradient(135deg, var(--cyan), var(--magenta)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.kicker { font-family: 'JetBrains Mono', monospace; font-size: .75rem; letter-spacing: .16em; text-transform: uppercase; color: var(--cyan); margin-bottom: .6rem; }
+p { color: var(--dim); font-size: 1.02rem; } p strong, li strong { color: var(--text); }
+.screen { display: none; flex: 1; flex-direction: column; } .screen.on { display: flex; }
+.center { justify-content: center; gap: 1rem; }
+.btn { appearance: none; border: 0; border-radius: 16px; font-family: 'Sora', sans-serif; font-weight: 800; font-size: 1.15rem; padding: 1.05rem 1rem; cursor: pointer; color: #06121a; touch-action: manipulation; user-select: none; }
+.btn:active { transform: scale(.97); }
+.btn.go { background: linear-gradient(135deg, var(--cyan), #7cf); width: 100%; }
+.btn.yes { background: var(--green); } .btn.no { background: #2a3350; color: var(--text); border: 2px solid #56628a; }
+.btn.ghost { background: transparent; color: var(--dim); border: 1px dashed #56628a; font-size: .95rem; font-weight: 600; width: 100%; }
+.bar { height: 10px; border-radius: 6px; background: rgba(255,255,255,.08); overflow: hidden; }
+.bar > i { display: block; height: 100%; width: 100%; background: linear-gradient(90deg, var(--green), var(--yellow), var(--magenta)); transform-origin: left; }
+.top { display: flex; justify-content: space-between; align-items: baseline; font-family: 'JetBrains Mono', monospace; font-size: .82rem; color: var(--dim); margin: .5rem 0 .35rem; }
+.top b { color: var(--text); font-size: 1.05rem; }
+.waiting { font-family: 'JetBrains Mono', monospace; font-size: .8rem; color: var(--yellow); min-height: 1.3rem; margin-top: .3rem; }
+.ticket { flex: 1; background: #fff; color: #1d2226; border-radius: 18px; padding: 1rem 1.1rem; margin: .5rem 0 .8rem; display: flex; flex-direction: column; gap: .55rem; box-shadow: 0 10px 40px rgba(0,229,255,.14); animation: pop .16s ease-out; overflow: auto; }
+@keyframes pop { from { transform: translateY(10px); opacity: .3; } to { transform: none; opacity: 1; } }
+.ticket .hd { font-family: 'JetBrains Mono', monospace; font-size: .74rem; letter-spacing: .1em; text-transform: uppercase; color: #57606a; }
+.ticket .ask { font-size: .98rem; color: #3b4450; } .ticket .ask b { color: #1d2226; }
+.ticket .draft { font-size: 1.08rem; font-weight: 600; border-left: 4px solid #0a66c2; padding-left: .7rem; }
+.ticket .row { display: flex; gap: .6rem; font-size: .93rem; border-top: 1px solid #eaeef2; padding-top: .35rem; }
+.ticket .row .k { min-width: 6.4rem; color: #57606a; font-size: .82rem; padding-top: .1rem; }
+.ticket .why { background: #fff8c5; border-radius: 10px; padding: .45rem .6rem; font-size: .92rem; }
+.btns { display: grid; grid-template-columns: 1fr 1.25fr; gap: .7rem; }
+.stat { display: grid; grid-template-columns: repeat(3, 1fr); gap: .6rem; margin: .8rem 0; }
+.stat div { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: .7rem .4rem; text-align: center; }
+.stat b { display: block; font-family: 'Sora', sans-serif; font-size: 1.7rem; font-weight: 800; line-height: 1.1; }
+.stat span { font-size: .74rem; color: var(--dim); }
+.red { color: var(--magenta); } .grn { color: var(--green); } .yel { color: var(--yellow); }
+.list { display: flex; flex-direction: column; gap: .55rem; margin: .6rem 0 1rem; }
+.item { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: .7rem .85rem; font-size: .93rem; color: var(--dim); }
+.item b { color: var(--text); } .item.bad { border-color: rgba(255,0,110,.5); } .item.ok { border-color: rgba(0,230,118,.4); }
+.item .q { font-style: italic; color: var(--text); display: block; margin: .15rem 0; }
+table { width: 100%; border-collapse: collapse; font-size: .95rem; margin: .6rem 0 1rem; }
+th, td { padding: .5rem .4rem; text-align: left; border-bottom: 1px solid rgba(255,255,255,.08); } th { font-family: 'JetBrains Mono', monospace; font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); }
+td:not(:first-child), th:not(:first-child) { text-align: center; font-weight: 700; }
+.punch { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 1.25rem; line-height: 1.3; margin: .4rem 0 .9rem; }
+.note { font-size: .85rem; color: var(--dim); text-align: center; margin-top: .7rem; }
+@media (min-width: 900px) { .wrap { max-width: 720px; } .ticket .draft { font-size: 1.3rem; } .ticket .ask { font-size: 1.1rem; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- INTRO 1 -->
+  <section class="screen center on" id="s-intro1">
+    <div class="kicker">ISOM 260 · Session 10 · Round 1</div>
+    <h1>🟢 Rubber <span class="grad">Stamp</span></h1>
+    <p>It's <strong>Friday, 4:30 PM.</strong> You manage customer support at <strong>Beacon Hill Bikes.</strong></p>
+    <p>Your AI employee has a badge, so it can't send anything on its own. It drafted <strong>30 replies.</strong> Each one waits for <strong>your OK.</strong></p>
+    <p>You leave at 5. Customers are waiting. <strong>Clear the tray.</strong></p>
+    <p class="mono" style="font-size:.85rem">✅ Approve = it goes out under your name<br>✋ Hold = that customer waits until Monday</p>
+    <button class="btn go" id="start1">Start · 75 seconds</button>
+    <p class="note">Wait for the signal. On a laptop: → approve, ← hold.</p>
+  </section>
+
+  <!-- PLAY (both rounds) -->
+  <section class="screen" id="s-play">
+    <div class="top"><span id="p-round">ROUND 1</span><span><b id="p-n">1</b> of <span id="p-total">30</span></span><span><b id="p-time">75</b>s</span></div>
+    <div class="bar"><i id="p-bar"></i></div>
+    <div class="waiting" id="p-wait"></div>
+    <div class="ticket" id="p-ticket"></div>
+    <div class="btns"><button class="btn no" id="b-no">✋ Hold</button><button class="btn yes" id="b-yes">✅ Approve</button></div>
+  </section>
+
+  <!-- RESULT 1 -->
+  <section class="screen" id="s-res1">
+    <div class="kicker">5:00 PM · Round 1</div>
+    <h2 id="r1-head"></h2>
+    <div class="stat" id="r1-stat"></div>
+    <div class="punch" id="r1-punch"></div>
+    <div class="list" id="r1-list"></div>
+    <p><strong>You're not careless. You were flooded.</strong> The first dozen were all fine, so your thumb learned "yes." That has a name: <strong>rubber-stamping.</strong></p>
+    <p class="note">👆 Look up. Hands in a moment.</p>
+    <button class="btn ghost" id="to2" style="margin-top:1rem">Round 2 · wait for the signal</button>
+  </section>
+
+  <!-- INTRO 2 -->
+  <section class="screen center" id="s-intro2">
+    <div class="kicker">ISOM 260 · Session 10 · Round 2</div>
+    <h1>Same tray. <span class="grad">With the dial.</span></h1>
+    <p>Same Friday. Same 30 drafts. This time a <strong>second reader</strong> scored every draft from 0 to 100.</p>
+    <p><strong>24 scored 70 or higher</strong> and went out on their own. You never see them.</p>
+    <p><strong>6 reach you.</strong> Each one tells you who is asking, what will happen, whether you can undo it, and why you're seeing it.</p>
+    <button class="btn go" id="start2">Start · 75 seconds</button>
+    <p class="note">Wait for the signal.</p>
+  </section>
+
+  <!-- RESULT 2 -->
+  <section class="screen" id="s-res2">
+    <div class="kicker">5:00 PM · Round 2</div>
+    <h2 id="r2-head"></h2>
+    <table id="r2-table"></table>
+    <div class="punch">Same you. Same Friday. <span class="grad">Fewer, better questions.</span></div>
+    <div class="list" id="r2-list"></div>
+    <div class="item bad" id="r2-twist"></div>
+    <p style="margin-top:.9rem"><strong>No dial is perfect.</strong> That's why you'll also set always-ask rules today, and why next Monday is about testing.</p>
+    <button class="btn ghost" id="again" style="margin-top:1rem">Play again from the start</button>
+  </section>
+</div>
+
+<script>
+(function () {
+  // 30 drafts. bad = should NOT have gone out as written. sure = the second reader's score (Round 2 bar is 70).
+  const C = [
+    {to:"Ana P.", ask:"What time do you open Saturday?", draft:"We open at 9 AM on Saturdays and close at 6 PM.", sure:98},
+    {to:"Jay M.", ask:"Do you sell kids' helmets?", draft:"Yes, sizes XS to M, from $35. They're by the front counter.", sure:96},
+    {to:"Rosa L.", ask:"How much is a basic tune-up?", draft:"A basic tune-up is $79 and usually takes two days.", sure:95},
+    {to:"Tim W.", ask:"Is the Trek FX 2 in stock in medium?", draft:"Yes, we have two medium FX 2s on the floor today.", sure:93},
+    {to:"Mei C.", ask:"Can I test ride before I buy?", draft:"Of course. Bring a photo ID and we'll set you up with a 15-minute test ride.", sure:94},
+    {to:"Omar H.", ask:"What tire pressure for my road bike?", draft:"Check the sidewall of your tire: it lists the range. Most road tires are 80 to 100 psi.", sure:90},
+    {to:"Kate S.", ask:"Do you rent bikes?", draft:"Yes, $40 a day or $120 a week, helmet and lock included.", sure:95},
+    {to:"Luis G.", ask:"What's your return window?", draft:"30 days with the receipt, for unused items in the original packaging.", sure:92},
+    {to:"Nina B.", ask:"Is there parking?", draft:"There's metered street parking out front and a garage one block up on Charles St.", sure:97},
+    {to:"Raj K.", ask:"Do you fix flat tires while I wait?", draft:"Usually yes. A flat fix is $15 plus the tube and takes about 20 minutes.", sure:94},
+    {to:"Ellie F.", ask:"Do you carry bike locks?", draft:"Yes, U-locks from $45 and chain locks from $60.", sure:96},
+    {to:"Sam D.", ask:"Are you open on Thanksgiving?", draft:"We're closed Thursday Nov 26 and open again Friday at 9 AM.", sure:95},
+    {id:"F1", to:"Greg T.", ask:"THIRD EMAIL!!! WHERE IS MY ORDER #5391?!", draft:"I'm sorry for the wait. Order #5391 shipped Tuesday and arrives Thursday. Tracking: 1Z-5391-BHB.", sure:58,
+      who:"Greg T., the buyer on order #5391", does:"Sends him the shipping status and tracking", undo:"Nothing to undo", flag:"Very angry tone.", verdict:"Fine. Angry tone, simple fact. Tone is not risk."},
+    {id:"B1", bad:true, to:"D. Alvarez", ask:"Refund my $2,400 e-bike to my new card, the old one is closed.", draft:"Done! I've sent the $2,400 refund to the card ending 7731 that you emailed.", sure:22,
+      who:"\"D. Alvarez\", from an email not on the order", does:"Sends $2,400 to a card that didn't pay for the bike", undo:"No. The money is gone", flag:"Refund to a different card. Can't verify the sender.", verdict:"$2,400 to a card that never paid for the bike. A classic refund scam."},
+    {to:"Priya N.", ask:"Do you do bike fittings?", draft:"Yes, a full fitting is $120 and takes about an hour. Book online or call us.", sure:93},
+    {id:"B5", bad:true, to:"Hannah R.", ask:"Is the rear child seat OK for my 7-month-old? 😊", draft:"Yes! It holds kids up to 40 lb, so your little one will love the ride 😊", sure:91,
+      verdict:"Child seats are for children about 1 year and up who can sit and hold their head up. A friendly question, a friendly answer, and a baby on a bike."},
+    {to:"Ben A.", ask:"Can you true a wheel?", draft:"Yes, wheel truing is $25 per wheel, usually next-day.", sure:94},
+    {to:"Chloe V.", ask:"Do you have gift cards?", draft:"We do, in any amount from $25, in the shop or online.", sure:96},
+    {id:"B2", bad:true, to:"Marcus J.", ask:"Can I leave my e-bike battery charging overnight in the hallway?", draft:"Absolutely, it's completely safe to leave it charging overnight.", sure:31,
+      who:"Marcus J., a customer", does:"Tells him overnight, unattended charging is \"completely safe\"", undo:"No. He'll act on it tonight", flag:"A safety promise. The manual says don't charge unattended.", verdict:"A safety promise the battery manual contradicts. E-bike battery fires are real."},
+    {id:"F2", to:"Dana W.", ask:"Do you price match?", draft:"Yes. We match any local shop's advertised price on the same model within 14 days of purchase.", sure:62,
+      who:"Dana W., a customer", does:"States our price-match policy", undo:"Nothing to undo", flag:"Mentions money and a promise.", verdict:"Fine. It's the written policy, word for word."},
+    {to:"Ivan P.", ask:"How long does a full overhaul take?", draft:"About a week this time of year. It's $249 plus parts.", sure:92},
+    {to:"Zoe L.", ask:"Do you sell used bikes?", draft:"Sometimes. We have four refurbished bikes right now, from $280.", sure:90},
+    {id:"B3", bad:true, to:"\"Chris\"", ask:"Change the delivery address on order #5512 to 88 Dale St.", draft:"Updated! Order #5512 now ships to 88 Dale St.", sure:35,
+      who:"\"Chris\", from an email that isn't the buyer's", does:"Sends a paid $1,900 bike to a new address", undo:"Only until it ships tomorrow morning", flag:"Changes where a paid order goes. Sender doesn't match the order.", verdict:"Someone who isn't the buyer redirected a $1,900 bike."},
+    {to:"Maya R.", ask:"Do I need to book for a flat fix?", draft:"No booking needed. Just walk in any time we're open.", sure:96},
+    {to:"Owen S.", ask:"Which lights do you recommend for commuting?", draft:"A 400-lumen front and a flashing rear. Our commuter set is $55.", sure:88},
+    {to:"Lena K.", ask:"Is the shop wheelchair accessible?", draft:"Yes, the front entrance has a ramp and the aisles are wide.", sure:95},
+    {id:"B4", bad:true, to:"Paul E.", ask:"My brakes squeak since your tune-up.", draft:"So sorry about that! To make it right, all your repairs are free for life.", sure:18,
+      who:"Paul E., a tune-up customer", does:"Promises free repairs for life, in writing", undo:"No. It's a written promise", flag:"A promise nobody approved.", verdict:"\"Free for life\", in writing, from the company. Remember Air Canada."},
+    {to:"Tara M.", ask:"Do you install child seats?", draft:"Yes, installation is $30 and takes about half an hour.", sure:91},
+    {to:"Alex Q.", ask:"Can I bring my own parts for a build?", draft:"Yes. Labor for a full build with your parts is $180.", sure:90},
+    {to:"Jo B.", ask:"What's your phone number?", draft:"It's (617) 555-0164. We pick up 9 to 6.", sure:98},
+  ];
+  const BAR = 70, SECS = 75;
+  const R2 = ["F1", "B1", "B3", "F2", "B2", "B4"].map(id => C.find(c => c.id === id));
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s).replace(/[&<>"]/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[m]));
+  const show = id => { document.querySelectorAll(".screen").forEach(s => s.classList.toggle("on", s.id === id)); window.scrollTo(0, 0); };
+  let round = 1, deck = [], i = 0, picks = [], t0 = 0, tick = null, playing = false;
+  const res = { 1: null, 2: null };
+
+  function draw() {
+    const c = deck[i];
+    $("p-n").textContent = i + 1;
+    let h;
+    if (round === 1) {
+      h = `<div class="hd">Approve reply #${i + 1}? · to ${esc(c.to)}</div><div class="ask">They asked: <b>${esc(c.ask)}</b></div><div class="draft">${esc(c.draft)}</div>`;
+      const left = deck.length - i;
+      $("p-wait").textContent = left > 1 ? `⏳ ${left} customers are waiting on you` : "⏳ last one";
+    } else {
+      h = `<div class="hd">Needs you · 🧑‍⚖️ sure: ${c.sure} of 100</div><div class="ask">They asked: <b>${esc(c.ask)}</b></div><div class="draft">${esc(c.draft)}</div>
+        <div class="row"><span class="k">Who's asking</span><span>${esc(c.who)}</span></div>
+        <div class="row"><span class="k">What happens</span><span>${esc(c.does)}</span></div>
+        <div class="row"><span class="k">Can we undo it</span><span>${esc(c.undo)}</span></div>
+        <div class="why">🧑‍⚖️ Why you're seeing it: <b>${esc(c.flag)}</b></div>`;
+      $("p-wait").textContent = "📤 24 routine replies already went out on their own";
+    }
+    const t = $("p-ticket"); t.innerHTML = h; t.style.animation = "none"; void t.offsetWidth; t.style.animation = "";
+  }
+  function start(r) {
+    round = r; deck = r === 1 ? C : R2; i = 0; picks = []; playing = true; t0 = performance.now();
+    $("p-round").textContent = "ROUND " + r; $("p-total").textContent = deck.length;
+    show("s-play"); draw();
+    clearInterval(tick);
+    tick = setInterval(() => {
+      const left = SECS - (performance.now() - t0) / 1000;
+      $("p-time").textContent = Math.max(0, Math.ceil(left));
+      $("p-bar").style.transform = `scaleX(${Math.max(0, left / SECS)})`;
+      if (left <= 0) finish();
+    }, 100);
+  }
+  function pick(yes) {
+    if (!playing) return;
+    picks.push(yes); i++;
+    if (i >= deck.length) finish(); else draw();
+  }
+  function finish() {
+    if (!playing) return;
+    playing = false; clearInterval(tick);
+    const secs = Math.min(SECS, (performance.now() - t0) / 1000);
+    const seen = picks.length;
+    const r = { secs, seen, per: seen ? secs / seen : 0, approvedBad: [], heldBad: [], heldGood: 0, approved: 0, unanswered: deck.length - seen };
+    deck.forEach((c, k) => {
+      if (k >= seen) return;
+      if (picks[k]) { r.approved++; if (c.bad) r.approvedBad.push(c); } else { if (c.bad) r.heldBad.push(c); else r.heldGood++; }
+    });
+    r.missedBad = deck.filter((c, k) => c.bad && k >= seen);
+    res[round] = r;
+    round === 1 ? result1(r) : result2(r);
+  }
+  const bullet = (c, cls, lead) => `<div class="item ${cls}"><b>${lead}</b><span class="q">“${esc(c.draft)}”</span>${esc(c.verdict)}</div>`;
+
+  function result1(r) {
+    const nb = r.approvedBad.length, totalBad = C.filter(c => c.bad).length;
+    $("r1-head").innerHTML = `You approved <span class="grad">${r.approved} of ${r.seen}</span> in ${Math.round(r.secs)} seconds.`;
+    $("r1-stat").innerHTML = `<div><b>${r.per.toFixed(1)}s</b><span>per decision</span></div><div><b class="${nb ? "red" : "grn"}">${nb}</b><span>bad ones you approved</span></div><div><b class="yel">${r.heldGood + r.unanswered}</b><span>customers left waiting</span></div>`;
+    $("r1-punch").innerHTML = nb
+      ? `💥 ${nb} of the ${totalBad} bad drafts went out <span class="grad">with your name on them.</span>`
+      : r.missedBad.length ? `⏳ The tray won. ${r.unanswered} drafts never got your eyes, and ${r.missedBad.length} of the bad ones were still in the pile.`
+      : (r.heldGood + r.unanswered > 4 ? `🛡️ Nothing bad got out. But ${r.heldGood + r.unanswered} customers who only wanted a simple answer now wait until Monday.` : `🏅 Nothing bad got out, and almost nobody waits. You're rare. Look around the room.`);
+    let h = r.approvedBad.map(c => bullet(c, "bad", "💥 You approved:")).join("");
+    h += r.heldBad.map(c => bullet(c, "ok", "🛡️ You caught:")).join("");
+    h += r.missedBad.map(c => bullet(c, "", "⏳ Never reached it:")).join("");
+    $("r1-list").innerHTML = h;
+    show("s-res1");
+  }
+  function result2(r) {
+    const a = res[1], bad2 = R2.filter(c => c.bad).length, caught = r.heldBad.length;
+    $("r2-head").innerHTML = `You caught <span class="grad">${caught} of ${bad2}</span>.`;
+    const row = (k, x, y) => `<tr><td>${k}</td><td>${x}</td><td>${y}</td></tr>`;
+    const badIn1 = a ? a.approvedBad.filter(c => c.id !== "B5").length : null;
+    $("r2-table").innerHTML = `<tr><th></th><th>Round 1</th><th>Round 2</th></tr>`
+      + row("Decisions you made", a ? a.seen : "—", r.seen)
+      + row("Seconds per decision", a ? a.per.toFixed(1) : "—", r.per.toFixed(1))
+      + row("The 4 bad drafts that got out", a ? `<span class="${badIn1 ? "red" : "grn"}">${badIn1}</span>` : "—", `<span class="${r.approvedBad.length ? "red" : "grn"}">${r.approvedBad.length}</span>`)
+      + row("Customers left waiting", a ? a.heldGood + a.unanswered : "—", r.heldGood + r.unanswered);
+    let h = r.approvedBad.map(c => bullet(c, "bad", "💥 Still approved:")).join("");
+    h += `<div class="item"><b>🥱 Two of the six were false alarms</b> (the angry customer, the price match). They cost you a few seconds. That's the price of a bar at ${BAR}.</div>`;
+    $("r2-list").innerHTML = h;
+    const b5 = C.find(c => c.id === "B5");
+    const did = a ? (a.approvedBad.includes(b5) ? "You approved it in Round 1." : a.heldBad.includes(b5) ? "You caught it in Round 1. The dial didn't." : "You never got to it in Round 1.") : "";
+    $("r2-twist").innerHTML = `<b>😬 One more thing.</b> Among the 24 that went out on their own:<span class="q">“${esc(b5.ask)}” → “${esc(b5.draft)}”</span>The second reader scored it <b>${b5.sure}</b>. ${esc(b5.verdict)} <b>${did}</b>`;
+    show("s-res2");
+  }
+
+  $("start1").onclick = () => start(1);
+  $("start2").onclick = () => start(2);
+  $("to2").onclick = () => show("s-intro2");
+  $("again").onclick = () => { res[1] = res[2] = null; show("s-intro1"); };
+  $("b-yes").onclick = () => pick(true);
+  $("b-no").onclick = () => pick(false);
+  document.addEventListener("keydown", e => {
+    if (!playing) return;
+    if (e.key === "ArrowRight") { e.preventDefault(); pick(true); }
+    if (e.key === "ArrowLeft") { e.preventDefault(); pick(false); }
+  });
+  const jump = () => { if (location.hash === "#2" && !playing) show("s-intro2"); };
+  window.addEventListener("hashchange", jump); jump();
+  window.__rs = { C, R2, res, start, pick, finish };   // for testing
+})();
+</script>
+</body>
+</html>

@@ -20,8 +20,8 @@
   ],
   "objectives": [
     {
-      "title": "See Why \"A Person Approves It\" Isn't Enough",
-      "description": "Count what last week's badge costs a manager at 200 messages a day, and explain rubber-stamping with a real case."
+      "title": "Feel Why \"A Person Approves It\" Isn't Enough",
+      "description": "Play the manager with 30 approvals and 75 seconds, see what you let through, and connect it to a real case of rubber-stamping."
     },
     {
       "title": "Add a Second Reader",
@@ -39,19 +39,20 @@
   "agenda": [
     {
       "time": "Mon Nov 16 · 12:30 PM",
-      "title": "The Badge Worked. Look What It Cost.",
-      "duration": "4 minutes",
-      "description": "Zero incidents last week, and a tray that eats the manager's whole day.",
+      "title": "🟢 Rubber Stamp, Round 1",
+      "duration": "8 minutes",
+      "description": "Friday, 4:30 PM. You're the manager. 30 drafts wait for your OK. 75 seconds.",
       "bulletPoints": [
-        "150 messages × 3 minutes = 7.5 hours of an 8-hour day",
-        "Would you read every one? Rubber-stamping, and the smoke alarm that goes off for toast"
+        "Last week's badge: zero incidents, and 150 × 3 minutes = 7.5 hours of the manager's day",
+        "Play on your phone, then hands up: who approved a bad one?",
+        "Rubber-stamping: the smoke alarm that goes off every time you make toast"
       ],
       "isBreak": false
     },
     {
-      "time": "Mon Nov 16 · 12:34 PM",
+      "time": "Mon Nov 16 · 12:38 PM",
       "title": "Cold Open: Four Real Cases",
-      "duration": "7 minutes",
+      "duration": "6 minutes",
       "description": "One question per story, shouted out before the reveal.",
       "bulletPoints": [
         "Uber, 2022: a contractor flooded with approval prompts says yes to one",
@@ -62,35 +63,35 @@
       "isBreak": false
     },
     {
-      "time": "Mon Nov 16 · 12:41 PM",
-      "title": "A Badge That Knows When to Ask",
-      "duration": "9 minutes",
-      "description": "Three upgrades and a whole-room vote.",
+      "time": "Mon Nov 16 · 12:44 PM",
+      "title": "A Badge That Knows When to Ask + Round 2",
+      "duration": "8 minutes",
+      "description": "Three upgrades, then the same tray again.",
       "bulletPoints": [
         "🧑‍⚖️ The second reader: an editor, not a spell-checker",
         "🎚️ The dial: a confidence threshold you set. Too low, something slips. Too high, the manager drowns",
         "📌 Always ask: what goes to a person however sure the AI is",
-        "Sure or ask? Three messages, fingers up. Tone is not risk. Friendly is not safe"
+        "Rubber Stamp, round 2: 24 drafts went out on their own, 6 reach you with reasons. And one that shouldn't have"
       ],
       "isBreak": false
     },
     {
-      "time": "Mon Nov 16 · 12:50 PM",
+      "time": "Mon Nov 16 · 12:52 PM",
       "title": "Hands-On: The Dial, Parts 1–4",
-      "duration": "26 minutes",
+      "duration": "25 minutes",
       "description": "Same company as last week, a bigger inbox, and an answer key.",
       "bulletPoints": [
         "Part 2: 8 messages with last week's badge. Bet how many really need a person",
         "Part 3: the second reader scores every answer",
-        "Part 4: set your bar and your always-ask rules. Goal: zero slipped, as few wasted as you can",
+        "Part 4: drag the live dial. Gut first, then reveal the answer key. Goal: zero slipped, as few wasted as you can",
         "Class tally on the board: same model, why different bars?"
       ],
       "isBreak": false
     },
     {
-      "time": "Mon Nov 16 · 1:16 PM",
+      "time": "Mon Nov 16 · 1:17 PM",
       "title": "Hands-On: Break a Dial, Build Your Own",
-      "duration": "14 minutes",
+      "duration": "13 minutes",
       "description": "Pairs, then your own project.",
       "bulletPoints": [
         "Part 5: one calm, friendly message aimed at your neighbor's dial. Your neighbor is the manager and the judge",
@@ -126,16 +127,25 @@
     {
       "title": "Slide Deck · Your Manager Is Drowning (Mon Nov 16)",
       "url": "/session-10/slides-meeting1.html",
-      "description": "Monday's class: what the badge cost, four real cases, the three upgrades, Sure or Ask, the hands-on, and the two approval cards.",
+      "description": "Monday's class: what the badge cost, Rubber Stamp, four real cases, the three upgrades, the hands-on, and the two approval cards.",
       "icon": "presentation",
       "badge": "Slides",
       "badgeType": "interactive",
       "linkText": "Open slides"
     },
     {
+      "title": "🟢 Rubber Stamp · the whole-room game",
+      "url": "/session-10/rubber-stamp.html",
+      "description": "Friday, 4:30 PM. 30 drafts wait for your OK and you have 75 seconds. Then the same tray again, with a dial. Play it on your phone.",
+      "icon": "zap",
+      "badge": "Game",
+      "badgeType": "interactive",
+      "linkText": "Play"
+    },
+    {
       "title": "🎚️ The Dial · Colab Notebook",
       "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-10/ISOM260_Session10_The_Dial.ipynb",
-      "description": "Monday's hands-on, on your class pass. Your AI employee's second week: 8 messages, a second reader that scores every answer, and a bar you set. Then trap your neighbor's dial and set the dial for your own final project.",
+      "description": "Monday's hands-on, on your class pass. Your AI employee's second week: 8 messages, a second reader that scores every answer, and a live dial you drag. Then trap your neighbor's dial and set the dial for your own final project.",
       "icon": "target",
       "badge": "Hands-On",
       "badgeType": "interactive",
@@ -177,7 +187,7 @@
         },
         {
           "title": "Set your dial (9 min)",
-          "description": "Pick the bar. Add always_ask(\"word\") rules. The answer key shows ✅ handled alone, 🟡 right call, 🥱 wasted and 😬 slipped. Aim for zero slipped and as few wasted as you can, then write why."
+          "description": "Drag the live dial and watch the messages move between \"goes out alone\" and \"waits for the manager\". Reveal the answer key: ✅ handled alone, 🟡 right call, 🥱 wasted, 😬 slipped. Aim for zero slipped and as few wasted as you can, then lock in your bar and write why."
         }
       ]
     },
