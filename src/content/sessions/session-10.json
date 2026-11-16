@@ -152,6 +152,15 @@
       "linkText": "Open"
     },
     {
+      "title": "📤 Upload your video · class folder",
+      "url": "https://drive.google.com/drive/folders/1laRS9z3vgXhqSfp2IW022kC9jEzIAJAB?usp=sharing",
+      "description": "Made an AI video today? Download it from the Render Desk, then upload it to this Google Drive folder. Name the file with your team name, like Maya-and-Leo.mp4. You need to be signed in to Google to upload.",
+      "icon": "play-circle",
+      "badge": "Upload",
+      "badgeType": "interactive",
+      "linkText": "Open the folder"
+    },
+    {
       "title": "🎚️ The Dial · Colab Notebook",
       "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-10/ISOM260_Session10_The_Dial.ipynb",
       "description": "Monday's hands-on, on your class pass. Your AI employee's second week: 8 messages, a second reader that scores every answer, and a live dial you drag. Then trap your neighbor's dial and set the dial for your own final project.",
@@ -213,6 +222,10 @@
         {
           "title": "Fix the card and send it",
           "description": "Who's asking, what it shows, can it be undone, why it's safe, and what the approver should check. Make it a ten-second yes. Then watch your screen."
+        },
+        {
+          "title": "Upload it",
+          "description": "When your video is done, download it from the Render Desk and upload it to the class folder (link in Resources), named with your team name."
         }
       ]
     }
