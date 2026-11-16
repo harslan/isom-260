@@ -90,23 +90,23 @@
     },
     {
       "time": "Mon Nov 16 · 1:17 PM",
-      "title": "Hands-On: Break a Dial, Build Your Own",
-      "duration": "13 minutes",
-      "description": "Pairs, then your own project.",
+      "title": "🎬 Render Desk: Make a Real AI Video",
+      "duration": "18 minutes",
+      "description": "Teams of two ask a real approver for a real render.",
       "bulletPoints": [
-        "Part 5: one calm, friendly message aimed at your neighbor's dial. Your neighbor is the manager and the judge",
-        "Part 6: your final project's dial. Who does it ask, how often, and what does it always ask about? An AI plays that person"
+        "A Director agent writes your video prompt and your approval card. You fix the card and send it",
+        "Seedance 2.5, 4 to 10 seconds, with sound, rendered on the professor's account, only if the approver says yes",
+        "Decide in ten seconds: the approver reads your card on the screen and approves, sends it back, or declines"
       ],
       "isBreak": false
     },
     {
-      "time": "Mon Nov 16 · 1:30 PM",
-      "title": "Decide in Ten Seconds + Homework",
-      "duration": "15 minutes",
-      "description": "Best trap read aloud, then what a good approval looks like.",
+      "time": "Mon Nov 16 · 1:35 PM",
+      "title": "Premiere + Homework",
+      "duration": "10 minutes",
+      "description": "Every approved video on the big screen.",
       "bulletPoints": [
-        "Two approval cards: one with nothing to judge, one a person can decide on in ten seconds",
-        "HW #9 Final Project Pitch due Thu Nov 19: your guardrail sentence can now say when your agent asks a person",
+        "HW #9 Final Project Pitch due Thu Nov 19: do Parts 5 and 6 of The Dial at home and paste Part 6's blue box into your guardrail sentence",
         "Wednesday: when the trap hides in a document your agent reads, and what your agent costs"
       ],
       "isBreak": false
@@ -141,6 +141,15 @@
       "badge": "Game",
       "badgeType": "interactive",
       "linkText": "Play"
+    },
+    {
+      "title": "🎬 Render Desk · make a real AI video",
+      "url": "/session-10/render-desk.html",
+      "description": "Teams of two: a Director agent writes your video prompt and approval card on your class pass. Send it to the approver. If they say yes, Seedance 2.5 renders it and it comes back to your screen.",
+      "icon": "play-circle",
+      "badge": "Studio",
+      "badgeType": "interactive",
+      "linkText": "Open"
     },
     {
       "title": "🎚️ The Dial · Colab Notebook",
@@ -193,17 +202,17 @@
     },
     {
       "number": 2,
-      "icon": "users",
-      "title": "Break a Dial, Build Your Own",
-      "description": "Parts 5 and 6:",
+      "icon": "play-circle",
+      "title": "Render Desk",
+      "description": "Teams of two, 8 minutes:",
       "steps": [
         {
-          "title": "Trap your neighbor's dial (7 min)",
-          "description": "One calm, friendly message aimed at their company and their bar. If the answer goes out alone, your neighbor decides: would their manager be fine with it?"
+          "title": "Talk to the Director",
+          "description": "An AI agent on your class pass. Tell it your company and the feeling. It drafts a 4 to 10 second video prompt and the approval card."
         },
         {
-          "title": "Your final project's dial (6 min)",
-          "description": "What your agent does alone, when it stops and asks, who it asks, how many times a day, and what it always asks about. An AI plays that person. The blue box goes into HW #9."
+          "title": "Fix the card and send it",
+          "description": "Who's asking, what it shows, can it be undone, why it's safe, and what the approver should check. Make it a ten-second yes. Then watch your screen."
         }
       ]
     }
@@ -229,7 +238,7 @@
   "homework": [
     {
       "label": "HW #9 · due Thu Nov 19, 11:59 PM:",
-      "text": "Final Project Pitch, on Canvas: four sentences (the problem, the person, the one tool, the one guardrail) plus your badge. Your guardrail sentence can now say when your agent stops and asks a person: paste the blue box from Part 6 of The Dial. Then reply to two classmates as their user."
+      "text": "Final Project Pitch, on Canvas: four sentences (the problem, the person, the one tool, the one guardrail) plus your badge. At home, do Parts 5 and 6 of The Dial: your guardrail sentence can now say when your agent stops and asks a person. Paste Part 6's blue box. Then reply to two classmates as their user."
     },
     {
       "label": "HW #10 · due Tue Nov 24, 11:59 PM:",
