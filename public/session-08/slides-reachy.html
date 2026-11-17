@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reachy Mini Gets a Job</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Sora:wght@400;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg-primary:#0a0e1a;--bg-card:#141929;--bg-elevated:#1a2035;
+  --cyan:#00e5ff;--cyan-glow:rgba(0,229,255,.15);
+  --magenta:#ff006e;--magenta-glow:rgba(255,0,110,.15);
+  --yellow:#ffd600;--yellow-glow:rgba(255,214,0,.15);
+  --green:#00e676;--green-glow:rgba(0,230,118,.15);
+  --orange:#ff9100;--purple:#b388ff;--purple-glow:rgba(179,136,255,.15);
+  --text-primary:#e8ecf4;--text-secondary:#8892a8;--text-dim:#5a6478;
+  --border:rgba(0,229,255,.12);--border-strong:rgba(0,229,255,.3);--grid-line:rgba(0,229,255,.04);
+}
+html,body{height:100%;overflow:hidden}
+body{background:var(--bg-primary);color:var(--text-primary);font-family:'DM Sans',sans-serif;line-height:1.5;
+  background-image:linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);background-size:40px 40px}
+.orb{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;opacity:.45}
+.o1{width:520px;height:520px;background:rgba(0,229,255,.09);top:-120px;left:-120px}
+.o2{width:440px;height:440px;background:rgba(179,136,255,.09);bottom:-120px;right:-80px}
+.deck{position:relative;width:100vw;height:100vh}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:6vh 7vw;opacity:0;pointer-events:none;transform:translateY(16px);transition:opacity .45s ease,transform .45s ease}
+.slide.active{opacity:1;pointer-events:auto;transform:none}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:clamp(12px,1.3vw,18px);letter-spacing:.18em;text-transform:uppercase;color:var(--cyan);margin-bottom:2vh}
+h1{font-family:'Sora',sans-serif;font-weight:800;font-size:clamp(36px,6.4vw,96px);line-height:1.05}
+h2{font-family:'Sora',sans-serif;font-weight:700;font-size:clamp(28px,4vw,60px);line-height:1.1;margin-bottom:3.5vh}
+.grad{background:linear-gradient(120deg,var(--cyan),var(--purple));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{font-size:clamp(16px,2vw,30px);color:var(--text-secondary);margin-top:2.5vh;max-width:60ch}
+.big{font-size:clamp(18px,2.3vw,34px)}
+.muted{color:var(--text-secondary)}
+.grid{display:grid;gap:2vw}
+.g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}
+.card{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:2.6vh 1.6vw}
+.card h3{font-family:'Sora',sans-serif;font-size:clamp(16px,1.8vw,28px);margin-bottom:1vh}
+.card p{font-size:clamp(14px,1.45vw,22px);color:var(--text-secondary)}
+.emoji{font-size:clamp(28px,3.4vw,52px);margin-bottom:1vh;display:block}
+.c-cyan{border-color:rgba(0,229,255,.35);box-shadow:0 0 30px var(--cyan-glow)}
+.c-mag{border-color:rgba(255,0,110,.35);box-shadow:0 0 30px var(--magenta-glow)}
+.c-yel{border-color:rgba(255,214,0,.35);box-shadow:0 0 30px var(--yellow-glow)}
+.c-grn{border-color:rgba(0,230,118,.35);box-shadow:0 0 30px var(--green-glow)}
+.c-pur{border-color:rgba(179,136,255,.35);box-shadow:0 0 30px var(--purple-glow)}
+.min{font-family:'JetBrains Mono',monospace;font-size:clamp(14px,1.5vw,22px);color:var(--cyan)}
+.flow{display:flex;align-items:stretch;gap:1vw}
+.flow .card{flex:1;text-align:center}
+.arrow{align-self:center;font-size:clamp(22px,2.6vw,40px);color:var(--cyan)}
+.qlist{list-style:none;counter-reset:q;display:flex;flex-direction:column;gap:1.6vh}
+.qlist li{counter-increment:q;display:flex;gap:1.2vw;align-items:baseline;font-size:clamp(17px,2.15vw,32px)}
+.qlist li::before{content:counter(q);font-family:'JetBrains Mono',monospace;color:var(--bg-primary);background:var(--cyan);border-radius:8px;min-width:1.7em;text-align:center;font-weight:700;font-size:.8em;padding:.05em 0}
+.qlist li span{color:var(--text-secondary);font-size:.72em}
+.row{display:flex;gap:3vw;align-items:center}
+.timer{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:clamp(40px,7vw,110px);color:var(--cyan);text-shadow:0 0 30px var(--cyan-glow);cursor:pointer;user-select:none;text-align:center}
+.timer.done{color:var(--magenta);animation:pulse 1s infinite}
+@keyframes pulse{50%{opacity:.4}}
+.hint{font-family:'JetBrains Mono',monospace;font-size:clamp(11px,1vw,15px);color:var(--text-dim);text-align:center}
+.fill{font-family:'Sora',sans-serif;font-size:clamp(20px,3vw,46px);line-height:1.5}
+.blank{display:inline-block;min-width:5em;border-bottom:3px solid var(--cyan);color:var(--cyan)}
+.tag{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:clamp(12px,1.2vw,18px);padding:.3em .8em;border-radius:999px;border:1px solid var(--border-strong);color:var(--cyan);margin-right:.6em}
+.footer{position:fixed;bottom:2.2vh;left:7vw;right:7vw;display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:clamp(11px,1vw,14px);color:var(--text-dim);z-index:5}
+.bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--cyan),var(--purple));transition:width .4s;z-index:5}
+.nav{position:fixed;bottom:1.6vh;right:2vw;display:flex;gap:8px;z-index:6}
+.nav button{background:var(--bg-elevated);color:var(--text-secondary);border:1px solid var(--border);border-radius:8px;width:38px;height:34px;font-size:16px;cursor:pointer}
+@media (max-width:760px){.g3,.g4{grid-template-columns:1fr 1fr}.flow{flex-direction:column}.arrow{transform:rotate(90deg)}}
+</style>
+</head>
+<body>
+<div class="orb o1"></div><div class="orb o2"></div>
+<div class="bar" id="bar"></div>
+<div class="deck" id="deck">
+
+<!-- 1 Title -->
+<section class="slide active">
+  <div class="kicker">ISOM 260 · Session 8 · Opening 30 min</div>
+  <h1>Reachy Mini<br><span class="grad">Gets a Job</span></h1>
+  <p class="sub">Meet the robot. Then your group decides what it should do for a living.</p>
+</section>
+
+<!-- 2 Plan -->
+<section class="slide">
+  <div class="kicker">The next 30 minutes</div>
+  <h2>Four steps</h2>
+  <div class="grid g4">
+    <div class="card c-cyan"><span class="emoji">👋</span><h3>Say hi</h3><p>Talk to it, live</p><div class="min">5 min</div></div>
+    <div class="card c-pur"><span class="emoji">🧠</span><h3>Look inside</h3><p>It's an agent with a body</p><div class="min">5 min</div></div>
+    <div class="card c-yel"><span class="emoji">💼</span><h3>Give it a job</h3><p>Groups design its job</p><div class="min">12 min</div></div>
+    <div class="card c-grn"><span class="emoji">🎤</span><h3>Pitch</h3><p>One sentence per group</p><div class="min">8 min</div></div>
+  </div>
+</section>
+
+<!-- 3 Say hi -->
+<section class="slide">
+  <div class="kicker">Live demo · 5 min</div>
+  <h2>Say hi to Reachy Mini 👋</h2>
+  <div class="grid g3">
+    <div class="card"><span class="emoji">🙋</span><h3>Ask it its name</h3><p>How does it introduce itself?</p></div>
+    <div class="card"><span class="emoji">👀</span><h3>Ask it to look around</h3><p>Look left, look at me, show it's happy</p></div>
+    <div class="card"><span class="emoji">🤔</span><h3>Ask it something tricky</h3><p>Something it shouldn't know, or shouldn't do</p></div>
+  </div>
+  <p class="sub">While it talks, watch the head and the antennas. Who decides when they move?</p>
+</section>
+
+<!-- 4 Inside -->
+<section class="slide">
+  <div class="kicker">What's inside · 5 min</div>
+  <h2>It's an agent <span class="grad">with a body</span></h2>
+  <div class="flow">
+    <div class="card c-cyan"><span class="emoji">👂</span><h3>Ears</h3><p>Microphones hear you</p></div>
+    <div class="arrow">→</div>
+    <div class="card c-pur"><span class="emoji">🧠</span><h3>Brain</h3><p>An LLM decides what to do</p></div>
+    <div class="arrow">→</div>
+    <div class="card c-yel"><span class="emoji">🛠️</span><h3>Tools</h3><p>Move head, turn body, wiggle antennas, use the camera</p></div>
+    <div class="arrow">→</div>
+    <div class="card c-grn"><span class="emoji">🗣️</span><h3>Voice</h3><p>Speaker answers you</p></div>
+  </div>
+  <p class="sub">Same loop as your notebooks. The only difference: <b style="color:var(--text-primary)">here the tools are motors.</b></p>
+</section>
+
+<!-- 5 Hugging Face -->
+<section class="slide">
+  <div class="kicker">Who made it</div>
+  <h2>Open source, from <span class="grad">Hugging Face</span> 🤗</h2>
+  <div class="grid g2">
+    <div class="card c-yel"><h3>🤗 Hugging Face</h3><p>The "GitHub of AI." Open models, datasets, and apps anyone can use. They bought Pollen Robotics, the team that builds Reachy Mini.</p></div>
+    <div class="card c-cyan"><h3>📱 Its app store = Hugging Face Spaces</h3><p>Apps are shared as Spaces. One click installs a new skill: talk, hand tracking, radio...</p></div>
+    <div class="card c-pur"><h3>🐍 You can build for it</h3><p>Python or a simple web app. There is a free simulator, so you don't even need the robot to start.</p></div>
+    <div class="card c-grn"><h3>💵 What it costs</h3><p>About $399 (plugs into a laptop) to $499 (wireless). More than 10,000 sold.</p></div>
+  </div>
+</section>
+
+<!-- 6 Food truck tie -->
+<section class="slide">
+  <div class="kicker">Hold this thought for later today</div>
+  <h2>A robot in a lobby is a <span class="grad">food truck</span> 🚚</h2>
+  <div class="grid g2">
+    <div class="card c-mag"><span class="emoji">🗣️</span><h3>It listens to strangers</h3><p>Anyone can walk up and say anything to it.</p></div>
+    <div class="card c-yel"><span class="emoji">🔘</span><h3>It holds buttons</h3><p>Motors, a camera, a mic. Maybe it can send a message or book something.</p></div>
+  </div>
+  <p class="sub">So the question you'll hear all day: <b style="color:var(--text-primary)">who could rob it, and where is the wall?</b></p>
+</section>
+
+<!-- 7 Groups -->
+<section class="slide">
+  <div class="kicker">Form groups · 1 min</div>
+  <h2>Groups of 4</h2>
+  <p class="big">Count off around the room. Same number, same group.</p>
+  <div class="grid g4" style="margin-top:4vh">
+    <div class="card"><h3>🎤 Pitcher</h3><p>Says your sentence at the end</p></div>
+    <div class="card"><h3>✍️ Writer</h3><p>Writes down the answers</p></div>
+    <div class="card"><h3>🦹 Thief</h3><p>Tries to break your idea</p></div>
+    <div class="card"><h3>⏱️ Timekeeper</h3><p>Keeps you on the clock</p></div>
+  </div>
+</section>
+
+<!-- 8 The job -->
+<section class="slide">
+  <div class="kicker">Group discussion · 12 min</div>
+  <div class="row" style="align-items:flex-start;gap:4vw">
+    <div style="flex:1.6">
+      <h2>Reachy Mini gets a job at <span class="grad">Sawyer</span></h2>
+      <ol class="qlist">
+        <li><div>What job? <span>Who does it serve, and where does it sit?</span></div></li>
+        <li><div>What does it need to know? <span>Its knowledge, its RAG</span></div></li>
+        <li><div>What buttons does it hold? <span>Its tools</span></div></li>
+        <li><div>Who could rob it? <span>And what is your wall?</span></div></li>
+        <li><div>Split or stay? <span>One agent, or two?</span></div></li>
+      </ol>
+    </div>
+    <div style="flex:1;align-self:center">
+      <div class="timer" data-secs="720">12:00</div>
+      <div class="hint">click to start / pause · double-click to reset</div>
+    </div>
+  </div>
+</section>
+
+<!-- 9 Idea starters -->
+<section class="slide">
+  <div class="kicker">Stuck? Steal one</div>
+  <h2>Idea starters</h2>
+  <div class="grid g4">
+    <div class="card"><span class="emoji">🏛️</span><h3>Lobby greeter</h3><p>Answers visitors at the Sawyer front desk</p></div>
+    <div class="card"><span class="emoji">🧑‍🏫</span><h3>Office hours helper</h3><p>Handles the easy questions before the professor</p></div>
+    <div class="card"><span class="emoji">💼</span><h3>Career fair host</h3><p>Sends students to the right employer table</p></div>
+    <div class="card"><span class="emoji">📚</span><h3>Study buddy</h3><p>Quizzes you before the exam, cheers when you get it</p></div>
+    <div class="card"><span class="emoji">⏰</span><h3>Meeting timekeeper</h3><p>Keeps a team meeting on track, nods at the quiet person</p></div>
+    <div class="card"><span class="emoji">🛍️</span><h3>Store greeter</h3><p>Welcomes shoppers and answers product questions</p></div>
+    <div class="card"><span class="emoji">🏨</span><h3>Hotel concierge</h3><p>Restaurant tips and check-out time, in any language</p></div>
+    <div class="card"><span class="emoji">✨</span><h3>Your own</h3><p>The best ones usually come from your own job or industry</p></div>
+  </div>
+</section>
+
+<!-- 10 Pitch -->
+<section class="slide">
+  <div class="kicker">Pitch round · 8 min · 45 seconds per group</div>
+  <div class="row" style="gap:4vw">
+    <div style="flex:2">
+      <p class="fill">Our Reachy is a <span class="blank">&nbsp;</span><br>
+      that <span class="blank">&nbsp;</span>.<br>
+      It holds <span class="blank">&nbsp;</span>.<br>
+      Our wall is <span class="blank">&nbsp;</span>.</p>
+    </div>
+    <div style="flex:1">
+      <div class="timer" data-secs="45">0:45</div>
+      <div class="hint">click to start · double-click to reset</div>
+    </div>
+  </div>
+  <p class="sub">Class vote after: which Reachy would you actually hire? 🙋</p>
+</section>
+
+<!-- 11 Next -->
+<section class="slide">
+  <div class="kicker">What happens to your idea</div>
+  <h2>Keep your idea</h2>
+  <div class="grid g3">
+    <div class="card c-cyan"><span class="emoji">📝</span><h3>Hand it in</h3><p>Writer: post your 4 lines before you leave today</p></div>
+    <div class="card c-pur"><span class="emoji">🔁</span><h3>Wednesday</h3><p>We test it against today's food-truck rules</p></div>
+    <div class="card c-yel"><span class="emoji">🚀</span><h3>HW #9 pitch</h3><p>It can be the starting point for your final project pitch, due Nov 19</p></div>
+  </div>
+  <p class="sub">Now, back to the plan: <b style="color:var(--text-primary)">rob my food truck</b> 🚚💥</p>
+</section>
+
+</div>
+<div class="footer"><span>ISOM 260 · Reachy Mini Gets a Job</span><span id="count"></span></div>
+<div class="nav"><button id="prev" aria-label="Previous">‹</button><button id="next" aria-label="Next">›</button><button id="fs" aria-label="Fullscreen">⛶</button></div>
+<script>
+const slides=[...document.querySelectorAll('.slide')];let i=0;
+function go(n){i=Math.max(0,Math.min(slides.length-1,n));slides.forEach((s,k)=>s.classList.toggle('active',k===i));
+document.getElementById('count').textContent=(i+1)+' / '+slides.length;document.getElementById('bar').style.width=((i+1)/slides.length*100)+'%';
+try{history.replaceState(null,'','#'+(i+1))}catch(e){}}
+document.addEventListener('keydown',e=>{if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();go(i+1)}
+else if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();go(i-1)}else if(e.key==='f'||e.key==='F'){fs()}});
+document.getElementById('next').onclick=()=>go(i+1);document.getElementById('prev').onclick=()=>go(i-1);
+function fs(){if(!document.fullscreenElement){document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen()}else{document.exitFullscreen()}}
+document.getElementById('fs').onclick=fs;
+const h=parseInt((location.hash||'').slice(1));go(isNaN(h)?0:h-1);
+document.querySelectorAll('.timer').forEach(t=>{let total=+t.dataset.secs,left=total,iv=null;
+const show=()=>{t.textContent=Math.floor(left/60)+':'+String(left%60).padStart(2,'0');t.classList.toggle('done',left===0)};
+t.addEventListener('click',()=>{if(iv){clearInterval(iv);iv=null;return}if(left===0)left=total;
+iv=setInterval(()=>{left--;show();if(left<=0){clearInterval(iv);iv=null}},1000)});
+t.addEventListener('dblclick',()=>{clearInterval(iv);iv=null;left=total;show()});show()});
+</script>
+</body>
+</html>
