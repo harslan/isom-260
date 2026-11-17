@@ -21,6 +21,10 @@ const sorted = sessions.sort((a, b) => a.data.number - b.data.number);
       <p class="text-text-secondary text-lg max-w-[600px] mx-auto">
         {course.code}: {course.title} &bull; {course.semester}
       </p>
+      <a href="/isom-260-syllabus.pdf" download="ISOM-260-Syllabus-Fall-2026.pdf" class="inline-flex items-center gap-2 mt-8 px-8 py-4 bg-gradient-to-r from-accent-cyan to-accent-purple rounded-full text-bg-primary font-semibold no-underline transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_10px_40px_rgba(0,212,255,0.3)]">
+        <Icon name="download" class="w-5 h-5" />
+        Download Syllabus (PDF)
+      </a>
     </div>
   </section>
 

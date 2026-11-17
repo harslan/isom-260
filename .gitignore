@@ -5,6 +5,7 @@ dist/
 *.env
 .DS_Store
 *.pdf
+!public/isom-260-syllabus.pdf
 *.textClipping
 .vercel
 smoke-out/

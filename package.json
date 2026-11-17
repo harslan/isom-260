@@ -10,7 +10,8 @@
     "check:dates": "node scripts/check-dates.mjs",
     "fix:dates": "node scripts/check-dates.mjs --fix",
     "smoke": "python3 scripts/smoke_notebooks.py",
-    "smoke:dry": "python3 scripts/smoke_notebooks.py --dry-run"
+    "smoke:dry": "python3 scripts/smoke_notebooks.py --dry-run",
+    "syllabus:pdf": "python3 scripts/build_syllabus_pdf.py"
   },
   "dependencies": {
     "@astrojs/vercel": "^9.0.4",
