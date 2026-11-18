@@ -113,17 +113,83 @@
     },
     {
       "time": "Wed Nov 18 · 12:30 PM",
-      "title": "Meeting 2: Hidden Traps and the Bill",
-      "duration": "75 minutes",
-      "description": "Part 2 of this session. Materials are posted before class.",
+      "title": "Cold Open: Two Songs, One Person",
+      "duration": "6 minutes",
+      "description": "The same AI made both. Which one is really for them?",
       "bulletPoints": [
-        "Input guardrails: instructions hidden inside a document or an email your agent reads",
-        "What your agent costs per message, and a limit that stops it"
+        "Song one came from one lazy sentence",
+        "Song two came from five true details",
+        "Same AI. What changed?"
+      ],
+      "isBreak": false
+    },
+    {
+      "time": "Wed Nov 18 · 12:36 PM",
+      "title": "🎵 A Song for Someone: Three Takes",
+      "duration": "39 minutes",
+      "description": "Pick one person who matters to you. Make them a song in Suno.",
+      "bulletPoints": [
+        "Take 1, the lazy one: tell the AI who it's for and nothing else",
+        "Take 2, the true one: add five true things only you know",
+        "Take 3, the director's cut: choose the sound, the mood, the voice and the language",
+        "Rather make something wild? Go for it. Any song, any style, about anything"
+      ],
+      "isBreak": false
+    },
+    {
+      "time": "Wed Nov 18 · 1:15 PM",
+      "title": "Send It",
+      "duration": "5 minutes",
+      "description": "Text the song to them now, before you talk yourself out of it.",
+      "bulletPoints": [
+        "Open your best take in Suno and press Share",
+        "Then tell us what they said"
+      ],
+      "isBreak": false
+    },
+    {
+      "time": "Wed Nov 18 · 1:20 PM",
+      "title": "The Premiere",
+      "duration": "20 minutes",
+      "description": "Volunteers only. Tell us who it's for, then play one minute.",
+      "bulletPoints": [
+        "If they wrote back, read it to us",
+        "The room votes: Goosebumps, Biggest Laugh, Best Detail, Best Reply"
+      ],
+      "isBreak": false
+    },
+    {
+      "time": "Wed Nov 18 · 1:40 PM",
+      "title": "What You Just Learned",
+      "duration": "5 minutes",
+      "description": "Three words for what you did today.",
+      "bulletPoints": [
+        "Context: the AI had the music, you had the details",
+        "Iteration: your third take beat your first",
+        "Judgment: Suno made six songs, you chose one"
       ],
       "isBreak": false
     }
   ],
   "resources": [
+    {
+      "title": "🎵 A Song for Someone · today's studio (Wed Nov 18)",
+      "url": "/session-10/song-for-someone.html",
+      "description": "Make a song for one person who matters to you, in three takes. The page writes your Suno prompt as you type. Nothing you type leaves your device.",
+      "icon": "mic",
+      "badge": "Studio",
+      "badgeType": "interactive",
+      "linkText": "Open the studio"
+    },
+    {
+      "title": "Suno · where the song gets made",
+      "url": "https://suno.com",
+      "description": "Sign in with Google. The free plan gives you 50 credits a day. One Create costs 10 credits and gives you two versions.",
+      "icon": "play-circle",
+      "badge": "Tool",
+      "badgeType": "tool",
+      "linkText": "Open Suno"
+    },
     {
       "title": "Slide Deck · Your Manager Is Drowning (Mon Nov 16)",
       "url": "/session-10/slides-meeting1.html",
@@ -228,6 +294,30 @@
           "description": "When your video is done, download it from the Render Desk and upload it to the class folder (link in Resources), named with your team name."
         }
       ]
+    },
+    {
+      "number": 3,
+      "icon": "heart",
+      "title": "A Song for Someone",
+      "description": "Wednesday, about 40 minutes, on your own or with a partner:",
+      "steps": [
+        {
+          "title": "Take 1: the lazy one",
+          "description": "Tell Suno who the song is for and nothing else. Listen. Nice song, but it could be for anyone."
+        },
+        {
+          "title": "Take 2: the true one",
+          "description": "Add five true things only you know: something they always say, a food, a place, a habit, one small memory. Listen again. What changed?"
+        },
+        {
+          "title": "Take 3: the director's cut",
+          "description": "Now direct the band. Choose the sound, the mood, the voice and the language. Change one thing and go again."
+        },
+        {
+          "title": "Send it",
+          "description": "Share your best take with them before class ends. Then tell us what they said."
+        }
+      ]
     }
   ],
   "takeaways": [
@@ -246,6 +336,10 @@
     {
       "icon": "check-circle",
       "text": "<strong>Rules for what you already know. A second reader for what you don't. A person for what matters.</strong> And when you ask a person, show them who is asking, what will happen, and whether it can be undone."
+    },
+    {
+      "icon": "heart",
+      "text": "<strong>The AI had the music. You had the details.</strong> Take 1 was for anyone. Take 2 was for one person. The only thing that changed was what you told it. In AI, we call that context."
     }
   ],
   "homework": [

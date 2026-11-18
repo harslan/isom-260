@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A Song for Someone</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Figtree:wght@400;600;800&family=Fraunces:opsz,wght@9..144,600;9..144,800&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: a record sleeve with liner notes. Deep teal sleeve, paper cards you write on,
+   one record whose label fills in with the name as you type. Single theme by choice. */
+:root {
+  --sleeve: #0e4a4b;
+  --sleeve-deep: #093435;
+  --paper: #fff6e6;
+  --ink: #1b2422;
+  --peach: #ffb38a;
+  --butter: #ffe7a0;
+  --mist: #cde4df;
+  --coral: #d4472c;
+  --rule: rgba(255, 255, 255, 0.2);
+  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-body: "Figtree", "Segoe UI", Helvetica, Arial, sans-serif;
+  --font-hand: "Caveat", "Segoe Script", "Bradley Hand", cursive;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body { margin: 0; background: var(--sleeve); color: #fff; font-family: var(--font-body); font-size: 19px; line-height: 1.5; }
+h1, h2, h3 { font-family: var(--font-display); line-height: 1.05; margin: 0; text-wrap: balance; }
+h1 { font-size: clamp(2.8rem, 7.5vw, 5.6rem); font-weight: 800; letter-spacing: -0.02em; }
+h1 em { font-style: normal; color: var(--peach); }
+h2 { font-size: clamp(1.7rem, 3.6vw, 2.6rem); font-weight: 800; }
+h3 { font-size: 1.3rem; font-weight: 600; }
+p { margin: 0; }
+button, input { font: inherit; }
+button { cursor: pointer; color: inherit; }
+:focus-visible { outline: 3px solid var(--butter); outline-offset: 3px; }
+.wrap { max-width: 1100px; margin: 0 auto; padding: 0 22px; }
+
+/* Header */
+.top { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(220px, 0.75fr); gap: 30px; align-items: center; padding: 44px 0 34px; }
+.top-text { display: grid; gap: 16px; }
+.eyebrow { font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.8rem; color: var(--butter); }
+.lede { font-size: clamp(1.2rem, 2.2vw, 1.5rem); color: var(--mist); max-width: 27em; }
+.lede b { color: #fff; }
+.record { position: relative; width: min(100%, 360px); aspect-ratio: 1; justify-self: center; border-radius: 50%;
+  background: repeating-radial-gradient(circle at 50% 50%, #101010 0 2px, #1d1d1d 2px 4px); box-shadow: 0 18px 40px rgba(0, 0, 0, 0.4); }
+.sheen { position: absolute; inset: 0; border-radius: 50%;
+  background: conic-gradient(from 0deg, transparent 0 40deg, rgba(255,255,255,0.16) 60deg, transparent 80deg 220deg, rgba(255,255,255,0.12) 240deg, transparent 260deg);
+  animation: turn 6s linear infinite; }
+@keyframes turn { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .sheen { animation: none; } }
+.label { position: absolute; inset: 29%; border-radius: 50%; background: var(--peach); color: var(--ink); display: grid; place-content: center; text-align: center; padding: 8%; gap: 0; }
+.label small { font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; font-size: 0.62rem; }
+.label b { font-family: var(--font-hand); font-size: clamp(1.5rem, 3.4vw, 2.3rem); line-height: 1; overflow-wrap: anywhere; }
+.label::after { content: ""; position: absolute; left: 50%; top: 50%; width: 9%; height: 9%; margin: -4.5% 0 0 -4.5%; border-radius: 50%; background: var(--sleeve); opacity: 0; }
+
+.start { display: flex; flex-wrap: wrap; gap: 10px; }
+.start span { border: 1.5px solid var(--rule); border-radius: 999px; padding: 6px 16px; font-weight: 600; font-size: 0.95rem; }
+.start b { color: var(--butter); }
+
+section { padding: 30px 0; border-top: 1px solid var(--rule); display: grid; gap: 18px; }
+.sub { color: var(--mist); max-width: 38em; font-size: 1.08rem; }
+
+/* Step cards */
+.step { background: var(--paper); color: var(--ink); border-radius: 18px; padding: clamp(18px, 3vw, 28px); display: grid; gap: 18px; color-scheme: light; }
+.step-head { display: grid; gap: 6px; }
+.take-no { font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; font-size: 0.8rem; color: var(--coral); }
+.step h2 { color: var(--ink); }
+.step .sub { color: #4a5552; }
+.fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+.field { display: grid; gap: 5px; }
+.field label { font-weight: 800; font-size: 0.95rem; }
+.field input { width: 100%; padding: 11px 13px; border: 2px solid #d9cdb4; border-radius: 10px; background: #fff; color: var(--ink); }
+.field input::placeholder { color: #9a9486; }
+.field input:focus { border-color: var(--sleeve); outline: none; box-shadow: 0 0 0 3px rgba(14, 74, 75, 0.25); }
+.chip-row { display: grid; gap: 6px; }
+.chip-row > span { font-weight: 800; font-size: 0.95rem; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { background: #fff; border: 2px solid #d9cdb4; border-radius: 999px; padding: 6px 15px; font-weight: 600; font-size: 0.95rem; color: var(--ink); }
+.chip:hover { border-color: var(--sleeve); }
+.chip[aria-pressed="true"] { background: var(--sleeve); border-color: var(--sleeve); color: #fff; }
+
+.take { background: var(--sleeve-deep); color: #fff; border-radius: 14px; padding: 16px 18px; display: grid; gap: 10px; }
+.take-top { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; justify-content: space-between; }
+.take-top b { color: var(--butter); font-weight: 800; }
+.tagx { font-size: 0.8rem; font-weight: 800; background: var(--butter); color: var(--ink); border-radius: 999px; padding: 2px 11px; }
+.tagx[hidden] { display: none; }
+.prompt { font-size: 1.12rem; font-weight: 600; overflow-wrap: anywhere; }
+.take-foot { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; }
+.count { font-size: 0.85rem; color: var(--mist); font-variant-numeric: tabular-nums; }
+.btn { background: var(--peach); color: var(--ink); border: 0; border-radius: 999px; padding: 9px 22px; font-weight: 800; }
+.btn:hover { background: var(--butter); }
+.btn.ghost { background: transparent; color: #fff; border: 2px solid var(--rule); }
+.btn.ghost:hover { background: #fff; color: var(--ink); }
+.then { color: var(--mist); font-size: 1rem; }
+.then b { color: #fff; }
+.copy-fallback { width: 100%; min-height: 5em; font: inherit; font-size: 0.95rem; padding: 8px; border-radius: 8px; border: 0; color: var(--ink); background: #fff; }
+.aside { border-left: 4px solid var(--coral); padding: 2px 0 2px 12px; color: #4a5552; font-size: 0.98rem; max-width: 40em; }
+
+/* Send it */
+.send { background: var(--peach); color: var(--ink); border-radius: 18px; padding: clamp(20px, 3.4vw, 34px); display: grid; gap: 12px; }
+.send h2 { font-size: clamp(2rem, 5vw, 3.4rem); }
+.send p { font-size: 1.15rem; max-width: 34em; }
+
+/* Learned */
+.learn { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 14px; }
+.learn li { border: 1.5px solid var(--rule); border-radius: 16px; padding: 18px; display: grid; gap: 8px; align-content: start; }
+.learn .term { font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; font-size: 0.8rem; color: var(--butter); }
+.learn h3 { font-size: 1.45rem; }
+.learn p { color: var(--mist); }
+.bridge { background: var(--sleeve-deep); border-radius: 16px; padding: 18px 20px; font-size: 1.12rem; max-width: 46em; }
+.bridge b { color: var(--butter); }
+
+/* Awards, spark, room */
+.cards { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.cards li { background: var(--sleeve-deep); border-radius: 14px; padding: 14px 16px; display: grid; gap: 4px; }
+.cards b { font-family: var(--font-display); font-size: 1.2rem; color: var(--peach); }
+.cards span { color: var(--mist); font-size: 0.98rem; }
+.spark { background: var(--sleeve-deep); border-radius: 18px; padding: clamp(16px, 3vw, 24px); display: grid; gap: 14px; }
+.spark-text { font-family: var(--font-display); font-size: clamp(1.3rem, 2.8vw, 1.9rem); font-weight: 600; color: var(--butter); min-height: 2.3em; }
+.row { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; }
+.show { display: grid; border: 1.5px solid var(--rule); border-radius: 14px; overflow: hidden; }
+.show div { display: grid; grid-template-columns: 4.6em 1fr auto; gap: 14px; padding: 10px 16px; border-top: 1px solid var(--rule); align-items: baseline; }
+.show div:first-child { border-top: 0; }
+.show .t { font-weight: 800; font-variant-numeric: tabular-nums; color: var(--butter); }
+.show .len { color: var(--mist); white-space: nowrap; font-size: 0.95rem; }
+.show .now { background: var(--peach); color: var(--ink); }
+.show .now .t, .show .now .len { color: var(--ink); }
+.show .now .len::before { content: "Now · "; font-weight: 800; }
+.clock { font-family: var(--font-display); font-weight: 800; font-size: clamp(2.8rem, 8vw, 5rem); line-height: 1; font-variant-numeric: tabular-nums; min-width: 3.2em; }
+.clock.done { color: var(--peach); }
+.kind { display: flex; flex-wrap: wrap; gap: 10px; }
+.kind span { border: 1.5px solid var(--rule); border-radius: 999px; padding: 6px 16px; font-weight: 600; font-size: 0.95rem; }
+footer { padding: 24px 0 44px; color: var(--mist); font-size: 0.9rem; border-top: 1px solid var(--rule); }
+
+@media (max-width: 720px) {
+  body { font-size: 17px; }
+  .top { grid-template-columns: 1fr; }
+  .record { width: min(70%, 280px); }
+  .show div { grid-template-columns: 4.2em 1fr; }
+  .show .len { grid-column: 2; }
+}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+  <header class="top">
+    <div class="top-text">
+      <p class="eyebrow">ISOM 260 · Wed Nov 18 · Open Studio</p>
+      <h1>A song for <em>someone</em></h1>
+      <p class="lede">Think of one person who matters to you. Today you make them a song, and <b>you send it before class ends</b>. A parent. A friend. Your dog. You, ten years from now. Your call.</p>
+      <div class="start" aria-label="Before you start">
+        <span><b>1</b> Open suno.com</span>
+        <span><b>2</b> Sign in with Google. It is free.</span>
+        <span><b>3</b> Come back here</span>
+      </div>
+    </div>
+    <div class="record" aria-hidden="true">
+      <div class="sheen"></div>
+      <div class="label"><small>For</small><b id="label-name">someone</b></div>
+    </div>
+  </header>
+
+  <section>
+    <div class="step">
+      <div class="step-head">
+        <span class="take-no">Take 1 · the lazy one</span>
+        <h2>Who is it for?</h2>
+        <p class="sub">Two answers. That is all the AI gets this time.</p>
+      </div>
+      <div class="fields">
+        <div class="field"><label for="rel">Who are they to you?</label><input id="rel" type="text" autocomplete="off" placeholder="my grandmother"></div>
+        <div class="field"><label for="name">What do you call them?</label><input id="name" type="text" autocomplete="off" placeholder="Nana"></div>
+      </div>
+      <div class="chip-row"><span>What kind of song?</span>
+        <div class="chips" data-group="occ" data-mode="one">
+          <button class="chip" type="button" data-v="none" aria-pressed="true">Just because</button>
+          <button class="chip" type="button" data-v="birthday" aria-pressed="false">Birthday</button>
+          <button class="chip" type="button" data-v="thanks" aria-pressed="false">Thank you</button>
+          <button class="chip" type="button" data-v="miss" aria-pressed="false">I miss you</button>
+          <button class="chip" type="button" data-v="congrats" aria-pressed="false">Congratulations</button>
+          <button class="chip" type="button" data-v="sorry" aria-pressed="false">I'm sorry</button>
+          <button class="chip" type="button" data-v="luck" aria-pressed="false">Good luck</button>
+        </div>
+      </div>
+      <div class="take" data-take="1">
+        <div class="take-top"><b>Paste this into Suno</b><span class="tagx" data-ex>Example. Type above to make it yours.</span></div>
+        <p class="prompt" id="p1"></p>
+        <div class="take-foot"><button class="btn" type="button" data-copy="p1">Copy</button><span class="count" id="c1"></span></div>
+        <p class="then">Press Create and listen. Nice song. <b>But it could be for anyone.</b></p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="step">
+      <div class="step-head">
+        <span class="take-no">Take 2 · the true one</span>
+        <h2>Five true things only you know</h2>
+        <p class="sub">Small and specific beats big and general. Fill in as many as you can.</p>
+      </div>
+      <div class="fields">
+        <div class="field"><label for="says">Something they always say</label><input id="says" type="text" autocomplete="off" placeholder="did you eat?"></div>
+        <div class="field"><label for="food">A food, a drink or a smell</label><input id="food" type="text" autocomplete="off" placeholder="mint tea"></div>
+        <div class="field"><label for="place">A place that is theirs</label><input id="place" type="text" autocomplete="off" placeholder="the porch in Worcester"></div>
+        <div class="field"><label for="habit">A habit or a sound</label><input id="habit" type="text" autocomplete="off" placeholder="how she hums while she cooks"></div>
+        <div class="field"><label for="memory">One small memory</label><input id="memory" type="text" autocomplete="off" placeholder="the time she taught me to ride a bike"></div>
+      </div>
+      <div class="take" data-take="2">
+        <div class="take-top"><b>Paste this into Suno</b><span class="tagx" data-ex>Example. Type above to make it yours.</span></div>
+        <p class="prompt" id="p2"></p>
+        <div class="take-foot"><button class="btn" type="button" data-copy="p2">Copy</button><span class="count" id="c2"></span></div>
+        <p class="then">Listen again. <b>What changed?</b> The AI is the same. The song is not.</p>
+      </div>
+      <p class="aside">First names and nicknames only. No last names, addresses or phone numbers. If Suno says the text is too long, cut one detail.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="step">
+      <div class="step-head">
+        <span class="take-no">Take 3 · the director's cut</span>
+        <h2>Now direct the band</h2>
+        <p class="sub">What music do they love? Describe the sound in your own words.</p>
+      </div>
+      <div class="fields">
+        <div class="field"><label for="sound">The sound</label><input id="sound" type="text" autocomplete="off" placeholder="acoustic soul with a piano"></div>
+        <div class="field"><label for="lang">The language, or two</label><input id="lang" type="text" autocomplete="off" placeholder="Spanish and English"></div>
+      </div>
+      <div class="chip-row"><span>Mood</span>
+        <div class="chips" data-group="moods" data-mode="many">
+          <button class="chip" type="button" data-v="warm" aria-pressed="false">Warm</button>
+          <button class="chip" type="button" data-v="funny" aria-pressed="false">Funny</button>
+          <button class="chip" type="button" data-v="tender" aria-pressed="false">Tender</button>
+          <button class="chip" type="button" data-v="joyful" aria-pressed="false">Joyful</button>
+          <button class="chip" type="button" data-v="nostalgic" aria-pressed="false">Nostalgic</button>
+          <button class="chip" type="button" data-v="epic" aria-pressed="false">Epic</button>
+        </div>
+      </div>
+      <div class="chip-row"><span>Tempo</span>
+        <div class="chips" data-group="tempo" data-mode="one">
+          <button class="chip" type="button" data-v="slow" aria-pressed="false">Slow</button>
+          <button class="chip" type="button" data-v="mid-tempo" aria-pressed="false">Medium</button>
+          <button class="chip" type="button" data-v="upbeat" aria-pressed="false">Upbeat</button>
+        </div>
+      </div>
+      <div class="chip-row"><span>Voice</span>
+        <div class="chips" data-group="voice" data-mode="one">
+          <button class="chip" type="button" data-v="female voice" aria-pressed="false">Female</button>
+          <button class="chip" type="button" data-v="male voice" aria-pressed="false">Male</button>
+          <button class="chip" type="button" data-v="duet" aria-pressed="false">Duet</button>
+          <button class="chip" type="button" data-v="choir" aria-pressed="false">Choir</button>
+        </div>
+      </div>
+      <div class="take" data-take="3">
+        <div class="take-top"><b>Paste this into Suno</b><span class="tagx" data-ex>Example. Type above to make it yours.</span></div>
+        <p class="prompt" id="p3"></p>
+        <div class="take-foot"><button class="btn" type="button" data-copy="p3">Copy</button><span class="count" id="c3"></span></div>
+        <p class="then">Not right yet? <b>Change one thing and go again.</b> You are the director.</p>
+      </div>
+      <p class="aside">Suno will not accept a famous artist's name. Describe the sound instead: "big soulful voice, slow piano". Want to write the words yourself? Choose Custom in Suno and paste your own lyrics.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="send">
+      <h2>Now send it.</h2>
+      <p>Open your best take in Suno. Press Share. Text the link to them right now, before you talk yourself out of it.</p>
+      <p><b>Then tell us what they said.</b></p>
+    </div>
+  </section>
+
+  <section>
+    <h2>The premiere</h2>
+    <p class="sub">Volunteers only. Tell us who it is for, then play one minute. If they wrote back, read it to us.</p>
+    <ul class="cards">
+      <li><b>Goosebumps</b><span>The one that made the room go quiet.</span></li>
+      <li><b>Biggest laugh</b><span>The one that got us all.</span></li>
+      <li><b>Best detail</b><span>The line only you could have written.</span></li>
+      <li><b>Best reply</b><span>The best text that came back.</span></li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>What you just learned</h2>
+    <ul class="learn">
+      <li><span class="term">Context</span><h3>The AI had the music. You had the details.</h3><p>Take 1 was for anyone. Take 2 was for one person. The only thing that changed was what you told it. In AI, we call that context.</p></li>
+      <li><span class="term">Iteration</span><h3>Nobody gets it in one prompt.</h3><p>Your third take beat your first. You listened, changed one thing and tried again. That loop is the real skill.</p></li>
+      <li><span class="term">Judgment</span><h3>Suno made six songs. You chose one.</h3><p>Making is cheap now. Knowing which one is right for this person is the human job.</p></li>
+    </ul>
+    <p class="bridge">Your final project agent works the same way. <b>Without your context, it writes songs for anyone's grandmother.</b> Next session: how do you choose the best answer when there are ten thousand of them?</p>
+  </section>
+
+  <section>
+    <h2>Rather make something wild?</h2>
+    <p class="sub">Go for it. Any song, any style, about anything. Spin if you want an idea.</p>
+    <div class="spark">
+      <p class="spark-text" id="spark-text" aria-live="polite">A sea shanty about the Green Line running late, as a duet.</p>
+      <div class="row" id="spark-row">
+        <button class="btn" type="button" id="spin">Spin</button>
+        <button class="btn ghost" type="button" id="copy-spark">Copy the idea</button>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>For the room</h2>
+    <div class="show" id="show"></div>
+    <div class="row">
+      <span class="clock" id="clock">00:00</span>
+      <button class="btn" type="button" data-min="8">8 min</button>
+      <button class="btn" type="button" data-min="12">12 min</button>
+      <button class="btn" type="button" data-min="15">15 min</button>
+      <button class="btn ghost" type="button" id="timer-stop">Stop</button>
+    </div>
+    <div class="kind">
+      <span>Make it kind. This is a gift.</span>
+      <span>Nothing you type on this page leaves your device.</span>
+      <span>Free plan: 50 credits a day. One Create costs 10.</span>
+    </div>
+  </section>
+
+</main>
+<footer><div class="wrap">ISOM 260 · AI for Business · Prof. Hasan Arslan · Sawyer Business School</div></footer>
+
+<script id="logic">
+var OCC = { none: 'A song', birthday: 'A birthday song', thanks: 'A thank-you song', miss: 'An "I miss you" song', congrats: 'A congratulations song', sorry: 'An "I\'m sorry" song', luck: 'A good-luck song' };
+var SAMPLE = { rel: 'my grandmother', name: 'Nana', occ: 'birthday', says: 'did you eat?', food: 'mint tea', place: 'the porch in Worcester', habit: 'how she hums while she cooks', memory: 'the time she taught me to ride a bike', sound: 'acoustic soul with a piano', moods: ['warm'], tempo: 'slow', voice: 'female voice', lang: '' };
+function clean(v) { return String(v || '').replace(/\s+/g, ' ').trim(); }
+function noDot(v) { return clean(v).replace(/[.,;:]+$/, ''); }
+function listJoin(a) {
+  if (a.length < 2) return a.join('');
+  return a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1];
+}
+function take1(s) { return (OCC[s.occ] || OCC.none) + ' for ' + noDot(s.rel) + '.'; }
+function take2(s) {
+  var t = take1(s);
+  if (clean(s.name)) t += ' Call them "' + noDot(s.name) + '" in the song.';
+  if (clean(s.says)) t += ' They always say "' + noDot(s.says) + '".';
+  var bits = [s.food, s.place, s.habit, s.memory].map(noDot).filter(Boolean);
+  if (bits.length) t += ' Mention ' + listJoin(bits) + '.';
+  return t;
+}
+function take3(s) {
+  var t = take2(s);
+  var style = [noDot(s.sound)].concat(s.moods || [], [s.tempo, s.voice]).filter(Boolean);
+  if (style.length) t += ' Style: ' + style.join(', ') + '.';
+  if (clean(s.lang)) t += ' Sung in ' + noDot(s.lang) + '.';
+  return t;
+}
+var STYLES = ['a sea shanty', 'a K-pop banger', 'a country ballad', 'a Broadway opening number', 'a lo-fi study beat', 'an 80s power ballad', 'a reggaeton track', 'a gospel choir song', 'a punk rock song', 'a bossa nova tune', 'a disco anthem', 'an opera aria', 'a campfire folk song', 'a Bollywood dance number', 'a heavy metal song', 'a jazz lounge number', 'an Anatolian rock song', 'an Afrobeats track', 'a lullaby'];
+var SUBJECTS = ['the Green Line running late', 'iced coffee in January', 'my laptop at 2% battery', 'the group chat that never sleeps', 'the 8 AM class I signed up for', 'my roommate\'s alarm clock', 'Sunday laundry', 'a printer that hates me', 'finals week', 'the last slice of pizza', 'my screen time report', 'an AI that says "great question"', 'the wind on Tremont Street', 'my first paycheck', 'the slowest elevator on campus', 'a pigeon on Boston Common', 'my 4,000 unread emails', 'a snow day', 'the friend who is always "5 minutes away"'];
+var TWISTS = ['as a duet', 'with a dramatic key change', 'sung by a huge choir', 'in two languages', 'with a spoken-word bridge', 'as a love song', 'as a breakup song', 'like a movie trailer', 'as a national anthem', 'with a rap verse in the middle', 'that starts as a whisper and ends huge', 'as a stadium chant', 'as a commercial jingle'];
+function sparkText(a, b, c) { return a.charAt(0).toUpperCase() + a.slice(1) + ' about ' + b + ', ' + c + '.'; }
+var SHOW = [
+  { at: [12, 30], mins: 6,  title: 'Two songs for the same person. Which one is really for them?' },
+  { at: [12, 36], mins: 4,  title: 'Pick your someone. Sign in to Suno.' },
+  { at: [12, 40], mins: 8,  title: 'Take 1: the lazy one' },
+  { at: [12, 48], mins: 15, title: 'Take 2: five true things' },
+  { at: [13, 3],  mins: 12, title: 'Take 3: direct the band' },
+  { at: [13, 15], mins: 5,  title: 'Send it' },
+  { at: [13, 20], mins: 20, title: 'The premiere' },
+  { at: [13, 40], mins: 5,  title: 'What you just learned' }
+];
+function blockAt(h, m) {
+  var now = h * 60 + m;
+  for (var i = 0; i < SHOW.length; i++) {
+    var st = SHOW[i].at[0] * 60 + SHOW[i].at[1];
+    if (now >= st && now < st + SHOW[i].mins) return i;
+  }
+  return -1;
+}
+function clockLabel(at) { var h = at[0] > 12 ? at[0] - 12 : at[0]; return h + ':' + (at[1] < 10 ? '0' : '') + at[1]; }
+</script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var KEY = 'isom260-song-for-someone';
+  var TEXT = ['rel', 'name', 'says', 'food', 'place', 'habit', 'memory', 'sound', 'lang'];
+  var state = { rel: '', name: '', occ: 'none', says: '', food: '', place: '', habit: '', memory: '', sound: '', moods: [], tempo: '', voice: '', lang: '' };
+  try {
+    var saved = JSON.parse(localStorage.getItem(KEY));
+    if (saved && typeof saved === 'object') {
+      Object.keys(state).forEach(function (k) { if (saved[k] != null && typeof saved[k] === typeof state[k]) state[k] = saved[k]; });
+      if (!Array.isArray(state.moods)) state.moods = [];
+    }
+  } catch (e) {}
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
+
+  function paint() {
+    var example = !clean(state.rel);
+    var s = example ? SAMPLE : state;
+    var out = [take1(s), take2(s), take3(s)];
+    for (var i = 0; i < 3; i++) {
+      $('p' + (i + 1)).textContent = out[i];
+      $('c' + (i + 1)).textContent = out[i].length + ' characters';
+    }
+    document.querySelectorAll('[data-ex]').forEach(function (t) { t.hidden = !example; });
+    $('label-name').textContent = clean(state.name) || clean(state.rel).replace(/^my\s+/i, '') || 'someone';
+  }
+
+  TEXT.forEach(function (id) {
+    var inp = $(id);
+    inp.value = state[id];
+    inp.addEventListener('input', function () { state[id] = inp.value; save(); paint(); });
+  });
+  document.querySelectorAll('.chips').forEach(function (group) {
+    var key = group.dataset.group, many = group.dataset.mode === 'many';
+    var chips = group.querySelectorAll('.chip');
+    function sync() {
+      chips.forEach(function (c) {
+        var on = many ? state[key].indexOf(c.dataset.v) > -1 : state[key] === c.dataset.v;
+        c.setAttribute('aria-pressed', on ? 'true' : 'false');
+      });
+    }
+    chips.forEach(function (c) {
+      c.addEventListener('click', function () {
+        var v = c.dataset.v;
+        if (many) {
+          var at = state[key].indexOf(v);
+          if (at > -1) state[key].splice(at, 1); else state[key].push(v);
+        } else if (key === 'occ') {
+          state[key] = v;
+        } else {
+          state[key] = state[key] === v ? '' : v;
+        }
+        sync(); save(); paint();
+      });
+    });
+    sync();
+  });
+
+  function copyText(text, host, btn, label) {
+    function fallback() {
+      var old = host.querySelector('.copy-fallback'); if (old) old.remove();
+      var ta = document.createElement('textarea'); ta.className = 'copy-fallback'; ta.value = text;
+      ta.setAttribute('aria-label', 'Text to copy. Select all and copy.');
+      host.appendChild(ta); ta.focus(); ta.select();
+    }
+    try { navigator.clipboard.writeText(text).then(function () {}, fallback); } catch (e) { fallback(); }
+    btn.textContent = 'Copied';
+    setTimeout(function () { btn.textContent = label; }, 1400);
+  }
+  document.querySelectorAll('[data-copy]').forEach(function (b) {
+    b.addEventListener('click', function () { copyText($(b.dataset.copy).textContent, b.closest('.take'), b, 'Copy'); });
+  });
+
+  // Spark
+  var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function pick(a) { return a[Math.floor(Math.random() * a.length)]; }
+  function newSpark() { return sparkText(pick(STYLES), pick(SUBJECTS), pick(TWISTS)); }
+  $('spin').addEventListener('click', function () {
+    if (still) { $('spark-text').textContent = newSpark(); return; }
+    var n = 0, flick = setInterval(function () {
+      $('spark-text').textContent = newSpark();
+      if (++n > 9) clearInterval(flick);
+    }, 80);
+  });
+  $('copy-spark').addEventListener('click', function () { copyText($('spark-text').textContent, $('spark-row'), $('copy-spark'), 'Copy the idea'); });
+
+  // Run of show
+  var showEl = $('show');
+  SHOW.forEach(function (s) {
+    var row = document.createElement('div');
+    [['t', clockLabel(s.at)], ['', s.title], ['len', s.mins + ' min']].forEach(function (c) {
+      var sp = document.createElement('span'); if (c[0]) sp.className = c[0]; sp.textContent = c[1]; row.appendChild(sp);
+    });
+    showEl.appendChild(row);
+  });
+  function markNow() {
+    var d = new Date(), i = blockAt(d.getHours(), d.getMinutes());
+    Array.prototype.forEach.call(showEl.children, function (r, k) { r.classList.toggle('now', k === i); });
+  }
+  markNow(); setInterval(markNow, 20000);
+
+  // Timer
+  var clock = $('clock'), endAt = 0, tick = null;
+  function paintClock() {
+    var left = Math.max(0, Math.round((endAt - Date.now()) / 1000));
+    var m = Math.floor(left / 60), s = left % 60;
+    clock.textContent = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+    clock.classList.toggle('done', left === 0);
+    if (left === 0 && tick) { clearInterval(tick); tick = null; }
+  }
+  document.querySelectorAll('[data-min]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      endAt = Date.now() + Number(b.dataset.min) * 60000;
+      if (tick) clearInterval(tick);
+      tick = setInterval(paintClock, 500); paintClock();
+    });
+  });
+  $('timer-stop').addEventListener('click', function () {
+    if (tick) clearInterval(tick); tick = null;
+    clock.textContent = '00:00'; clock.classList.remove('done');
+  });
+
+  paint();
+})();
+</script>
+</body>
+</html>
