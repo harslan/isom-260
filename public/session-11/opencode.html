@@ -53,6 +53,8 @@ input[type=text] { width: 100%; font: inherit; font-family: 'JetBrains Mono', mo
 .map td:first-child { color: var(--text); font-weight: 700; white-space: nowrap; padding-right: .9rem; }
 details { margin-top: .5rem; } summary { cursor: pointer; color: var(--text); font-weight: 700; }
 .warn { border-color: rgba(255,214,0,.4); } .warn b { color: var(--yellow); }
+.noreport { margin-top: .55rem; border-left: 3px solid var(--yellow); padding: .35rem .75rem; background: rgba(255,214,0,.06); border-radius: 0 10px 10px 0; font-size: .95rem; }
+.noreport a, li a { color: var(--cyan); }
 .idea { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; margin-top: .5rem; }
 .fl { display: block; font-family: 'JetBrains Mono', monospace; font-size: .75rem; letter-spacing: .08em; color: var(--dim); margin-top: .7rem; }
 .chips { display: flex; flex-wrap: wrap; gap: .4rem; margin: .35rem 0 .2rem; }
@@ -99,13 +101,14 @@ details { margin-top: .5rem; } summary { cursor: pointer; color: var(--text); fo
     <h2><span class="n">3</span> Mission 1 · Marco's Monday Report <span class="t">10 min</span></h2>
     <p>Marco runs North End Noodle Co. Every Monday he wants to know how last week went. Copy this into OpenCode and press Enter. Then <strong>watch it work</strong>: what does it read? What does it run? What does it write?</p>
     <div class="copyrow"><pre id="m1">Read sales.csv. Build Marco a one-page report as report.html: the total for the week, money by dish, money by day, one simple bar chart, and three things he should do next week. Keep it clean and easy to read. When you're done, tell me how to open it.</pre><button class="btn" data-copy="m1">Copy</button></div>
-    <p>If it asks permission to run a command or write a file, <strong>read what it wants to do first</strong>, then allow it. That's your badge from Session 9: some things it does alone, some things it asks a person.</p>
+    <p>Notice: it usually <strong>doesn't stop to ask</strong>. It reads, runs and writes on its own. That's the badge from Session 9, set to "allowed" by default. Fine in this folder: it only holds Marco's files. If it does ask, <strong>read what it wants to do first</strong>, then allow it.</p>
     <p>Open <code>report.html</code> in your browser (double-click it in the folder).</p>
   </div>
 
   <div class="card">
     <h2><span class="n">4</span> Grade it <span class="t">you're the professor</span></h2>
     <p>It looks great. That's a vibe check. <strong>Now check it against the rubric</strong>, with <code>sales.csv</code> open next to it.</p>
+    <p class="noreport">No report yet? Grade <a href="/session-11/report-b.html" target="_blank" rel="noopener"><strong>Report B</strong></a> with the same rubric. It looks great too. Three mistakes are planted in it.</p>
     <div class="tabs"><button class="btn ghost on" data-round="1">Round 1</button><button class="btn ghost" data-round="2">Round 2</button></div>
     <div class="rub" id="rub"></div>
     <div class="verdict v-wait" id="verdict">Tick what's true for <strong>your</strong> report.</div>
@@ -124,7 +127,7 @@ details { margin-top: .5rem; } summary { cursor: pointer; color: var(--text); fo
       <div>"Write for a busy owner: short sentences, the most important number first."</div>
       <div>"Use navy and gold, like a Suffolk report."</div>
     </div>
-    <p style="margin-top:.7rem">Then type: <code>Rebuild report.html.</code> Grade it again on the <strong>Round 2</strong> tab. What got better? <strong>Did anything break?</strong> That's a regression.</p>
+    <p style="margin-top:.7rem">Save the file. <strong>Start a new session</strong>, so it reads your new sentence. Then type: <code>Rebuild report.html from sales.csv.</code> Grade it again on the <strong>Round 2</strong> tab. What got better? <strong>Did anything break?</strong> That's a regression.</p>
   </div>
 
   <div class="card hot">
@@ -159,6 +162,7 @@ details { margin-top: .5rem; } summary { cursor: pointer; color: var(--text); fo
   <div class="card">
     <h2>Done early?</h2>
     <ul>
+      <li>Grade <a href="/session-11/report-b.html" target="_blank" rel="noopener"><strong>Report B</strong></a>. It looks great. Three mistakes are planted in it. Find all three.</li>
       <li>Look at your neighbor's Marco report. <strong>Same mission, same model, different report?</strong> The term: non-deterministic. You're looking at it.</li>
       <li>Type <code>/undo</code> in OpenCode. Can we undo it? Session 10 would approve.</li>
       <li>Ask it: "Add a chart of bowls sold by day, and tell Marco which day needs more staff."</li>
@@ -169,7 +173,7 @@ details { margin-top: .5rem; } summary { cursor: pointer; color: var(--text); fo
     <h2>🗺️ Everything you learned is a menu item</h2>
     <table class="map">
       <tr><td>Tools</td><td>It reads, writes and runs commands. Your Session 4 agent loop, in a real product.</td></tr>
-      <tr><td>Permissions</td><td>What runs alone, what asks first. Your badge (Session 9) and your approvals (Session 10).</td></tr>
+      <tr><td>Permissions</td><td>What runs alone, what asks first. Your badge (Session 9) and your approvals (Session 10). OpenCode's default: almost everything runs alone.</td></tr>
       <tr><td>AGENTS.md</td><td>The job description it reads every time. Context.</td></tr>
       <tr><td>MCP servers</td><td>Plug in new tools (Session 6).</td></tr>
       <tr><td>Custom agents</td><td>Specialists with their own prompts and tools (Session 8).</td></tr>

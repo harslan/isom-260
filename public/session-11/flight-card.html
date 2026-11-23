@@ -43,7 +43,7 @@
             <tr><td class="t">12:53</td><td>15–17 · One test case up close · three kinds 🟢 🌀 🎭 · change one thing, check again: 🔧 fixed, 💥 broke (4 min)</td></tr>
             <tr><td class="t">12:57</td><td>18–19 · <span class="hl">MEET OPENCODE</span>: 229K stars, open source. "Everything you learned is a menu item." Lids up (3 min)</td></tr>
             <tr><td class="t">1:00</td><td>20 · <span class="hl">🛠️ MISSION 1</span>, pairs. Lab page steps 2–3: unzip Marco's folder, open it in OpenCode, pick the model, paste the mission. Walk the room. "What is it reading? What is it running?"</td></tr>
-            <tr><td class="t">1:10</td><td>21 · <span class="hl">GRADE IT, THEN CHANGE ONE THING</span>. Rubric on the lab page (step 4). "Who got Pad Thai?" Then one sentence in AGENTS.md, "Rebuild report.html", grade again · <span class="cut">STOP 1:20</span></td></tr>
+            <tr><td class="t">1:10</td><td>21 · <span class="hl">GRADE IT, THEN CHANGE ONE THING</span>. Rubric on the lab page (step 4). "Who got Pad Thai?" Then one sentence in AGENTS.md, new session, "Rebuild report.html from sales.csv", grade again · <span class="cut">STOP 1:20</span></td></tr>
             <tr><td class="t">1:20</td><td>22 · <span class="hl">🎁 MISSION 2: RUBRIC FIRST</span>. Step 6 on the lab page. A real person, 3 musts, 1 must not, paste the mission in a new session. "Passed? Send it to them"</td></tr>
             <tr><td class="t">1:32</td><td>23 · <span class="hl">SHOW AND TELL</span>. Two or three pairs plug in or share screen. They read their rubric first, the room grades · <span class="cut">STOP 1:38</span></td></tr>
             <tr><td class="t">1:38</td><td>24–25 · HW #10 Tue, The Exam notebook over the break, keep OpenCode, HW #11 Dec 3. "Prove it." Happy Thanksgiving</td></tr>
@@ -54,7 +54,7 @@
             <li>Students: <b>isom-260.vercel.app/session-11/opencode.html</b>. Download the desktop app, download one zip (<code>marco-monday-report</code>: sales.csv, MISSION.md, AGENTS.md), open the folder in OpenCode</li>
             <li><b>Model:</b> DeepSeek V4.1 Flash Free. OpenCode's docs say its provider keeps nothing and doesn't train on it. Other free models may keep what's typed: practice data only, first names only</li>
             <li><b>Mission 1:</b> the agent builds <code>report.html</code> from sales.csv. The lab page has a rubric with checkboxes that gives a pass or fail, for Round 1 and Round 2</li>
-            <li><b>Round 2:</b> one sentence in AGENTS.md (the agent's job description), then "Rebuild report.html". The page shows Round 1 → Round 2 and whether anything broke</li>
+            <li><b>Round 2:</b> one sentence in AGENTS.md (the agent's job description), save, <b>new session</b>, then "Rebuild report.html from sales.csv". The page shows Round 1 → Round 2 and whether anything broke</li>
             <li><b>Mission 2:</b> they type who it's for, what it is, 3 musts and 1 must not. The page writes the mission and turns their rubric into checkboxes. The agent builds <code>gift.html</code></li>
             <li><b>Plan B on the same page:</b> a class-pass config (opencode.json) that runs OpenCode on the Sandbox with Gemini 2.5 Flash</li>
         </ul>
@@ -67,6 +67,12 @@ Top dish, the week    Ramen      $5,364
 Busiest day           Saturday   $3,066  (Fri $2,542)
 🌀 The trap           biggest single row is
                       Pad Thai on Saturday, $1,216</div>
+
+        <h2>Report B answer key (three planted mistakes)</h2>
+        <div class="mono">1 Total says $13,442   true: $13,242 (its own dish numbers add to 13,242)
+2 Top dish: Pad Thai   true: Ramen (its own table says $5,364 vs $5,073)
+3 Bar chart            Pad Thai bar is tallest, but it is labeled $5,073
+Rubric: 2 of 7, FAIL.  Advice #1 ("put Pad Thai first") follows from mistake 2</div>
 
         <h2>Grade It answer key</h2>
         <div class="mono">#1  Ramen $18             PASS
@@ -94,9 +100,11 @@ Busiest day           Saturday   $3,066  (Fri $2,542)
         <ul>
             <li><b>A laptop can't install</b> (Chromebook, iPad, locked laptop) → pair up. One working laptop per pair is the plan anyway</li>
             <li><b>"Free usage limit" or free models blocked on the campus network</b> → Plan B, class pass. If your own test this morning showed Plan B works, say "everyone, Plan B" early</li>
-            <li><b>Half the room is stuck at 1:05</b> → you drive on the big screen. The room writes the rubric and grades your report on their lab pages. The lesson still lands</li>
+            <li><b>Someone has no report</b> → they grade <b>Report B</b> (link in step 4 of the lab page). Same rubric. It looks great and has three planted mistakes</li>
+            <li><b>Half the room is stuck at 1:05</b> → you drive on the big screen. The room grades your report, or Report B, on their lab pages. The lesson still lands</li>
+            <li><b>Every report passes</b> → good, say "now you know. Before, you only hoped." Then put Report B on the big screen: "this one looks better than yours. Grade it."</li>
             <li><b>Nothing works at all</b> → the Session 11 page still has 🧪 The Exam notebook (Colab, class pass). Run Parts 1–4 in class as originally planned</li>
-            <li>It asks permission to run a command → "read what it wants to do, then allow it." That's the badge</li>
+            <li>It never asks permission → normal. OpenCode's default is "allowed". Ask the room: "who set that badge?" If it does ask: read it, then allow it</li>
             <li>The report shows no chart or looks plain → fine. That's a Round 2 sentence</li>
             <li>It says Pad Thai → perfect. Put that one on the big screen</li>
         </ul>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>North End Noodle Co. · Weekly Report</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #f6f3ee; color: #1f2933; line-height: 1.5; padding: 1.5rem 1rem 3rem; }
+.page { max-width: 860px; margin: 0 auto; background: #fff; border-radius: 16px; box-shadow: 0 8px 30px rgba(0,0,0,.08); overflow: hidden; }
+header { background: linear-gradient(135deg, #b23a2e, #d9772b); color: #fff; padding: 1.6rem 1.8rem; }
+header h1 { font-size: 1.6rem; letter-spacing: -.01em; }
+header p { opacity: .9; font-size: .95rem; }
+main { padding: 1.5rem 1.8rem 1.8rem; }
+.kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: .8rem; margin-bottom: 1.6rem; }
+.kpi { background: #fbf7f1; border: 1px solid #efe6d8; border-radius: 12px; padding: .9rem 1rem; }
+.kpi .l { font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; color: #8a7a66; font-weight: 700; }
+.kpi .v { font-size: 1.55rem; font-weight: 800; color: #b23a2e; }
+.kpi .s { font-size: .82rem; color: #5f6b76; }
+h2 { font-size: 1.05rem; margin: 1.4rem 0 .6rem; color: #b23a2e; }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem; align-items: end; }
+table { width: 100%; border-collapse: collapse; font-size: .95rem; }
+th, td { text-align: left; padding: .45rem .5rem; border-bottom: 1px solid #f0e9dd; }
+th { font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; color: #8a7a66; }
+td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; }
+.chart { display: flex; align-items: flex-end; gap: 1.1rem; height: 200px; padding: 0 .4rem; border-bottom: 2px solid #e6dccb; }
+.bar { flex: 1; background: linear-gradient(180deg, #d9772b, #b23a2e); border-radius: 8px 8px 0 0; position: relative; }
+.bar span { position: absolute; top: -1.5rem; left: 0; right: 0; text-align: center; font-weight: 700; font-size: .88rem; }
+.labels { display: flex; gap: 1.1rem; padding: .35rem .4rem 0; font-size: .82rem; color: #5f6b76; text-align: center; }
+.labels div { flex: 1; }
+.days td .mini { display: inline-block; height: .55rem; background: #e9b98f; border-radius: 4px; vertical-align: middle; margin-right: .5rem; }
+ol { padding-left: 1.2rem; }
+ol li { margin-bottom: .5rem; }
+footer { padding: .9rem 1.8rem; background: #fbf7f1; border-top: 1px solid #efe6d8; font-size: .78rem; color: #8a7a66; }
+@media (max-width: 640px) { .kpis, .two { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <h1>North End Noodle Co.</h1>
+    <p>Weekly sales report for Marco · Monday to Sunday</p>
+  </header>
+  <main>
+    <div class="kpis">
+      <div class="kpi"><div class="l">Total for the week</div><div class="v">$13,442</div><div class="s">730 bowls sold</div></div>
+      <div class="kpi"><div class="l">Top dish</div><div class="v">Pad Thai</div><div class="s">our best seller this week</div></div>
+      <div class="kpi"><div class="l">Busiest day</div><div class="v">Saturday</div><div class="s">$3,066 in one day</div></div>
+    </div>
+
+    <h2>Money by dish</h2>
+    <div class="two">
+      <table>
+        <tr><th>Dish</th><th class="n">Bowls</th><th class="n">Money</th></tr>
+        <tr><td>Ramen</td><td class="n">298</td><td class="n">$5,364</td></tr>
+        <tr><td>Pad Thai</td><td class="n">267</td><td class="n">$5,073</td></tr>
+        <tr><td>Dan Dan Noodles</td><td class="n">165</td><td class="n">$2,805</td></tr>
+      </table>
+      <div>
+        <div class="chart">
+          <div class="bar" style="height:100%"><span>$5,073</span></div>
+          <div class="bar" style="height:78%"><span>$5,364</span></div>
+          <div class="bar" style="height:52%"><span>$2,805</span></div>
+        </div>
+        <div class="labels"><div>Pad Thai</div><div>Ramen</div><div>Dan Dan</div></div>
+      </div>
+    </div>
+
+    <h2>Money by day</h2>
+    <table class="days">
+      <tr><th>Day</th><th class="n">Money</th></tr>
+      <tr><td><span class="mini" style="width:23%"></span>Monday</td><td class="n">$1,395</td></tr>
+      <tr><td><span class="mini" style="width:20%"></span>Tuesday</td><td class="n">$1,218</td></tr>
+      <tr><td><span class="mini" style="width:24%"></span>Wednesday</td><td class="n">$1,482</td></tr>
+      <tr><td><span class="mini" style="width:26%"></span>Thursday</td><td class="n">$1,573</td></tr>
+      <tr><td><span class="mini" style="width:41%"></span>Friday</td><td class="n">$2,542</td></tr>
+      <tr><td><span class="mini" style="width:50%"></span>Saturday</td><td class="n">$3,066</td></tr>
+      <tr><td><span class="mini" style="width:32%"></span>Sunday</td><td class="n">$1,966</td></tr>
+    </table>
+
+    <h2>Three things to do next week</h2>
+    <ol>
+      <li><strong>Put Pad Thai first on the menu.</strong> It is the top dish, so give it the best spot and the big photo.</li>
+      <li><strong>Add staff on Friday and Saturday.</strong> Those two days bring in more than 40% of the week.</li>
+      <li><strong>Run a Tuesday special.</strong> Tuesday is the slowest day. A small deal could fill empty tables.</li>
+    </ol>
+  </main>
+  <footer>Report B · ISOM 260 practice report. It looks great. Three mistakes are planted in it. Check it against sales.csv.</footer>
+</div>
+</body>
+</html>

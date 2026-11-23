@@ -137,7 +137,7 @@
       "description": "Check the report against the rubric. Then add one sentence to the agent's job description.",
       "bulletPoints": [
         "The rubric: week total, top dish, busiest day, a chart that matches. Must not: Pad Thai as the top dish",
-        "Round 2: one sentence in AGENTS.md, then \"Rebuild report.html\"",
+        "Round 2: one sentence in AGENTS.md, a new session, then \"Rebuild report.html from sales.csv\"",
         "What got better? Did anything break?"
       ],
       "isBreak": false
@@ -280,7 +280,7 @@
         },
         {
           "title": "Change one thing",
-          "description": "Write one sentence in AGENTS.md, the agent's job description. Ask it to rebuild. Grade again: 🔧 fixed or 💥 broke?"
+          "description": "Write one sentence in AGENTS.md, the agent's job description. Start a new session and ask it to rebuild. Grade again: 🔧 fixed or 💥 broke?"
         }
       ]
     },
