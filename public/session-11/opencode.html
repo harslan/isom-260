@@ -3,140 +3,283 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OpenCode on Your Class Pass · ISOM 260</title>
+<title>The OpenCode Lab · Session 11 | ISOM 260</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Sora:wght@600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-:root { --bg:#0a0e1a; --card:#141929; --line:rgba(0,229,255,.18); --cyan:#00e5ff; --magenta:#ff006e; --yellow:#ffd600; --green:#00e676; --text:#e8ecf4; --dim:#8892a8; }
+:root { --bg:#0a0e1a; --card:#141929; --line:rgba(0,229,255,.18); --cyan:#00e5ff; --magenta:#ff006e; --yellow:#ffd600; --green:#00e676; --purple:#b388ff; --text:#e8ecf4; --dim:#8892a8; }
 body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.55;
   background-image: linear-gradient(rgba(0,229,255,.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,255,.04) 1px, transparent 1px); background-size: 36px 36px; }
-.wrap { max-width: 760px; margin: 0 auto; padding: 28px 18px 60px; }
-h1 { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 2.1rem; letter-spacing: -.02em; line-height: 1.15; margin-bottom: .6rem; }
-h2 { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 1.3rem; margin-bottom: .5rem; display: flex; gap: .6rem; align-items: center; }
-h2 .n { font-family: 'JetBrains Mono', monospace; font-size: .95rem; background: rgba(0,230,118,.15); color: var(--green); border-radius: 8px; padding: .1rem .55rem; }
+.wrap { max-width: 780px; margin: 0 auto; padding: 26px 18px 70px; }
+h1 { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 2.15rem; letter-spacing: -.02em; line-height: 1.15; margin-bottom: .6rem; }
+h2 { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 1.3rem; margin-bottom: .55rem; display: flex; gap: .6rem; align-items: center; flex-wrap: wrap; }
+h2 .n { font-family: 'JetBrains Mono', monospace; font-size: .9rem; background: rgba(0,230,118,.15); color: var(--green); border-radius: 8px; padding: .1rem .55rem; }
+h2 .t { font-family: 'JetBrains Mono', monospace; font-size: .75rem; color: var(--dim); font-weight: 500; }
 .grad { background: linear-gradient(135deg, var(--cyan), var(--magenta)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
 .kicker { font-family: 'JetBrains Mono', monospace; font-size: .75rem; letter-spacing: .16em; text-transform: uppercase; color: var(--cyan); margin-bottom: .6rem; }
-p, li { color: var(--dim); font-size: 1.02rem; } p strong, li strong { color: var(--text); }
+p, li { color: var(--dim); font-size: 1.02rem; } p strong, li strong, td strong { color: var(--text); }
+p + p { margin-top: .5rem; }
 .card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 1.1rem 1.2rem; margin: 1.1rem 0; }
-ul, ol { padding-left: 1.2rem; display: flex; flex-direction: column; gap: .3rem; }
+.card.hot { border-color: rgba(0,229,255,.5); box-shadow: 0 0 40px rgba(0,229,255,.08); }
+ol, ul { padding-left: 1.25rem; display: flex; flex-direction: column; gap: .35rem; margin: .4rem 0; }
 pre, code { font-family: 'JetBrains Mono', monospace; }
-pre { background: #05080f; border: 1px solid #263048; border-radius: 10px; padding: .75rem .9rem; font-size: .85rem; color: #cfe8ff; overflow-x: auto; margin: .5rem 0; white-space: pre; }
+pre { background: #05080f; border: 1px solid #263048; border-radius: 10px; padding: .8rem .9rem; font-size: .88rem; color: #cfe8ff; white-space: pre-wrap; margin: .5rem 0; }
 code { background: rgba(0,229,255,.08); color: var(--cyan); border-radius: 5px; padding: .05rem .35rem; font-size: .9em; }
-input { width: 100%; font: inherit; font-family: 'JetBrains Mono', monospace; padding: .7rem .8rem; border-radius: 10px; border: 1px solid #3a4666; background: #0b1120; color: var(--text); margin: .3rem 0 .6rem; }
-.btns { display: flex; gap: .6rem; flex-wrap: wrap; margin: .4rem 0; }
-button { appearance: none; border: 0; border-radius: 12px; font-family: 'Sora', sans-serif; font-weight: 700; font-size: .95rem; padding: .7rem 1rem; cursor: pointer; background: linear-gradient(135deg, var(--cyan), #7cf); color: #06121a; }
-button.ghost { background: transparent; color: var(--text); border: 1px solid #56628a; }
-button:disabled { opacity: .4; cursor: not-allowed; }
+.btns { display: flex; gap: .6rem; flex-wrap: wrap; margin: .6rem 0; }
+.btn { appearance: none; border: 0; border-radius: 12px; font-family: 'Sora', sans-serif; font-weight: 700; font-size: .98rem; padding: .75rem 1.05rem; cursor: pointer; text-decoration: none;
+  background: linear-gradient(135deg, var(--cyan), #7cf); color: #06121a; display: inline-flex; align-items: center; gap: .4rem; }
+.btn.ghost { background: transparent; color: var(--text); border: 1px solid #56628a; }
+.btn:disabled { opacity: .4; cursor: not-allowed; }
+.copyrow { position: relative; } .copyrow .btn { position: absolute; top: .45rem; right: .45rem; padding: .35rem .7rem; font-size: .8rem; }
+.copyrow pre { padding-right: 5.5rem; }
+input[type=text] { width: 100%; font: inherit; font-family: 'JetBrains Mono', monospace; padding: .7rem .8rem; border-radius: 10px; border: 1px solid #3a4666; background: #0b1120; color: var(--text); margin: .3rem 0 .4rem; }
+.note { font-size: .9rem; } .ok { font-size: .9rem; min-height: 1.3rem; }
+.rub { display: flex; flex-direction: column; gap: .45rem; margin: .6rem 0; }
+.rub label { display: flex; gap: .7rem; align-items: flex-start; background: #0f1424; border: 1px solid #263048; border-radius: 12px; padding: .6rem .8rem; cursor: pointer; color: var(--dim); }
+.rub label strong { color: var(--text); }
+.rub input { margin-top: .3rem; width: 1.15rem; height: 1.15rem; accent-color: var(--green); flex: none; }
+.rub .must { color: var(--green); font-family: 'JetBrains Mono', monospace; font-size: .75rem; font-weight: 700; white-space: nowrap; padding-top: .2rem; }
+.rub .not { color: var(--magenta); font-family: 'JetBrains Mono', monospace; font-size: .75rem; font-weight: 700; white-space: nowrap; padding-top: .2rem; }
+.rub .not ~ input, .rub label.bad input { accent-color: var(--magenta); }
+.verdict { border-radius: 12px; padding: .75rem .9rem; font-weight: 700; margin-top: .5rem; font-size: 1.02rem; }
+.v-pass { background: rgba(0,230,118,.12); color: var(--green); border: 1px solid rgba(0,230,118,.4); }
+.v-fail { background: rgba(255,0,110,.1); color: #ff6fa8; border: 1px solid rgba(255,0,110,.4); }
+.v-wait { background: #0f1424; color: var(--dim); border: 1px dashed #3a4666; font-weight: 500; }
+.tabs { display: flex; gap: .4rem; margin-top: .4rem; } .tabs button { flex: 1; }
+.tabs button.on { outline: 2px solid var(--cyan); }
+.score { font-family: 'JetBrains Mono', monospace; font-size: .95rem; color: var(--text); margin-top: .6rem; }
+.map { width: 100%; border-collapse: collapse; margin-top: .4rem; font-size: .95rem; }
+.map td { padding: .45rem .4rem; border-bottom: 1px solid rgba(255,255,255,.08); color: var(--dim); vertical-align: top; }
+.map td:first-child { color: var(--text); font-weight: 700; white-space: nowrap; padding-right: .9rem; }
+details { margin-top: .5rem; } summary { cursor: pointer; color: var(--text); font-weight: 700; }
 .warn { border-color: rgba(255,214,0,.4); } .warn b { color: var(--yellow); }
-.ok { color: var(--green); font-size: .9rem; min-height: 1.3rem; }
-table { width: 100%; border-collapse: collapse; font-size: .95rem; margin-top: .4rem; }
-td { padding: .45rem .4rem; border-bottom: 1px solid rgba(255,255,255,.08); color: var(--dim); vertical-align: top; } td b { color: var(--text); }
-.tag { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: .75rem; border-radius: 8px; padding: .05rem .45rem; margin-right: .3rem; }
-.t-e { background: rgba(0,230,118,.15); color: var(--green); } .t-t { background: rgba(255,214,0,.15); color: var(--yellow); } .t-x { background: rgba(255,0,110,.15); color: var(--magenta); }
-details summary { cursor: pointer; color: var(--text); font-weight: 700; }
+.idea { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; margin-top: .5rem; }
+.fl { display: block; font-family: 'JetBrains Mono', monospace; font-size: .75rem; letter-spacing: .08em; color: var(--dim); margin-top: .7rem; }
+.chips { display: flex; flex-wrap: wrap; gap: .4rem; margin: .35rem 0 .2rem; }
+.chips button { appearance: none; font: inherit; font-size: .88rem; border-radius: 999px; padding: .3rem .75rem; background: #0f1424; color: var(--text); border: 1px solid #3a4666; cursor: pointer; }
+.chips button:hover { border-color: var(--cyan); }
+.idea div { background: #0f1424; border: 1px solid #263048; border-radius: 12px; padding: .55rem .75rem; font-size: .92rem; color: var(--dim); }
+@media (max-width: 600px) { .idea { grid-template-columns: 1fr; } h1 { font-size: 1.8rem; } }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="kicker">ISOM 260 · Session 11 · optional · for your final project</div>
-  <h1>A real coding agent, <span class="grad">on your class pass.</span></h1>
-  <p><strong>OpenCode</strong> is an open-source coding agent, built like Claude Code. It runs in your terminal, reads your files, runs commands and writes files. Anyone can read its code. Here it runs on <strong>your class pass</strong>: no credit card, no personal key, and the Sandbox doesn't store what you type.</p>
+  <div class="kicker">ISOM 260 · Session 11 · the OpenCode lab · pairs</div>
+  <h1>🛠️ Put a real agent <span class="grad">to work.</span></h1>
+  <p><strong>OpenCode</strong> is an open-source coding agent, built like Claude Code and used by millions of developers. It reads your files, writes code, runs it, and builds things. Two missions today. In both, your real job is the same: <strong>grade what it builds.</strong></p>
 
-  <div class="card">
-    <h2><span class="n">1</span> Install it (once)</h2>
-    <p>If your laptop has Node.js, one line works on Mac and Windows:</p>
-    <pre>npm install -g opencode-ai</pre>
-    <p>No Node.js? Install it from <strong>nodejs.org</strong> (the LTS button) first, or see <strong>opencode.ai</strong> for other ways to install.</p>
+  <div class="card hot">
+    <h2><span class="n">1</span> Get the app <span class="t">start the download now · we use it at 1:00</span></h2>
+    <div class="btns"><a class="btn" href="https://opencode.ai/download" target="_blank" rel="noopener">⬇ Download OpenCode Desktop</a></div>
+    <ul>
+      <li><strong>Mac:</strong> Apple Silicon for M1, M2, M3 or M4 Macs, Intel for older ones (Apple menu → About This Mac). Open the file and drag OpenCode into Applications.</li>
+      <li><strong>Windows:</strong> x64 for most laptops. Run the installer. If Windows warns you, choose <strong>More info → Run anyway</strong>.</li>
+      <li>It's free. <strong>No account needed.</strong></li>
+    </ul>
   </div>
 
   <div class="card">
-    <h2><span class="n">2</span> Make your project folder</h2>
-    <p>Type your class pass. This page builds your config file. <strong>Nothing you type leaves this page.</strong></p>
-    <input id="pass" placeholder="CODE:Maya R" autocomplete="off" spellcheck="false">
-    <div class="btns">
-      <button id="dl-config" disabled>⬇ opencode.json</button>
-      <button id="dl-csv" class="ghost">⬇ sales.csv (practice data)</button>
+    <h2><span class="n">2</span> Get Marco's folder</h2>
+    <div class="btns"><a class="btn" href="/session-11/marco-monday-report.zip" download>⬇ marco-monday-report.zip</a></div>
+    <ol>
+      <li><strong>Unzip it</strong> (double-click on Mac; on Windows, right-click → Extract All). You get a folder with <code>sales.csv</code>, <code>MISSION.md</code> and <code>AGENTS.md</code>.</li>
+      <li>Open OpenCode and <strong>open that folder</strong> as your project.</li>
+      <li>Pick a model: <strong>DeepSeek V4.1 Flash Free</strong>. It's free, and its provider doesn't keep or train on what you type. Free models come and go: if it's not there, pick another one with "Free" in its name, and keep personal data out.</li>
+    </ol>
+    <details><summary>Free models not working? Plan B: run it on your class pass</summary>
+      <p style="margin-top:.5rem">Type your class pass. This builds an <code>opencode.json</code> file. Nothing you type leaves this page. Put the file <strong>inside Marco's folder</strong>, reopen the folder in OpenCode, and pick <strong>Gemini 2.5 Flash (class pass)</strong>.</p>
+      <input type="text" id="pass" placeholder="CODE:Maya R" autocomplete="off" spellcheck="false">
+      <div class="ok" id="msg"></div>
+      <div class="btns"><button class="btn" id="dl-config" disabled>⬇ opencode.json</button></div>
+      <p class="note">Your pass is inside that file, so don't share it. Each step the agent takes is one call on your class pass.</p>
+    </details>
+  </div>
+
+  <div class="card">
+    <h2><span class="n">3</span> Mission 1 · Marco's Monday Report <span class="t">10 min</span></h2>
+    <p>Marco runs North End Noodle Co. Every Monday he wants to know how last week went. Copy this into OpenCode and press Enter. Then <strong>watch it work</strong>: what does it read? What does it run? What does it write?</p>
+    <div class="copyrow"><pre id="m1">Read sales.csv. Build Marco a one-page report as report.html: the total for the week, money by dish, money by day, one simple bar chart, and three things he should do next week. Keep it clean and easy to read. When you're done, tell me how to open it.</pre><button class="btn" data-copy="m1">Copy</button></div>
+    <p>If it asks permission to run a command or write a file, <strong>read what it wants to do first</strong>, then allow it. That's your badge from Session 9: some things it does alone, some things it asks a person.</p>
+    <p>Open <code>report.html</code> in your browser (double-click it in the folder).</p>
+  </div>
+
+  <div class="card">
+    <h2><span class="n">4</span> Grade it <span class="t">you're the professor</span></h2>
+    <p>It looks great. That's a vibe check. <strong>Now check it against the rubric</strong>, with <code>sales.csv</code> open next to it.</p>
+    <div class="tabs"><button class="btn ghost on" data-round="1">Round 1</button><button class="btn ghost" data-round="2">Round 2</button></div>
+    <div class="rub" id="rub"></div>
+    <div class="verdict v-wait" id="verdict">Tick what's true for <strong>your</strong> report.</div>
+    <div class="score" id="score"></div>
+    <details><summary>Why would anyone say Pad Thai? (open after grading)</summary>
+      <p style="margin-top:.5rem">Pad Thai on Saturday is the <strong>single biggest line</strong> in the file: $1,216. But over the whole week, <strong>Ramen</strong> made more: $5,364 vs. $5,073. An agent that eyeballs the file instead of adding it up picks Pad Thai. That's a <strong>🌀 tricky</strong> test case: everyday input with a trap inside.</p>
+    </details>
+  </div>
+
+  <div class="card">
+    <h2><span class="n">5</span> Round 2: change one thing <span class="t">5 min</span></h2>
+    <p>Open <code>AGENTS.md</code> in the folder. It's the agent's <strong>job description</strong>: OpenCode reads it every time. Write <strong>one sentence</strong> under the line. Ideas:</p>
+    <div class="idea">
+      <div>"Compute every number with code from sales.csv. Never estimate."</div>
+      <div>"At the bottom, show the table you computed, so Marco can check it."</div>
+      <div>"Write for a busy owner: short sentences, the most important number first."</div>
+      <div>"Use navy and gold, like a Suffolk report."</div>
     </div>
-    <div class="ok" id="msg"></div>
-    <p>Make a new folder, like <code>my-agent</code>. Put <strong>both files</strong> in it. Your pass sits inside <code>opencode.json</code>, so don't share that file.</p>
-    <details style="margin-top:.6rem"><summary>See the config file</summary><pre id="preview"></pre></details>
+    <p style="margin-top:.7rem">Then type: <code>Rebuild report.html.</code> Grade it again on the <strong>Round 2</strong> tab. What got better? <strong>Did anything break?</strong> That's a regression.</p>
+  </div>
+
+  <div class="card hot">
+    <h2><span class="n">6</span> Mission 2 · Rubric first. Then build. <span class="t">12 min</span></h2>
+    <p>Now build something for <strong>a real person</strong>. This time, write the exam <strong>before</strong> the agent builds. Real teams work this way. The term: <strong>test-first</strong>.</p>
+    <p class="note">First names only. Nothing private.</p>
+    <span class="fl">WHO IS IT FOR?</span>
+    <input type="text" id="g-who" placeholder="my roommate Sam" autocomplete="off">
+    <span class="fl">WHAT SHOULD IT BE? (one page)</span>
+    <div class="chips" id="chips">
+      <button data-v="a birthday page with a countdown and a joke">🎂 birthday page</button>
+      <button data-v="a flyer page for our club's next event">📣 club flyer</button>
+      <button data-v="a tiny game you can play in ten seconds">🎮 tiny game</button>
+      <button data-v="a thank-you card that feels personal">💌 thank-you card</button>
+      <button data-v="a one-page menu for a dinner I'm cooking">🍝 dinner menu</button>
+    </div>
+    <input type="text" id="g-what" placeholder="a birthday page with a countdown and a joke" autocomplete="off">
+    <span class="fl" style="color:var(--green)">✔ IT MUST… (three things you can check with your eyes)</span>
+    <input type="text" class="g-must" placeholder="say Sam's name in big letters at the top" autocomplete="off">
+    <input type="text" class="g-must" placeholder="look good on a phone" autocomplete="off">
+    <input type="text" class="g-must" placeholder="have one button that does something fun" autocomplete="off">
+    <span class="fl" style="color:var(--magenta)">✘ IT MUST NOT… (one thing)</span>
+    <input type="text" id="g-not" placeholder="use more than three colors" autocomplete="off">
+    <p style="margin-top:.7rem">Your mission, ready to paste. In OpenCode, <strong>start a new session</strong> first.</p>
+    <div class="copyrow"><pre id="m2"></pre><button class="btn" data-copy="m2" id="m2copy" disabled>Copy</button></div>
+    <p>Open <code>gift.html</code> in your browser. Then grade it against <strong>your own rubric</strong>:</p>
+    <div class="rub" id="rub2"></div>
+    <div class="verdict v-wait" id="verdict2">Fill in your rubric above first.</div>
+    <p style="margin-top:.7rem">Failed one? Tell the agent exactly which line failed and ask it to fix that. Then check <strong>every</strong> line again. Passed? <strong>Send it to them.</strong></p>
   </div>
 
   <div class="card">
-    <h2><span class="n">3</span> Start it inside that folder</h2>
-    <pre>cd my-agent
-opencode</pre>
-    <p>Then type a task in plain English. Try this one:</p>
-    <pre id="task" style="white-space:pre-wrap">Read sales.csv. Which dish made the most money this week, and which day was busiest? Write a 5-line summary for Marco in summary.md with the numbers.</pre>
-    <p>Watch it work: it reads the file, does the math, and writes <code>summary.md</code>. It may ask before running a command. Read what it wants to do, then say yes.</p>
+    <h2>Done early?</h2>
+    <ul>
+      <li>Look at your neighbor's Marco report. <strong>Same mission, same model, different report?</strong> The term: non-deterministic. You're looking at it.</li>
+      <li>Type <code>/undo</code> in OpenCode. Can we undo it? Session 10 would approve.</li>
+      <li>Ask it: "Add a chart of bowls sold by day, and tell Marco which day needs more staff."</li>
+    </ul>
   </div>
 
   <div class="card">
-    <h2><span class="n">4</span> Now grade it. You know how.</h2>
-    <p>Open <code>summary.md</code>. Today you learned that an answer that sounds right isn't a test. Here is the rubric:</p>
-    <table>
-      <tr><td><span class="tag t-e">✔ must</span></td><td>name <b>Ramen</b> as the dish with the most money this week, with the number</td></tr>
-      <tr><td><span class="tag t-e">✔ must</span></td><td>name <b>Saturday</b> as the busiest day, with the number</td></tr>
-      <tr><td><span class="tag t-x">✘ must not</span></td><td>name Pad Thai as the top dish</td></tr>
+    <h2>🗺️ Everything you learned is a menu item</h2>
+    <table class="map">
+      <tr><td>Tools</td><td>It reads, writes and runs commands. Your Session 4 agent loop, in a real product.</td></tr>
+      <tr><td>Permissions</td><td>What runs alone, what asks first. Your badge (Session 9) and your approvals (Session 10).</td></tr>
+      <tr><td>AGENTS.md</td><td>The job description it reads every time. Context.</td></tr>
+      <tr><td>MCP servers</td><td>Plug in new tools (Session 6).</td></tr>
+      <tr><td>Custom agents</td><td>Specialists with their own prompts and tools (Session 8).</td></tr>
+      <tr><td>/undo</td><td>Can we undo it? (Session 10)</td></tr>
+      <tr><td>You, with a rubric</td><td>The exam (today). No product does this part for you.</td></tr>
     </table>
-    <p style="margin-top:.6rem">Why would anyone say Pad Thai? <strong>The single biggest row in the file is Pad Thai on Saturday.</strong> An agent that grabs the top row gets it wrong. That's a <span class="tag t-t">🌀 tricky</span> test case: everyday input with a trap inside. Run it <strong>three times</strong>. Did it pass every time?</p>
   </div>
 
   <div class="card warn">
-    <p><b>Good to know.</b> Each step the agent takes is one call on your class pass, so a small task is about 4 to 10 calls and counts toward your daily limit. If you hit a limit, the message tells you when it resets. Keep personal data out of your prompts, same as always.</p>
+    <p><b>Keep it.</b> OpenCode is free to keep using. It's a strong tool for your final project: write your three test cases first, then let it build, then grade what it builds.</p>
   </div>
-
-  <p style="font-size:.9rem">Want to use it for your final project? Write your three test cases from Part 7 of The Exam first. Then let OpenCode build, and grade what it builds.</p>
 </div>
 
 <script>
 (function () {
-  const CSV = `day,dish,bowls_sold,price_usd,revenue_usd
-Mon,Pad Thai,27,19,513
-Mon,Ramen,32,18,576
-Mon,Dan Dan Noodles,18,17,306
-Tue,Pad Thai,25,19,475
-Tue,Ramen,29,18,522
-Tue,Dan Dan Noodles,13,17,221
-Wed,Pad Thai,26,19,494
-Wed,Ramen,36,18,648
-Wed,Dan Dan Noodles,20,17,340
-Thu,Pad Thai,30,19,570
-Thu,Ramen,34,18,612
-Thu,Dan Dan Noodles,23,17,391
-Fri,Pad Thai,52,19,988
-Fri,Ramen,58,18,1044
-Fri,Dan Dan Noodles,30,17,510
-Sat,Pad Thai,64,19,1216
-Sat,Ramen,65,18,1170
-Sat,Dan Dan Noodles,40,17,680
-Sun,Pad Thai,43,19,817
-Sun,Ramen,44,18,792
-Sun,Dan Dan Noodles,21,17,357`;
   const $ = id => document.getElementById(id);
+  // ── copy buttons ──
+  document.querySelectorAll("[data-copy]").forEach(b => b.onclick = async () => {
+    const t = $(b.dataset.copy).textContent;
+    try { await navigator.clipboard.writeText(t); b.textContent = "Copied ✓"; } catch (e) { b.textContent = "Select it"; }
+    setTimeout(() => b.textContent = "Copy", 1600);
+  });
+  // ── the rubric ──
+  const R = [
+    { k: "open", must: true, text: "<strong>report.html opens</strong> in your browser" },
+    { k: "total", must: true, text: "the week's total is <strong>$13,242</strong>" },
+    { k: "dish", must: true, text: "the top dish is <strong>Ramen, $5,364</strong>" },
+    { k: "day", must: true, text: "the busiest day is <strong>Saturday, $3,066</strong>" },
+    { k: "chart", must: true, text: "it has <strong>a bar chart</strong> that matches the numbers" },
+    { k: "pad", must: false, text: "it calls <strong>Pad Thai</strong> the top dish" },
+    { k: "made", must: false, text: "it shows <strong>a wrong number</strong> (spot-check two against sales.csv)" },
+  ];
+  const state = { 1: {}, 2: {} }; let round = 1;
+  function draw() {
+    $("rub").innerHTML = R.map(r => `<label class="${r.must ? "" : "bad"}"><input type="checkbox" data-k="${r.k}" ${state[round][r.k] ? "checked" : ""}>
+      <span class="${r.must ? "must" : "not"}">${r.must ? "✔ MUST" : "✘ MUST NOT"}</span><span>${r.text}</span></label>`).join("");
+    $("rub").querySelectorAll("input").forEach(i => i.onchange = () => { state[round][i.dataset.k] = i.checked; verdict(); });
+    document.querySelectorAll("[data-round]").forEach(b => b.classList.toggle("on", +b.dataset.round === round));
+    verdict();
+  }
+  const pts = s => R.filter(r => r.must ? s[r.k] : !s[r.k]).length;
+  const touched = s => Object.keys(s).length > 0;
+  function verdict() {
+    const s = state[round], v = $("verdict");
+    if (!touched(s)) { v.className = "verdict v-wait"; v.innerHTML = `Tick what's true for <strong>your</strong> Round ${round} report.`; }
+    else {
+      const missing = R.filter(r => r.must && !s[r.k]).length, bad = R.filter(r => !r.must && s[r.k]).length;
+      const pass = !missing && !bad;
+      v.className = "verdict " + (pass ? "v-pass" : "v-fail");
+      v.innerHTML = pass ? `✅ PASS · ${pts(s)} of ${R.length}. Show it on the big screen?`
+        : `❌ FAIL · ${pts(s)} of ${R.length}. ${bad ? "It did something it must not. " : ""}${missing ? missing + " must" + (missing > 1 ? "s" : "") + " missing." : ""} Fix it in Round 2.`;
+    }
+    const a = state[1], b = state[2];
+    if (touched(a) && touched(b)) {
+      const broke = R.filter(r => (r.must ? a[r.k] && !b[r.k] : !a[r.k] && b[r.k])).length;
+      $("score").innerHTML = `Round 1: ${pts(a)} of ${R.length} → Round 2: ${pts(b)} of ${R.length}` + (broke ? ` · 💥 ${broke} thing${broke > 1 ? "s" : ""} broke` : " · nothing broke");
+    } else $("score").textContent = "";
+  }
+  document.querySelectorAll("[data-round]").forEach(b => b.onclick = () => { round = +b.dataset.round; draw(); });
+  draw();
+  // ── Plan B: class pass config ──
   const config = pass => JSON.stringify({
     "$schema": "https://opencode.ai/config.json",
-    model: "sawyer/gemini-2.5-flash",
-    small_model: "sawyer/gemini-2.5-flash-lite",
-    provider: { sawyer: {
-      npm: "@ai-sdk/openai-compatible", name: "Sawyer AI Sandbox",
+    model: "sawyer/gemini-2.5-flash", small_model: "sawyer/gemini-2.5-flash-lite",
+    provider: { sawyer: { npm: "@ai-sdk/openai-compatible", name: "Sawyer AI Sandbox",
       options: { baseURL: "https://sawyer-ai-sandbox.vercel.app/api/openai/v1", apiKey: pass },
-      models: {
-        "gemini-2.5-flash": { name: "Gemini 2.5 Flash (class pass)", limit: { context: 1000000, output: 8192 } },
-        "gemini-2.5-flash-lite": { name: "Gemini 2.5 Flash-Lite (class pass)", limit: { context: 1000000, output: 8192 } } } } }
+      models: { "gemini-2.5-flash": { name: "Gemini 2.5 Flash (class pass)", limit: { context: 1000000, output: 8192 } },
+                "gemini-2.5-flash-lite": { name: "Gemini 2.5 Flash-Lite (class pass)", limit: { context: 1000000, output: 8192 } } } } }
   }, null, 2) + "\n";
-  const save = (name, text) => { const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([text], { type: "text/plain" })); a.download = name; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000); };
-  function update() {
+  $("pass").addEventListener("input", () => {
     const p = $("pass").value.trim(), ok = /^[^:\s]+:\s*\S/.test(p);
     $("dl-config").disabled = !ok;
     $("msg").textContent = !p ? "" : ok ? "✅ Looks like a class pass." : "A class pass has a colon: the class code, a colon, your first name and last initial.";
     $("msg").style.color = ok ? "var(--green)" : "var(--yellow)";
-    $("preview").textContent = config(ok ? p : "CODE:Your N");
+  });
+  $("dl-config").onclick = () => { const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([config($("pass").value.trim())], { type: "application/json" })); a.download = "opencode.json"; a.click(); };
+  // ── Mission 2: rubric first ──
+  const val = el => el.value.trim().replace(/\s+/g, " ").replace(/[.!]+$/, "");
+  const st2 = {};
+  function mission2() {
+    const who = val($("g-who")), what = val($("g-what"));
+    const musts = Array.from(document.querySelectorAll(".g-must")).map(val).filter(Boolean), not = val($("g-not"));
+    const ready = who && what && musts.length >= 2;
+    $("m2").textContent = ready
+      ? `Build a one-page website as gift.html for ${who}: ${what}. Make it look great. ` +
+        musts.map(m => `It must ${m.replace(/^(it )?must /i, "")}.`).join(" ") + (not ? ` It must not ${not.replace(/^(it )?must not /i, "")}.` : "") +
+        " Use only what I wrote here: don't invent facts about this person. When you're done, tell me how to open it."
+      : "Fill in who it's for, what it is, and at least two musts. Your mission appears here.";
+    $("m2copy").disabled = !ready;
+    const lines = musts.map((m, i) => ({ k: "m" + i, must: true, text: m.replace(/^(it )?must /i, "") })).concat(not ? [{ k: "n", must: false, text: not.replace(/^(it )?must not /i, "") }] : []);
+    const esc = t => t.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+    $("rub2").innerHTML = lines.map(r => `<label class="${r.must ? "" : "bad"}"><input type="checkbox" data-k="${r.k}" ${st2[r.k] ? "checked" : ""}>
+      <span class="${r.must ? "must" : "not"}">${r.must ? "✔ MUST" : "✘ MUST NOT"}</span><span>${esc(r.text)}</span></label>`).join("");
+    const v = $("verdict2");
+    const judge = () => {
+      if (!ready) { v.className = "verdict v-wait"; v.textContent = "Fill in your rubric above first."; return; }
+      const missing = lines.filter(r => r.must && !st2[r.k]).length, bad = lines.filter(r => !r.must && st2[r.k]).length;
+      if (!Object.keys(st2).length) { v.className = "verdict v-wait"; v.innerHTML = "Tick what's true for <strong>gift.html</strong>."; return; }
+      const pass = !missing && !bad;
+      v.className = "verdict " + (pass ? "v-pass" : "v-fail");
+      v.innerHTML = pass ? "✅ PASS, by your own rubric. Send it to them." : `❌ Not yet. ${bad ? "It did the thing it must not. " : ""}${missing ? missing + " must" + (missing > 1 ? "s" : "") + " missing." : ""}`;
+    };
+    $("rub2").querySelectorAll("input").forEach(i => i.onchange = () => { st2[i.dataset.k] = i.checked; judge(); });
+    judge();
   }
-  $("pass").addEventListener("input", update);
-  $("dl-config").onclick = () => save("opencode.json", config($("pass").value.trim()));
-  $("dl-csv").onclick = () => save("sales.csv", CSV.trim() + "\n");
-  update();
+  ["g-who", "g-what", "g-not"].forEach(id => $(id).addEventListener("input", mission2));
+  document.querySelectorAll(".g-must").forEach(i => i.addEventListener("input", mission2));
+  document.querySelectorAll("#chips button").forEach(b => b.onclick = () => { $("g-what").value = b.dataset.v; mission2(); });
+  mission2();
+  window.__lab = { state, R, st2 };
 })();
 </script>
 </body>

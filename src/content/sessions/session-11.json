@@ -2,7 +2,7 @@
   "number": 11,
   "slug": "session-11",
   "title": "Testing & Evaluating Agents",
-  "subtitle": "It worked in the demo. Now write the exam your AI employee has to pass, change one thing, and take it again.",
+  "subtitle": "It worked in the demo. Learn to grade an AI with a rubric. Then put a real coding agent to work, and grade what it builds.",
   "heroTitle": "Testing & <span class=\"bg-gradient-to-br from-accent-cyan to-accent-purple bg-clip-text text-transparent\">Evaluating Agents</span>",
   "duration": "1 meeting · 75 min",
   "meetings": [
@@ -12,170 +12,167 @@
   "tags": [
     "Testing",
     "Evaluation",
-    "Test Cases",
     "Rubrics",
-    "LLM-as-Judge",
-    "Edge Cases",
+    "Test Cases",
+    "Coding Agents",
+    "OpenCode",
     "Regression"
   ],
   "objectives": [
     {
       "title": "Tell a Vibe Check from a Test",
-      "description": "Watch a demo go three for three. Then give the same AI employee an 8-question exam, and see why \"it looked fine when I tried it\" is not an answer."
+      "description": "Watch a demo go three for three, then see the message nobody tried. \"It looked fine when I tried it\" is not an answer."
     },
     {
-      "title": "Write a Test Case",
-      "description": "One message, plus what a good answer must do and must not do. Three kinds: everyday (happy path), tricky (edge case) and trap (adversarial test)."
+      "title": "Write a Rubric",
+      "description": "A test case is one input plus what a good answer must do and must not do. Three kinds: everyday (happy path), tricky (edge case) and trap (adversarial test)."
     },
     {
-      "title": "Use a Grader, and Check It",
-      "description": "A second AI marks every answer against the rubric. The term is LLM-as-judge. Then judge the judge: where would you grade differently?"
+      "title": "Put a Real Coding Agent to Work",
+      "description": "Run OpenCode, an open-source coding agent, on a real task. See the tools, permissions and job description you learned this semester inside a real product."
     },
     {
-      "title": "Change One Thing and Retake",
-      "description": "Add one sentence to the job description and run the whole exam again. Count what you fixed and what you broke. The second one has a name: a regression."
+      "title": "Change One Thing and Check Again",
+      "description": "Add one sentence to the agent's job description and rebuild. Count what you fixed and what you broke. The second one has a name: a regression."
     }
   ],
   "agenda": [
     {
       "time": "Mon Nov 23 · 12:30 PM",
-      "title": "The Demo, and Tuesday",
-      "duration": "6 minutes",
-      "description": "Three messages, three good answers. Would you ship it Monday?",
+      "title": "⬇ Start the Download",
+      "duration": "2 minutes",
+      "description": "Laptops open. OpenCode Desktop installs while we talk.",
       "bulletPoints": [
-        "Three weeks, three questions: what may it touch (the badge), when does it ask a person (the dial), and today: how do you know it works?",
-        "Hands up after the demo: who ships it?",
-        "Tuesday, a real customer: \"No peanuts in the Ramen, so I'm all set with my allergy, right?\"",
-        "Trying three and nodding has a name: a vibe check. A demo is a highlight reel"
+        "Session 11 page → The OpenCode Lab → step 1",
+        "Free, no account. We use it at 1:00"
       ],
       "isBreak": false
     },
     {
-      "time": "Mon Nov 23 · 12:36 PM",
+      "time": "Mon Nov 23 · 12:32 PM",
+      "title": "The Demo, and Tuesday",
+      "duration": "5 minutes",
+      "description": "Three messages, three good answers. Would you ship it Monday?",
+      "bulletPoints": [
+        "Hands up after the demo: who ships it?",
+        "Tuesday, a real customer: \"No peanuts in the Ramen, so I'm all set with my allergy, right?\"",
+        "Trying three and nodding has a name: a vibe check"
+      ],
+      "isBreak": false
+    },
+    {
+      "time": "Mon Nov 23 · 12:37 PM",
       "title": "Cold Open: Three Real Cases",
       "duration": "5 minutes",
       "description": "One question per story, shouted out before the reveal.",
       "bulletPoints": [
-        "Taco Bell, 2025: two million orders went fine, then \"18,000 cups of water, please\". The weird one: an edge case",
+        "Taco Bell, 2025: \"18,000 cups of water, please\". The weird one: an edge case",
         "A Chevrolet dealer, 2023: a chatbot agrees to sell a Tahoe for $1. The trap: an adversarial test",
-        "DPD, 2024: a chat that worked for years swears at a customer after a system update. A regression"
+        "DPD, 2024: a chat that worked for years swears at a customer after an update. A regression"
       ],
       "isBreak": false
     },
     {
-      "time": "Mon Nov 23 · 12:41 PM",
+      "time": "Mon Nov 23 · 12:42 PM",
       "title": "Today You Are the Professor",
       "duration": "2 minutes",
       "description": "Every one of them worked in the demo. None of them had an exam.",
       "bulletPoints": [
-        "Why this is a business skill: engineers build it, you say what \"good\" means",
-        "📝 The question (a test case) · 📚 the exam (a test set) · 🧑‍🏫 the grader (LLM-as-judge) · 📊 the grade (pass rate)"
+        "Engineers build it. You say what \"good\" means",
+        "The question (a test case) · the exam (a test set) · the grader · the grade (pass rate)"
       ],
       "isBreak": false
     },
     {
-      "time": "Mon Nov 23 · 12:43 PM",
+      "time": "Mon Nov 23 · 12:44 PM",
       "title": "📝 Grade It: You Are the Grader",
-      "duration": "10 minutes",
+      "duration": "9 minutes",
       "description": "Phones out. The noodle shop's AI answered 10 guests. Pass or fail?",
       "bulletPoints": [
-        "Round 1, your gut: 60 seconds, no rules. Hands up: who got 8 or more?",
-        "Round 2, the same 10 answers with the manager's rubric: what a good answer must do, and must not do",
-        "Same answers, same you. The rubric changed your grade. Your notebook's AI grader gets one too"
+        "Round 1, your gut: 60 seconds, no rules",
+        "Round 2, the same 10 answers with the manager's rubric: must, and must not",
+        "Same answers, same you. The rubric changed your grade"
       ],
       "isBreak": false
     },
     {
       "time": "Mon Nov 23 · 12:53 PM",
-      "title": "One Test Case, Three Kinds",
-      "duration": "2 minutes",
-      "description": "A test case is a message plus a rubric. A good exam mixes three kinds of question.",
+      "title": "Three Kinds of Question, One Rule",
+      "duration": "4 minutes",
+      "description": "A good exam mixes everyday, tricky and trap questions.",
       "bulletPoints": [
-        "Grade what it does, not the words: the AI never writes the same sentence twice",
-        "🟢 everyday (happy path) · 🌀 tricky (edge case) · 🎭 trap (adversarial test). The demo only had 🟢"
+        "Grade what it does, not the words",
+        "🟢 everyday (happy path) · 🌀 tricky (edge case) · 🎭 trap (adversarial test)",
+        "Change one thing, then check everything again. 🔧 fixed, 💥 broke"
       ],
       "isBreak": false
     },
     {
-      "time": "Mon Nov 23 · 12:55 PM",
-      "title": "🧪 Hands-On: The Exam, Parts 1–4",
-      "duration": "12 minutes",
-      "description": "Same six companies, same class pass. This time the job description is three lines long.",
-      "bulletPoints": [
-        "Part 2: the demo. Three messages, three answers. Decide: ship it, True or False?",
-        "Part 3: the exam. Bet how many of 8 it will pass, then read your report card",
-        "Part 4: read the red ones. Judge the judge, and pick the one failure that would cost your company the most"
-      ],
-      "isBreak": false
-    },
-    {
-      "time": "Mon Nov 23 · 1:07 PM",
-      "title": "Class Tally",
+      "time": "Mon Nov 23 · 12:57 PM",
+      "title": "Meet OpenCode",
       "duration": "3 minutes",
-      "description": "On the board: your bet, your score, your worst ❌.",
+      "description": "An open-source coding agent, built like Claude Code. Everything you learned is a menu item.",
       "bulletPoints": [
-        "Which kind failed most: 🟢, 🌀 or 🎭?",
-        "\"But nobody told it that rule!\" The customer doesn't read your prompt. An exam tests what the business needs",
-        "Is 7 of 8 good? It depends which one. And was the grader right?"
+        "Tools, MCP servers, custom agents, permissions, /undo, AGENTS.md",
+        "The one part no product does for you: the rubric"
+      ],
+      "isBreak": false
+    },
+    {
+      "time": "Mon Nov 23 · 1:00 PM",
+      "title": "🛠️ Mission 1: Marco's Monday Report",
+      "duration": "10 minutes",
+      "description": "Pairs. The agent reads a week of sales and builds Marco a one-page report.",
+      "bulletPoints": [
+        "Open Marco's folder in OpenCode and paste the mission",
+        "Watch it work: what does it read, run and write?",
+        "Open report.html. Looks great? That's a vibe check"
       ],
       "isBreak": false
     },
     {
       "time": "Mon Nov 23 · 1:10 PM",
-      "title": "Change One Thing. Take the Exam Again",
-      "duration": "2 minutes",
-      "description": "The boss panics and adds one sentence. Look at what it fixes, and what it breaks.",
-      "bulletPoints": [
-        "🔧 Fixed: failed before, passes now",
-        "💥 Broke: passed before, fails now. The term: a regression",
-        "You only see the 💥 if you retake the whole exam, every time you change anything"
-      ],
-      "isBreak": false
-    },
-    {
-      "time": "Mon Nov 23 · 1:12 PM",
-      "title": "🏆 Hands-On: Fix It, Then Stump It (Parts 5–6)",
-      "duration": "14 minutes",
-      "description": "One sentence for your worst failure. Then write the question your employee gets wrong.",
-      "bulletPoints": [
-        "Part 5: add ONE sentence to the job description. The whole exam runs again. Watch the 💥 row",
-        "Part 6: write question 9 yourself: the message, the MUST and the MUST NOT. Your employee answers it three times",
-        "Read your question and rubric to your neighbor. Is it fair?"
-      ],
-      "isBreak": false
-    },
-    {
-      "time": "Mon Nov 23 · 1:26 PM",
-      "title": "Ask It Three Times",
-      "duration": "4 minutes",
-      "description": "Same question, same employee, three tries.",
-      "bulletPoints": [
-        "🏆 Stumped, 🎲 flaky or 🛡️ held? Best stumper, read out loud",
-        "A calculator gives the same answer every time. Your AI employee doesn't. The term: non-deterministic",
-        "If it matters, ask it more than once"
-      ],
-      "isBreak": false
-    },
-    {
-      "time": "Mon Nov 23 · 1:30 PM",
-      "title": "Your Agent's Exam (Part 7)",
-      "duration": "5 minutes",
-      "description": "Three test cases for your own final project agent: one everyday, one tricky, one trap.",
-      "bulletPoints": [
-        "For each one: the input, and \"it passes if…\"",
-        "An AI plays a QA tester and suggests the test you forgot",
-        "The results go into the \"Test results\" paragraph of your 1-page brief"
-      ],
-      "isBreak": false
-    },
-    {
-      "time": "Mon Nov 23 · 1:35 PM",
-      "title": "Homework and the Road to Demo Day",
+      "title": "Grade It, Then Change One Thing",
       "duration": "10 minutes",
+      "description": "Check the report against the rubric. Then add one sentence to the agent's job description.",
+      "bulletPoints": [
+        "The rubric: week total, top dish, busiest day, a chart that matches. Must not: Pad Thai as the top dish",
+        "Round 2: one sentence in AGENTS.md, then \"Rebuild report.html\"",
+        "What got better? Did anything break?"
+      ],
+      "isBreak": false
+    },
+    {
+      "time": "Mon Nov 23 · 1:20 PM",
+      "title": "🎁 Mission 2: Rubric First. Then Build",
+      "duration": "12 minutes",
+      "description": "Build something for a real person. Write the exam before the agent builds.",
+      "bulletPoints": [
+        "Pick a person. First names only",
+        "Write 3 things it must do and 1 thing it must not. The lab page writes your mission",
+        "Grade it against your own rubric. Passed? Send it to them"
+      ],
+      "isBreak": false
+    },
+    {
+      "time": "Mon Nov 23 · 1:32 PM",
+      "title": "Show and Tell",
+      "duration": "6 minutes",
+      "description": "Best builds on the big screen. Read your rubric first.",
+      "bulletPoints": [
+        "Same mission, same model, different reports: non-deterministic, live",
+        "The room grades it with you"
+      ],
+      "isBreak": false
+    },
+    {
+      "time": "Mon Nov 23 · 1:38 PM",
+      "title": "Homework and the Road to Demo Day",
+      "duration": "7 minutes",
       "description": "Don't say it works. Show the exam, the score, and the one it still fails.",
       "bulletPoints": [
         "HW #10 First Working Run due Tue Nov 24",
-        "Over the break: run your three test cases on your own agent",
+        "Over the break: The Exam notebook. Keep OpenCode for your final project",
         "HW #11 Demo Dry Run due Thu Dec 3. No class Wed Nov 25. Happy Thanksgiving"
       ],
       "isBreak": false
@@ -183,13 +180,22 @@
   ],
   "resources": [
     {
-      "title": "🧪 The Exam · Colab Notebook",
-      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-11/ISOM260_Session11_The_Exam.ipynb",
-      "description": "Today's hands-on, on your class pass. Your AI employee passes a demo, then takes an 8-question exam with a grader. Change one sentence and retake it, write the question it gets wrong, and leave with three test cases for your own agent.",
-      "icon": "microscope",
+      "title": "🛠️ The OpenCode Lab · today's hands-on",
+      "url": "/session-11/opencode.html",
+      "description": "Put a real open-source coding agent to work. Mission 1: build Marco's Monday report, grade it, change one sentence, rebuild. Mission 2: write a rubric first, then build something for a real person.",
+      "icon": "terminal",
       "badge": "Hands-On",
       "badgeType": "interactive",
-      "linkText": "Open in Colab"
+      "linkText": "Open the lab"
+    },
+    {
+      "title": "⬇ OpenCode Desktop",
+      "url": "https://opencode.ai/download",
+      "description": "The free, open-source coding agent for today's lab. Mac and Windows. No account needed for the free models.",
+      "icon": "download",
+      "badge": "Tool",
+      "badgeType": "tool",
+      "linkText": "Download"
     },
     {
       "title": "📝 Grade It · the whole-room game",
@@ -203,20 +209,20 @@
     {
       "title": "Slide Deck · It Worked in the Demo",
       "url": "/session-11/slides.html",
-      "description": "Today's class: the demo that looked perfect, three real cases, the exam, one test case up close, and \"change one thing, take the exam again\".",
+      "description": "Today's class: the demo that looked perfect, three real cases, Grade It, and the OpenCode lab.",
       "icon": "presentation",
       "badge": "Slides",
       "badgeType": "interactive",
       "linkText": "Open slides"
     },
     {
-      "title": "🛠️ Optional · OpenCode on your class pass",
-      "url": "/session-11/opencode.html",
-      "description": "A real open-source coding agent, built like Claude Code, running on your class pass. Install it, ask it to analyze a sales file, then grade it with a rubric. A good tool for your final project.",
-      "icon": "terminal",
-      "badge": "Optional",
-      "badgeType": "tool",
-      "linkText": "Set it up"
+      "title": "🧪 The Exam · Colab Notebook (over the break)",
+      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-11/ISOM260_Session11_The_Exam.ipynb",
+      "description": "About 35 minutes, on your class pass. Your AI employee passes a demo, then takes an 8-question exam with a grader. Change one sentence and retake it, write the question it gets wrong, and leave with three test cases for your own agent.",
+      "icon": "microscope",
+      "badge": "Homework",
+      "badgeType": "code",
+      "linkText": "Open in Colab"
     },
     {
       "title": "Final Project · Build Your Agent",
@@ -228,15 +234,6 @@
       "linkText": "Open"
     },
     {
-      "title": "Last week · The Dial",
-      "url": "https://colab.research.google.com/github/harslan/isom-260/blob/master/public/session-10/ISOM260_Session10_The_Dial.ipynb",
-      "description": "Missed Session 10? Today's exam uses the same 8 messages and the same answer key. This is where they come from.",
-      "icon": "target",
-      "badge": "Catch Up",
-      "badgeType": "code",
-      "linkText": "Open in Colab"
-    },
-    {
       "title": "The Register · DPD's chatbot swears at a customer",
       "url": "https://www.theregister.com/2024/01/23/dpd_chatbot_goes_rogue",
       "description": "The reporting behind today's third case: a chat that had worked for years, an update, and nobody ran the test again.",
@@ -244,15 +241,6 @@
       "badge": "Reading",
       "badgeType": "reference",
       "linkText": "Read"
-    },
-    {
-      "title": "Anthropic · How to write tests for an AI",
-      "url": "https://docs.anthropic.com/en/docs/build-with-claude/develop-tests",
-      "description": "How one AI company tells builders to do it: decide what success looks like, write the test cases, then grade. For the curious.",
-      "icon": "file-text",
-      "badge": "Docs",
-      "badgeType": "code",
-      "linkText": "Read docs"
     }
   ],
   "activities": [
@@ -260,7 +248,7 @@
       "number": 1,
       "icon": "zap",
       "title": "Grade It",
-      "description": "Whole room, on your phone, about 10 minutes:",
+      "description": "Whole room, on your phone, about 9 minutes:",
       "steps": [
         {
           "title": "Round 1: your gut (60 s)",
@@ -278,61 +266,61 @@
     },
     {
       "number": 2,
-      "icon": "microscope",
-      "title": "The Exam",
-      "description": "About 15 minutes in the notebook, Parts 2 to 4:",
+      "icon": "terminal",
+      "title": "Mission 1: Marco's Monday Report",
+      "description": "Pairs, about 20 minutes, in OpenCode:",
       "steps": [
         {
-          "title": "The demo (3 min)",
-          "description": "Your AI employee has a three-line job description and no house rules. It answers three messages. Read them the way a boss would in a demo, then decide: ship it Monday?"
+          "title": "Give it the mission",
+          "description": "Open Marco's folder and paste the mission. The agent reads sales.csv and builds report.html: totals, a chart, and three things Marco should do next week."
         },
         {
-          "title": "The exam (6 min)",
-          "description": "8 questions, each with a rubric: what a good answer must do and must not do. Bet how many it will pass. A second AI grades every answer, and you get a report card."
+          "title": "Grade it",
+          "description": "Check the report against the rubric with sales.csv open next to it. One line is a trap: the biggest single row is Pad Thai on Saturday, but Ramen wins the week."
         },
         {
-          "title": "Read the red ones (4 min)",
-          "description": "Each failure has a direction: 😬 went too far, 🥱 did too little, 🤥 got a fact wrong. Judge the judge, then pick the one failure that would cost your company the most."
+          "title": "Change one thing",
+          "description": "Write one sentence in AGENTS.md, the agent's job description. Ask it to rebuild. Grade again: 🔧 fixed or 💥 broke?"
         }
       ]
     },
     {
       "number": 3,
-      "icon": "zap",
-      "title": "Fix It, Then Stump It",
-      "description": "About 16 minutes, Parts 5 and 6:",
+      "icon": "heart",
+      "title": "Mission 2: Rubric First. Then Build",
+      "description": "Pairs, about 12 minutes:",
       "steps": [
         {
-          "title": "One sentence, the whole exam again",
-          "description": "Add ONE sentence to the job description, aimed at your worst failure. All 8 questions run again. 🔧 fixed is what you wanted. 💥 broke is a regression: it passed before and fails now."
+          "title": "Pick a real person",
+          "description": "A friend, a parent, your club. First names only, nothing private."
         },
         {
-          "title": "Stump your employee",
-          "description": "Write question 9 yourself: who it's from, the message, the MUST and the MUST NOT. Your employee answers it three times. 🏆 stumped, 🎲 flaky, or 🛡️ held."
+          "title": "Write the exam first",
+          "description": "Three things it must do and one thing it must not, all checkable with your eyes. The lab page turns them into a mission. The term: test-first."
         },
         {
-          "title": "Is it fair?",
-          "description": "Read your question and your rubric to your neighbor. Could a real person send it? Would they grade it the same way?"
+          "title": "Build, grade, send",
+          "description": "The agent builds gift.html. Grade it against your own rubric. If it passes, send it to them."
         }
       ]
     },
     {
       "number": 4,
-      "icon": "rocket",
-      "title": "Your Agent's Exam",
-      "description": "Part 7, started in class and finished at home:",
+      "icon": "microscope",
+      "title": "The Exam (over the break)",
+      "description": "A Colab notebook, about 35 minutes, on your class pass:",
       "steps": [
         {
-          "title": "Three test cases",
-          "description": "For your own final project agent: one everyday request, one tricky one, one trap. For each: the input, and how you'll know it passed."
+          "title": "The demo vs. the exam",
+          "description": "Your AI employee looks perfect on three messages. Then it takes an 8-question exam, graded by a second AI with a rubric."
         },
         {
-          "title": "The test you forgot",
-          "description": "An AI plays a QA tester, reads your three, and suggests one more."
+          "title": "Fix it, then stump it",
+          "description": "Add one sentence and retake the whole exam. Then write the question it gets wrong, and ask it three times."
         },
         {
-          "title": "Run them on your agent",
-          "description": "Copy the blue box into your final notebook. Run each test and tick pass or fail. A test that fails is not a bad grade. It is the best paragraph in your brief."
+          "title": "Your agent's exam",
+          "description": "Three test cases for your own final project agent: everyday, tricky and trap."
         }
       ]
     }
@@ -348,15 +336,15 @@
     },
     {
       "icon": "check-circle",
-      "text": "<strong>A test needs a rubric.</strong> Grade what an answer does, not its words: what it must do and must not do. Without a rubric, your gut and the AI grader are both guessing. And a person checks the grader."
+      "text": "<strong>A test needs a rubric, and the rubric comes first.</strong> What must a good answer do, and what must it not do? Write it before you see the result, so you grade what you wanted and not what you got."
     },
     {
       "icon": "repeat",
-      "text": "<strong>Change one thing, then take the whole exam again.</strong> A fix that breaks something that used to work is a regression. You only see it if you rerun everything. Safe and useless is still a fail."
+      "text": "<strong>Change one thing, then check everything again.</strong> A fix that breaks something that used to work is a regression. You only see it if you check every line again."
     },
     {
-      "icon": "trending-up",
-      "text": "<strong>Ask it more than once.</strong> The same question can pass today and fail tomorrow. Every failure you find becomes a new exam question. That is how a test set grows."
+      "icon": "terminal",
+      "text": "<strong>A real coding agent is made of what you learned:</strong> tools, permissions, a job description. It built a report in minutes. Knowing whether the report is right was still your job."
     }
   ],
   "homework": [
@@ -366,7 +354,11 @@
     },
     {
       "label": "Over the break:",
-      "text": "Finish Part 7 of The Exam: three test cases for your own agent. Run them on your agent and tick pass or fail. What passed and what failed goes into the \"Test results\" paragraph of your 1-page brief."
+      "text": "Do The Exam, the Colab notebook on this page (about 35 minutes). Then write three test cases for your own agent: everyday, tricky and trap. They go into the \"Test results\" paragraph of your 1-page brief."
+    },
+    {
+      "label": "Keep OpenCode:",
+      "text": "It's free to keep using. Try it on your final project: write your test cases first, let it build, then grade what it builds."
     },
     {
       "label": "HW #11 · due Thu Dec 3, 11:59 PM:",
