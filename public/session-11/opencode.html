@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenCode on Your Class Pass · ISOM 260</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Sora:wght@600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root { --bg:#0a0e1a; --card:#141929; --line:rgba(0,229,255,.18); --cyan:#00e5ff; --magenta:#ff006e; --yellow:#ffd600; --green:#00e676; --text:#e8ecf4; --dim:#8892a8; }
+body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.55;
+  background-image: linear-gradient(rgba(0,229,255,.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,255,.04) 1px, transparent 1px); background-size: 36px 36px; }
+.wrap { max-width: 760px; margin: 0 auto; padding: 28px 18px 60px; }
+h1 { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 2.1rem; letter-spacing: -.02em; line-height: 1.15; margin-bottom: .6rem; }
+h2 { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 1.3rem; margin-bottom: .5rem; display: flex; gap: .6rem; align-items: center; }
+h2 .n { font-family: 'JetBrains Mono', monospace; font-size: .95rem; background: rgba(0,230,118,.15); color: var(--green); border-radius: 8px; padding: .1rem .55rem; }
+.grad { background: linear-gradient(135deg, var(--cyan), var(--magenta)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.kicker { font-family: 'JetBrains Mono', monospace; font-size: .75rem; letter-spacing: .16em; text-transform: uppercase; color: var(--cyan); margin-bottom: .6rem; }
+p, li { color: var(--dim); font-size: 1.02rem; } p strong, li strong { color: var(--text); }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 1.1rem 1.2rem; margin: 1.1rem 0; }
+ul, ol { padding-left: 1.2rem; display: flex; flex-direction: column; gap: .3rem; }
+pre, code { font-family: 'JetBrains Mono', monospace; }
+pre { background: #05080f; border: 1px solid #263048; border-radius: 10px; padding: .75rem .9rem; font-size: .85rem; color: #cfe8ff; overflow-x: auto; margin: .5rem 0; white-space: pre; }
+code { background: rgba(0,229,255,.08); color: var(--cyan); border-radius: 5px; padding: .05rem .35rem; font-size: .9em; }
+input { width: 100%; font: inherit; font-family: 'JetBrains Mono', monospace; padding: .7rem .8rem; border-radius: 10px; border: 1px solid #3a4666; background: #0b1120; color: var(--text); margin: .3rem 0 .6rem; }
+.btns { display: flex; gap: .6rem; flex-wrap: wrap; margin: .4rem 0; }
+button { appearance: none; border: 0; border-radius: 12px; font-family: 'Sora', sans-serif; font-weight: 700; font-size: .95rem; padding: .7rem 1rem; cursor: pointer; background: linear-gradient(135deg, var(--cyan), #7cf); color: #06121a; }
+button.ghost { background: transparent; color: var(--text); border: 1px solid #56628a; }
+button:disabled { opacity: .4; cursor: not-allowed; }
+.warn { border-color: rgba(255,214,0,.4); } .warn b { color: var(--yellow); }
+.ok { color: var(--green); font-size: .9rem; min-height: 1.3rem; }
+table { width: 100%; border-collapse: collapse; font-size: .95rem; margin-top: .4rem; }
+td { padding: .45rem .4rem; border-bottom: 1px solid rgba(255,255,255,.08); color: var(--dim); vertical-align: top; } td b { color: var(--text); }
+.tag { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: .75rem; border-radius: 8px; padding: .05rem .45rem; margin-right: .3rem; }
+.t-e { background: rgba(0,230,118,.15); color: var(--green); } .t-t { background: rgba(255,214,0,.15); color: var(--yellow); } .t-x { background: rgba(255,0,110,.15); color: var(--magenta); }
+details summary { cursor: pointer; color: var(--text); font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="kicker">ISOM 260 · Session 11 · optional · for your final project</div>
+  <h1>A real coding agent, <span class="grad">on your class pass.</span></h1>
+  <p><strong>OpenCode</strong> is an open-source coding agent, built like Claude Code. It runs in your terminal, reads your files, runs commands and writes files. Anyone can read its code. Here it runs on <strong>your class pass</strong>: no credit card, no personal key, and the Sandbox doesn't store what you type.</p>
+
+  <div class="card">
+    <h2><span class="n">1</span> Install it (once)</h2>
+    <p>If your laptop has Node.js, one line works on Mac and Windows:</p>
+    <pre>npm install -g opencode-ai</pre>
+    <p>No Node.js? Install it from <strong>nodejs.org</strong> (the LTS button) first, or see <strong>opencode.ai</strong> for other ways to install.</p>
+  </div>
+
+  <div class="card">
+    <h2><span class="n">2</span> Make your project folder</h2>
+    <p>Type your class pass. This page builds your config file. <strong>Nothing you type leaves this page.</strong></p>
+    <input id="pass" placeholder="CODE:Maya R" autocomplete="off" spellcheck="false">
+    <div class="btns">
+      <button id="dl-config" disabled>⬇ opencode.json</button>
+      <button id="dl-csv" class="ghost">⬇ sales.csv (practice data)</button>
+    </div>
+    <div class="ok" id="msg"></div>
+    <p>Make a new folder, like <code>my-agent</code>. Put <strong>both files</strong> in it. Your pass sits inside <code>opencode.json</code>, so don't share that file.</p>
+    <details style="margin-top:.6rem"><summary>See the config file</summary><pre id="preview"></pre></details>
+  </div>
+
+  <div class="card">
+    <h2><span class="n">3</span> Start it inside that folder</h2>
+    <pre>cd my-agent
+opencode</pre>
+    <p>Then type a task in plain English. Try this one:</p>
+    <pre id="task" style="white-space:pre-wrap">Read sales.csv. Which dish made the most money this week, and which day was busiest? Write a 5-line summary for Marco in summary.md with the numbers.</pre>
+    <p>Watch it work: it reads the file, does the math, and writes <code>summary.md</code>. It may ask before running a command. Read what it wants to do, then say yes.</p>
+  </div>
+
+  <div class="card">
+    <h2><span class="n">4</span> Now grade it. You know how.</h2>
+    <p>Open <code>summary.md</code>. Today you learned that an answer that sounds right isn't a test. Here is the rubric:</p>
+    <table>
+      <tr><td><span class="tag t-e">✔ must</span></td><td>name <b>Ramen</b> as the dish with the most money this week, with the number</td></tr>
+      <tr><td><span class="tag t-e">✔ must</span></td><td>name <b>Saturday</b> as the busiest day, with the number</td></tr>
+      <tr><td><span class="tag t-x">✘ must not</span></td><td>name Pad Thai as the top dish</td></tr>
+    </table>
+    <p style="margin-top:.6rem">Why would anyone say Pad Thai? <strong>The single biggest row in the file is Pad Thai on Saturday.</strong> An agent that grabs the top row gets it wrong. That's a <span class="tag t-t">🌀 tricky</span> test case: everyday input with a trap inside. Run it <strong>three times</strong>. Did it pass every time?</p>
+  </div>
+
+  <div class="card warn">
+    <p><b>Good to know.</b> Each step the agent takes is one call on your class pass, so a small task is about 4 to 10 calls and counts toward your daily limit. If you hit a limit, the message tells you when it resets. Keep personal data out of your prompts, same as always.</p>
+  </div>
+
+  <p style="font-size:.9rem">Want to use it for your final project? Write your three test cases from Part 7 of The Exam first. Then let OpenCode build, and grade what it builds.</p>
+</div>
+
+<script>
+(function () {
+  const CSV = `day,dish,bowls_sold,price_usd,revenue_usd
+Mon,Pad Thai,27,19,513
+Mon,Ramen,32,18,576
+Mon,Dan Dan Noodles,18,17,306
+Tue,Pad Thai,25,19,475
+Tue,Ramen,29,18,522
+Tue,Dan Dan Noodles,13,17,221
+Wed,Pad Thai,26,19,494
+Wed,Ramen,36,18,648
+Wed,Dan Dan Noodles,20,17,340
+Thu,Pad Thai,30,19,570
+Thu,Ramen,34,18,612
+Thu,Dan Dan Noodles,23,17,391
+Fri,Pad Thai,52,19,988
+Fri,Ramen,58,18,1044
+Fri,Dan Dan Noodles,30,17,510
+Sat,Pad Thai,64,19,1216
+Sat,Ramen,65,18,1170
+Sat,Dan Dan Noodles,40,17,680
+Sun,Pad Thai,43,19,817
+Sun,Ramen,44,18,792
+Sun,Dan Dan Noodles,21,17,357`;
+  const $ = id => document.getElementById(id);
+  const config = pass => JSON.stringify({
+    "$schema": "https://opencode.ai/config.json",
+    model: "sawyer/gemini-2.5-flash",
+    small_model: "sawyer/gemini-2.5-flash-lite",
+    provider: { sawyer: {
+      npm: "@ai-sdk/openai-compatible", name: "Sawyer AI Sandbox",
+      options: { baseURL: "https://sawyer-ai-sandbox.vercel.app/api/openai/v1", apiKey: pass },
+      models: {
+        "gemini-2.5-flash": { name: "Gemini 2.5 Flash (class pass)", limit: { context: 1000000, output: 8192 } },
+        "gemini-2.5-flash-lite": { name: "Gemini 2.5 Flash-Lite (class pass)", limit: { context: 1000000, output: 8192 } } } } }
+  }, null, 2) + "\n";
+  const save = (name, text) => { const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([text], { type: "text/plain" })); a.download = name; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000); };
+  function update() {
+    const p = $("pass").value.trim(), ok = /^[^:\s]+:\s*\S/.test(p);
+    $("dl-config").disabled = !ok;
+    $("msg").textContent = !p ? "" : ok ? "✅ Looks like a class pass." : "A class pass has a colon: the class code, a colon, your first name and last initial.";
+    $("msg").style.color = ok ? "var(--green)" : "var(--yellow)";
+    $("preview").textContent = config(ok ? p : "CODE:Your N");
+  }
+  $("pass").addEventListener("input", update);
+  $("dl-config").onclick = () => save("opencode.json", config($("pass").value.trim()));
+  $("dl-csv").onclick = () => save("sales.csv", CSV.trim() + "\n");
+  update();
+})();
+</script>
+</body>
+</html>

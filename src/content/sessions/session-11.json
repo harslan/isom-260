@@ -210,6 +210,15 @@
       "linkText": "Open slides"
     },
     {
+      "title": "🛠️ Optional · OpenCode on your class pass",
+      "url": "/session-11/opencode.html",
+      "description": "A real open-source coding agent, built like Claude Code, running on your class pass. Install it, ask it to analyze a sales file, then grade it with a rubric. A good tool for your final project.",
+      "icon": "terminal",
+      "badge": "Optional",
+      "badgeType": "tool",
+      "linkText": "Set it up"
+    },
+    {
       "title": "Final Project · Build Your Agent",
       "url": "/project",
       "description": "Your three test cases belong in your final notebook. What passed and what failed goes into the \"Test results\" paragraph of your 1-page brief.",
